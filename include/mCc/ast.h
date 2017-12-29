@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Forward Declarations */
 
 struct mC_ast_node;
@@ -13,6 +17,10 @@ struct mC_ast_literal;
 struct mC_ast_node
 {
 	/* TODO source location */
+
+	/* An empty struct messes up C and C++ interoperability. Remove this
+	 * pitiful, unsed integer when you add another field. */
+	int unused;
 };
 
 /* Operators */
@@ -112,5 +120,10 @@ void mC_ast_dot_print_end(FILE *out);
 void mC_ast_dot_print_expression(FILE *out, struct mC_ast_expression *expression);
 
 void mC_ast_dot_print_literal(FILE *out, struct mC_ast_literal *literal);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

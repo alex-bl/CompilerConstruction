@@ -48,21 +48,21 @@ toplevel : expression { *result = $1; }
 
 binary_op : PLUS  { $$ = MC_AST_BINARY_OP_ADD; }
           | MINUS { $$ = MC_AST_BINARY_OP_SUB; }
-	  | ASTER { $$ = MC_AST_BINARY_OP_MUL; }
-	  | SLASH { $$ = MC_AST_BINARY_OP_DIV; }
-	  ;
+          | ASTER { $$ = MC_AST_BINARY_OP_MUL; }
+          | SLASH { $$ = MC_AST_BINARY_OP_DIV; }
+          ;
 
 single_expr : literal                         { $$ = mC_ast_expression_new_literal_expression($1); }
             | LPARENTH expression RPARENTH    { $$ = mC_ast_expression_new_parenth_expression($2); }
-	    ;
+            ;
 
 expression : single_expr                      { $$ = $1;                                                     }
- 	   | single_expr binary_op expression { $$ = mC_ast_expression_new_binary_op_expression($2, $1, $3); }
-	   ;
+           | single_expr binary_op expression { $$ = mC_ast_expression_new_binary_op_expression($2, $1, $3); }
+           ;
 
 literal : INT_LITERAL   { $$ = mC_ast_literal_new_int_literal($1);   }
         | FLOAT_LITERAL { $$ = mC_ast_literal_new_float_literal($1); }
-	;
+        ;
 
 %%
 
@@ -70,11 +70,11 @@ literal : INT_LITERAL   { $$ = mC_ast_literal_new_int_literal($1);   }
 
 void yyerror(yyscan_t *scanner, const char* msg) {}
 
-struct mC_ast_expression* mC_parser_run(void)
+struct mC_ast_expression* mC_parser_run(FILE *in)
 {
 	yyscan_t scanner;
-
 	mC_parser_lex_init(&scanner);
+	mC_parser_set_in(in, scanner);
 
 	struct mC_ast_expression *result = NULL;
 	if (yyparse(scanner, &result) != 0) {

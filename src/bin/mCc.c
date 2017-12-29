@@ -4,9 +4,11 @@
 #include "mCc/ast.h"
 #include "mCc/parser.h"
 
-int main(void)
+int main(int argc, char *argv[])
 {
-	struct mC_ast_expression *expr = mC_parser_run();
+	FILE *in = stdin;
+
+	struct mC_ast_expression *expr = mC_parser_run(in);
 	if (!expr) {
 		return EXIT_FAILURE;
 	}

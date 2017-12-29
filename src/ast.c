@@ -131,9 +131,9 @@ static void dot_print_node_end(FILE *out)
 	fprintf(out, "\"];\n");
 }
 
-static void dot_print_edge(FILE *out, const void *src_node, const void *dst_node)
+static void dot_print_edge(FILE *out, const void *src_node, const void *dst_node, const char* label)
 {
-	fprintf(out, "\t\"%p\" -> \"%p\"\n", src_node, dst_node);
+	fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%s\"]\n", src_node, dst_node, label);
 }
 
 void mC_ast_dot_print_begin(FILE *out)
@@ -173,19 +173,19 @@ void mC_ast_dot_print_expression(FILE *out, struct mC_ast_expression *expression
 	switch (expression-> type) {
 		case MC_AST_EXPRESSION_TYPE_LITERAL:
 			mC_ast_dot_print_literal(out, expression->literal);
-			dot_print_edge(out, expression, expression->literal);
+			dot_print_edge(out, expression, expression->literal, "literal");
 			break;
 
 		case MC_AST_EXPRESSION_TYPE_BINARY_OP:
 			mC_ast_dot_print_expression(out, expression->lhs);
-			dot_print_edge(out, expression, expression->lhs);
+			dot_print_edge(out, expression, expression->lhs, "lhs");
 			mC_ast_dot_print_expression(out, expression->rhs);
-			dot_print_edge(out, expression, expression->rhs);
+			dot_print_edge(out, expression, expression->rhs, "rhs");
 			break;
 
 		case MC_AST_EXPRESSION_TYPE_PARENTH:
 			mC_ast_dot_print_expression(out, expression->expression);
-			dot_print_edge(out, expression, expression->expression);
+			dot_print_edge(out, expression, expression->expression, "expression");
 			break;
 
 		/* ignore invalid types */
