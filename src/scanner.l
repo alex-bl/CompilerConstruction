@@ -1,5 +1,4 @@
 %option prefix="mC_parser_"
-%option header-file="scanner.h"
 
 %option batch
 %option bison-bridge

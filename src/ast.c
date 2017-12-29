@@ -1,4 +1,4 @@
-#include "ast.h"
+#include "mCc/ast.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -45,6 +45,7 @@ struct mC_ast_expression* mC_ast_expression_new_binary_op_expression(enum mC_ast
 	}
 
 	expr->type = MC_AST_EXPRESSION_TYPE_BINARY_OP;
+	expr->op = op;
 	expr->lhs = lhs;
 	expr->rhs = rhs;
 	return expr;

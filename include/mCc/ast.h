@@ -1,5 +1,5 @@
-#ifndef MC_AST_H
-#define MC_AST_H
+#ifndef MCC_AST_H
+#define MCC_AST_H
 
 /* Forward Declarations */
 
@@ -44,8 +44,8 @@ struct mC_ast_expression
 		/* MC_AST_EXPRESSION_TYPE_BINARY_OP */
 		struct
 		{
+			enum   mC_ast_binary_op   op;
 			struct mC_ast_expression *lhs;
-			enum   mC_ast_binary_op  *op;
 			struct mC_ast_expression *rhs;
 		};
 

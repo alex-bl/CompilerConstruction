@@ -1,5 +1,3 @@
-%defines
-
 %define api.prefix {mC_parser_}
 
 %define api.pure full
@@ -10,9 +8,7 @@
 %define parse.error verbose
 
 %code requires {
-#include "ast.h"
-
-struct mC_ast_expression* mC_parser_run(void);
+#include "mCc/parser.h"
 }
 
 %{
