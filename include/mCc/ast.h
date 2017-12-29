@@ -14,8 +14,7 @@ struct mC_ast_expression;
 struct mC_ast_literal;
 
 /* Data contained by every ast node. */
-struct mC_ast_node
-{
+struct mC_ast_node {
 	/* TODO source location */
 
 	/* An empty struct messes up C and C++ interoperability. Remove this
@@ -25,8 +24,7 @@ struct mC_ast_node
 
 /* Operators */
 
-enum mC_ast_binary_op
-{
+enum mC_ast_binary_op {
 	MC_AST_BINARY_OP_ADD,
 	MC_AST_BINARY_OP_SUB,
 	MC_AST_BINARY_OP_MUL,
@@ -35,26 +33,22 @@ enum mC_ast_binary_op
 
 /* Expressions */
 
-enum mC_ast_expression_type
-{
+enum mC_ast_expression_type {
 	MC_AST_EXPRESSION_TYPE_LITERAL,
 	MC_AST_EXPRESSION_TYPE_BINARY_OP,
 	MC_AST_EXPRESSION_TYPE_PARENTH,
 };
 
-struct mC_ast_expression
-{
+struct mC_ast_expression {
 	struct mC_ast_node node;
-	enum   mC_ast_expression_type type;
-	union
-	{
+	enum mC_ast_expression_type type;
+	union {
 		/* MC_AST_EXPRESSION_TYPE_LITERAL */
 		struct mC_ast_literal *literal;
 
 		/* MC_AST_EXPRESSION_TYPE_BINARY_OP */
-		struct
-		{
-			enum   mC_ast_binary_op   op;
+		struct {
+			enum mC_ast_binary_op op;
 			struct mC_ast_expression *lhs;
 			struct mC_ast_expression *rhs;
 		};
@@ -64,33 +58,30 @@ struct mC_ast_expression
 	};
 };
 
-struct mC_ast_expression*
-mC_ast_new_expression_literal(struct mC_ast_literal* literal);
+struct mC_ast_expression *
+mC_ast_new_expression_literal(struct mC_ast_literal *literal);
 
-struct mC_ast_expression*
-mC_ast_new_expression_parenth(struct mC_ast_expression* expression);
+struct mC_ast_expression *
+mC_ast_new_expression_parenth(struct mC_ast_expression *expression);
 
-struct mC_ast_expression*
+struct mC_ast_expression *
 mC_ast_new_expression_binary_op(enum mC_ast_binary_op op,
-                                struct mC_ast_expression* lhs,
-                                struct mC_ast_expression* rhs);
+                                struct mC_ast_expression *lhs,
+                                struct mC_ast_expression *rhs);
 
 void mC_ast_delete_expression(struct mC_ast_expression *expression);
 
 /* Literals */
 
-enum mC_ast_literal_type
-{
+enum mC_ast_literal_type {
 	MC_AST_LITERAL_TYPE_INT,
 	MC_AST_LITERAL_TYPE_FLOAT,
 };
 
-struct mC_ast_literal
-{
+struct mC_ast_literal {
 	struct mC_ast_node node;
-	enum   mC_ast_literal_type type;
-	union
-	{
+	enum mC_ast_literal_type type;
+	union {
 		/* MC_AST_LITERAL_TYPE_INT */
 		long i_value;
 
@@ -99,9 +90,9 @@ struct mC_ast_literal
 	};
 };
 
-struct mC_ast_literal* mC_ast_new_literal_int(long value);
+struct mC_ast_literal *mC_ast_new_literal_int(long value);
 
-struct mC_ast_literal* mC_ast_new_literal_float(double value);
+struct mC_ast_literal *mC_ast_new_literal_float(double value);
 
 void mC_ast_delete_literal(struct mC_ast_literal *literal);
 
@@ -115,10 +106,10 @@ void mC_ast_print_dot_begin(FILE *out);
 
 void mC_ast_print_dot_end(FILE *out);
 
-void mC_ast_print_dot_expression(FILE *out, struct mC_ast_expression *expression);
+void mC_ast_print_dot_expression(FILE *out,
+                                 struct mC_ast_expression *expression);
 
 void mC_ast_print_dot_literal(FILE *out, struct mC_ast_literal *literal);
-
 
 #ifdef __cplusplus
 }

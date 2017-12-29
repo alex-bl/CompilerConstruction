@@ -68,9 +68,9 @@ literal : INT_LITERAL   { $$ = mC_ast_new_literal_int($1);   }
 
 #include "scanner.h"
 
-void yyerror(yyscan_t *scanner, const char* msg) {}
+void yyerror(yyscan_t *scanner, const char *msg) {}
 
-struct mC_ast_expression* mC_parser_run(FILE *in)
+struct mC_ast_expression *mC_parser_run(FILE *in)
 {
 	yyscan_t scanner;
 	mC_parser_lex_init(&scanner);

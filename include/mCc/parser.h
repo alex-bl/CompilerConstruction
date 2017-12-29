@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-struct mC_ast_expression* mC_parser_run(FILE *in);
+struct mC_ast_expression *mC_parser_run(FILE *in);
 
 #ifdef __cplusplus
 }

@@ -9,7 +9,7 @@ TEST(AST, NestedExpression_1)
 
 	struct mC_ast_expression *expr;
 	{
-		FILE *in = fmemopen((void*) input, sizeof(input) - 1, "r");
+		FILE *in = fmemopen((void *)input, sizeof(input) - 1, "r");
 		ASSERT_TRUE(in);
 
 		expr = mC_parser_run(in);
