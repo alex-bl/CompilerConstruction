@@ -11,8 +11,8 @@ The next segment presents the grammar of mC using this notation:
 - `,` indicates concatenation
 - `|` indicates alternation
 - `( )` indicates grouping
-- `[ ]` indicates optional parts
-- `{ }` indicates *1 or more repetition*
+- `[ ]` indicates optional parts (0 or 1)
+- `{ }` indicates repetition (1 or more)
 - `[ ]` and `{ }` can be combined to represent *0 or more repetition*
 - `" "` indicates a terminal string
 - `/ /` indicates a [RegEx]
@@ -36,6 +36,7 @@ int_literal      = [ "-" ] , { digit }
 
 float_literal    = [ "-" ] , { digit } , "." , { digit }
 
+string_literal   = /"[^"]*"/
 
 # Operators
 
@@ -48,7 +49,7 @@ binary_op        = "+"  | "-" | "*" | "/"
 
 # Types
 
-type             = "bool" | "int" | "float"
+type             = "bool" | "int" | "float" | "string"
 
 
 # Declaration / Assignment
@@ -60,7 +61,7 @@ assignment       = identifier , "=" , expression
 
 # Expressions
 
-expression       = single_expr , [ bin_op , expression ]
+expression       = single_expr , [ binary_op , expression ]
 
 single_expr      = literal
                  | identifier
@@ -68,9 +69,10 @@ single_expr      = literal
                  | unary_op , expression
                  | "(" , expression , ")"
 
-literal          = bool_lit
-                 | int_lit
-                 | float_lit
+literal          = bool_literal
+                 | int_literal
+                 | float_literal
+		 | string_literal
 
 
 # Statements
@@ -112,7 +114,7 @@ program = [ { function_def } ]
 
 mC supports only *C-style* comments, starting with `/*` and ending with `*/`.
 Like in C, they can span across multiple lines.
-Comments are discarded by the parser, but do not forget to take newlines into accout.
+Comments are discarded by the parser, but do not forget to take newlines into account.
 
 ## Special Semantics
 
@@ -120,6 +122,14 @@ Comments are discarded by the parser, but do not forget to take newlines into ac
 
 For mC we consider `bool` a first-class citizen, distinct from `int`.
 Yet we skip boolean binary operators like `&&` and `||`.
+
+### Strings
+
+Strings are immutable and do not support any operation (eg concatenation).
+Neither can they contain escape sequences.
+Yet, like comments, they can span across multiple lines.
+
+Their sole purpose is to be used with a `print` function for which an implementation will be provided by the compiler.
 
 ### Type Conversion
 
@@ -147,3 +157,15 @@ It is possible to use a function before it has been defined.
 In C, the parameters list of a function taking no arguments contains only `void`.
 For mC we simply use an empty parameter list.
 Hence, instead of writing `int foo(void)` we write `int foo()`, where `foo` is the name of a function returning an `int` and taking no arguments.
+
+## I/O
+
+The following built-in functions will be provided by the compiler for I/O operations:
+
+- `print`       outputs a given string to `stdout`
+- `print_int`   outputs a given integer to `stdout`
+- `print_float` outputs a given float to `stdout`
+- `read_int`    reads an integer from `stdin`
+- `read_float`  reads a float from `stdin`
+
+With these, it we can create simple, interactive programs.
