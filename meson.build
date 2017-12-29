@@ -39,9 +39,7 @@ mCc_exe = executable('mCc', 'src/bin/mCc.c',
                      include_directories: mCc_inc,
                      link_with: mCc_lib)
 
-#gtest = dependency('gtest',
-#   fallback: ['gtest', 'gtest_main_dep']
-#)
+gtest = dependency('gtest', fallback: ['gtest', 'gtest_main_dep'])
 
 #foo_tests = ['foo_test', 'bar/baz_test']
 #foreach foo_test : foo_tests
