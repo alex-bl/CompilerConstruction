@@ -6,14 +6,15 @@
 
 int main(void)
 {
-	FILE *in = stdin;
-
-	struct mC_ast_expression *expr = mC_parser_run(in);
+	struct mC_ast_expression *expr = mC_parser_run(stdin);
 	if (!expr) {
 		return EXIT_FAILURE;
 	}
 
-	/* TODO */
+	FILE *out = stdout;
+	mC_ast_dot_print_begin(out);
+	mC_ast_dot_print_expression(out, expr);
+	mC_ast_dot_print_end(out);
 
 	mC_ast_expression_delete(expr);
 

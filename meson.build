@@ -24,7 +24,7 @@ pgen = generator(bison,
                               '--defines=@OUTPUT1@',
                               '@INPUT@' ])
 
-# ------------------------------------------------------------------------ MAIN
+# --------------------------------------------------------------------- LIBRARY
 
 mCc_inc = include_directories('include')
 
@@ -36,9 +36,15 @@ mCc_lib = library('mCc', mCc_src,
                   c_args: '-D_POSIX_SOURCE',
                   include_directories: mCc_inc)
 
-mCc_exe = executable('mCc', 'src/bin/mCc.c',
-                     include_directories: mCc_inc,
-                     link_with: mCc_lib)
+# ----------------------------------------------------------------- EXECUTABLES
+
+mCc_exes = [ 'mCc', 'mC_to_dot' ]
+
+foreach exe : mCc_exes
+    executable(exe, 'src/bin/' + exe + '.c',
+               include_directories: mCc_inc,
+               link_with: mCc_lib)
+endforeach
 
 # ------------------------------------------------------------------ UNIT TESTS
 
