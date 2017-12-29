@@ -52,16 +52,16 @@ binary_op : PLUS  { $$ = MC_AST_BINARY_OP_ADD; }
           | SLASH { $$ = MC_AST_BINARY_OP_DIV; }
           ;
 
-single_expr : literal                         { $$ = mC_ast_expression_new_literal_expression($1); }
-            | LPARENTH expression RPARENTH    { $$ = mC_ast_expression_new_parenth_expression($2); }
+single_expr : literal                         { $$ = mC_ast_new_expression_literal($1); }
+            | LPARENTH expression RPARENTH    { $$ = mC_ast_new_expression_parenth($2); }
             ;
 
-expression : single_expr                      { $$ = $1;                                                     }
-           | single_expr binary_op expression { $$ = mC_ast_expression_new_binary_op_expression($2, $1, $3); }
+expression : single_expr                      { $$ = $1;                                          }
+           | single_expr binary_op expression { $$ = mC_ast_new_expression_binary_op($2, $1, $3); }
            ;
 
-literal : INT_LITERAL   { $$ = mC_ast_literal_new_int_literal($1);   }
-        | FLOAT_LITERAL { $$ = mC_ast_literal_new_float_literal($1); }
+literal : INT_LITERAL   { $$ = mC_ast_new_literal_int($1);   }
+        | FLOAT_LITERAL { $$ = mC_ast_new_literal_float($1); }
         ;
 
 %%

@@ -12,11 +12,11 @@ int main(void)
 	}
 
 	FILE *out = stdout;
-	mC_ast_dot_print_begin(out);
-	mC_ast_dot_print_expression(out, expr);
-	mC_ast_dot_print_end(out);
+	mC_ast_print_dot_begin(out);
+	mC_ast_print_dot_expression(out, expr);
+	mC_ast_print_dot_end(out);
 
-	mC_ast_expression_delete(expr);
+	mC_ast_delete_expression(expr);
 
 	return EXIT_SUCCESS;
 }

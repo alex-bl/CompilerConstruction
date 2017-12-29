@@ -65,17 +65,17 @@ struct mC_ast_expression
 };
 
 struct mC_ast_expression*
-mC_ast_expression_new_literal_expression(struct mC_ast_literal* literal);
+mC_ast_new_expression_literal(struct mC_ast_literal* literal);
 
 struct mC_ast_expression*
-mC_ast_expression_new_parenth_expression(struct mC_ast_expression* expression);
+mC_ast_new_expression_parenth(struct mC_ast_expression* expression);
 
 struct mC_ast_expression*
-mC_ast_expression_new_binary_op_expression(enum mC_ast_binary_op op,
-                                           struct mC_ast_expression* lhs,
-                                           struct mC_ast_expression* rhs);
+mC_ast_new_expression_binary_op(enum mC_ast_binary_op op,
+                                struct mC_ast_expression* lhs,
+                                struct mC_ast_expression* rhs);
 
-void mC_ast_expression_delete(struct mC_ast_expression *expression);
+void mC_ast_delete_expression(struct mC_ast_expression *expression);
 
 /* Literals */
 
@@ -99,13 +99,11 @@ struct mC_ast_literal
 	};
 };
 
-struct mC_ast_literal*
-mC_ast_literal_new_int_literal(long value);
+struct mC_ast_literal* mC_ast_new_literal_int(long value);
 
-struct mC_ast_literal*
-mC_ast_literal_new_float_literal(double value);
+struct mC_ast_literal* mC_ast_new_literal_float(double value);
 
-void mC_ast_literal_delete(struct mC_ast_literal *literal);
+void mC_ast_delete_literal(struct mC_ast_literal *literal);
 
 /* ----------------------------------------------------------------- PRINTER */
 
@@ -113,13 +111,13 @@ void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op);
 
 /* -------------------------------------------------------- GRAPHVIZ PRINTER */
 
-void mC_ast_dot_print_begin(FILE *out);
+void mC_ast_print_dot_begin(FILE *out);
 
-void mC_ast_dot_print_end(FILE *out);
+void mC_ast_print_dot_end(FILE *out);
 
-void mC_ast_dot_print_expression(FILE *out, struct mC_ast_expression *expression);
+void mC_ast_print_dot_expression(FILE *out, struct mC_ast_expression *expression);
 
-void mC_ast_dot_print_literal(FILE *out, struct mC_ast_literal *literal);
+void mC_ast_print_dot_literal(FILE *out, struct mC_ast_literal *literal);
 
 
 #ifdef __cplusplus

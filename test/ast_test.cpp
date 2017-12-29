@@ -51,5 +51,5 @@ TEST(AST, NestedExpression_1)
 	ASSERT_EQ(MC_AST_LITERAL_TYPE_FLOAT, subexpr->rhs->literal->type);
 	ASSERT_EQ(3.14, subexpr->rhs->literal->f_value);
 
-	mC_ast_expression_delete(expr);
+	mC_ast_delete_expression(expr);
 }

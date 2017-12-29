@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-struct mC_ast_expression* mC_ast_expression_new_literal_expression(struct mC_ast_literal* literal)
+struct mC_ast_expression* mC_ast_new_expression_literal(struct mC_ast_literal* literal)
 {
 	assert(literal);
 
@@ -18,7 +18,7 @@ struct mC_ast_expression* mC_ast_expression_new_literal_expression(struct mC_ast
 }
 
 struct mC_ast_expression*
-mC_ast_expression_new_parenth_expression(struct mC_ast_expression* expression)
+mC_ast_new_expression_parenth(struct mC_ast_expression* expression)
 {
 	assert(expression);
 
@@ -32,9 +32,9 @@ mC_ast_expression_new_parenth_expression(struct mC_ast_expression* expression)
 	return expr;
 }
 
-struct mC_ast_expression* mC_ast_expression_new_binary_op_expression(enum mC_ast_binary_op op,
-                                                                     struct mC_ast_expression* lhs,
-                                                                     struct mC_ast_expression* rhs)
+struct mC_ast_expression* mC_ast_new_expression_binary_op(enum mC_ast_binary_op op,
+                                                          struct mC_ast_expression* lhs,
+                                                          struct mC_ast_expression* rhs)
 {
 	assert(lhs);
 	assert(rhs);
@@ -51,22 +51,22 @@ struct mC_ast_expression* mC_ast_expression_new_binary_op_expression(enum mC_ast
 	return expr;
 }
 
-void mC_ast_expression_delete(struct mC_ast_expression *expression)
+void mC_ast_delete_expression(struct mC_ast_expression *expression)
 {
 	assert(expression);
 
 	switch(expression->type) {
 		case MC_AST_EXPRESSION_TYPE_LITERAL:
-			mC_ast_literal_delete(expression->literal);
+			mC_ast_delete_literal(expression->literal);
 			break;
 
 		case MC_AST_EXPRESSION_TYPE_BINARY_OP:
-			mC_ast_expression_delete(expression->lhs);
-			mC_ast_expression_delete(expression->rhs);
+			mC_ast_delete_expression(expression->lhs);
+			mC_ast_delete_expression(expression->rhs);
 			break;
 
 		case MC_AST_EXPRESSION_TYPE_PARENTH:
-			mC_ast_expression_delete(expression->expression);
+			mC_ast_delete_expression(expression->expression);
 			break;
 
 		/* ignore invalid types */
@@ -75,7 +75,7 @@ void mC_ast_expression_delete(struct mC_ast_expression *expression)
 	free(expression);
 }
 
-struct mC_ast_literal* mC_ast_literal_new_int_literal(long value)
+struct mC_ast_literal* mC_ast_new_literal_int(long value)
 {
 	struct mC_ast_literal* lit = malloc(sizeof(struct mC_ast_literal));
 	if (!lit) {
@@ -87,7 +87,7 @@ struct mC_ast_literal* mC_ast_literal_new_int_literal(long value)
 	return lit;
 }
 
-struct mC_ast_literal* mC_ast_literal_new_float_literal(double value)
+struct mC_ast_literal* mC_ast_new_literal_float(double value)
 {
 	struct mC_ast_literal* lit = malloc(sizeof(struct mC_ast_literal));
 	if (!lit) {
@@ -99,7 +99,7 @@ struct mC_ast_literal* mC_ast_literal_new_float_literal(double value)
 	return lit;
 }
 
-void mC_ast_literal_delete(struct mC_ast_literal *literal)
+void mC_ast_delete_literal(struct mC_ast_literal *literal)
 {
 	assert(literal);
 	free(literal);
@@ -136,18 +136,18 @@ static void dot_print_edge(FILE *out, const void *src_node, const void *dst_node
 	fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%s\"]\n", src_node, dst_node, label);
 }
 
-void mC_ast_dot_print_begin(FILE *out)
+void mC_ast_print_dot_begin(FILE *out)
 {
 	fprintf(out, "digraph \"AST\" {\n");
 	fprintf(out, "\tnodesep=0.6\n");
 }
 
-void mC_ast_dot_print_end(FILE *out)
+void mC_ast_print_dot_end(FILE *out)
 {
 	fprintf(out, "}\n");
 }
 
-void mC_ast_dot_print_expression(FILE *out, struct mC_ast_expression *expression)
+void mC_ast_print_dot_expression(FILE *out, struct mC_ast_expression *expression)
 {
 	dot_print_node_begin(out, expression, "expr");
 
@@ -172,19 +172,19 @@ void mC_ast_dot_print_expression(FILE *out, struct mC_ast_expression *expression
 	/* children */
 	switch (expression-> type) {
 		case MC_AST_EXPRESSION_TYPE_LITERAL:
-			mC_ast_dot_print_literal(out, expression->literal);
+			mC_ast_print_dot_literal(out, expression->literal);
 			dot_print_edge(out, expression, expression->literal, "literal");
 			break;
 
 		case MC_AST_EXPRESSION_TYPE_BINARY_OP:
-			mC_ast_dot_print_expression(out, expression->lhs);
+			mC_ast_print_dot_expression(out, expression->lhs);
 			dot_print_edge(out, expression, expression->lhs, "lhs");
-			mC_ast_dot_print_expression(out, expression->rhs);
+			mC_ast_print_dot_expression(out, expression->rhs);
 			dot_print_edge(out, expression, expression->rhs, "rhs");
 			break;
 
 		case MC_AST_EXPRESSION_TYPE_PARENTH:
-			mC_ast_dot_print_expression(out, expression->expression);
+			mC_ast_print_dot_expression(out, expression->expression);
 			dot_print_edge(out, expression, expression->expression, "expression");
 			break;
 
@@ -192,7 +192,7 @@ void mC_ast_dot_print_expression(FILE *out, struct mC_ast_expression *expression
 	}
 }
 
-void mC_ast_dot_print_literal(FILE *out, struct mC_ast_literal *literal)
+void mC_ast_print_dot_literal(FILE *out, struct mC_ast_literal *literal)
 {
 	dot_print_node_begin(out, literal, "lit");
 

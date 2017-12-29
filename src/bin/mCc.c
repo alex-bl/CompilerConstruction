@@ -15,7 +15,7 @@ int main(void)
 
 	/* TODO */
 
-	mC_ast_expression_delete(expr);
+	mC_ast_delete_expression(expr);
 
 	return EXIT_SUCCESS;
 }
