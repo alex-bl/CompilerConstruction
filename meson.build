@@ -1,13 +1,13 @@
-project('mCc',
-    'c',
+project('mCc', 'c',
     default_options: [
         'buildtype=release',
-        'cpp_std=c11',
+        'c_std=c11',
+        'cpp_std=c++14',
         'warning_level=2'
     ]
 )
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------ GENERATORS
 
 flex = find_program('flex')
 lgen = generator(flex,
@@ -24,7 +24,7 @@ pgen = generator(bison,
                               '--defines=@OUTPUT1@',
                               '@INPUT@' ])
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------ MAIN
 
 mCc_inc = include_directories('include')
 
@@ -33,20 +33,23 @@ mCc_src = [ 'src/ast.c',
             pgen.process('src/parser.y') ]
 
 mCc_lib = library('mCc', mCc_src,
+                  c_args: '-D_POSIX_SOURCE',
                   include_directories: mCc_inc)
 
 mCc_exe = executable('mCc', 'src/bin/mCc.c',
                      include_directories: mCc_inc,
                      link_with: mCc_lib)
 
+# ------------------------------------------------------------------ UNIT TESTS
+
 gtest = dependency('gtest', fallback: ['gtest', 'gtest_main_dep'])
 
-#foo_tests = ['foo_test', 'bar/baz_test']
-#foreach foo_test : foo_tests
-#   t = executable('ut_' + foo_test.underscorify(), 'test/' + foo_test + '.cpp',
-#       include_directories: foo_inc,
-#       link_with: foo_lib,
-#       dependencies: gtest
-#   )
-#   test(foo_test, t)
-#endforeach
+mCc_uts = [ 'ast_test' ]
+
+foreach ut : mCc_uts
+    t = executable('ut_' + ut.underscorify(), 'test/' + ut + '.cpp',
+                   include_directories: mCc_inc,
+                   link_with: mCc_lib,
+                   dependencies: gtest)
+    test(ut, t)
+endforeach
