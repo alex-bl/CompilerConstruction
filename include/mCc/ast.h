@@ -1,6 +1,8 @@
 #ifndef MCC_AST_H
 #define MCC_AST_H
 
+#include <stdio.h>
+
 /* Forward Declarations */
 
 struct mC_ast_node;
@@ -96,5 +98,19 @@ struct mC_ast_literal*
 mC_ast_literal_new_float_literal(double value);
 
 void mC_ast_literal_delete(struct mC_ast_literal *literal);
+
+/* ----------------------------------------------------------------- PRINTER */
+
+void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op);
+
+/* -------------------------------------------------------- GRAPHVIZ PRINTER */
+
+void mC_ast_dot_print_begin(FILE *out);
+
+void mC_ast_dot_print_end(FILE *out);
+
+void mC_ast_dot_print_expression(FILE *out, struct mC_ast_expression *expression);
+
+void mC_ast_dot_print_literal(FILE *out, struct mC_ast_literal *literal);
 
 #endif
