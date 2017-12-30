@@ -4,6 +4,8 @@ IndentWidth: 4
 TabWidth: 4
 UseTab: ForIndentation
 BreakBeforeBraces: Linux
+AlignEscapedNewlines: DontAlign
+AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: true
 AllowShortCaseLabelsOnASingleLine: true

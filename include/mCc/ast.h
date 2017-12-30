@@ -96,21 +96,6 @@ struct mC_ast_literal *mC_ast_new_literal_float(double value);
 
 void mC_ast_delete_literal(struct mC_ast_literal *literal);
 
-/* ----------------------------------------------------------------- PRINTER */
-
-void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op);
-
-/* -------------------------------------------------------- GRAPHVIZ PRINTER */
-
-void mC_ast_print_dot_begin(FILE *out);
-
-void mC_ast_print_dot_end(FILE *out);
-
-void mC_ast_print_dot_expression(FILE *out,
-                                 struct mC_ast_expression *expression);
-
-void mC_ast_print_dot_literal(FILE *out, struct mC_ast_literal *literal);
-
 #ifdef __cplusplus
 }
 #endif

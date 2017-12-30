@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "mCc/ast.h"
+#include "mCc/ast_print.h"
 #include "mCc/parser.h"
 
 int main(void)
