@@ -24,11 +24,13 @@ struct mC_ast_visitor {
 	mC_ast_literal_visitor literal_float;
 };
 
-void mC_ast_visit_expression(struct mC_ast_expression *expression,
-                             struct mC_ast_visitor *visitor);
+/* Depth-First Post-Order */
 
-void mC_ast_visit_literal(struct mC_ast_literal *literal,
-                          struct mC_ast_visitor *visitor);
+void mC_ast_visit_expression_df_post(struct mC_ast_expression *expression,
+                                     struct mC_ast_visitor *visitor);
+
+void mC_ast_visit_literal_post(struct mC_ast_literal *literal,
+                               struct mC_ast_visitor *visitor);
 
 #ifdef __cplusplus
 }

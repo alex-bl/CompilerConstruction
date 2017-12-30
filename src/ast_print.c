@@ -108,5 +108,5 @@ void mC_ast_print_dot_expression(FILE *out,
 	    .literal_float = print_dot_literal_float,
 	};
 
-	mC_ast_visit_expression(expression, &visitor);
+	mC_ast_visit_expression_df_post(expression, &visitor);
 }
