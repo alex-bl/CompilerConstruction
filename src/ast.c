@@ -8,8 +8,7 @@ mC_ast_new_expression_literal(struct mC_ast_literal *literal)
 {
 	assert(literal);
 
-	struct mC_ast_expression *expr =
-	    malloc(sizeof(struct mC_ast_expression));
+	struct mC_ast_expression *expr = malloc(sizeof(struct mC_ast_expression));
 	if (!expr) {
 		return NULL;
 	}
@@ -24,8 +23,7 @@ mC_ast_new_expression_parenth(struct mC_ast_expression *expression)
 {
 	assert(expression);
 
-	struct mC_ast_expression *expr =
-	    malloc(sizeof(struct mC_ast_expression));
+	struct mC_ast_expression *expr = malloc(sizeof(struct mC_ast_expression));
 
 	if (!expr) {
 		return NULL;
@@ -44,8 +42,7 @@ mC_ast_new_expression_binary_op(enum mC_ast_binary_op op,
 	assert(lhs);
 	assert(rhs);
 
-	struct mC_ast_expression *expr =
-	    malloc(sizeof(struct mC_ast_expression));
+	struct mC_ast_expression *expr = malloc(sizeof(struct mC_ast_expression));
 	if (!expr) {
 		return NULL;
 	}
@@ -62,20 +59,18 @@ void mC_ast_delete_expression(struct mC_ast_expression *expression)
 	assert(expression);
 
 	switch (expression->type) {
-	case MC_AST_EXPRESSION_TYPE_LITERAL:
-		mC_ast_delete_literal(expression->literal);
-		break;
+		case MC_AST_EXPRESSION_TYPE_LITERAL:
+			mC_ast_delete_literal(expression->literal);
+			break;
 
-	case MC_AST_EXPRESSION_TYPE_BINARY_OP:
-		mC_ast_delete_expression(expression->lhs);
-		mC_ast_delete_expression(expression->rhs);
-		break;
+		case MC_AST_EXPRESSION_TYPE_BINARY_OP:
+			mC_ast_delete_expression(expression->lhs);
+			mC_ast_delete_expression(expression->rhs);
+			break;
 
-	case MC_AST_EXPRESSION_TYPE_PARENTH:
-		mC_ast_delete_expression(expression->expression);
-		break;
-
-		/* ignore invalid types */
+		case MC_AST_EXPRESSION_TYPE_PARENTH:
+			mC_ast_delete_expression(expression->expression);
+			break;
 	}
 
 	free(expression);
@@ -116,23 +111,10 @@ void mC_ast_delete_literal(struct mC_ast_literal *literal)
 void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op)
 {
 	switch (op) {
-	case MC_AST_BINARY_OP_ADD:
-		fprintf(out, "+");
-		break;
-
-	case MC_AST_BINARY_OP_SUB:
-		fprintf(out, "-");
-		break;
-
-	case MC_AST_BINARY_OP_MUL:
-		fprintf(out, "*");
-		break;
-
-	case MC_AST_BINARY_OP_DIV:
-		fprintf(out, "/");
-		break;
-
-		/* ignore invalid types */
+		case MC_AST_BINARY_OP_ADD: fprintf(out, "+"); break;
+		case MC_AST_BINARY_OP_SUB: fprintf(out, "-"); break;
+		case MC_AST_BINARY_OP_MUL: fprintf(out, "*"); break;
+		case MC_AST_BINARY_OP_DIV: fprintf(out, "+"); break;
 	}
 }
 
@@ -167,44 +149,36 @@ void mC_ast_print_dot_expression(FILE *out,
 	dot_print_node_begin(out, expression, "expr");
 
 	switch (expression->type) {
-	case MC_AST_EXPRESSION_TYPE_LITERAL:
-		fprintf(out, "lit");
-		break;
+		case MC_AST_EXPRESSION_TYPE_LITERAL: fprintf(out, "lit"); break;
 
-	case MC_AST_EXPRESSION_TYPE_BINARY_OP:
-		mC_ast_print_binary_op(out, expression->op);
-		break;
+		case MC_AST_EXPRESSION_TYPE_BINARY_OP:
+			mC_ast_print_binary_op(out, expression->op);
+			break;
 
-	case MC_AST_EXPRESSION_TYPE_PARENTH:
-		fprintf(out, "( )");
-		break;
-
-		/* ignore invalid types */
+		case MC_AST_EXPRESSION_TYPE_PARENTH: fprintf(out, "( )"); break;
 	}
 
 	dot_print_node_end(out);
 
 	/* children */
 	switch (expression->type) {
-	case MC_AST_EXPRESSION_TYPE_LITERAL:
-		mC_ast_print_dot_literal(out, expression->literal);
-		dot_print_edge(out, expression, expression->literal, "literal");
-		break;
+		case MC_AST_EXPRESSION_TYPE_LITERAL:
+			mC_ast_print_dot_literal(out, expression->literal);
+			dot_print_edge(out, expression, expression->literal, "literal");
+			break;
 
-	case MC_AST_EXPRESSION_TYPE_BINARY_OP:
-		mC_ast_print_dot_expression(out, expression->lhs);
-		dot_print_edge(out, expression, expression->lhs, "lhs");
-		mC_ast_print_dot_expression(out, expression->rhs);
-		dot_print_edge(out, expression, expression->rhs, "rhs");
-		break;
+		case MC_AST_EXPRESSION_TYPE_BINARY_OP:
+			mC_ast_print_dot_expression(out, expression->lhs);
+			dot_print_edge(out, expression, expression->lhs, "lhs");
+			mC_ast_print_dot_expression(out, expression->rhs);
+			dot_print_edge(out, expression, expression->rhs, "rhs");
+			break;
 
-	case MC_AST_EXPRESSION_TYPE_PARENTH:
-		mC_ast_print_dot_expression(out, expression->expression);
-		dot_print_edge(out, expression, expression->expression,
-		               "expression");
-		break;
-
-		/* ignore invalid types */
+		case MC_AST_EXPRESSION_TYPE_PARENTH:
+			mC_ast_print_dot_expression(out, expression->expression);
+			dot_print_edge(out, expression, expression->expression,
+			               "expression");
+			break;
 	}
 }
 
@@ -213,15 +187,13 @@ void mC_ast_print_dot_literal(FILE *out, struct mC_ast_literal *literal)
 	dot_print_node_begin(out, literal, "lit");
 
 	switch (literal->type) {
-	case MC_AST_LITERAL_TYPE_INT:
-		fprintf(out, "%ld", literal->i_value);
-		break;
+		case MC_AST_LITERAL_TYPE_INT:
+			fprintf(out, "%ld", literal->i_value);
+			break;
 
-	case MC_AST_LITERAL_TYPE_FLOAT:
-		fprintf(out, "%f", literal->f_value);
-		break;
-
-		/* ignore invalid types */
+		case MC_AST_LITERAL_TYPE_FLOAT:
+			fprintf(out, "%f", literal->f_value);
+			break;
 	}
 
 	dot_print_node_end(out);
