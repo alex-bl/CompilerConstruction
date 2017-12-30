@@ -35,7 +35,7 @@ mCc_src = [ 'src/ast.c',
             pgen.process('src/parser.y') ]
 
 mCc_lib = library('mCc', mCc_src,
-                  c_args: '-D_POSIX_SOURCE',
+                  c_args: '-D_POSIX_C_SOURCE=200809L',
                   include_directories: mCc_inc)
 
 # ----------------------------------------------------------------- EXECUTABLES

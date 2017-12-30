@@ -9,11 +9,11 @@
 
 %code requires {
 #include "mCc/parser.h"
-
-#include <assert.h>
 }
 
 %{
+#include <assert.h>
+
 int mC_parser_lex();
 void mC_parser_error();
 %}
