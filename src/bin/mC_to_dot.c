@@ -6,7 +6,7 @@
 
 int main(void)
 {
-	struct mC_ast_expression *expr = mC_parser_run(stdin);
+	struct mC_ast_expression *expr = mC_parser_parse_file(stdin);
 	if (!expr) {
 		return EXIT_FAILURE;
 	}

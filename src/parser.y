@@ -9,6 +9,8 @@
 
 %code requires {
 #include "mCc/parser.h"
+
+#include <assert.h>
 }
 
 %{
@@ -70,11 +72,27 @@ literal : INT_LITERAL   { $$ = mC_ast_new_literal_int($1);   }
 
 void yyerror(yyscan_t *scanner, const char *msg) {}
 
-struct mC_ast_expression *mC_parser_run(FILE *in)
+struct mC_ast_expression *mC_parser_parse_string(const char *input, size_t len)
+{
+	assert(len > 0);
+	FILE *in = fmemopen((void *)input, len - 1, "r");
+	if (!in) {
+		fprintf(stderr, "could not open in-memory stream\n");
+		return NULL;
+	}
+
+	struct mC_ast_expression *result = mC_parser_parse_file(in);
+
+	fclose(in);
+
+	return result;
+}
+
+struct mC_ast_expression *mC_parser_parse_file(FILE *input)
 {
 	yyscan_t scanner;
 	mC_parser_lex_init(&scanner);
-	mC_parser_set_in(in, scanner);
+	mC_parser_set_in(input, scanner);
 
 	struct mC_ast_expression *result = NULL;
 	if (yyparse(scanner, &result) != 0) {

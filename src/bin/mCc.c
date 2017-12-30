@@ -8,7 +8,7 @@ int main(void)
 {
 	FILE *in = stdin;
 
-	struct mC_ast_expression *expr = mC_parser_run(in);
+	struct mC_ast_expression *expr = mC_parser_parse_file(in);
 	if (!expr) {
 		return EXIT_FAILURE;
 	}

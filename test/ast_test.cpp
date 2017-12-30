@@ -6,16 +6,7 @@
 TEST(AST, NestedExpression_1)
 {
 	const char input[] = "42 * (-192 + 3.14)";
-
-	struct mC_ast_expression *expr;
-	{
-		FILE *in = fmemopen((void *)input, sizeof(input) - 1, "r");
-		ASSERT_TRUE(in);
-
-		expr = mC_parser_run(in);
-
-		fclose(in);
-	}
+	auto expr = mC_parser_parse_string(input, sizeof(input));
 
 	// root
 	ASSERT_EQ(MC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
