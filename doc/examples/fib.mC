@@ -14,9 +14,12 @@ void main()
 	int n;
 	n = read_int();
 
+	int result;
+	result = fib(n);
+
 	print("fib(");
 	print_int(n);
 	print(") = ");
-	print_int(fib(n));
-	print("\n");
+	print_int(result);
+	print_nl();
 }

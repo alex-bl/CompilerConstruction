@@ -127,7 +127,6 @@ Yet we skip boolean binary operators like `&&` and `||`.
 
 Strings are immutable and do not support any operation (eg concatenation).
 Yet, like comments, strings can span across multiple lines.
-`\\` and `\n` are supported escape sequences.
 
 Their sole purpose is to be used with a `print` function for which an implementation will be provided by the compiler.
 
@@ -163,6 +162,7 @@ Hence, instead of writing `int foo(void)` we write `int foo()`, where `foo` is t
 The following built-in functions will be provided by the compiler for I/O operations:
 
 - `print`       outputs a given string to `stdout`
+- `print_nl`    outputs the new-line character (`\n`) to `stdout`
 - `print_int`   outputs a given integer to `stdout`
 - `print_float` outputs a given float to `stdout`
 - `read_int`    reads an integer from `stdin`
