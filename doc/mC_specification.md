@@ -126,8 +126,8 @@ Yet we skip boolean binary operators like `&&` and `||`.
 ### Strings
 
 Strings are immutable and do not support any operation (eg concatenation).
-Neither can they contain escape sequences.
-Yet, like comments, they can span across multiple lines.
+Yet, like comments, strings can span across multiple lines.
+`\\` and `\n` are supported escape sequences.
 
 Their sole purpose is to be used with a `print` function for which an implementation will be provided by the compiler.
 
