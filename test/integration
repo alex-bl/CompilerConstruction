@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -eu
+
+readonly DIR=$(dirname "$(readlink -f "$0")")
+readonly EXAMPLE_DIR="$DIR/../doc/examples"
+
+if [[ -t 1 ]]; then
+	readonly NC='\e[0m'
+	readonly Red='\e[1;31m'
+	readonly Green='\e[1;32m'
+else
+	readonly NC=''
+	readonly Red=''
+	readonly Green=''
+fi
+
+readonly pattern=${1:-*}
+
+flawless=true
+
+echo " Inputs                                        Time        Memory     Status"
+echo "----------------------------------------- ------------ ------------- --------"
+
+(cd "$EXAMPLE_DIR"; find -type f -name "${pattern}.mC" -print0) |
+sort -z |
+(while read -r -d $'\0' ex; do
+	stats=$(\time -f "%e %M %x" ./mCc "$EXAMPLE_DIR/$ex" 2>&1 | tail -n1)
+
+	printf "%-40s   %8s s   %8s kB   " "$ex" $(echo $stats | cut -d ' ' -f-2)
+
+	if [[ "$(echo $stats | cut -d ' ' -f3)" == "0" ]]; then
+		echo -e "${Green}[ Ok ]${NC}"
+	else
+		flawless=false
+		echo -e "${Red}[Fail]${NC}"
+	fi
+done; $flawless)
