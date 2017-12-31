@@ -9,6 +9,9 @@
 #
 # The compiler is assumed to be located in the current working directory under
 # the name `mCc`. Therefore this script should be executed from `builddir`.
+#
+# TODO: Add a flag so that the compiler output can be viewed in case of a
+# failure. Similar to `ctest`'s `--output-on-failure`.
 
 set -eu
 
