@@ -105,3 +105,5 @@ Prefer this method to adding additional flags to the main compiler executable `m
 
 Since this is only here to get you started, only a small portion of the grammar has been implemented.
 Yet this should make it much easier to work with `flex` / `bison` as starting from scratch.
+
+Notice me, if you find any mistakes which should be patched.
