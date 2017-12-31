@@ -1,10 +1,21 @@
 #!/bin/bash
 
+# This script will feed all example inputs matching a given pattern to the
+# compiler. For each invocation, time, memory consumption, and exit status are
+# recorded.
+#
+# The pattern can be provided as first argument to this script and defaults to
+# `*`. The pattern is extended by appending `.mC` before passing it to `find`.
+#
+# The compiler is assumed to be located in the current working directory under
+# the name `mCc`. Therefore this script should be executed from `builddir`.
+
 set -eu
 
 readonly DIR=$(dirname "$(readlink -f "$0")")
 readonly EXAMPLE_DIR="$DIR/../doc/examples"
 
+# colour support
 if [[ -t 1 ]]; then
 	readonly NC='\e[0m'
 	readonly Red='\e[1;31m'
@@ -19,16 +30,18 @@ readonly pattern=${1:-*}
 
 flawless=true
 
-echo " Inputs                                        Time        Memory     Status"
+echo " Input                                         Time        Memory     Status"
 echo "----------------------------------------- ------------ ------------- --------"
 
 (cd "$EXAMPLE_DIR"; find -type f -name "${pattern}.mC" -print0) |
 sort -z |
 (while read -r -d $'\0' ex; do
+	# Run compiler with example input and obtain statistics.
 	stats=$(\time -f "%e %M %x" ./mCc "$EXAMPLE_DIR/$ex" 2>&1 | tail -n1)
 
 	printf "%-40s   %8s s   %8s kB   " "$ex" $(echo $stats | cut -d ' ' -f-2)
 
+	# fancy status label
 	if [[ "$(echo $stats | cut -d ' ' -f3)" == "0" ]]; then
 		echo -e "${Green}[ Ok ]${NC}"
 	else
