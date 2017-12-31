@@ -1,7 +1,6 @@
 # Compiler Construction
 
-This repository holds a *getting started* code-base for the compiler
-construction course.
+This repository holds a *getting started* code-base for the [compiler construction course](https://github.com/W4RH4WK/UIBK-703602-Compiler-Construction).
 
 ## Input Language
 
