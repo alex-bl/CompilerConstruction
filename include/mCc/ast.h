@@ -13,13 +13,16 @@ struct mC_ast_node;
 struct mC_ast_expression;
 struct mC_ast_literal;
 
+struct mC_ast_source_location {
+	int start_line;
+	int start_col;
+	int end_line;
+	int end_col;
+};
+
 /* Data contained by every ast node. */
 struct mC_ast_node {
-	/* TODO source location */
-
-	/* An empty struct messes up C and C++ interoperability. Remove this
-	 * pitiful, unsed integer when you add another field. */
-	int unused;
+	struct mC_ast_source_location sloc;
 };
 
 /* Operators */
