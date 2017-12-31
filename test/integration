@@ -10,6 +10,9 @@
 # The compiler is assumed to be located in the current working directory under
 # the name `mCc`. Therefore this script should be executed from `builddir`.
 #
+# The output format corresponds to a Markdown table and can be interpreted
+# using `pandoc` (https://pandoc.org/MANUAL.html#tables).
+#
 # TODO: Add a flag so that the compiler output can be viewed in case of a
 # failure. Similar to `ctest`'s `--output-on-failure`.
 
@@ -33,7 +36,7 @@ readonly pattern=${1:-*}
 
 flawless=true
 
-echo " Input                                         Time        Memory     Status"
+echo "Input                                             Time        Memory  Status"
 echo "----------------------------------------- ------------ ------------- --------"
 
 (cd "$EXAMPLE_DIR"; find -type f -name "${pattern}.mC" -print0) |
