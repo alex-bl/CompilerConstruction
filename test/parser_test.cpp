@@ -6,7 +6,7 @@
 TEST(Parser, NestedExpression_1)
 {
 	const char input[] = "42 * (-192 + 3.14)";
-	auto result = mC_parser_parse_string(input, sizeof(input));
+	auto result = mC_parser_parse_string(input);
 
 	ASSERT_EQ(MC_PARSER_STATUS_OK, result.status);
 

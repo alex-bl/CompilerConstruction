@@ -12,7 +12,7 @@
 }
 
 %{
-#include <assert.h>
+#include <string.h>
 
 int mC_parser_lex();
 void mC_parser_error();
@@ -72,13 +72,11 @@ literal : INT_LITERAL   { $$ = mC_ast_new_literal_int($1);   }
 
 void yyerror(yyscan_t *scanner, const char *msg) {}
 
-struct mC_parser_result mC_parser_parse_string(const char *input, size_t len)
+struct mC_parser_result mC_parser_parse_string(const char *input)
 {
-	assert(len > 0);
-
 	struct mC_parser_result result = {0};
 
-	FILE *in = fmemopen((void *)input, len - 1, "r");
+	FILE *in = fmemopen((void *)input, strlen(input), "r");
 	if (!in) {
 		result.status = MC_PARSER_STATUS_UNABLE_TO_OPEN_STREAM;
 		return result;
