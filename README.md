@@ -4,7 +4,7 @@ This repository holds a *getting started* code-base for the [compiler constructi
 
 ## Input Language
 
-- see [mC Specification](doc/mC_specification.md)
+- see [mC Specification](https://github.com/W4RH4WK/UIBK-703602-Compiler-Construction/blob/master/mC_specification.md)
 - see [examples](doc/examples)
 
 ## Prerequisites
