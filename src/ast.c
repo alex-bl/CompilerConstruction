@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
+/* ------------------------------------------------------------- Expressions */
+
 struct mC_ast_expression *
 mC_ast_new_expression_literal(struct mC_ast_literal *literal)
 {
@@ -75,6 +77,8 @@ void mC_ast_delete_expression(struct mC_ast_expression *expression)
 
 	free(expression);
 }
+
+/* ---------------------------------------------------------------- Literals */
 
 struct mC_ast_literal *mC_ast_new_literal_int(long value)
 {

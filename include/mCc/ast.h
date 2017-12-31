@@ -1,17 +1,15 @@
 #ifndef MCC_AST_H
 #define MCC_AST_H
 
-#include <stdio.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Forward Declarations */
-
-struct mC_ast_node;
 struct mC_ast_expression;
 struct mC_ast_literal;
+
+/* ---------------------------------------------------------------- AST NODE */
 
 struct mC_ast_source_location {
 	int start_line;
@@ -25,7 +23,7 @@ struct mC_ast_node {
 	struct mC_ast_source_location sloc;
 };
 
-/* Operators */
+/* --------------------------------------------------------------- Operators */
 
 enum mC_ast_binary_op {
 	MC_AST_BINARY_OP_ADD,
@@ -34,7 +32,7 @@ enum mC_ast_binary_op {
 	MC_AST_BINARY_OP_DIV,
 };
 
-/* Expressions */
+/* ------------------------------------------------------------- Expressions */
 
 enum mC_ast_expression_type {
 	MC_AST_EXPRESSION_TYPE_LITERAL,
@@ -74,7 +72,7 @@ mC_ast_new_expression_binary_op(enum mC_ast_binary_op op,
 
 void mC_ast_delete_expression(struct mC_ast_expression *expression);
 
-/* Literals */
+/* ---------------------------------------------------------------- Literals */
 
 enum mC_ast_literal_type {
 	MC_AST_LITERAL_TYPE_INT,
