@@ -23,8 +23,8 @@ This repository holds a *getting started* code-base for the [compiler constructi
 [Google Test](https://github.com/google/googletest) is used for unit testing.
 Meson downloads and builds it automatically if it is not found system.
 
-    $ git clone <URL>
-    $ cd <DIR>
+    $ git clone https://github.com/W4RH4WK/mCc.git
+    $ cd mCc
     $ meson builddir
     $ cd builddir
     $ ninja
