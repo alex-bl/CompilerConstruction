@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
+	/* determine input source */
 	FILE *in;
 	if (strcmp("-", argv[1]) == 0) {
 		in = stdin;
@@ -29,17 +30,28 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	struct mC_ast_expression *expr = mC_parser_parse_file(in);
-	if (!expr) {
+	struct mC_ast_expression *expr = NULL;
+
+	/* parsing phase */
+	{
+		struct mC_parser_result result = mC_parser_parse_file(in);
 		fclose(in);
-		return EXIT_FAILURE;
+		if (result.status != MC_PARSER_STATUS_OK) {
+			return EXIT_FAILURE;
+		}
+		expr = result.expression;
 	}
 
-	/* TODO */
+	/*    TODO
+	 * - run semantic checks
+	 * - create three-address code
+	 * - do some optimisations
+	 * - output assembly code
+	 * - invoke backend compiler
+	 */
 
+	/* cleanup */
 	mC_ast_delete_expression(expr);
-
-	fclose(in);
 
 	return EXIT_SUCCESS;
 }

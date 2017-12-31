@@ -6,7 +6,11 @@
 TEST(AST, NestedExpression_1)
 {
 	const char input[] = "42 * (-192 + 3.14)";
-	auto expr = mC_parser_parse_string(input, sizeof(input));
+	auto result = mC_parser_parse_string(input, sizeof(input));
+
+	ASSERT_EQ(MC_PARSER_STATUS_OK, result.status);
+
+	auto expr = result.expression;
 
 	// root
 	ASSERT_EQ(MC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);

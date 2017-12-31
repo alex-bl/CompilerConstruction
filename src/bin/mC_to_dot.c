@@ -7,9 +7,15 @@
 
 int main(void)
 {
-	struct mC_ast_expression *expr = mC_parser_parse_file(stdin);
-	if (!expr) {
-		return EXIT_FAILURE;
+	struct mC_ast_expression *expr = NULL;
+
+	/* parsing phase */
+	{
+		struct mC_parser_result result = mC_parser_parse_file(stdin);
+		if (result.status != MC_PARSER_STATUS_OK) {
+			return EXIT_FAILURE;
+		}
+		expr = result.expression;
 	}
 
 	FILE *out = stdout;
