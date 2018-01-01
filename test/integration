@@ -51,7 +51,6 @@ print_run_md()
 	if [[ "$4" == "0" ]]; then
 		echo -e "${Green}[ Ok ]${NC}"
 	else
-		flawless=false
 		echo -e "${Red}[Fail]${NC}"
 	fi
 }
@@ -131,12 +130,15 @@ parse_args "$@"
 
 print_header
 
-(cd "$EXAMPLE_DIR"; find -type f -name "${pattern}.mC" -print0) |
-sort -z |
+(cd "$EXAMPLE_DIR"; find -type f -name "${pattern}.mC" -print0) | sort -z |
 (while read -r -d $'\0' ex; do
 
 	# Run compiler with example input and obtain statistics.
 	stats=$(\time -f "%e %M %x" ./mCc "$EXAMPLE_DIR/$ex" 2>&1 | tail -n1)
+
+	if [[ $(echo $stats | cut -d ' ' -f3) -ne 0 ]]; then
+		flawless=false
+	fi
 
 	print_run "$ex" $stats
 
