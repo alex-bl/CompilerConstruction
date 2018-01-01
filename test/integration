@@ -15,10 +15,10 @@
 #
 # TODO: Add a flag so that the compiler output can be viewed in case of a
 # failure. Similar to `ctest`'s `--output-on-failure`.
-#
-# TODO: Add a flag to change the output format to CSV.
 
 set -eu
+
+# ------------------------------------------------------------ GLOBAL VARIABLES
 
 readonly DIR=$(dirname "$(readlink -f "$0")")
 readonly EXAMPLE_DIR="$DIR/../doc/examples"
@@ -34,26 +34,115 @@ else
 	readonly Green=''
 fi
 
-readonly pattern=${1:-*}
-
 flawless=true
+option_csv=false
 
-echo "Input                                             Time        Memory  Status"
-echo "----------------------------------------- ------------ ------------- --------"
+# ------------------------------------------------------------------- FUNCTIONS
 
-(cd "$EXAMPLE_DIR"; find -type f -name "${pattern}.mC" -print0) |
-sort -z |
-(while read -r -d $'\0' ex; do
-	# Run compiler with example input and obtain statistics.
-	stats=$(\time -f "%e %M %x" ./mCc "$EXAMPLE_DIR/$ex" 2>&1 | tail -n1)
+print_header_md()
+{
+	echo "Input                                             Time        Memory  Status"
+	echo "----------------------------------------- ------------ ------------- --------"
+}
 
-	printf "%-40s   %8s s   %8s kB   " "$ex" $(echo $stats | cut -d ' ' -f-2)
+print_header_csv()
+{
+	echo "Input,Time [s],Memory [kB],Status"
+}
+
+print_run_md()
+{
+	echo "$@" | awk '{ printf "%-40s   %8s s   %8s kB   ", $1, $2, $3; }'
 
 	# fancy status label
-	if [[ "$(echo $stats | cut -d ' ' -f3)" == "0" ]]; then
+	if [[ "$4" == "0" ]]; then
 		echo -e "${Green}[ Ok ]${NC}"
 	else
 		flawless=false
 		echo -e "${Red}[Fail]${NC}"
 	fi
+}
+
+print_run_csv()
+{
+	echo "$@" | tr ' ' ','
+}
+
+print_run()
+{
+	if $option_csv; then
+		print_run_csv "$@"
+	else
+		print_run_md "$@"
+	fi
+}
+
+print_header()
+{
+	if $option_csv; then
+		print_header_csv
+	else
+		print_header_md
+	fi
+}
+
+print_usage()
+{
+	echo "usage: $0 [OPTIONS] [PATTERN]"
+	echo
+	echo "Runs example mC inputs matching the given pattern using ./mCc."
+	echo
+	echo "OPTIONS:"
+	echo "  -h, --help       displays this help message"
+	echo "  -c, --csv        output as CSV"
+	echo
+}
+
+parse_args()
+{
+	ARGS=$(getopt -o hc -l help,csv -- "$@")
+	eval set -- "$ARGS"
+
+	while true; do
+		case "$1" in
+			-h|--help)
+				print_usage
+				exit
+				;;
+
+			-c|--csv)
+				option_csv=true
+				shift
+				;;
+
+			--)
+				shift
+				break
+				;;
+
+			*)
+				exit 1
+				;;
+		esac
+	done
+
+	readonly pattern=${1:-*}
+}
+
+
+# ------------------------------------------------------------------------ MAIN
+
+parse_args "$@"
+
+print_header
+
+(cd "$EXAMPLE_DIR"; find -type f -name "${pattern}.mC" -print0) |
+sort -z |
+(while read -r -d $'\0' ex; do
+
+	# Run compiler with example input and obtain statistics.
+	stats=$(\time -f "%e %M %x" ./mCc "$EXAMPLE_DIR/$ex" 2>&1 | tail -n1)
+
+	print_run "$ex" $stats
+
 done; $flawless)
