@@ -14,7 +14,7 @@ const char *mC_ast_print_binary_op(enum mC_ast_binary_op op)
 	return "unknown binary op";
 }
 
-/* -------------------------------------------------------- GRAPHVIZ PRINTER */
+/* ------------------------------------------------------------- DOT Printer */
 
 void mC_ast_print_dot_begin(FILE *out)
 {

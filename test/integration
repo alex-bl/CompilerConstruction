@@ -1,17 +1,10 @@
 #!/bin/bash
 
-# This script will feed all example inputs matching a given pattern to the
-# compiler. For each invocation, time, memory consumption, and exit status are
-# recorded.
-#
-# The pattern can be provided as first argument to this script and defaults to
-# `*`. The pattern is extended by appending `.mC` before passing it to `find`.
-#
 # The compiler is assumed to be located in the current working directory under
 # the name `mCc`. Therefore this script should be executed from `builddir`.
 #
-# The output format corresponds to a Markdown table and can be interpreted
-# using `pandoc` (https://pandoc.org/MANUAL.html#tables).
+# The default output format corresponds to a Markdown table and can be
+# interpreted using `pandoc` (https://pandoc.org/MANUAL.html#tables).
 #
 # TODO: Add a flag so that the compiler output can be viewed in case of a
 # failure. Similar to `ctest`'s `--output-on-failure`.
@@ -91,6 +84,8 @@ print_usage()
 	echo "usage: $0 [OPTIONS] [PATTERN]"
 	echo
 	echo "Runs example mC inputs matching the given pattern using ./mCc."
+	echo "The pattern defaults to `*` and is suffixed with `.mC` before passing"
+	echo "it to `find`."
 	echo
 	echo "OPTIONS:"
 	echo "  -h, --help       displays this help message"

@@ -9,7 +9,7 @@ extern "C" {
 struct mC_ast_expression;
 struct mC_ast_literal;
 
-/* ---------------------------------------------------------------- AST NODE */
+/* ---------------------------------------------------------------- AST Node */
 
 struct mC_ast_source_location {
 	int start_line;
