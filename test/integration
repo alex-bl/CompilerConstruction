@@ -84,8 +84,8 @@ print_usage()
 	echo "usage: $0 [OPTIONS] [PATTERN]"
 	echo
 	echo "Runs example mC inputs matching the given pattern using ./mCc."
-	echo "The pattern defaults to `*` and is suffixed with `.mC` before passing"
-	echo "it to `find`."
+	echo "The pattern defaults to '*' and is suffixed with '.mC' before passing"
+	echo "it to find(1)."
 	echo
 	echo "OPTIONS:"
 	echo "  -h, --help       displays this help message"
