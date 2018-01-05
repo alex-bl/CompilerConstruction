@@ -27,7 +27,13 @@ else
 	readonly Green=''
 fi
 
+# Will be set to false when the compiler's exit code is not 0.
 flawless=true
+
+# Pattern used to collect test inputs.
+pattern="*"
+
+# Options:
 option_csv=false
 
 # ------------------------------------------------------------------- FUNCTIONS
@@ -120,7 +126,9 @@ parse_args()
 		esac
 	done
 
-	readonly pattern=${1:-*}
+	if [[ -n ${1+x} ]]; then
+		pattern="$1"
+	fi
 }
 
 
