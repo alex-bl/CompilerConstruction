@@ -67,6 +67,8 @@ Pay attention when combining C and C++ code.
 Strange errors may occur when handled incorrectly.
 Consider passing additional flags (eg `-Wc++-compat`) to the C compiler for more warnings.
 
+Meson provides a way to wrap tests with arbitrary programs (eg Valgrind) or GDB.
+
 ### Integration Testing
 
 Valid example inputs are placed inside `doc/examples`.
