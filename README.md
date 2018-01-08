@@ -72,7 +72,7 @@ Meson provides a way to wrap tests with arbitrary programs (eg Valgrind) or GDB.
 ### Integration Testing
 
 Valid example inputs are placed inside `doc/examples`.
-They can be compiled with `mCc` using the provided shell script `test/integration`.
+They can be compiled with `mCc` using the provided Bash script `test/integration`.
 Invoke it from the build directory as shown above.
 
 ### Lexer and Parser
@@ -80,7 +80,7 @@ Invoke it from the build directory as shown above.
 `flex` and `bison` are used to generate the lexer and parser, respectively.
 Their input files are `scanner.l` and `parser.y` and have their own special syntax.
 The resulting files are `scanner.c`, `scanner.h`, `parser.tab.c`, and `parser.tab.h`, which are all considered implementation details.
-The main interface to the parser is defined by `parser.h` and should be free of implementation details.
+The main interface of the parser is defined by `parser.h` and should be free of implementation details.
 
 ### Abstract Syntax Tree (AST)
 
