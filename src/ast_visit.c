@@ -2,21 +2,21 @@
 
 #include <assert.h>
 
-#define visit(_f, _x, _y) \
-	if (_f) { \
-		(_f)(_x, _y); \
+#define visit(f_, ...) \
+	if (f_) { \
+		(f_)(__VA_ARGS__); \
 	}
 
-#define visit_if(_c, _f, _x, _y) \
-	if (_c) { \
-		visit(_f, _x, _y); \
+#define visit_if(cond_, f_, ...) \
+	if (cond_) { \
+		visit((f_), ##__VA_ARGS__); \
 	}
 
-#define visit_if_pre(_order, _f, _x, _y) \
-	visit_if((_order) == MC_AST_VISIT_PRE_ORDER, _f, _x, _y)
+#define visit_if_pre(order_, f_, ...) \
+	visit_if((order_) == MC_AST_VISIT_PRE_ORDER, (f_), ##__VA_ARGS__)
 
-#define visit_if_post(_order, _f, _x, _y) \
-	visit_if((_order) == MC_AST_VISIT_POST_ORDER, _f, _x, _y)
+#define visit_if_post(order_, f_, ...) \
+	visit_if((order_) == MC_AST_VISIT_POST_ORDER, (f_), ##__VA_ARGS__)
 
 void mC_ast_visit_expression_df(enum mC_ast_visit_order order,
                                 struct mC_ast_expression *expression,
