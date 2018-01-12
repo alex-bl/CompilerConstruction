@@ -26,7 +26,6 @@ mC_ast_new_expression_parenth(struct mC_ast_expression *expression)
 	assert(expression);
 
 	struct mC_ast_expression *expr = malloc(sizeof(struct mC_ast_expression));
-
 	if (!expr) {
 		return NULL;
 	}

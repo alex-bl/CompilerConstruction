@@ -42,6 +42,7 @@ enum mC_ast_expression_type {
 
 struct mC_ast_expression {
 	struct mC_ast_node node;
+
 	enum mC_ast_expression_type type;
 	union {
 		/* MC_AST_EXPRESSION_TYPE_LITERAL */
@@ -81,6 +82,7 @@ enum mC_ast_literal_type {
 
 struct mC_ast_literal {
 	struct mC_ast_node node;
+
 	enum mC_ast_literal_type type;
 	union {
 		/* MC_AST_LITERAL_TYPE_INT */
