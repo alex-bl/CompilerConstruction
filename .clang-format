@@ -7,6 +7,6 @@ BreakBeforeBraces: Linux
 AlignEscapedNewlines: DontAlign
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: false
-IndentCaseLabels: true
+IndentCaseLabels: false
 AllowShortCaseLabelsOnASingleLine: true
 ...

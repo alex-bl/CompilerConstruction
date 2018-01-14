@@ -5,10 +5,10 @@
 const char *mC_ast_print_binary_op(enum mC_ast_binary_op op)
 {
 	switch (op) {
-		case MC_AST_BINARY_OP_ADD: return "+";
-		case MC_AST_BINARY_OP_SUB: return "-";
-		case MC_AST_BINARY_OP_MUL: return "*";
-		case MC_AST_BINARY_OP_DIV: return "/";
+	case MC_AST_BINARY_OP_ADD: return "+";
+	case MC_AST_BINARY_OP_SUB: return "-";
+	case MC_AST_BINARY_OP_MUL: return "*";
+	case MC_AST_BINARY_OP_DIV: return "/";
 	}
 
 	return "unknown binary op";

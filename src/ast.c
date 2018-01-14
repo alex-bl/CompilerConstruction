@@ -60,18 +60,18 @@ void mC_ast_delete_expression(struct mC_ast_expression *expression)
 	assert(expression);
 
 	switch (expression->type) {
-		case MC_AST_EXPRESSION_TYPE_LITERAL:
-			mC_ast_delete_literal(expression->literal);
-			break;
+	case MC_AST_EXPRESSION_TYPE_LITERAL:
+		mC_ast_delete_literal(expression->literal);
+		break;
 
-		case MC_AST_EXPRESSION_TYPE_BINARY_OP:
-			mC_ast_delete_expression(expression->lhs);
-			mC_ast_delete_expression(expression->rhs);
-			break;
+	case MC_AST_EXPRESSION_TYPE_BINARY_OP:
+		mC_ast_delete_expression(expression->lhs);
+		mC_ast_delete_expression(expression->rhs);
+		break;
 
-		case MC_AST_EXPRESSION_TYPE_PARENTH:
-			mC_ast_delete_expression(expression->expression);
-			break;
+	case MC_AST_EXPRESSION_TYPE_PARENTH:
+		mC_ast_delete_expression(expression->expression);
+		break;
 	}
 
 	free(expression);
