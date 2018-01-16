@@ -1,15 +1,20 @@
 #include "mCc/ast_print.h"
 
+#include <assert.h>
+
 #include "mCc/ast_visit.h"
 
 void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op)
 {
+	assert(out);
+
 	switch (op) {
 	case MC_AST_BINARY_OP_ADD: fprintf(out, "+"); return;
 	case MC_AST_BINARY_OP_SUB: fprintf(out, "-"); return;
 	case MC_AST_BINARY_OP_MUL: fprintf(out, "*"); return;
 	case MC_AST_BINARY_OP_DIV: fprintf(out, "/"); return;
 	}
+
 	fprintf(out, "unknown binary op");
 }
 
@@ -17,28 +22,42 @@ void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op)
 
 void mC_ast_print_dot_begin(FILE *out)
 {
+	assert(out);
+
 	fprintf(out, "digraph \"AST\" {\n");
 	fprintf(out, "\tnodesep=0.6\n");
 }
 
 void mC_ast_print_dot_end(FILE *out)
 {
+	assert(out);
+
 	fprintf(out, "}\n");
 }
 
 static void print_dot_node_begin(FILE *out, const void *node)
 {
+	assert(out);
+	assert(node);
+
 	fprintf(out, "\t\"%p\" [shape=box, label=\"", node);
 }
 
 static void print_dot_node_end(FILE *out)
 {
+	assert(out);
+
 	fprintf(out, "\"];\n");
 }
 
 static void print_dot_edge(FILE *out, const void *src_node,
                            const void *dst_node, const char *label)
 {
+	assert(out);
+	assert(src_node);
+	assert(dst_node);
+	assert(label);
+
 	fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%s\"]\n", src_node, dst_node,
 	        label);
 }
@@ -46,6 +65,9 @@ static void print_dot_edge(FILE *out, const void *src_node,
 static void print_dot_expression_literal(struct mC_ast_expression *expression,
                                          void *data)
 {
+	assert(expression);
+	assert(data);
+
 	FILE *out = data;
 	print_dot_node_begin(out, expression);
 	fprintf(out, "expr: lit");
@@ -57,6 +79,9 @@ static void print_dot_expression_literal(struct mC_ast_expression *expression,
 static void print_dot_expression_binary_op(struct mC_ast_expression *expression,
                                            void *data)
 {
+	assert(expression);
+	assert(data);
+
 	FILE *out = data;
 	print_dot_node_begin(out, expression);
 	fprintf(out, "expr: ");
@@ -70,6 +95,9 @@ static void print_dot_expression_binary_op(struct mC_ast_expression *expression,
 static void print_dot_expression_parenth(struct mC_ast_expression *expression,
                                          void *data)
 {
+	assert(expression);
+	assert(data);
+
 	FILE *out = data;
 	print_dot_node_begin(out, expression);
 	fprintf(out, "( )");
@@ -80,6 +108,9 @@ static void print_dot_expression_parenth(struct mC_ast_expression *expression,
 
 static void print_dot_literal_int(struct mC_ast_literal *literal, void *data)
 {
+	assert(literal);
+	assert(data);
+
 	FILE *out = data;
 	print_dot_node_begin(out, literal);
 	fprintf(out, "%ld", literal->i_value);
@@ -88,6 +119,9 @@ static void print_dot_literal_int(struct mC_ast_literal *literal, void *data)
 
 static void print_dot_literal_float(struct mC_ast_literal *literal, void *data)
 {
+	assert(literal);
+	assert(data);
+
 	FILE *out = data;
 	print_dot_node_begin(out, literal);
 	fprintf(out, "%f", literal->f_value);
@@ -97,6 +131,9 @@ static void print_dot_literal_float(struct mC_ast_literal *literal, void *data)
 void mC_ast_print_dot_expression(FILE *out,
                                  struct mC_ast_expression *expression)
 {
+	assert(out);
+	assert(expression);
+
 	struct mC_ast_visitor visitor = {
 	    .data = out,
 
