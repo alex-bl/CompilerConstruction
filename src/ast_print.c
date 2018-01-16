@@ -2,16 +2,15 @@
 
 #include "mCc/ast_visit.h"
 
-const char *mC_ast_print_binary_op(enum mC_ast_binary_op op)
+void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op)
 {
 	switch (op) {
-	case MC_AST_BINARY_OP_ADD: return "+";
-	case MC_AST_BINARY_OP_SUB: return "-";
-	case MC_AST_BINARY_OP_MUL: return "*";
-	case MC_AST_BINARY_OP_DIV: return "/";
+	case MC_AST_BINARY_OP_ADD: fprintf(out, "+"); return;
+	case MC_AST_BINARY_OP_SUB: fprintf(out, "-"); return;
+	case MC_AST_BINARY_OP_MUL: fprintf(out, "*"); return;
+	case MC_AST_BINARY_OP_DIV: fprintf(out, "/"); return;
 	}
-
-	return "unknown binary op";
+	fprintf(out, "unknown binary op");
 }
 
 /* ------------------------------------------------------------- DOT Printer */
@@ -60,7 +59,8 @@ static void print_dot_expression_binary_op(struct mC_ast_expression *expression,
 {
 	FILE *out = data;
 	print_dot_node_begin(out, expression);
-	fprintf(out, "expr: %s", mC_ast_print_binary_op(expression->op));
+	fprintf(out, "expr: ");
+	mC_ast_print_binary_op(out, expression->op);
 	print_dot_node_end(out);
 
 	print_dot_edge(out, expression, expression->lhs, "lhs");

@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-const char *mC_ast_print_binary_op(enum mC_ast_binary_op op);
+void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op);
 
 /* ------------------------------------------------------------- DOT Printer */
 
