@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# The compiler is assumed to be located in the current working directory under
-# the name `mCc`. Therefore this script should be executed from `builddir`.
+# See usage information for a description.
 #
 # The default output format corresponds to a Markdown table and can be
 # interpreted using `pandoc` (https://pandoc.org/MANUAL.html#tables).
@@ -14,7 +13,12 @@ set -eu
 # ------------------------------------------------------------ GLOBAL VARIABLES
 
 readonly DIR=$(dirname "$(readlink -f "$0")")
-readonly EXAMPLE_DIR="$DIR/../doc/examples"
+
+# Location containing examples.
+readonly EXAMPLES_DIR="${EXAMPLES_DIR:-$DIR/../doc/examples}"
+
+# mC compiler binary.
+readonly MCC="${MCC:-./mCc}"
 
 # colour support
 if [[ -t 1 ]]; then
@@ -26,9 +30,6 @@ else
 	readonly Red=''
 	readonly Green=''
 fi
-
-# Will be set to false when the compiler's exit code is not 0.
-flawless=true
 
 # Pattern used to collect test inputs.
 pattern="*"
@@ -88,9 +89,13 @@ print_usage()
 {
 	echo "usage: $0 [OPTIONS] [PATTERN]"
 	echo
-	echo "Runs example mC inputs matching the given pattern using ./mCc."
-	echo "The pattern defaults to '*' and is suffixed with '.mC' before passing"
-	echo "it to find(1)."
+	echo "Runs example mC inputs matching the given PATTERN using the mC"
+	echo "compiler. The pattern defaults to '*' and is suffixed with .mC"
+	echo "before it is passed to find(1)."
+	echo
+	echo "The compiler can be set with the environment variable MCC,"
+	echo "which defaults to ./mCc. To override the examples directory, set"
+	echo "EXAMPLES_DIR."
 	echo
 	echo "OPTIONS:"
 	echo "  -h, --help       displays this help message"
@@ -138,16 +143,20 @@ parse_args "$@"
 
 print_header
 
-(cd "$EXAMPLE_DIR"; find -type f -name "${pattern}.mC" -print0) | sort -z |
-(while read -r -d $'\0' ex; do
+(cd "$EXAMPLES_DIR"; find -type f -name "${pattern}.mC" -print0) | sort -z |
+(
+	flawless=true
+	while read -r -d $'\0' example; do
 
-	# Run compiler with example input and obtain statistics.
-	stats=$(\time -f "%e %M %x" ./mCc "$EXAMPLE_DIR/$ex" 2>&1 | tail -n1)
+		# Run compiler with example input and obtain statistics.
+		stats=$(\time -f "%e %M %x" "$MCC" "$EXAMPLES_DIR/$example" 2>&1 | tail -n1)
 
-	if [[ $(echo $stats | cut -d ' ' -f3) -ne 0 ]]; then
-		flawless=false
-	fi
+		if [[ $(echo $stats | cut -d ' ' -f3) -ne 0 ]]; then
+			flawless=false
+		fi
 
-	print_run "$ex" $stats
+		print_run "$example" $stats
 
-done; $flawless)
+	done
+	$flawless
+)
