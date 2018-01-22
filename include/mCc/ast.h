@@ -6,12 +6,12 @@ extern "C" {
 #endif
 
 /* Forward Declarations */
-struct mC_ast_expression;
-struct mC_ast_literal;
+struct mCc_ast_expression;
+struct mCc_ast_literal;
 
 /* ---------------------------------------------------------------- AST Node */
 
-struct mC_ast_source_location {
+struct mCc_ast_source_location {
 	int start_line;
 	int start_col;
 	int end_line;
@@ -19,85 +19,85 @@ struct mC_ast_source_location {
 };
 
 /* Data contained by every ast node. */
-struct mC_ast_node {
-	struct mC_ast_source_location sloc;
+struct mCc_ast_node {
+	struct mCc_ast_source_location sloc;
 };
 
 /* --------------------------------------------------------------- Operators */
 
-enum mC_ast_binary_op {
-	MC_AST_BINARY_OP_ADD,
-	MC_AST_BINARY_OP_SUB,
-	MC_AST_BINARY_OP_MUL,
-	MC_AST_BINARY_OP_DIV,
+enum mCc_ast_binary_op {
+	MCC_AST_BINARY_OP_ADD,
+	MCC_AST_BINARY_OP_SUB,
+	MCC_AST_BINARY_OP_MUL,
+	MCC_AST_BINARY_OP_DIV,
 };
 
 /* ------------------------------------------------------------- Expressions */
 
-enum mC_ast_expression_type {
-	MC_AST_EXPRESSION_TYPE_LITERAL,
-	MC_AST_EXPRESSION_TYPE_BINARY_OP,
-	MC_AST_EXPRESSION_TYPE_PARENTH,
+enum mCc_ast_expression_type {
+	MCC_AST_EXPRESSION_TYPE_LITERAL,
+	MCC_AST_EXPRESSION_TYPE_BINARY_OP,
+	MCC_AST_EXPRESSION_TYPE_PARENTH,
 };
 
-struct mC_ast_expression {
-	struct mC_ast_node node;
+struct mCc_ast_expression {
+	struct mCc_ast_node node;
 
-	enum mC_ast_expression_type type;
+	enum mCc_ast_expression_type type;
 	union {
-		/* MC_AST_EXPRESSION_TYPE_LITERAL */
-		struct mC_ast_literal *literal;
+		/* mCc_AST_EXPRESSION_TYPE_LITERAL */
+		struct mCc_ast_literal *literal;
 
-		/* MC_AST_EXPRESSION_TYPE_BINARY_OP */
+		/* mCc_AST_EXPRESSION_TYPE_BINARY_OP */
 		struct {
-			enum mC_ast_binary_op op;
-			struct mC_ast_expression *lhs;
-			struct mC_ast_expression *rhs;
+			enum mCc_ast_binary_op op;
+			struct mCc_ast_expression *lhs;
+			struct mCc_ast_expression *rhs;
 		};
 
-		/* MC_AST_EXPRESSION_TYPE_PARENTH */
-		struct mC_ast_expression *expression;
+		/* mCc_AST_EXPRESSION_TYPE_PARENTH */
+		struct mCc_ast_expression *expression;
 	};
 };
 
-struct mC_ast_expression *
-mC_ast_new_expression_literal(struct mC_ast_literal *literal);
+struct mCc_ast_expression *
+mCc_ast_new_expression_literal(struct mCc_ast_literal *literal);
 
-struct mC_ast_expression *
-mC_ast_new_expression_parenth(struct mC_ast_expression *expression);
+struct mCc_ast_expression *
+mCc_ast_new_expression_parenth(struct mCc_ast_expression *expression);
 
-struct mC_ast_expression *
-mC_ast_new_expression_binary_op(enum mC_ast_binary_op op,
-                                struct mC_ast_expression *lhs,
-                                struct mC_ast_expression *rhs);
+struct mCc_ast_expression *
+mCc_ast_new_expression_binary_op(enum mCc_ast_binary_op op,
+                                 struct mCc_ast_expression *lhs,
+                                 struct mCc_ast_expression *rhs);
 
-void mC_ast_delete_expression(struct mC_ast_expression *expression);
+void mCc_ast_delete_expression(struct mCc_ast_expression *expression);
 
 /* ---------------------------------------------------------------- Literals */
 
-enum mC_ast_literal_type {
-	MC_AST_LITERAL_TYPE_INT,
-	MC_AST_LITERAL_TYPE_FLOAT,
+enum mCc_ast_literal_type {
+	MCC_AST_LITERAL_TYPE_INT,
+	MCC_AST_LITERAL_TYPE_FLOAT,
 };
 
-struct mC_ast_literal {
-	struct mC_ast_node node;
+struct mCc_ast_literal {
+	struct mCc_ast_node node;
 
-	enum mC_ast_literal_type type;
+	enum mCc_ast_literal_type type;
 	union {
-		/* MC_AST_LITERAL_TYPE_INT */
+		/* mCc_AST_LITERAL_TYPE_INT */
 		long i_value;
 
-		/* MC_AST_LITERAL_TYPE_FLOAT */
+		/* mCc_AST_LITERAL_TYPE_FLOAT */
 		double f_value;
 	};
 };
 
-struct mC_ast_literal *mC_ast_new_literal_int(long value);
+struct mCc_ast_literal *mCc_ast_new_literal_int(long value);
 
-struct mC_ast_literal *mC_ast_new_literal_float(double value);
+struct mCc_ast_literal *mCc_ast_new_literal_float(double value);
 
-void mC_ast_delete_literal(struct mC_ast_literal *literal);
+void mCc_ast_delete_literal(struct mCc_ast_literal *literal);
 
 #ifdef __cplusplus
 }

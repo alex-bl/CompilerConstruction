@@ -10,20 +10,20 @@
 extern "C" {
 #endif
 
-enum mC_parser_status {
-	MC_PARSER_STATUS_OK,
-	MC_PARSER_STATUS_UNABLE_TO_OPEN_STREAM,
-	MC_PARSER_STATUS_UNKNOWN_ERROR,
+enum mCc_parser_status {
+	MCC_PARSER_STATUS_OK,
+	MCC_PARSER_STATUS_UNABLE_TO_OPEN_STREAM,
+	MCC_PARSER_STATUS_UNKNOWN_ERROR,
 };
 
-struct mC_parser_result {
-	enum mC_parser_status status;
-	struct mC_ast_expression *expression;
+struct mCc_parser_result {
+	enum mCc_parser_status status;
+	struct mCc_ast_expression *expression;
 };
 
-struct mC_parser_result mC_parser_parse_string(const char *input);
+struct mCc_parser_result mCc_parser_parse_string(const char *input);
 
-struct mC_parser_result mC_parser_parse_file(FILE *input);
+struct mCc_parser_result mCc_parser_parse_file(FILE *input);
 
 #ifdef __cplusplus
 }

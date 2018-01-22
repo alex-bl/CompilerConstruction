@@ -1,8 +1,8 @@
-%define api.prefix {mC_parser_}
+%define api.prefix {mCc_parser_}
 
 %define api.pure full
 %lex-param   {void *scanner}
-%parse-param {void *scanner} {struct mC_ast_expression** result}
+%parse-param {void *scanner} {struct mCc_ast_expression** result}
 
 %define parse.trace
 %define parse.error verbose
@@ -14,12 +14,12 @@
 %{
 #include <string.h>
 
-int mC_parser_lex();
-void mC_parser_error();
+int mCc_parser_lex();
+void mCc_parser_error();
 %}
 
 %define api.value.type union
-%define api.token.prefix {MC_PARSER_TOKEN_}
+%define api.token.prefix {MCC_PARSER_TOKEN_}
 
 %token END 0 "EOF"
 
@@ -34,12 +34,12 @@ void mC_parser_error();
 %token ASTER "*"
 %token SLASH "/"
 
-%type <enum mC_ast_binary_op> binary_op
+%type <enum mCc_ast_binary_op> binary_op
 
-%type <struct mC_ast_expression*> single_expr
-%type <struct mC_ast_expression*> expression
+%type <struct mCc_ast_expression*> single_expr
+%type <struct mCc_ast_expression*> expression
 
-%type <struct mC_ast_literal*> literal
+%type <struct mCc_ast_literal*> literal
 
 %start toplevel
 
@@ -48,22 +48,22 @@ void mC_parser_error();
 toplevel : expression { *result = $1; }
          ;
 
-binary_op : PLUS  { $$ = MC_AST_BINARY_OP_ADD; }
-          | MINUS { $$ = MC_AST_BINARY_OP_SUB; }
-          | ASTER { $$ = MC_AST_BINARY_OP_MUL; }
-          | SLASH { $$ = MC_AST_BINARY_OP_DIV; }
+binary_op : PLUS  { $$ = MCC_AST_BINARY_OP_ADD; }
+          | MINUS { $$ = MCC_AST_BINARY_OP_SUB; }
+          | ASTER { $$ = MCC_AST_BINARY_OP_MUL; }
+          | SLASH { $$ = MCC_AST_BINARY_OP_DIV; }
           ;
 
-single_expr : literal                         { $$ = mC_ast_new_expression_literal($1); }
-            | LPARENTH expression RPARENTH    { $$ = mC_ast_new_expression_parenth($2); }
+single_expr : literal                         { $$ = mCc_ast_new_expression_literal($1); }
+            | LPARENTH expression RPARENTH    { $$ = mCc_ast_new_expression_parenth($2); }
             ;
 
 expression : single_expr                      { $$ = $1;                                          }
-           | single_expr binary_op expression { $$ = mC_ast_new_expression_binary_op($2, $1, $3); }
+           | single_expr binary_op expression { $$ = mCc_ast_new_expression_binary_op($2, $1, $3); }
            ;
 
-literal : INT_LITERAL   { $$ = mC_ast_new_literal_int($1);   }
-        | FLOAT_LITERAL { $$ = mC_ast_new_literal_float($1); }
+literal : INT_LITERAL   { $$ = mCc_ast_new_literal_int($1);   }
+        | FLOAT_LITERAL { $$ = mCc_ast_new_literal_float($1); }
         ;
 
 %%
@@ -72,35 +72,35 @@ literal : INT_LITERAL   { $$ = mC_ast_new_literal_int($1);   }
 
 void yyerror(yyscan_t *scanner, const char *msg) {}
 
-struct mC_parser_result mC_parser_parse_string(const char *input)
+struct mCc_parser_result mCc_parser_parse_string(const char *input)
 {
-	struct mC_parser_result result = {0};
+	struct mCc_parser_result result = {0};
 
 	FILE *in = fmemopen((void *)input, strlen(input), "r");
 	if (!in) {
-		result.status = MC_PARSER_STATUS_UNABLE_TO_OPEN_STREAM;
+		result.status = MCC_PARSER_STATUS_UNABLE_TO_OPEN_STREAM;
 		return result;
 	}
 
-	result = mC_parser_parse_file(in);
+	result = mCc_parser_parse_file(in);
 
 	fclose(in);
 
 	return result;
 }
 
-struct mC_parser_result mC_parser_parse_file(FILE *input)
+struct mCc_parser_result mCc_parser_parse_file(FILE *input)
 {
 	yyscan_t scanner;
-	mC_parser_lex_init(&scanner);
-	mC_parser_set_in(input, scanner);
+	mCc_parser_lex_init(&scanner);
+	mCc_parser_set_in(input, scanner);
 
-	struct mC_parser_result result = {0};
+	struct mCc_parser_result result = {0};
 	if (yyparse(scanner, &result.expression) != 0) {
-		result.status = MC_PARSER_STATUS_UNKNOWN_ERROR;
+		result.status = MCC_PARSER_STATUS_UNKNOWN_ERROR;
 	}
 
-	mC_parser_lex_destroy(scanner);
+	mCc_parser_lex_destroy(scanner);
 
 	return result;
 }

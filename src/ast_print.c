@@ -4,15 +4,15 @@
 
 #include "mCc/ast_visit.h"
 
-void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op)
+void mCc_ast_print_binary_op(FILE *out, enum mCc_ast_binary_op op)
 {
 	assert(out);
 
 	switch (op) {
-	case MC_AST_BINARY_OP_ADD: fprintf(out, "+"); return;
-	case MC_AST_BINARY_OP_SUB: fprintf(out, "-"); return;
-	case MC_AST_BINARY_OP_MUL: fprintf(out, "*"); return;
-	case MC_AST_BINARY_OP_DIV: fprintf(out, "/"); return;
+	case MCC_AST_BINARY_OP_ADD: fprintf(out, "+"); return;
+	case MCC_AST_BINARY_OP_SUB: fprintf(out, "-"); return;
+	case MCC_AST_BINARY_OP_MUL: fprintf(out, "*"); return;
+	case MCC_AST_BINARY_OP_DIV: fprintf(out, "/"); return;
 	}
 
 	fprintf(out, "unknown binary op");
@@ -20,7 +20,7 @@ void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op)
 
 /* ------------------------------------------------------------- DOT Printer */
 
-void mC_ast_print_dot_begin(FILE *out)
+void mCc_ast_print_dot_begin(FILE *out)
 {
 	assert(out);
 
@@ -28,7 +28,7 @@ void mC_ast_print_dot_begin(FILE *out)
 	fprintf(out, "\tnodesep=0.6\n");
 }
 
-void mC_ast_print_dot_end(FILE *out)
+void mCc_ast_print_dot_end(FILE *out)
 {
 	assert(out);
 
@@ -62,7 +62,7 @@ static void print_dot_edge(FILE *out, const void *src_node,
 	        label);
 }
 
-static void print_dot_expression_literal(struct mC_ast_expression *expression,
+static void print_dot_expression_literal(struct mCc_ast_expression *expression,
                                          void *data)
 {
 	assert(expression);
@@ -76,8 +76,9 @@ static void print_dot_expression_literal(struct mC_ast_expression *expression,
 	print_dot_edge(out, expression, expression->literal, "literal");
 }
 
-static void print_dot_expression_binary_op(struct mC_ast_expression *expression,
-                                           void *data)
+static void
+print_dot_expression_binary_op(struct mCc_ast_expression *expression,
+                               void *data)
 {
 	assert(expression);
 	assert(data);
@@ -85,14 +86,14 @@ static void print_dot_expression_binary_op(struct mC_ast_expression *expression,
 	FILE *out = data;
 	print_dot_node_begin(out, expression);
 	fprintf(out, "expr: ");
-	mC_ast_print_binary_op(out, expression->op);
+	mCc_ast_print_binary_op(out, expression->op);
 	print_dot_node_end(out);
 
 	print_dot_edge(out, expression, expression->lhs, "lhs");
 	print_dot_edge(out, expression, expression->rhs, "rhs");
 }
 
-static void print_dot_expression_parenth(struct mC_ast_expression *expression,
+static void print_dot_expression_parenth(struct mCc_ast_expression *expression,
                                          void *data)
 {
 	assert(expression);
@@ -106,7 +107,7 @@ static void print_dot_expression_parenth(struct mC_ast_expression *expression,
 	print_dot_edge(out, expression, expression->expression, "expression");
 }
 
-static void print_dot_literal_int(struct mC_ast_literal *literal, void *data)
+static void print_dot_literal_int(struct mCc_ast_literal *literal, void *data)
 {
 	assert(literal);
 	assert(data);
@@ -117,7 +118,7 @@ static void print_dot_literal_int(struct mC_ast_literal *literal, void *data)
 	print_dot_node_end(out);
 }
 
-static void print_dot_literal_float(struct mC_ast_literal *literal, void *data)
+static void print_dot_literal_float(struct mCc_ast_literal *literal, void *data)
 {
 	assert(literal);
 	assert(data);
@@ -128,13 +129,13 @@ static void print_dot_literal_float(struct mC_ast_literal *literal, void *data)
 	print_dot_node_end(out);
 }
 
-void mC_ast_print_dot_expression(FILE *out,
-                                 struct mC_ast_expression *expression)
+void mCc_ast_print_dot_expression(FILE *out,
+                                  struct mCc_ast_expression *expression)
 {
 	assert(out);
 	assert(expression);
 
-	struct mC_ast_visitor visitor = {
+	struct mCc_ast_visitor visitor = {
 	    .data = out,
 
 	    .expression_literal = print_dot_expression_literal,
@@ -145,5 +146,5 @@ void mC_ast_print_dot_expression(FILE *out,
 	    .literal_float = print_dot_literal_float,
 	};
 
-	mC_ast_visit_expression_df(MC_AST_VISIT_PRE_ORDER, expression, &visitor);
+	mCc_ast_visit_expression_df(MCC_AST_VISIT_PRE_ORDER, expression, &visitor);
 }

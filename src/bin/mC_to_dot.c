@@ -7,23 +7,23 @@
 
 int main(void)
 {
-	struct mC_ast_expression *expr = NULL;
+	struct mCc_ast_expression *expr = NULL;
 
 	/* parsing phase */
 	{
-		struct mC_parser_result result = mC_parser_parse_file(stdin);
-		if (result.status != MC_PARSER_STATUS_OK) {
+		struct mCc_parser_result result = mCc_parser_parse_file(stdin);
+		if (result.status != MCC_PARSER_STATUS_OK) {
 			return EXIT_FAILURE;
 		}
 		expr = result.expression;
 	}
 
 	FILE *out = stdout;
-	mC_ast_print_dot_begin(out);
-	mC_ast_print_dot_expression(out, expr);
-	mC_ast_print_dot_end(out);
+	mCc_ast_print_dot_begin(out);
+	mCc_ast_print_dot_expression(out, expr);
+	mCc_ast_print_dot_end(out);
 
-	mC_ast_delete_expression(expr);
+	mCc_ast_delete_expression(expr);
 
 	return EXIT_SUCCESS;
 }

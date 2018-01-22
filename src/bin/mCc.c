@@ -30,13 +30,13 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	struct mC_ast_expression *expr = NULL;
+	struct mCc_ast_expression *expr = NULL;
 
 	/* parsing phase */
 	{
-		struct mC_parser_result result = mC_parser_parse_file(in);
+		struct mCc_parser_result result = mCc_parser_parse_file(in);
 		fclose(in);
-		if (result.status != MC_PARSER_STATUS_OK) {
+		if (result.status != MCC_PARSER_STATUS_OK) {
 			return EXIT_FAILURE;
 		}
 		expr = result.expression;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 	 */
 
 	/* cleanup */
-	mC_ast_delete_expression(expr);
+	mCc_ast_delete_expression(expr);
 
 	return EXIT_SUCCESS;
 }

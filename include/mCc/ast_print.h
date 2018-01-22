@@ -9,16 +9,16 @@
 extern "C" {
 #endif
 
-void mC_ast_print_binary_op(FILE *out, enum mC_ast_binary_op op);
+void mCc_ast_print_binary_op(FILE *out, enum mCc_ast_binary_op op);
 
 /* ------------------------------------------------------------- DOT Printer */
 
-void mC_ast_print_dot_begin(FILE *out);
+void mCc_ast_print_dot_begin(FILE *out);
 
-void mC_ast_print_dot_end(FILE *out);
+void mCc_ast_print_dot_end(FILE *out);
 
-void mC_ast_print_dot_expression(FILE *out,
-                                 struct mC_ast_expression *expression);
+void mCc_ast_print_dot_expression(FILE *out,
+                                  struct mCc_ast_expression *expression);
 
 #ifdef __cplusplus
 }

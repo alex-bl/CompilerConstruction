@@ -40,7 +40,7 @@ The goal is to have the implementation of the mC compiler (`mCc`) available as l
 
 ### Naming
 
-As C does not feature namespaces, the names of all symbols are prefixed with `mC_` followed by another prefix for their corresponding unit (eg `ast_`).
+As C does not feature namespaces, the names of all symbols are prefixed with `mCc_` followed by another prefix for their corresponding unit (eg `ast_`).
 Please adhere to this convention to prevent conflicts with other software.
 
 ### Formatting
