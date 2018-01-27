@@ -2,21 +2,25 @@
 
 #include <assert.h>
 
-#define visit(f_, ...) \
-	if (f_) { \
-		(f_)(__VA_ARGS__); \
-	}
+#define visit(callback, ...) \
+	do { \
+		if (callback) { \
+			(callback)(__VA_ARGS__); \
+		} \
+	} while (0)
 
-#define visit_if(cond_, f_, ...) \
-	if (cond_) { \
-		visit((f_), ##__VA_ARGS__); \
-	}
+#define visit_if(cond, callback, ...) \
+	do { \
+		if (cond) { \
+			visit(callback, ##__VA_ARGS__); \
+		} \
+	} while (0)
 
-#define visit_if_pre(order, callback, ...) \
-	visit_if((order) == MCC_AST_VISIT_PRE_ORDER, callback, ##__VA_ARGS__)
+#define visit_if_pre(order_, callback, ...) \
+	visit_if((order_) == MCC_AST_VISIT_PRE_ORDER, callback, ##__VA_ARGS__)
 
-#define visit_if_post(order, callback, ...) \
-	visit_if((order) == MCC_AST_VISIT_POST_ORDER, callback, ##__VA_ARGS__)
+#define visit_if_post(order_, callback, ...) \
+	visit_if((order_) == MCC_AST_VISIT_POST_ORDER, callback, ##__VA_ARGS__)
 
 void mCc_ast_visit_expression_df(enum mCc_ast_visit_order order,
                                  struct mCc_ast_expression *expression,
