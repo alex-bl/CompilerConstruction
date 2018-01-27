@@ -11,8 +11,8 @@ typedef void (*mCc_ast_expression_visitor)(struct mCc_ast_expression *, void *);
 typedef void (*mCc_ast_literal_visitor)(struct mCc_ast_literal *, void *);
 
 struct mCc_ast_visitor {
-	/* some custom data provided to each callback */
-	void *data;
+	/* some custom data provided by the user, forwarded to each callback */
+	void *userdata;
 
 	mCc_ast_expression_visitor expression;
 	mCc_ast_expression_visitor expression_literal;

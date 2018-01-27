@@ -12,11 +12,11 @@
 		visit((f_), ##__VA_ARGS__); \
 	}
 
-#define visit_if_pre(order_, f_, ...) \
-	visit_if((order_) == MCC_AST_VISIT_PRE_ORDER, (f_), ##__VA_ARGS__)
+#define visit_if_pre(order, callback, ...) \
+	visit_if((order) == MCC_AST_VISIT_PRE_ORDER, callback, ##__VA_ARGS__)
 
-#define visit_if_post(order_, f_, ...) \
-	visit_if((order_) == MCC_AST_VISIT_POST_ORDER, (f_), ##__VA_ARGS__)
+#define visit_if_post(order, callback, ...) \
+	visit_if((order) == MCC_AST_VISIT_POST_ORDER, callback, ##__VA_ARGS__)
 
 void mCc_ast_visit_expression_df(enum mCc_ast_visit_order order,
                                  struct mCc_ast_expression *expression,
@@ -25,36 +25,36 @@ void mCc_ast_visit_expression_df(enum mCc_ast_visit_order order,
 	assert(expression);
 	assert(visitor);
 
-	visit_if_pre(order, visitor->expression, expression, visitor->data);
+	visit_if_pre(order, visitor->expression, expression, visitor->userdata);
 
 	switch (expression->type) {
 	case MCC_AST_EXPRESSION_TYPE_LITERAL:
 		visit_if_pre(order, visitor->expression_literal, expression,
-		             visitor->data);
+		             visitor->userdata);
 		mCc_ast_visit_literal(order, expression->literal, visitor);
 		visit_if_post(order, visitor->expression_literal, expression,
-		              visitor->data);
+		              visitor->userdata);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_BINARY_OP:
 		visit_if_pre(order, visitor->expression_binary_op, expression,
-		             visitor->data);
+		             visitor->userdata);
 		mCc_ast_visit_expression_df(order, expression->lhs, visitor);
 		mCc_ast_visit_expression_df(order, expression->rhs, visitor);
 		visit_if_post(order, visitor->expression_binary_op, expression,
-		              visitor->data);
+		              visitor->userdata);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_PARENTH:
 		visit_if_pre(order, visitor->expression_parenth, expression,
-		             visitor->data);
+		             visitor->userdata);
 		mCc_ast_visit_expression_df(order, expression->expression, visitor);
 		visit_if_post(order, visitor->expression_parenth, expression,
-		              visitor->data);
+		              visitor->userdata);
 		break;
 	}
 
-	visit_if_post(order, visitor->expression, expression, visitor->data);
+	visit_if_post(order, visitor->expression, expression, visitor->userdata);
 }
 
 void mCc_ast_visit_literal(enum mCc_ast_visit_order order,
@@ -64,17 +64,17 @@ void mCc_ast_visit_literal(enum mCc_ast_visit_order order,
 	assert(literal);
 	assert(visitor);
 
-	visit_if_pre(order, visitor->literal, literal, visitor->data);
+	visit_if_pre(order, visitor->literal, literal, visitor->userdata);
 
 	switch (literal->type) {
 	case MCC_AST_LITERAL_TYPE_INT:
-		visit(visitor->literal_int, literal, visitor->data);
+		visit(visitor->literal_int, literal, visitor->userdata);
 		break;
 
 	case MCC_AST_LITERAL_TYPE_FLOAT:
-		visit(visitor->literal_float, literal, visitor->data);
+		visit(visitor->literal_float, literal, visitor->userdata);
 		break;
 	}
 
-	visit_if_post(order, visitor->literal, literal, visitor->data);
+	visit_if_post(order, visitor->literal, literal, visitor->userdata);
 }

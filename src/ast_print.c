@@ -136,7 +136,7 @@ void mCc_ast_print_dot_expression(FILE *out,
 	assert(expression);
 
 	struct mCc_ast_visitor visitor = {
-	    .data = out,
+	    .userdata = out,
 
 	    .expression_literal = print_dot_expression_literal,
 	    .expression_binary_op = print_dot_expression_binary_op,
