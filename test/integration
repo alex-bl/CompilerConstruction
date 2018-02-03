@@ -103,6 +103,19 @@ print_usage()
 	echo
 }
 
+assert_installed()
+{
+	if ! hash "$1" &> /dev/null; then
+		echo >&2 "$1 not installed"
+		exit 1
+	fi
+}
+
+check_prerequisites()
+{
+	assert_installed time
+}
+
 parse_args()
 {
 	ARGS=$(getopt -o hc -l help,csv -- "$@")
@@ -140,6 +153,8 @@ parse_args()
 # ------------------------------------------------------------------------ MAIN
 
 parse_args "$@"
+
+check_prerequisites
 
 print_header
 
