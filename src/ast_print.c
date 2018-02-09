@@ -136,14 +136,14 @@ void mCc_ast_print_dot_expression(FILE *out,
 	assert(expression);
 
 	struct mCc_ast_visitor visitor = {
-	    .userdata = out,
+		.userdata = out,
 
-	    .expression_literal = print_dot_expression_literal,
-	    .expression_binary_op = print_dot_expression_binary_op,
-	    .expression_parenth = print_dot_expression_parenth,
+		.expression_literal = print_dot_expression_literal,
+		.expression_binary_op = print_dot_expression_binary_op,
+		.expression_parenth = print_dot_expression_parenth,
 
-	    .literal_int = print_dot_literal_int,
-	    .literal_float = print_dot_literal_float,
+		.literal_int = print_dot_literal_int,
+		.literal_float = print_dot_literal_float,
 	};
 
 	mCc_ast_visit_expression_df(MCC_AST_VISIT_PRE_ORDER, expression, &visitor);

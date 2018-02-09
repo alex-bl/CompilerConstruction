@@ -9,4 +9,5 @@ AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: false
 AllowShortCaseLabelsOnASingleLine: true
+Cpp11BracedListStyle: false
 ...
