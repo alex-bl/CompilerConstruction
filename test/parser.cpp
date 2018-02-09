@@ -78,3 +78,11 @@ TEST(Parser, NestedExpression_1)
 
 	mCc_ast_delete_expression(expr);
 }
+
+TEST(Parser, MissingClosingParenthesis_1)
+{
+	const char input[] = "(42";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_NE(MCC_PARSER_STATUS_OK, result.status);
+}
