@@ -59,5 +59,6 @@ foreach ut : mCc_uts
                    include_directories: mCc_inc,
                    link_with: mCc_lib,
                    dependencies: gtest)
+
     test(ut, t)
 endforeach

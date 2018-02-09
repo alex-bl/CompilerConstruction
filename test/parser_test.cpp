@@ -3,6 +3,34 @@
 #include "mCc/ast.h"
 #include "mCc/parser.h"
 
+TEST(Parser, BinaryOp_1)
+{
+	const char input[] = "192 + 3.14";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	auto expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_ADD, expr->op);
+
+	// root -> lhs
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->lhs->type);
+
+	// root -> lhs -> literal
+	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, expr->lhs->literal->type);
+	ASSERT_EQ(192, expr->lhs->literal->i_value);
+
+	// root -> rhs
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->rhs->type);
+
+	// root -> rhs -> literal
+	ASSERT_EQ(MCC_AST_LITERAL_TYPE_FLOAT, expr->rhs->literal->type);
+	ASSERT_EQ(3.14, expr->rhs->literal->f_value);
+}
+
 TEST(Parser, NestedExpression_1)
 {
 	const char input[] = "42 * (-192 + 3.14)";
