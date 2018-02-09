@@ -62,3 +62,19 @@ foreach ut : mCc_uts
 
     test(ut, t)
 endforeach
+
+# ------------------------------------------------------------------ BENCHMARKS
+
+mCc_benchs = [ ['parser/binary_op',         '100000'],
+               ['parser/nested_expression', '100000'] ]
+
+foreach bench : mCc_benchs
+    name = bench[0]
+    reps = bench[1]
+
+    b = executable('bench_' + name.underscorify(), 'benchmark/' + name + '.c',
+                   include_directories: mCc_inc,
+                   link_with: mCc_lib)
+
+    benchmark(name + ': ' + reps, b, args: [reps])
+endforeach
