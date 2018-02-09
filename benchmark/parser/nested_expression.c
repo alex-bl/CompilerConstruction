@@ -6,11 +6,11 @@
 
 int main(int argc, char *argv[])
 {
-	const long reps = argc >= 2 ? atol(argv[1]) : 100000;
+	const long repetitions = argc >= 2 ? atol(argv[1]) : 100000;
 
 	const char input[] = "42 * (-192 + 3.14)";
 
-	for (long i = 0; i < reps; i++) {
+	for (long i = 0; i < repetitions; i++) {
 		struct mCc_parser_result result = mCc_parser_parse_string(input);
 
 		assert(result.status == MCC_PARSER_STATUS_OK);
