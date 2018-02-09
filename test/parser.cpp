@@ -29,6 +29,8 @@ TEST(Parser, BinaryOp_1)
 	// root -> rhs -> literal
 	ASSERT_EQ(MCC_AST_LITERAL_TYPE_FLOAT, expr->rhs->literal->type);
 	ASSERT_EQ(3.14, expr->rhs->literal->f_value);
+
+	mCc_ast_delete_expression(expr);
 }
 
 TEST(Parser, NestedExpression_1)
