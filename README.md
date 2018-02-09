@@ -61,7 +61,7 @@ Pass `--buildtype=debug` to `meson` when creating the build directory to obtain 
 ### Unit Testing
 
 While the compiler itself is written in C, unit tests are written in C++.
-Each *unit* (source file located in `src`) should have a corresponding `_test` file in `test` containing the relevant unit tests.
+Each *unit* (source file located in `src`) should have a corresponding file in `test` containing the relevant unit tests.
 For convenience, each unit test suit is compiled into a separate executable.
 
 Pay attention when combining C and C++ code.
