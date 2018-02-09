@@ -10,7 +10,7 @@ mCc_ast_new_expression_literal(struct mCc_ast_literal *literal)
 {
 	assert(literal);
 
-	struct mCc_ast_expression *expr = malloc(sizeof(struct mCc_ast_expression));
+	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
 	if (!expr) {
 		return NULL;
 	}
@@ -25,7 +25,7 @@ mCc_ast_new_expression_parenth(struct mCc_ast_expression *expression)
 {
 	assert(expression);
 
-	struct mCc_ast_expression *expr = malloc(sizeof(struct mCc_ast_expression));
+	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
 	if (!expr) {
 		return NULL;
 	}
@@ -43,7 +43,7 @@ mCc_ast_new_expression_binary_op(enum mCc_ast_binary_op op,
 	assert(lhs);
 	assert(rhs);
 
-	struct mCc_ast_expression *expr = malloc(sizeof(struct mCc_ast_expression));
+	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
 	if (!expr) {
 		return NULL;
 	}
@@ -81,7 +81,7 @@ void mCc_ast_delete_expression(struct mCc_ast_expression *expression)
 
 struct mCc_ast_literal *mCc_ast_new_literal_int(long value)
 {
-	struct mCc_ast_literal *lit = malloc(sizeof(struct mCc_ast_literal));
+	struct mCc_ast_literal *lit = malloc(sizeof(*lit));
 	if (!lit) {
 		return NULL;
 	}
@@ -93,7 +93,7 @@ struct mCc_ast_literal *mCc_ast_new_literal_int(long value)
 
 struct mCc_ast_literal *mCc_ast_new_literal_float(double value)
 {
-	struct mCc_ast_literal *lit = malloc(sizeof(struct mCc_ast_literal));
+	struct mCc_ast_literal *lit = malloc(sizeof(*lit));
 	if (!lit) {
 		return NULL;
 	}
