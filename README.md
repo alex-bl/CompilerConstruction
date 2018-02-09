@@ -29,6 +29,7 @@ Meson downloads and builds it automatically if it is not found on your system.
     $ ninja
     $ ninja test
     $ ../test/integration
+    $ ninja benchmark
 
 ## Overview
 
