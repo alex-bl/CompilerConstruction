@@ -36,7 +36,15 @@ Pay attention when combining C and C++ code.
 Strange errors may occur when handled incorrectly.
 Consider passing additional flags (eg `-Wc++-compat`) to the C compiler for more warnings.
 
-Meson provides a way to wrap tests with arbitrary programs (eg Valgrind) or GDB.
+Meson provides a `--wrapper` flag to run tests through arbitrary programs, for instance:
+
+    $ meson test --wrapper 'valgrind --error-exitcode=1 --leak-check=full'
+
+Full output can be obtained by also passing `--verbose`.
+
+If you encounter segfaults happening at random, catch them by repeating unit tests multiple times with GDB attached:
+
+    $ meson test --repeat 1000000 --gdb
 
 ## Integration Testing
 
