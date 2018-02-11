@@ -18,10 +18,9 @@ int main(void)
 		expr = result.expression;
 	}
 
-	FILE *out = stdout;
-	mCc_ast_print_dot_begin(out);
-	mCc_ast_print_dot_expression(out, expr);
-	mCc_ast_print_dot_end(out);
+	mCc_ast_print_dot_begin(stdout);
+	mCc_ast_print_dot_expression(stdout, expr);
+	mCc_ast_print_dot_end(stdout);
 
 	mCc_ast_delete_expression(expr);
 
