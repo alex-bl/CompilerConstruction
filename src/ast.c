@@ -21,21 +21,6 @@ mCc_ast_new_expression_literal(struct mCc_ast_literal *literal)
 }
 
 struct mCc_ast_expression *
-mCc_ast_new_expression_parenth(struct mCc_ast_expression *expression)
-{
-	assert(expression);
-
-	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
-	if (!expr) {
-		return NULL;
-	}
-
-	expr->type = MCC_AST_EXPRESSION_TYPE_PARENTH;
-	expr->expression = expression;
-	return expr;
-}
-
-struct mCc_ast_expression *
 mCc_ast_new_expression_binary_op(enum mCc_ast_binary_op op,
                                  struct mCc_ast_expression *lhs,
                                  struct mCc_ast_expression *rhs)
@@ -52,6 +37,21 @@ mCc_ast_new_expression_binary_op(enum mCc_ast_binary_op op,
 	expr->op = op;
 	expr->lhs = lhs;
 	expr->rhs = rhs;
+	return expr;
+}
+
+struct mCc_ast_expression *
+mCc_ast_new_expression_parenth(struct mCc_ast_expression *expression)
+{
+	assert(expression);
+
+	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
+	if (!expr) {
+		return NULL;
+	}
+
+	expr->type = MCC_AST_EXPRESSION_TYPE_PARENTH;
+	expr->expression = expression;
 	return expr;
 }
 

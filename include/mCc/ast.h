@@ -64,12 +64,12 @@ struct mCc_ast_expression *
 mCc_ast_new_expression_literal(struct mCc_ast_literal *literal);
 
 struct mCc_ast_expression *
-mCc_ast_new_expression_parenth(struct mCc_ast_expression *expression);
-
-struct mCc_ast_expression *
 mCc_ast_new_expression_binary_op(enum mCc_ast_binary_op op,
                                  struct mCc_ast_expression *lhs,
                                  struct mCc_ast_expression *rhs);
+
+struct mCc_ast_expression *
+mCc_ast_new_expression_parenth(struct mCc_ast_expression *expression);
 
 void mCc_ast_delete_expression(struct mCc_ast_expression *expression);
 
