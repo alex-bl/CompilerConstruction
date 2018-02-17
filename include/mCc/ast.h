@@ -45,17 +45,17 @@ struct mCc_ast_expression {
 
 	enum mCc_ast_expression_type type;
 	union {
-		/* mCc_AST_EXPRESSION_TYPE_LITERAL */
+		/* MCC_AST_EXPRESSION_TYPE_LITERAL */
 		struct mCc_ast_literal *literal;
 
-		/* mCc_AST_EXPRESSION_TYPE_BINARY_OP */
+		/* MCC_AST_EXPRESSION_TYPE_BINARY_OP */
 		struct {
 			enum mCc_ast_binary_op op;
 			struct mCc_ast_expression *lhs;
 			struct mCc_ast_expression *rhs;
 		};
 
-		/* mCc_AST_EXPRESSION_TYPE_PARENTH */
+		/* MCC_AST_EXPRESSION_TYPE_PARENTH */
 		struct mCc_ast_expression *expression;
 	};
 };
@@ -85,10 +85,10 @@ struct mCc_ast_literal {
 
 	enum mCc_ast_literal_type type;
 	union {
-		/* mCc_AST_LITERAL_TYPE_INT */
+		/* MCC_AST_LITERAL_TYPE_INT */
 		long i_value;
 
-		/* mCc_AST_LITERAL_TYPE_FLOAT */
+		/* MCC_AST_LITERAL_TYPE_FLOAT */
 		double f_value;
 	};
 };
