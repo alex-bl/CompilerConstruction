@@ -2,9 +2,10 @@
 
 The source files located in `src` are built into a (shared) library.
 Each source file located in `src/bin` results in one corresponding executable, which is linked against the library.
-Similarly, each source file in `test` and `benchmark` results in one executable for unit testing purposes.
+Similarly, each source file in `test` and `benchmark` results in one executable for unit testing / benchmarking.
 
-The goal is to have the implementation of the mC compiler (`mCc`) available as library.
+The goal is to implement the mC compiler as (shared) library.
+This implementation is then used by dedicated binaries, like `mCc` and `mC_to_dot`.
 
 ## Naming
 
@@ -29,7 +30,7 @@ Pass `--buildtype=debug` to `meson` when creating the build directory to obtain 
 ## Unit Testing
 
 While the compiler itself is written in C, unit tests are written in C++.
-Each *unit* (source file located in `src`) should have a corresponding file in `test` containing the relevant unit tests.
+Each *unit* should have a corresponding file in `test` containing the relevant unit tests.
 For convenience, each unit test suit is compiled into a separate executable.
 
 Pay attention when combining C and C++ code.
@@ -50,7 +51,6 @@ If you encounter segfaults happening at random, catch them by repeating unit tes
 
 Valid example inputs are placed inside `doc/examples`.
 They can be compiled with `mCc` using the provided Bash script `test/integration`.
-Invoke it from the build directory as shown above.
 
 ## Lexer and Parser
 
@@ -71,7 +71,12 @@ Furthermore, a visitor mechanism is provided in `ast_visit.h`.
 An AST printer for the [Dot Format](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) is provided.
 Together with [Graphviz](https://graphviz.gitlab.io/), ASTs can be visualised.
 
-    $ ./mC_to_dot ../doc/examples/fib.mC | dot -Tpng | feh -
+    $ cat ../doc/examples/fib.mC | ./mC_to_dot | xdot -
+
+or
+
+    $ cat ../doc/examples/fib.mC | ./mC_to_dot | dot -Tpng > fib.mC.png
+    $ xdg-open fib.mC.png
 
 Note that for this very purpose a dedicated executable `mC_to_dot` is created.
 It is recommended to add other utility executables for debugging and scripting purposes.
@@ -83,4 +88,4 @@ Since this is only here to get you started, only a small portion of the grammar 
 Yet this should make it much easier to work with `flex` / `bison` than starting from scratch.
 
 Be sure to understand the provided code before using it!
-Notice me if you find any mistakes which should be patched.
+Notify me if you find any mistakes which should be patched.
