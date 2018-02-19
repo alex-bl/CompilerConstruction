@@ -4,7 +4,8 @@ project('mCc', 'c',
         'c_std=c11',
         'cpp_std=c++14',
         'warning_level=2'
-    ]
+    ],
+    meson_version: '>=0.44.0'
 )
 
 # ------------------------------------------------------------------ GENERATORS
