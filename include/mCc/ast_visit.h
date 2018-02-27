@@ -17,8 +17,10 @@ enum mCc_ast_visit_order {
 	MCC_AST_VISIT_POST_ORDER,
 };
 
-typedef void (*mCc_ast_expression_visitor)(struct mCc_ast_expression *, void *);
-typedef void (*mCc_ast_literal_visitor)(struct mCc_ast_literal *, void *);
+/* Callbacks */
+typedef void (*mCc_ast_visit_expression_cb)(struct mCc_ast_expression *,
+                                            void *);
+typedef void (*mCc_ast_visit_literal_cb)(struct mCc_ast_literal *, void *);
 
 struct mCc_ast_visitor {
 	enum mCc_ast_visit_traversal traversal;
@@ -26,14 +28,14 @@ struct mCc_ast_visitor {
 
 	void *userdata;
 
-	mCc_ast_expression_visitor expression;
-	mCc_ast_expression_visitor expression_literal;
-	mCc_ast_expression_visitor expression_binary_op;
-	mCc_ast_expression_visitor expression_parenth;
+	mCc_ast_visit_expression_cb expression;
+	mCc_ast_visit_expression_cb expression_literal;
+	mCc_ast_visit_expression_cb expression_binary_op;
+	mCc_ast_visit_expression_cb expression_parenth;
 
-	mCc_ast_literal_visitor literal;
-	mCc_ast_literal_visitor literal_int;
-	mCc_ast_literal_visitor literal_float;
+	mCc_ast_visit_literal_cb literal;
+	mCc_ast_visit_literal_cb literal_int;
+	mCc_ast_visit_literal_cb literal_float;
 };
 
 void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
