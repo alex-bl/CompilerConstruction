@@ -136,6 +136,9 @@ void mCc_ast_print_dot_expression(FILE *out,
 	assert(expression);
 
 	struct mCc_ast_visitor visitor = {
+		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
+		.order = MCC_AST_VISIT_PRE_ORDER,
+
 		.userdata = out,
 
 		.expression_literal = print_dot_expression_literal,
@@ -146,5 +149,5 @@ void mCc_ast_print_dot_expression(FILE *out,
 		.literal_float = print_dot_literal_float,
 	};
 
-	mCc_ast_visit_expression_df(MCC_AST_VISIT_PRE_ORDER, expression, &visitor);
+	mCc_ast_visit_expression(expression, &visitor);
 }

@@ -7,11 +7,23 @@
 extern "C" {
 #endif
 
+enum mCc_ast_visit_traversal {
+	MCC_AST_VISIT_DEPTH_FIRST,
+	/* TODO: MCC_AST_VISIT_BREADTH_FIRST, */
+};
+
+enum mCc_ast_visit_order {
+	MCC_AST_VISIT_PRE_ORDER,
+	MCC_AST_VISIT_POST_ORDER,
+};
+
 typedef void (*mCc_ast_expression_visitor)(struct mCc_ast_expression *, void *);
 typedef void (*mCc_ast_literal_visitor)(struct mCc_ast_literal *, void *);
 
 struct mCc_ast_visitor {
-	/* some custom data provided by the user, forwarded to each callback */
+	enum mCc_ast_visit_traversal traversal;
+	enum mCc_ast_visit_order order;
+
 	void *userdata;
 
 	mCc_ast_expression_visitor expression;
@@ -24,19 +36,10 @@ struct mCc_ast_visitor {
 	mCc_ast_literal_visitor literal_float;
 };
 
-enum mCc_ast_visit_order {
-	MCC_AST_VISIT_PRE_ORDER,
-	MCC_AST_VISIT_POST_ORDER,
-};
+void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
+                              struct mCc_ast_visitor *visitor);
 
-/* Depth-First */
-
-void mCc_ast_visit_expression_df(enum mCc_ast_visit_order order,
-                                 struct mCc_ast_expression *expression,
-                                 struct mCc_ast_visitor *visitor);
-
-void mCc_ast_visit_literal(enum mCc_ast_visit_order order,
-                           struct mCc_ast_literal *literal,
+void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
                            struct mCc_ast_visitor *visitor);
 
 #ifdef __cplusplus
