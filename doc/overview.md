@@ -26,6 +26,7 @@ Otherwise, extend the lists upon adding new source files.
 
 The default build-type is configured to *release*.
 Pass `--buildtype=debug` to `meson` when creating the build directory to obtain a debug build.
+Meson also provides `debugoptimized` which is commonly used during development.
 
 ## Unit Testing
 
