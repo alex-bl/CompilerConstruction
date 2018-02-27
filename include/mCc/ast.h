@@ -18,7 +18,7 @@ struct mCc_ast_source_location {
 	int end_col;
 };
 
-/* Data contained by every ast node. */
+/* Data contained by every AST node. */
 struct mCc_ast_node {
 	struct mCc_ast_source_location sloc;
 };
