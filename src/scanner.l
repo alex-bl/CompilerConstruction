@@ -18,20 +18,20 @@ float_literal -?[0-9]+\.[0-9]+
 
 %%
 
-{int_literal}     { yylval->MCC_PARSER_TOKEN_INT_LITERAL = atol(yytext); return MCC_PARSER_TOKEN_INT_LITERAL; }
+{int_literal}     { yylval->TK_INT_LITERAL = atol(yytext); return TK_INT_LITERAL; }
 
-{float_literal}   { yylval->MCC_PARSER_TOKEN_FLOAT_LITERAL = atof(yytext); return MCC_PARSER_TOKEN_FLOAT_LITERAL; }
+{float_literal}   { yylval->TK_FLOAT_LITERAL = atof(yytext); return TK_FLOAT_LITERAL; }
 
-"+"               { return MCC_PARSER_TOKEN_PLUS; }
-"-"               { return MCC_PARSER_TOKEN_MINUS; }
-"*"               { return MCC_PARSER_TOKEN_ASTER; }
-"/"               { return MCC_PARSER_TOKEN_SLASH; }
+"+"               { return TK_PLUS; }
+"-"               { return TK_MINUS; }
+"*"               { return TK_ASTER; }
+"/"               { return TK_SLASH; }
 
-"("               { return MCC_PARSER_TOKEN_LPARENTH; }
-")"               { return MCC_PARSER_TOKEN_RPARENTH; }
+"("               { return TK_LPARENTH; }
+")"               { return TK_RPARENTH; }
 
 [ \t\r\n]+        { /* ignore */ }
 
-<<EOF>>           { return MCC_PARSER_TOKEN_END; }
+<<EOF>>           { return TK_END; }
 
 .                 { fprintf(stderr, "invalid character '%c'\n", yytext[0]); }

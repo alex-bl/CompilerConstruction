@@ -19,7 +19,7 @@ void mCc_parser_error();
 %}
 
 %define api.value.type union
-%define api.token.prefix {MCC_PARSER_TOKEN_}
+%define api.token.prefix {TK_}
 
 %token END 0 "EOF"
 
