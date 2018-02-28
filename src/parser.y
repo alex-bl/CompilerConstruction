@@ -36,10 +36,8 @@ void mCc_parser_error();
 
 %type <enum mCc_ast_binary_op> binary_op
 
-%type <struct mCc_ast_expression*> single_expr
-%type <struct mCc_ast_expression*> expression
-
-%type <struct mCc_ast_literal*> literal
+%type <struct mCc_ast_expression *> expression single_expr
+%type <struct mCc_ast_literal *> literal
 
 %start toplevel
 
@@ -58,7 +56,7 @@ single_expr : literal                         { $$ = mCc_ast_new_expression_lite
             | LPARENTH expression RPARENTH    { $$ = mCc_ast_new_expression_parenth($2); }
             ;
 
-expression : single_expr                      { $$ = $1;                                          }
+expression : single_expr                      { $$ = $1;                                           }
            | single_expr binary_op expression { $$ = mCc_ast_new_expression_binary_op($2, $1, $3); }
            ;
 
