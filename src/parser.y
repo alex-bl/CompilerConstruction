@@ -78,7 +78,7 @@ struct mCc_parser_result mCc_parser_parse_string(const char *input)
 {
 	assert(input);
 
-	struct mCc_parser_result result = {0};
+	struct mCc_parser_result result = { 0 };
 
 	FILE *in = fmemopen((void *)input, strlen(input), "r");
 	if (!in) {
@@ -101,7 +101,10 @@ struct mCc_parser_result mCc_parser_parse_file(FILE *input)
 	mCc_parser_lex_init(&scanner);
 	mCc_parser_set_in(input, scanner);
 
-	struct mCc_parser_result result = {0};
+	struct mCc_parser_result result = {
+		.status = MCC_PARSER_STATUS_OK,
+	};
+
 	if (yyparse(scanner, &result.expression) != 0) {
 		result.status = MCC_PARSER_STATUS_UNKNOWN_ERROR;
 	}
