@@ -68,12 +68,16 @@ literal : INT_LITERAL   { $$ = mCc_ast_new_literal_int($1);   }
 
 %%
 
+#include <assert.h>
+
 #include "scanner.h"
 
 void yyerror(yyscan_t *scanner, const char *msg) {}
 
 struct mCc_parser_result mCc_parser_parse_string(const char *input)
 {
+	assert(input);
+
 	struct mCc_parser_result result = {0};
 
 	FILE *in = fmemopen((void *)input, strlen(input), "r");
@@ -91,6 +95,8 @@ struct mCc_parser_result mCc_parser_parse_string(const char *input)
 
 struct mCc_parser_result mCc_parser_parse_file(FILE *input)
 {
+	assert(input);
+
 	yyscan_t scanner;
 	mCc_parser_lex_init(&scanner);
 	mCc_parser_set_in(input, scanner);
