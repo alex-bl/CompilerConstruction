@@ -129,13 +129,11 @@ static void print_dot_literal_float(struct mCc_ast_literal *literal, void *data)
 	print_dot_node_end(out);
 }
 
-void mCc_ast_print_dot_expression(FILE *out,
-                                  struct mCc_ast_expression *expression)
+static struct mCc_ast_visitor print_dot_visitor(FILE *out)
 {
 	assert(out);
-	assert(expression);
 
-	struct mCc_ast_visitor visitor = {
+	return (struct mCc_ast_visitor){
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
 		.order = MCC_AST_VISIT_PRE_ORDER,
 
@@ -148,6 +146,23 @@ void mCc_ast_print_dot_expression(FILE *out,
 		.literal_int = print_dot_literal_int,
 		.literal_float = print_dot_literal_float,
 	};
+}
 
+void mCc_ast_print_dot_expression(FILE *out,
+                                  struct mCc_ast_expression *expression)
+{
+	assert(out);
+	assert(expression);
+
+	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_expression(expression, &visitor);
+}
+
+void mCc_ast_print_dot_literal(FILE *out, struct mCc_ast_literal *literal)
+{
+	assert(out);
+	assert(literal);
+
+	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	mCc_ast_visit_literal(literal, &visitor);
 }

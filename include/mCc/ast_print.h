@@ -20,6 +20,8 @@ void mCc_ast_print_dot_end(FILE *out);
 void mCc_ast_print_dot_expression(FILE *out,
                                   struct mCc_ast_expression *expression);
 
+void mCc_ast_print_dot_literal(FILE *out, struct mCc_ast_literal *literal);
+
 #ifdef __cplusplus
 }
 #endif
