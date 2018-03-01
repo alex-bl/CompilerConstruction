@@ -13,6 +13,7 @@ void main()
 
 	int n;
 	n = read_int();
+	print_nl();
 
 	int result;
 	result = fib(n);
