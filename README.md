@@ -6,6 +6,7 @@ Compiler construction assignments  will be uploaded in this repo.
 1. Install meson:
 
    `sudo apt-get install meson`
+   
 2. Install google test:
    `sudo apt-get install libgtest-dev`
    
