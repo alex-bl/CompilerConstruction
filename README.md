@@ -21,4 +21,4 @@ Compiler construction assignments  will be uploaded in this repo.
 
 3. Clone templates:
 
-   `git clone` https://github.com/W4RH4WK/mCc.git
+   `git clone https://github.com/W4RH4WK/mCc.git`
