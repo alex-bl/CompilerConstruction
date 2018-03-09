@@ -5,7 +5,9 @@ Compiler construction assignments  will be uploaded in this repo.
 
 1. Install meson:
 
-   `sudo apt-get install meson`
+   `pip3 install meson`
+   
+   NOTE: In 16.04 LTS only version 0.29 available   
    
 2. Install google test:
    `sudo apt-get install libgtest-dev`
@@ -23,3 +25,12 @@ Compiler construction assignments  will be uploaded in this repo.
 3. Clone templates:
 
    `git clone https://github.com/W4RH4WK/mCc.git`
+
+4. Install flex + bison + doxygen:
+
+   `sudo apt-get install flex`
+   
+   `sudo apt-get install bison`
+   
+   `sudo apt-get install doxygen`
+   
