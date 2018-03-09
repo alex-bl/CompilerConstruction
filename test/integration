@@ -1,0 +1,177 @@
+#!/bin/bash
+
+# See usage information for a description.
+#
+# The default output format corresponds to a Markdown table and can be
+# interpreted using `pandoc` (https://pandoc.org/MANUAL.html#tables).
+#
+# TODO: Add a flag so that the compiler output can be viewed in case of a
+# failure. Similar to `ctest`'s `--output-on-failure`.
+
+set -eu
+
+# ------------------------------------------------------------ GLOBAL VARIABLES
+
+readonly DIR=$(dirname "$(readlink -f "$0")")
+
+# Location containing examples.
+readonly EXAMPLES_DIR="${EXAMPLES_DIR:-$DIR/../doc/examples}"
+
+# mC compiler binary.
+readonly MCC="${MCC:-./mCc}"
+
+# colour support
+if [[ -t 1 ]]; then
+	readonly NC='\e[0m'
+	readonly Red='\e[1;31m'
+	readonly Green='\e[1;32m'
+else
+	readonly NC=''
+	readonly Red=''
+	readonly Green=''
+fi
+
+# Pattern used to collect test inputs.
+pattern="*"
+
+# Options:
+option_csv=false
+
+# ------------------------------------------------------------------- FUNCTIONS
+
+print_header_md()
+{
+	echo "Input                                             Time        Memory  Status"
+	echo "----------------------------------------- ------------ ------------- --------"
+}
+
+print_header_csv()
+{
+	echo "Input,Time [s],Memory [kB],Status"
+}
+
+print_run_md()
+{
+	echo "$@" | awk '{ printf "%-40s   %8s s   %8s kB   ", $1, $2, $3; }'
+
+	# fancy status label
+	if [[ "$4" == "0" ]]; then
+		echo -e "${Green}[ Ok ]${NC}"
+	else
+		echo -e "${Red}[Fail]${NC}"
+	fi
+}
+
+print_run_csv()
+{
+	echo "$@" | tr ' ' ','
+}
+
+print_run()
+{
+	if $option_csv; then
+		print_run_csv "$@"
+	else
+		print_run_md "$@"
+	fi
+}
+
+print_header()
+{
+	if $option_csv; then
+		print_header_csv
+	else
+		print_header_md
+	fi
+}
+
+print_usage()
+{
+	echo "usage: $0 [OPTIONS] [PATTERN]"
+	echo
+	echo "Runs example mC inputs matching the given PATTERN using the mC"
+	echo "compiler. The pattern defaults to '*' and is suffixed with .mC"
+	echo "before it is passed to find(1)."
+	echo
+	echo "The compiler can be set with the environment variable MCC,"
+	echo "which defaults to ./mCc. To override the examples directory, set"
+	echo "EXAMPLES_DIR."
+	echo
+	echo "OPTIONS:"
+	echo "  -h, --help       displays this help message"
+	echo "  -c, --csv        output as CSV"
+	echo
+}
+
+assert_installed()
+{
+	if ! hash "$1" &> /dev/null; then
+		echo >&2 "$1 not installed"
+		exit 1
+	fi
+}
+
+check_prerequisites()
+{
+	assert_installed time
+}
+
+parse_args()
+{
+	ARGS=$(getopt -o hc -l help,csv -- "$@")
+	eval set -- "$ARGS"
+
+	while true; do
+		case "$1" in
+			-h|--help)
+				print_usage
+				exit
+				;;
+
+			-c|--csv)
+				option_csv=true
+				shift
+				;;
+
+			--)
+				shift
+				break
+				;;
+
+			*)
+				exit 1
+				;;
+		esac
+	done
+
+	if [[ -n ${1+x} ]]; then
+		pattern="$1"
+	fi
+}
+
+
+# ------------------------------------------------------------------------ MAIN
+
+parse_args "$@"
+
+check_prerequisites
+
+print_header
+
+(cd "$EXAMPLES_DIR"; find -type f -name "${pattern}.mC" -print0) | sort -z |
+(
+	flawless=true
+	while read -r -d $'\0' example; do
+
+		# Run compiler with example input and obtain statistics.
+		stats=$(\time -f "%e %M %x" "$MCC" "$EXAMPLES_DIR/$example" 2>&1 | tail -n1)
+
+		if [[ $(echo $stats | cut -d ' ' -f3) -ne 0 ]]; then
+			flawless=false
+		fi
+
+		print_run "$example" $stats
+
+	done
+	$flawless
+)
