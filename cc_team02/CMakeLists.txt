@@ -1,6 +1,5 @@
 # TODOs: 
 # - add benchmarking? => if yes, see https://github.com/vincent-picaud/Blog_CMake_GoogleBenchmark
-# - add doxygen?
 # - add install-target
 # - add + configure cpack?
 
@@ -16,6 +15,15 @@ set(CMAKE_C_FLAGS "-std=c11")
 set(CMAKE_CXX_FLAGS "-std=c++14")
 # build-type
 set(CMAKE_BUILD_TYPE Debug)
+
+#============================================================ doxygen config
+set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/doc")
+# for other supported types see https://www.stack.nl/~dimitri/doxygen/manual/output.html
+# maybe integrate pandoc to construct markdown out of doxygen's xml
+set(DOXYGEN_GENERATE_HTML YES)
+set(DOXYGEN_GENERATE_MAN NO)
+set(DOXYGEN_GENERATE_XML NO)
+#============================================================  
   
 # configure a header file to pass some of the CMake settings
 # to the source code
@@ -41,7 +49,8 @@ target_link_libraries(mC_to_dot mCc_lib)
 
 #================================================================== testing
 
-#test deps => target 'gtest'
+# test deps => target 'gtest'
+# test => run tests
 add_subdirectory(test)
 include(CTest)
 
@@ -62,6 +71,9 @@ foreach(entry_name ${unit_test_list})
 	add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 endforeach(entry_name)
 
+#================================================================ doxygen
+# why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-
+find_package(Doxygen)
+doxygen_add_docs(doxygen "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}/src" COMMENT "Generating docs")
 
-
-#=================================================================
+#================================================================

@@ -2,4 +2,6 @@
 
 This file lists and justifies all changes made to the [mCc Template](https://github.com/W4RH4WK/mCc) not directly related to any of the assignments.
 
-- - -
+## Changes
+
+- **cmake**: Switched to `cmake` for build system provides because it provides better IDE-integration.
