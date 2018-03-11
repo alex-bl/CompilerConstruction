@@ -5,7 +5,6 @@ Compiler construction assignments  will be uploaded in this repo.
 
 See [setup hints](setup.md)
    
-## Current state
+## Content
 
-- cmake-configuration added to provided template from https://github.com/W4RH4WK/mCc
-- template-files integrated and setup with cmake
+- cc_team02: template-project basic setup with cmake
