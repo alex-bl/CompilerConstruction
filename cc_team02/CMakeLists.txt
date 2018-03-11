@@ -1,0 +1,67 @@
+# TODOs: 
+# - add benchmarking? => if yes, see https://github.com/vincent-picaud/Blog_CMake_GoogleBenchmark
+# - add doxygen?
+# - add install-target
+# - add + configure cpack?
+
+cmake_minimum_required (VERSION 3.5)
+project (cc_team02)
+
+# The version number.
+set (cc_team02_VERSION_MAJOR 1)
+set (cc_team02_VERSION_MINOR 0)
+
+# set global compiler flags
+set(CMAKE_C_FLAGS "-std=c11")
+set(CMAKE_CXX_FLAGS "-std=c++14")
+# build-type
+set(CMAKE_BUILD_TYPE Debug)
+  
+# configure a header file to pass some of the CMake settings
+# to the source code
+configure_file (
+  "${PROJECT_SOURCE_DIR}/config/config.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/config/config.h"
+  )
+
+#=================================================================== building
+  
+# add the binary tree to the search path for include files
+# so that we will find the headers
+include_directories("${PROJECT_SOURCE_DIR}/include" ${CMAKE_CURRENT_BINARY_DIR})
+
+add_subdirectory(src)
+
+# link libs with executables
+add_executable(mCc src/bin/mCc.c)
+target_link_libraries(mCc mCc_lib)
+
+add_executable(mC_to_dot src/bin/mC_to_dot.c)
+target_link_libraries(mC_to_dot mCc_lib)
+
+#================================================================== testing
+
+#test deps => target 'gtest'
+add_subdirectory(test)
+include(CTest)
+
+# taken from:
+# https://github.com/google/googletest/tree/master/googletest#incorporating-into-an-existing-cmake-project
+# Now simply link against gtest or gtest_main as needed. Eg
+#
+# ... and extended (using the loop)
+
+#create list: add all tests manually here (file-names without *.cpp)
+set(unit_test_list parser)
+
+foreach(entry_name ${unit_test_list})
+	# build and link
+	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)	
+	target_link_libraries(${entry_name}_test_exec mCc_lib gtest_main)
+	# pass the test_exec to ctest
+	add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
+endforeach(entry_name)
+
+
+
+#=================================================================
