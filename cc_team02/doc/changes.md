@@ -4,4 +4,4 @@ This file lists and justifies all changes made to the [mCc Template](https://git
 
 ## Changes
 
-- **cmake**: Switched to `cmake` for build system provides because it provides better IDE-integration.
+- **cmake**: Switched to `cmake` for build system because it provides better IDE-integration.
