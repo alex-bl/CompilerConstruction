@@ -34,3 +34,7 @@ Compiler construction assignments  will be uploaded in this repo.
    
    `sudo apt-get install doxygen`
    
+## Changes to provided template
+
+- cmake-configuration added
+- template-files integrated and setup with cmake
