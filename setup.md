@@ -1,12 +1,13 @@
 # Setup
 
-1. Install meson:
+1. Install cmake:
 
-   `pip3 install meson`
-   
-   NOTE: In 16.04 LTS only version 0.29 available   
+   `sudo apt-get install cmake`
+
+   `sud apt-get install valgrind`
    
 2. Install google test:
+
    `sudo apt-get install libgtest-dev`
    
    `sudo apt-get install cmake # install cmake`
@@ -30,3 +31,4 @@
    `sudo apt-get install bison`
    
    `sudo apt-get install doxygen`
+
