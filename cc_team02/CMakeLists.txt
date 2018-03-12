@@ -3,16 +3,17 @@
 # - add install-target
 # - add + configure cpack?
 
-cmake_minimum_required (VERSION 3.5)
+cmake_minimum_required (VERSION 3.9.6)
 project (cc_team02)
 
 # The version number.
 set (cc_team02_VERSION_MAJOR 1)
 set (cc_team02_VERSION_MINOR 0)
 
-# set global compiler flags
-set(CMAKE_C_FLAGS "-std=c11")
-set(CMAKE_CXX_FLAGS "-std=c++14")
+# set global compiler flags (append them)
+string(APPEND CMAKE_C_FLAGS "-std=c11 -Wall -Werror")
+string(APPEND CMAKE_CXX_FLAGS "-std=c++14 -Wall -Werror")
+
 # build-type
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -70,6 +71,14 @@ foreach(entry_name ${unit_test_list})
 	# pass the test_exec to ctest
 	add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 endforeach(entry_name)
+
+# enabling valgrind => target test_memcheck
+# taken from:
+# https://stackoverflow.com/questions/40325957/how-do-i-add-valgrind-tests-to-my-cmake-test-target
+add_custom_target(test_memcheck
+    COMMAND ${CMAKE_CTEST_COMMAND} 
+        --force-new-ctest-process --test-action memcheck
+    COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
 
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-
