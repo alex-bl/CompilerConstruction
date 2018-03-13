@@ -1,0 +1,32 @@
+# taken from:
+# https://github.com/google/googletest/tree/master/googletest#incorporating-into-an-existing-cmake-project
+
+# TODO: don't check out as git-repo, but download instead?
+# using this link https://github.com/google/googletest/archive/release-1.8.0.tar.gz?
+#
+# cmake cannot deal with https unless installed this way with curl providing ssl-support:
+# 
+#   https://github.com/avast-tl/retdec/issues/214
+#   https://github.com/ruslo/hunter/issues/328#issuecomment-198672048
+# 
+# EDIT: Works now :-)
+
+cmake_minimum_required(VERSION 3.9.6)
+
+project(googletest-download NONE)
+
+include(ExternalProject)
+ExternalProject_Add(googletest
+  #GIT_REPOSITORY    https://github.com/google/googletest.git
+  #GIT_TAG           master
+  URL				"https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
+  DOWNLOAD_DIR		"${GTEST_DOWNLOAD_DESTINATION}"
+  SOURCE_DIR        "${GTEST_DOWNLOAD_DESTINATION}/googletest-src"
+  BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googletest-build"
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND     ""
+  INSTALL_COMMAND   ""
+  TEST_COMMAND      ""
+)
+
+

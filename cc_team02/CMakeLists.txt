@@ -17,6 +17,10 @@ string(APPEND CMAKE_CXX_FLAGS "-std=c++14 -Wall -Werror")
 # build-type
 set(CMAKE_BUILD_TYPE Debug)
 
+# gtest download-dest
+set (GTEST_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/googletest-release-1.8.0")
+set (GBENCHMARK_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/googlebenchmark-release-1.3.0")
+
 #============================================================ doxygen config
 set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/doc")
 # for other supported types see https://www.stack.nl/~dimitri/doxygen/manual/output.html
@@ -52,7 +56,7 @@ target_link_libraries(mC_to_dot mCc_lib)
 
 # test deps => target 'gtest'
 # test => run tests
-add_subdirectory(test)
+add_subdirectory("test")
 include(CTest)
 
 # taken from:
@@ -62,7 +66,7 @@ include(CTest)
 # ... and extended (using the loop)
 
 #create list: add all tests manually here (file-names without *.cpp)
-set(unit_test_list parser)
+set(unit_test_list "parser")
 
 foreach(entry_name ${unit_test_list})
 	# build and link
@@ -79,6 +83,23 @@ add_custom_target(test_memcheck
     COMMAND ${CMAKE_CTEST_COMMAND} 
         --force-new-ctest-process --test-action memcheck
     COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
+
+#================================================================= benchmark
+# TODO: why are there 36 benchmarks instead of 2?
+
+add_subdirectory("benchmark")
+# do the same as for testing, but with benchmark
+set(my_benchmark_list "just_try")
+
+foreach(entry_name ${my_benchmark_list})
+	# build and link
+	add_executable(${entry_name}_benchmark_exec benchmark/${entry_name}.cpp)	
+	# TODO: used the correct binary?
+	# This is actually just a test-file: If using non-test-files also link the mCc_binaries
+	target_link_libraries(${entry_name}_benchmark_exec benchmark)
+	# pass the test_exec to ctest
+	add_test(NAME ${entry_name}_benchmark COMMAND ${entry_name}_benchmark_exec)
+endforeach(entry_name)
 
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-

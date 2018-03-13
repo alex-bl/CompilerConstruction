@@ -4,7 +4,9 @@
 
    `sudo apt-get install cmake`
 
-   `sud apt-get install valgrind`
+   `sudo apt-get install valgrind`
+
+   `sudo apt-get install libcurl4-openssl-dev`
    
 2. Install google test:
 
