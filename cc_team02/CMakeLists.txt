@@ -36,9 +36,13 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/config/config.h.in"
   "${CMAKE_CURRENT_BINARY_DIR}/config/config.h"
   )
+
+# configure bench_execution shell-script
+configure_file (
+  "${PROJECT_SOURCE_DIR}/config/execute_bench.sh.in"
+  "${CMAKE_BINARY_DIR}/bench/execute_bench.sh"
+  )
   
-# ignore tests
-# configure_file("${PROJECT_SOURCE_DIR}/config/ignore_tests.cmake" "${CMAKE_BINARY_DIR}")
 #=================================================================== building
   
 # add the binary tree to the search path for include files
@@ -88,7 +92,6 @@ add_custom_target(test_memcheck
     COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
 
 #================================================================= benchmark
-# TODO: why are there 36 benchmarks instead of 2?
 
 add_subdirectory("benchmark")
 # do the same as for testing, but with benchmark
@@ -100,17 +103,16 @@ foreach(entry_name ${my_benchmark_list})
 	# TODO: used the correct binary?
 	# This is actually just a test-file: If using non-test-files also link the mCc_binaries
 	target_link_libraries(${entry_name}_benchmark_exec benchmark)
-	# pass the test_exec to ctest => after COMMAND set args
-	#add_test(NAME ${entry_name}_benchmark COMMAND ${entry_name}_benchmark_exec)
+	# copy executables to bench-directory
+	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bench/bin
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bench/bin)		
 endforeach(entry_name)
 
-# TODO: add a custom configuration here to set a base path-variable in executeBench.sh
-# then iterate over the binary-dir end run the binaries matching to *bench
+# custom benchmark-target => run all benchmark-binaries within shell-script
+add_custom_target(run_benchmarks
+    COMMAND ${CMAKE_BINARY_DIR}/bench/execute_bench.sh)
 
-# custom benchmark-target => show output
-add_custom_target(tests_with_benchmark
-    COMMAND "${PROJECT_SOURCE_DIR}/benchmark/executeBench.sh")
-#just_try_benchmark_exec --benchmark_color=false
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-
 find_package(Doxygen)
