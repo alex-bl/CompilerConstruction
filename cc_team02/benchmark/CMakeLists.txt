@@ -21,6 +21,9 @@ endif()
 # settings on Windows => needed here?
 set(googlebenchmark_force_shared_crt ON CACHE BOOL "" FORCE)
 
+# Disable the googlebenchmark specific tests which would run on default on every ctest-run
+SET(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable gbenchmark tests to run on every ctest-run")
+
 # Add googlebenchmark directly to our build. This defines
 # the gbenchmark and gbenchmark_main targets.
 add_subdirectory(${GBENCHMARK_DOWNLOAD_DESTINATION}/googlebenchmark-src
