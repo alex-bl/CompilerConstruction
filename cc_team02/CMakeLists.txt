@@ -101,13 +101,16 @@ foreach(entry_name ${my_benchmark_list})
 	# This is actually just a test-file: If using non-test-files also link the mCc_binaries
 	target_link_libraries(${entry_name}_benchmark_exec benchmark)
 	# pass the test_exec to ctest => after COMMAND set args
-	add_test(NAME ${entry_name}_benchmark COMMAND ${entry_name}_benchmark_exec)
+	#add_test(NAME ${entry_name}_benchmark COMMAND ${entry_name}_benchmark_exec)
 endforeach(entry_name)
+
+# TODO: add a custom configuration here to set a base path-variable in executeBench.sh
+# then iterate over the binary-dir end run the binaries matching to *bench
 
 # custom benchmark-target => show output
 add_custom_target(tests_with_benchmark
-    COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
-
+    COMMAND "${PROJECT_SOURCE_DIR}/benchmark/executeBench.sh")
+#just_try_benchmark_exec --benchmark_color=false
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-
 find_package(Doxygen)
