@@ -64,6 +64,8 @@ target_link_libraries(mC_to_dot mCc_lib)
 # test => run tests
 add_subdirectory("test")
 include(CTest)
+# add native gtest support
+include(GoogleTest)
 
 # taken from:
 # https://github.com/google/googletest/tree/master/googletest#incorporating-into-an-existing-cmake-project
@@ -80,7 +82,13 @@ foreach(entry_name ${unit_test_list})
 	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)	
 	target_link_libraries(${entry_name}_test_exec mCc_lib gtest_main)
 	# pass the test_exec to ctest => after COMMAND set args
-	add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
+	# add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
+	# native gtest support since cmake 3.9?
+	gtest_add_tests(TARGET ${entry_name}_test_exec
+					EXTRA_ARGS ""
+					TEST_PREFIX "mCc_test_"
+					TEST_SUFFIX ".tst"
+					TEST_LIST "list_of_exec_tests")	
 endforeach(entry_name)
 
 # enabling valgrind => target test_memcheck
