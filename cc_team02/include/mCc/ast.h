@@ -78,6 +78,8 @@ void mCc_ast_delete_expression(struct mCc_ast_expression *expression);
 enum mCc_ast_literal_type {
 	MCC_AST_LITERAL_TYPE_INT,
 	MCC_AST_LITERAL_TYPE_FLOAT,
+	MCC_AST_LITERAL_TYPE_BOOLEAN,
+	MCC_AST_LITERAL_TYPE_STRING
 };
 
 struct mCc_ast_literal {
