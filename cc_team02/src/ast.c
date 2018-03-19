@@ -1,7 +1,7 @@
-#include "mCc/ast.h"
-
 #include <assert.h>
 #include <stdlib.h>
+
+#include "mCc/ast.h"
 
 /* ------------------------------------------------------------- Expressions */
 
@@ -72,6 +72,19 @@ void mCc_ast_delete_expression(struct mCc_ast_expression *expression)
 	case MCC_AST_EXPRESSION_TYPE_PARENTH:
 		mCc_ast_delete_expression(expression->expression);
 		break;
+
+	case MCC_AST_EXPRESSION_TYPE_CALL_EXPR:
+		/*TODO*/
+		break;
+
+	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER:
+		/*TODO*/
+		break;
+
+	case MCC_AST_EXPRESSION_TYPE_UNARY_OP:
+		/*TODO*/
+		break;
+
 	}
 
 	free(expression);

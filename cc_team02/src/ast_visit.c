@@ -1,6 +1,6 @@
-#include "mCc/ast_visit.h"
-
 #include <assert.h>
+
+#include "mCc/ast_visit.h"
 
 #define visit(node, callback, visitor) \
 	do { \
@@ -51,6 +51,18 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		mCc_ast_visit_expression(expression->expression, visitor);
 		visit_if_post_order(expression, visitor->expression_parenth, visitor);
 		break;
+
+	case MCC_AST_EXPRESSION_TYPE_CALL_EXPR:
+		/*TODO*/
+		break;
+
+	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER:
+		/*TODO*/
+		break;
+
+	case MCC_AST_EXPRESSION_TYPE_UNARY_OP:
+		/*TODO*/
+		break;
 	}
 
 	visit_if_post_order(expression, visitor->expression, visitor);
@@ -71,6 +83,14 @@ void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
 
 	case MCC_AST_LITERAL_TYPE_FLOAT:
 		visit(literal, visitor->literal_float, visitor);
+		break;
+
+	case MCC_AST_LITERAL_TYPE_BOOL:
+		/*TODO*/
+		break;
+
+	case MCC_AST_LITERAL_TYPE_STRING:
+		/*TODO*/
 		break;
 	}
 

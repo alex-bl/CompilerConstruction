@@ -1,7 +1,7 @@
-#include "mCc/ast_print.h"
 
 #include <assert.h>
 
+#include "mCc/ast_print.h"
 #include "mCc/ast_visit.h"
 
 #define LABEL_SIZE 64
