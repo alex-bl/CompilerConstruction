@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>cc_team02: mCc_ast_literal Struct Reference</title>
+<title>cc_team02: mCc_ast_declaration Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -82,36 +82,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structmCc__ast__literal-members.html">List of all members</a>  </div>
+<a href="structmCc__ast__declaration-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">mCc_ast_literal Struct Reference</div>  </div>
+<div class="title">mCc_ast_declaration Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ae03d380d19aa513772d8b503de28536f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae03d380d19aa513772d8b503de28536f"></a>
+<tr class="memitem:a66f94da6e78a288fdd55a42c9336dc6a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a66f94da6e78a288fdd55a42c9336dc6a"></a>
 struct <a class="el" href="structmCc__ast__node.html">mCc_ast_node</a>&#160;</td><td class="memItemRight" valign="bottom"><b>node</b></td></tr>
-<tr class="separator:ae03d380d19aa513772d8b503de28536f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47bcfe288627ace18c3385b17cc72f56"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a47bcfe288627ace18c3385b17cc72f56"></a>
-enum mCc_ast_literal_type&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
-<tr class="separator:a47bcfe288627ace18c3385b17cc72f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6eb76a26aa3e9fccd5c531c1e61582f"><td class="memItemLeft" ><a class="anchor" id="ae6eb76a26aa3e9fccd5c531c1e61582f"></a>
+<tr class="separator:a66f94da6e78a288fdd55a42c9336dc6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d4827a710c235c6a6a9429e0599fe04"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1d4827a710c235c6a6a9429e0599fe04"></a>
+enum mCc_ast_declaration_type&#160;</td><td class="memItemRight" valign="bottom"><b>declaration_type</b></td></tr>
+<tr class="separator:a1d4827a710c235c6a6a9429e0599fe04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a318fb6f6ea0cee0a7a4b862c8e58dfa0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a318fb6f6ea0cee0a7a4b862c8e58dfa0"></a>
+enum mCc_ast_literal_type&#160;</td><td class="memItemRight" valign="bottom"><b>data_type</b></td></tr>
+<tr class="separator:a318fb6f6ea0cee0a7a4b862c8e58dfa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aa140da6a6e9456214c3b54345e2466"><td class="memItemLeft" ><a class="anchor" id="a0aa140da6a6e9456214c3b54345e2466"></a>
 union {</td></tr>
-<tr class="memitem:a18a239aafbe865974d9bf5b8f8c7352d"><td class="memItemLeft" >
-&#160;&#160;&#160;long&#160;&#160;&#160;<b>i_value</b></td></tr>
-<tr class="separator:a18a239aafbe865974d9bf5b8f8c7352d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18c7f8b7814927336bffccd2968e1baa"><td class="memItemLeft" >
-&#160;&#160;&#160;double&#160;&#160;&#160;<b>f_value</b></td></tr>
-<tr class="separator:a18c7f8b7814927336bffccd2968e1baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdeca42ef95e22f4a5c1bc8bd8dfd557"><td class="memItemLeft" >
-&#160;&#160;&#160;bool&#160;&#160;&#160;<b>b_value</b></td></tr>
-<tr class="separator:abdeca42ef95e22f4a5c1bc8bd8dfd557"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20027e3ac887631969a718660be4148b"><td class="memItemLeft" >
-&#160;&#160;&#160;const char *&#160;&#160;&#160;<b>s_value</b></td></tr>
-<tr class="separator:a20027e3ac887631969a718660be4148b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6eb76a26aa3e9fccd5c531c1e61582f"><td class="memItemLeft" valign="top">};&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="separator:ae6eb76a26aa3e9fccd5c531c1e61582f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d680c08b513d834f899555671920192"><td class="memItemLeft" >
+&#160;&#160;&#160;struct <a class="el" href="structmCc__ast__identifier.html">mCc_ast_identifier</a>&#160;&#160;&#160;<b>identifier</b></td></tr>
+<tr class="separator:a1d680c08b513d834f899555671920192"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a210d59a82f468afb6e335d3d06907625"><td class="memItemLeft" ><a class="anchor" id="a210d59a82f468afb6e335d3d06907625"></a>
+&#160;&#160;&#160;struct {</td></tr>
+<tr class="memitem:a4c05fe39aac4a2a25d8d3b089eb8406a"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;struct <a class="el" href="structmCc__ast__identifier.html">mCc_ast_identifier</a>&#160;&#160;&#160;<b>array_identifier</b></td></tr>
+<tr class="separator:a4c05fe39aac4a2a25d8d3b089eb8406a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab83f9ba0959a637d68f5047f4142c5ba"><td class="memItemLeft" >
+&#160;&#160;&#160;&#160;&#160;&#160;size_t&#160;&#160;&#160;<b>size</b></td></tr>
+<tr class="separator:ab83f9ba0959a637d68f5047f4142c5ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a210d59a82f468afb6e335d3d06907625"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:a210d59a82f468afb6e335d3d06907625"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aa140da6a6e9456214c3b54345e2466"><td class="memItemLeft" valign="top">};&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:a0aa140da6a6e9456214c3b54345e2466"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/mCc/<a class="el" href="ast_8h_source.html">ast.h</a></li>
