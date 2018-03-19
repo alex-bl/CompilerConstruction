@@ -1,7 +1,7 @@
 #ifndef MCC_AST_LITERAL_H
 #define MCC_AST_LITERAL_H
 
-#include "mCc/ast/ast_node.h"
+#include "mCc/ast/basis/ast_node.h"
 #include <stdbool.h>
 
 #ifdef __cplusplus

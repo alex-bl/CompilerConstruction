@@ -1,8 +1,8 @@
 #ifndef MCC_AST_STATEMENT_H
 #define MCC_AST_STATEMENT_H
 
-#include "mCc/ast/ast_node.h"
-#include "mCc/ast/ast_expression.h"
+#include "mCc/ast/basis/ast_node.h"
+#include "mCc/ast/basis/ast_expression.h"
 
 #ifdef __cplusplus
 extern "C" {

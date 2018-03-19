@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-#include "mCc/ast/ast_program.h"
+#include "mCc/ast/basis/ast_program.h"
 
 struct mCc_ast_statement
 mCc_ast_new_if_statement(struct mCc_ast_expression *condition_expr,

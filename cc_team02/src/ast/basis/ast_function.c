@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-#include "mCc/ast/ast_function.h"
+#include "mCc/ast/basis/ast_function.h"
 
 /*---------------------------------------------------------------- function
  * definition*/

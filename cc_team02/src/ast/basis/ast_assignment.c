@@ -1,6 +1,6 @@
 
 #include <stddef.h>
-#include "mCc/ast/ast_assignment.h"
+#include "mCc/ast/basis/ast_assignment.h"
 
 struct mCc_ast_assignment *mCc_ast_new_primitive_assignment(
     const char *identifier, struct mCc_ast_expression *assigned_expresion_value)

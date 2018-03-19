@@ -1,9 +1,9 @@
 #ifndef MCC_AST_ASSIGNMENT_H
 #define MCC_AST_ASSIGNMENT_H
 
-#include "mCc/ast/ast_node.h"
-#include "mCc/ast/ast_identifier.h"
-#include "mCc/ast/ast_expression.h"
+#include "mCc/ast/basis/ast_node.h"
+#include "mCc/ast/basis/ast_identifier.h"
+#include "mCc/ast/basis/ast_expression.h"
 
 #ifdef __cplusplus
 extern "C" {

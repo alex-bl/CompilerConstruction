@@ -3,8 +3,8 @@
 
 #include <stddef.h>
 
-#include "mCc/ast/ast_node.h"
-#include "mCc/ast/ast_function.h"
+#include "mCc/ast/basis/ast_node.h"
+#include "mCc/ast/basis/ast_function.h"
 
 #ifdef __cplusplus
 extern "C" {

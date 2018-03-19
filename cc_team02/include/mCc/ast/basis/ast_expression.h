@@ -1,9 +1,9 @@
 #ifndef MCC_AST_EXPRESSION_H
 #define MCC_AST_EXPRESSION_H
 
-#include "mCc/ast/ast_node.h"
-#include "mCc/ast/ast_operator.h"
-#include "mCc/ast/ast_literal.h"
+#include "mCc/ast/basis/ast_node.h"
+#include "mCc/ast/basis/ast_operator.h"
+#include "mCc/ast/basis/ast_literal.h"
 
 
 #ifdef __cplusplus

@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-#include "mCc/ast/ast_declaration.h"
+#include "mCc/ast/basis/ast_declaration.h"
 
 struct mCc_ast_declaration *
 mCc_ast_new_primitive_declaration(enum mCc_ast_literal_type data_type,
