@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 #include "mCc/ast/print/ast_basic_printing.h"
 

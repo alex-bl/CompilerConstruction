@@ -1,6 +1,7 @@
 #include <assert.h>
 
 #include "mCc/ast/visit/ast_visit_expression.h"
+#include "mCc/ast/visit/ast_visit_literal.h"
 
 void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
                               struct mCc_ast_visitor *visitor)

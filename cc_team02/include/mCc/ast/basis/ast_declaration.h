@@ -5,6 +5,7 @@
 
 #include "mCc/ast/basis/ast_node.h"
 #include "mCc/ast/basis/ast_identifier.h"
+#include "mCc/ast/basis/ast_literal.h"
 
 #ifdef __cplusplus
 extern "C" {

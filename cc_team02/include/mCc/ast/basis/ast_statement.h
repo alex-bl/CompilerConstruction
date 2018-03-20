@@ -1,8 +1,8 @@
 #ifndef MCC_AST_STATEMENT_H
 #define MCC_AST_STATEMENT_H
 
-#include "mCc/ast/basis/ast_node.h"
 #include "mCc/ast/basis/ast_expression.h"
+#include "mCc/ast/basis/ast_node.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,18 +59,18 @@ struct mCc_ast_statement {
 	};
 };
 
-struct mCc_ast_statement
+struct mCc_ast_statement *
 mCc_ast_new_if_statement(struct mCc_ast_expression *condition_expr,
                          struct mCc_ast_statement *if_stmt,
                          struct mCc_ast_statement *else_stmt);
 
-struct mCc_ast_statement
+struct mCc_ast_statement *
 mCc_ast_new_while_statement(struct mCc_ast_expression *loop_expr,
                             struct mCc_ast_statement *while_stmt);
-struct mCc_ast_statement
+struct mCc_ast_statement *
 mCc_ast_new_return_statement(struct mCc_ast_statement *return_stmt);
 
-struct mCc_ast_statement mCc_ast_new_compound_statement(
+struct mCc_ast_statement *mCc_ast_new_compound_statement(
     struct mCc_ast_compound_statement *compound_stmt);
 
 /**
@@ -81,7 +81,7 @@ struct mCc_ast_statement mCc_ast_new_compound_statement(
  * @param nr_of_stmts
  * @return
  */
-struct mCc_ast_compound_statement
+struct mCc_ast_compound_statement *
 mCc_ast_new_compound_statement_build(struct mCc_ast_statement *_stmts,
                                      long nr_of_stmts);
 
