@@ -1,22 +1,11 @@
 #include <stdlib.h>
+#include <assert.h>
 
 #include "mCc/ast/print/ast_basic_printing.h"
 #include "mCc/ast/print/ast_print_literal.h"
 #include "mCc/ast/visit/ast_visit_literal.h"
 
 #define LABEL_SIZE 64
-
-const char *mCc_ast_print_binary_op(enum mCc_ast_binary_op op)
-{
-	switch (op) {
-	case MCC_AST_BINARY_OP_ADD: return "+";
-	case MCC_AST_BINARY_OP_SUB: return "-";
-	case MCC_AST_BINARY_OP_MUL: return "*";
-	case MCC_AST_BINARY_OP_DIV: return "/";
-	}
-
-	return "unknown op";
-}
 
 static void print_dot_literal_int(struct mCc_ast_literal *literal, void *data)
 {

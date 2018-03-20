@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "mCc/ast/basis/ast_literal.h"
 

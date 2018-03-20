@@ -3,8 +3,8 @@
 
 #include <stddef.h>
 
-#include "mCc/ast/basis/ast_node.h"
 #include "mCc/ast/basis/ast_function.h"
+#include "mCc/ast/basis/ast_node.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,7 +18,7 @@ struct mCc_ast_program {
 	size_t nr_function_defs;
 };
 
-struct mCc_ast_program
+struct mCc_ast_program *
 mCc_ast_new_program(struct mCc_ast_function_def *function_defs,
                     size_t nr_function_defs);
 
