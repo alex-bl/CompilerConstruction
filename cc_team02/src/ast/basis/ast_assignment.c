@@ -19,12 +19,7 @@ mCc_ast_new_array_assignment(struct mCc_ast_identifier *identifier,
 	return NULL;
 }
 
-void mCc_ast_delete_primitive_assignment(struct mCc_ast_assignment *name)
-{
-	/* TODO */
-}
-
-void mCc_ast_delete_array_assignment(struct mCc_ast_assignment *name)
+void mCc_ast_delete_assignment(struct mCc_ast_assignment *name)
 {
 	/* TODO */
 }

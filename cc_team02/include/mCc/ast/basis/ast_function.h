@@ -31,19 +31,20 @@ struct mCc_ast_function_def {
 	/* Just a helper */
 	struct mCc_ast_statement *first_statement;
 
-	struct mCc_ast_declaration *parameters;
+	struct mCc_ast_declaration *first_parameter;
 
 	struct mCc_ast_function_def *next_function_def;
 };
 
-struct mCc_ast_function_def *
-mCc_ast_new_void_function_def(struct mCc_ast_identifier *identifier);
+struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
+    struct mCc_ast_identifier *identifier,
+    enum mCc_ast_function_return_type return_type,
+    struct mCc_ast_statement *stmts);
 
-struct mCc_ast_function_def *
-mCc_ast_new_type_function_def(struct mCc_ast_identifier *identifier,
-                              enum mCc_ast_function_return_type return_type,
-                              struct mCc_ast_declaration *params,
-                              struct mCc_ast_statement *stmt);
+struct mCc_ast_function_def *mCc_ast_new_parameterized_function_def(
+    struct mCc_ast_identifier *identifier,
+    enum mCc_ast_function_return_type return_type,
+    struct mCc_ast_declaration *params, struct mCc_ast_statement *stmts);
 
 void mCc_ast_delete_function_def(struct mCc_ast_function_def *function_def);
 
@@ -61,8 +62,11 @@ struct mCc_ast_function_call {
 };
 
 struct mCc_ast_function_call *
-mCc_ast_new_int_function_call(struct mCc_ast_identifier *identifier,
-                              struct mCc_ast_expression *args);
+mCc_ast_new_parameterized_function_call(struct mCc_ast_identifier *identifier,
+                                        struct mCc_ast_expression *args);
+
+struct mCc_ast_function_call *mCc_ast_new_non_parameterized_function_call(
+    struct mCc_ast_identifier *identifier);
 
 void mCc_ast_delete_function_call(struct mCc_ast_function_call *function_call);
 

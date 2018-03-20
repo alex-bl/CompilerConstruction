@@ -19,12 +19,7 @@ mCc_ast_new_array_declaration(enum mCc_ast_literal_type data_type,
 	return NULL;
 }
 
-void mCc_ast_delete_primitive_declaration(struct mCc_ast_declaration *name)
-{
-	/* TODO */
-}
-
-void mCc_ast_delete_array_declaration(struct mCc_ast_declaration *name)
+void mCc_ast_delete_declaration(struct mCc_ast_declaration *name)
 {
 	/* TODO */
 }

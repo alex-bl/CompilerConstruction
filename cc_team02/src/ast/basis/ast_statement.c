@@ -26,28 +26,27 @@ mCc_ast_new_return_statement(struct mCc_ast_statement *return_stmt)
 }
 
 struct mCc_ast_statement *
-mCc_ast_new_compound_statement(struct mCc_ast_statement *stmt, struct mCc_ast_statement *to_append)
+mCc_ast_new_expression_statement(struct mCc_ast_expression *expression_stmt)
 {
 	/* TODO */
 	return NULL;
 }
 
-void mCc_ast_delete_if_statement(struct mCc_ast_statement *stmt)
+struct mCc_ast_statement *
+mCc_ast_new_declaration_statement(struct mCc_ast_declaration *declaration)
 {
 	/* TODO */
+	return NULL;
 }
 
-void mCc_ast_delete_while_statement(struct mCc_ast_statement *stmt)
+struct mCc_ast_statement *
+mCc_ast_new_assign_statement(struct mCc_ast_assignment *assignment)
 {
 	/* TODO */
+	return NULL;
 }
 
-void mCc_ast_delete_return_statement(struct mCc_ast_statement *stmt)
-{
-	/* TODO */
-}
-
-void mCc_ast_delete_compound_statement(struct mCc_ast_statement *stmt)
+void mCc_ast_delete_statement(struct mCc_ast_statement *stmt)
 {
 	/* TODO */
 }
