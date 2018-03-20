@@ -37,14 +37,3 @@ void print_dot_edge(FILE *out, const void *src_node, const void *dst_node,
 	fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%s\"];\n", src_node, dst_node,
 	        label);
 }
-
-void print_dot_expression_literal(struct mCc_ast_expression *expression,
-                                  void *data)
-{
-	assert(expression);
-	assert(data);
-
-	FILE *out = data;
-	print_dot_node(out, expression, "expr: lit");
-	print_dot_edge(out, expression, expression->literal, "literal");
-}

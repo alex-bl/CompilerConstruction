@@ -1,6 +1,5 @@
 #include <stdlib.h>
 
-#include "mCc/ast/basis/ast_literal.h"
 #include "mCc/ast/print/ast_basic_printing.h"
 #include "mCc/ast/print/ast_print_literal.h"
 #include "mCc/ast/visit/ast_visit_literal.h"

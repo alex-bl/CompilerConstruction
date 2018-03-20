@@ -9,7 +9,8 @@
 extern "C" {
 #endif
 
-void mCc_ast_print_dot_identifier(FILE *out, struct mCc_ast_identifier *identifier);
+void mCc_ast_print_dot_identifier(FILE *out,
+                                  struct mCc_ast_identifier *identifier);
 
 #ifdef __cplusplus
 }
