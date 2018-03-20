@@ -1,6 +1,6 @@
+#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include "mCc/ast/basis/ast_literal.h"
 
@@ -31,14 +31,26 @@ struct mCc_ast_literal *mCc_ast_new_literal_float(double value)
 /* added */
 struct mCc_ast_literal *mCc_ast_new_literal_bool(bool value)
 {
-	/* TODO */
-	return NULL;
+	struct mCc_ast_literal *lit = malloc(sizeof(*lit));
+	if (!lit) {
+		return NULL;
+	}
+
+	lit->type = MCC_AST_LITERAL_TYPE_BOOL;
+	lit->b_value = value;
+	return lit;
 }
 
 struct mCc_ast_literal *mCc_ast_new_literal_string(const char *value)
 {
-	/* TODO */
-	return NULL;
+	struct mCc_ast_literal *lit = malloc(sizeof(*lit));
+	if (!lit) {
+		return NULL;
+	}
+
+	lit->type = MCC_AST_LITERAL_TYPE_STRING;
+	lit->s_value = value;
+	return lit;
 }
 
 void mCc_ast_delete_literal(struct mCc_ast_literal *literal)
