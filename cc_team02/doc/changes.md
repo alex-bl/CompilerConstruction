@@ -4,4 +4,7 @@ This file lists and justifies all changes made to the [mCc Template](https://git
 
 ## Changes
 
-- **cmake**: Switched to `cmake` for build system because it provides better IDE-integration.
+- **cmake**: Also supporting `cmake` as build system because it provides better IDE-integration (and there should't be any conflict to meson).
+- **ast.h**: This header acts as a "header-container" because the ast-components' definition is splitted to separate headers (for better modularization according to their functionality: the main reason is to guarantee a parallel implementation without many merge-conflicts/intersections)
+- **ast_print.h***: Same as for ast.h
+- **ast_visit.h***: Same as for ast.h

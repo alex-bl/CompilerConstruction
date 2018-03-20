@@ -26,11 +26,13 @@
 
    `git clone https://github.com/W4RH4WK/mCc.git`
 
-4. Install flex + bison + doxygen:
+4. Install flex + bison + doxygen + clang-format 5.0 (at least):
 
    `sudo apt-get install flex`
    
    `sudo apt-get install bison`
    
    `sudo apt-get install doxygen`
+
+   `sudo apt-get install clang-format-5.0`
 
