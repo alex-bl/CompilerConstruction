@@ -13,14 +13,11 @@ extern "C" {
 struct mCc_ast_program {
 	struct mCc_ast_node node;
 
-	struct mCc_ast_function_def *function_defs;
-
-	size_t nr_function_defs;
+	struct mCc_ast_function_def *first_function_def;
 };
 
 struct mCc_ast_program *
-mCc_ast_new_program(struct mCc_ast_function_def *function_defs,
-                    size_t nr_function_defs);
+mCc_ast_new_program(struct mCc_ast_function_def *first_function_def);
 
 void mCc_ast_delete_program(struct mCc_ast_program *program);
 

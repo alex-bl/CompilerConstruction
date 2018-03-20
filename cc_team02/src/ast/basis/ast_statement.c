@@ -26,15 +26,7 @@ mCc_ast_new_return_statement(struct mCc_ast_statement *return_stmt)
 }
 
 struct mCc_ast_statement *
-mCc_ast_new_compound_statement(struct mCc_ast_compound_statement *compound_stmt)
-{
-	/* TODO */
-	return NULL;
-}
-
-struct mCc_ast_compound_statement *
-mCc_ast_new_compound_statement_build(struct mCc_ast_statement *_stmts,
-                                     long nr_of_stmts)
+mCc_ast_new_compound_statement(struct mCc_ast_statement *stmt, struct mCc_ast_statement *to_append)
 {
 	/* TODO */
 	return NULL;

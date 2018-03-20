@@ -1,5 +1,5 @@
-#include <stdlib.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #include "mCc/ast/print/ast_basic_printing.h"
 #include "mCc/ast/print/ast_print_expression.h"
@@ -12,8 +12,15 @@ const char *mCc_ast_print_binary_op(enum mCc_ast_binary_op op)
 	case MCC_AST_BINARY_OP_SUB: return "-";
 	case MCC_AST_BINARY_OP_MUL: return "*";
 	case MCC_AST_BINARY_OP_DIV: return "/";
+	case MCC_AST_BINARY_OP_LESS_THAN: return "<";
+	case MCC_AST_BINARY_OP_GREATER_THAN: return ">";
+	case MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN: return "<=";
+	case MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN: return ">=";
+	case MCC_AST_BINARY_OP_AND: return "&&";
+	case MCC_AST_BINARY_OP_OR: return "||";
+	case MCC_AST_BINARY_OP_EQUALS: return "==";
+	case MCC_AST_BINARY_OP_NOT_EQUALS: return "!=";
 	}
-
 	return "unknown op";
 }
 

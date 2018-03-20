@@ -15,21 +15,12 @@ enum mCc_ast_statement_type {
 	MCC_AST_STATEMENT_COMPOUND
 };
 
-/**
- * This is just a "helper-struct" because it is needed inside the
- * "function-block"
- */
-struct mCc_ast_compound_statement {
-	/* MCC_AST_EXPRESSION */
-	struct mCc_ast_statement *statements;
-	/*TODO: a long or smaller? :-)*/
-	long nr_of_statements;
-};
-
 struct mCc_ast_statement {
 	struct mCc_ast_node node;
 
 	enum mCc_ast_statement_type statement_type;
+
+	struct mCc_ast_statement *next_statement;
 
 	union {
 
@@ -70,20 +61,9 @@ mCc_ast_new_while_statement(struct mCc_ast_expression *loop_expr,
 struct mCc_ast_statement *
 mCc_ast_new_return_statement(struct mCc_ast_statement *return_stmt);
 
-struct mCc_ast_statement *mCc_ast_new_compound_statement(
-    struct mCc_ast_compound_statement *compound_stmt);
-
-/**
- * It just initializes the "helper-struct". It is not intended to use
- * immediately as action inside the parser
- *
- * @param stmts
- * @param nr_of_stmts
- * @return
- */
-struct mCc_ast_compound_statement *
-mCc_ast_new_compound_statement_build(struct mCc_ast_statement *_stmts,
-                                     long nr_of_stmts);
+struct mCc_ast_statement *
+mCc_ast_new_compound_statement(struct mCc_ast_statement *first,
+                               struct mCc_ast_statement *to_append);
 
 void mCc_ast_delete_if_statement(struct mCc_ast_statement *stmt);
 
