@@ -1,6 +1,8 @@
 #ifndef MCC_AST_STATEMENT_H
 #define MCC_AST_STATEMENT_H
 
+#include "mCc/ast/basis/ast_assignment.h"
+#include "mCc/ast/basis/ast_declaration.h"
 #include "mCc/ast/basis/ast_expression.h"
 #include "mCc/ast/basis/ast_node.h"
 
@@ -12,24 +14,19 @@ enum mCc_ast_statement_type {
 	MCC_AST_STATEMENT_IF,
 	MCC_AST_STATEMENT_WHILE,
 	MCC_AST_STATEMENT_RETURN,
-	MCC_AST_STATEMENT_COMPOUND
-};
+	MCC_AST_STATEMENT_COMPOUND,
 
-/**
- * This is just a "helper-struct" because it is needed inside the
- * "function-block"
- */
-struct mCc_ast_compound_statement {
-	/* MCC_AST_EXPRESSION */
-	struct mCc_ast_statement *statements;
-	/*TODO: a long or smaller? :-)*/
-	long nr_of_statements;
+	MCC_AST_STATEMENT_DECLARATION,
+	MCC_AST_STATEMENT_ASSIGNMENT,
+	MCC_AST_STATEMENT_EXPRESSION
 };
 
 struct mCc_ast_statement {
 	struct mCc_ast_node node;
 
 	enum mCc_ast_statement_type statement_type;
+
+	struct mCc_ast_statement *next_statement;
 
 	union {
 
@@ -54,8 +51,14 @@ struct mCc_ast_statement {
 		/* MCC_AST_EXPRESSION */
 		struct mCc_ast_expression *return_expression;
 
-		// compound-statement
-		struct mCc_ast_compound_statement *compound_statement;
+		/* MCC_AST_EXPRESSION => this as separate attribute?*/
+		struct mCc_ast_expression *expression;
+
+		/* MCC_AST_DECLARATION*/
+		struct mCc_ast_declaration *declaration;
+
+		/* MCC_AST_ASSIGNMENT */
+		struct mCc_ast_assignment *assignment;
 	};
 };
 
@@ -70,28 +73,16 @@ mCc_ast_new_while_statement(struct mCc_ast_expression *loop_expr,
 struct mCc_ast_statement *
 mCc_ast_new_return_statement(struct mCc_ast_statement *return_stmt);
 
-struct mCc_ast_statement *mCc_ast_new_compound_statement(
-    struct mCc_ast_compound_statement *compound_stmt);
+struct mCc_ast_statement *
+mCc_ast_new_expression_statement(struct mCc_ast_expression *expression_stmt);
 
-/**
- * It just initializes the "helper-struct". It is not intended to use
- * immediately as action inside the parser
- *
- * @param stmts
- * @param nr_of_stmts
- * @return
- */
-struct mCc_ast_compound_statement *
-mCc_ast_new_compound_statement_build(struct mCc_ast_statement *_stmts,
-                                     long nr_of_stmts);
+struct mCc_ast_statement *
+mCc_ast_new_declaration_statement(struct mCc_ast_declaration *declaration);
 
-void mCc_ast_delete_if_statement(struct mCc_ast_statement *stmt);
+struct mCc_ast_statement *
+mCc_ast_new_assign_statement(struct mCc_ast_assignment *assignment);
 
-void mCc_ast_delete_while_statement(struct mCc_ast_statement *stmt);
-
-void mCc_ast_delete_return_statement(struct mCc_ast_statement *stmt);
-
-void mCc_ast_delete_compound_statement(struct mCc_ast_statement *stmt);
+void mCc_ast_delete_statement(struct mCc_ast_statement *stmt);
 
 #ifdef __cplusplus
 }

@@ -11,8 +11,11 @@ set(cc_team02_VERSION_MAJOR 1)
 set(cc_team02_VERSION_MINOR 0)
 
 # set global compiler flags (append them)
-string(APPEND CMAKE_C_FLAGS "-std=c11 -Wall -Werror")
-string(APPEND CMAKE_CXX_FLAGS "-std=c++14 -Wall -Werror")
+string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Werror")
+string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Werror")
+
+# enable this to see the exact commands form cmake
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 # build-type
 set(CMAKE_BUILD_TYPE Debug)

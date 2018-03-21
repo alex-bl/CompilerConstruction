@@ -39,6 +39,10 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		/*TODO*/
 		break;
 
+	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY:
+		/*TODO*/
+		break;
+
 	case MCC_AST_EXPRESSION_TYPE_UNARY_OP:
 		/*TODO*/
 		break;
