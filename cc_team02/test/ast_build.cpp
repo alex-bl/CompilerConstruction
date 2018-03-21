@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-TEST(AstBuilder, CreateInt)
+TEST(AstLiteralBuilder, CreateInt)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_int(12);
 
@@ -14,7 +14,7 @@ TEST(AstBuilder, CreateInt)
 	mCc_ast_delete_literal(lit);
 }
 
-TEST(AstBuilder, CreateFloat)
+TEST(AstLiteralBuilder, CreateFloat)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_float(1.2);
 
@@ -24,7 +24,7 @@ TEST(AstBuilder, CreateFloat)
 	mCc_ast_delete_literal(lit);
 }
 
-TEST(AstBuilder, CreateBool)
+TEST(AstLiteralBuilder, CreateBool)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_bool(true);
 
@@ -34,7 +34,7 @@ TEST(AstBuilder, CreateBool)
 	mCc_ast_delete_literal(lit);
 }
 
-TEST(AstBuilder, CreateString)
+TEST(AstLiteralBuilder, CreateString)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
 
