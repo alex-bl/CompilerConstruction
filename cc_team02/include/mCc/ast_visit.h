@@ -76,6 +76,11 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_expression_cb expression_literal;
 	mCc_ast_visit_expression_cb expression_binary_op;
 	mCc_ast_visit_expression_cb expression_parenth;
+	mCc_ast_visit_expression_cb expression_function_call;
+	mCc_ast_visit_expression_cb expression_identifier;
+	mCc_ast_visit_expression_cb expression_array_identifier;
+	mCc_ast_visit_expression_cb expression_unary_op;
+
 
 	// literal
 	mCc_ast_visit_literal_cb literal;
@@ -105,16 +110,20 @@ struct mCc_ast_visitor {
 
 	// identifier
 	mCc_ast_visit_identifier_cb identifier;
+	mCc_ast_visit_identifier_cb array_identifier;
 
 	// program
 	mCc_ast_visit_program_cb program;
 
-	// program
-	mCc_ast_visit_program_cb statement;
+	// statement
+	mCc_ast_visit_statement_cb statement;
 	mCc_ast_visit_statement_cb statement_if;
 	mCc_ast_visit_statement_cb statement_while;
 	mCc_ast_visit_statement_cb statement_return;
-	mCc_ast_visit_statement_cb statement_compound;
+	mCc_ast_visit_statement_cb statement_declaration;
+	mCc_ast_visit_statement_cb statement_assignment;
+	mCc_ast_visit_statement_cb statement_expression;
+
 };
 
 #ifdef __cplusplus

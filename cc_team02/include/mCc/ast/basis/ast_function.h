@@ -55,10 +55,10 @@ struct mCc_ast_function_call {
 	struct mCc_ast_node node;
 
 	/* MCC_AST_IDENTIFIER */
-	struct mCc_ast_identifier identifier;
+	struct mCc_ast_identifier *identifier;
 
 	/* MCC_AST_EXPRESSION*/
-	struct mCc_ast_expression *arguments;
+	struct mCc_ast_expression *first_argument;
 };
 
 struct mCc_ast_function_call *
