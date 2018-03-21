@@ -78,7 +78,7 @@ include(GoogleTest)
 # is it that much simple? googleTest is already a module => https://cmake.org/cmake/help/v3.9/module/GoogleTest.html
 
 #create list: add all tests manually here (file-names without *.cpp)
-set(unit_test_list "parser")
+set(unit_test_list "parser" "ast_build")
 
 foreach(entry_name ${unit_test_list})
 	# build and link
