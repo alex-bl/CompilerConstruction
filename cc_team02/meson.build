@@ -29,15 +29,36 @@ pgen = generator(bison,
 
 mCc_inc = include_directories('include')
 
-mCc_src = [ 'src/ast.c',
-            'src/ast_print.c',
-            'src/ast_visit.c',
-            lgen.process('src/scanner.l'),
-            pgen.process('src/parser.y') ]
+mCc_ast_src = ['src/ast/basis/ast_assignment.c','src/ast/basis/ast_declaration.c','src/ast/basis/ast_expression.c','src/ast/basis/ast_function.c',
+'src/ast/basis/ast_identifier.c','src/ast/basis/ast_literal.c','src/ast/basis/ast_program.c','src/ast/basis/ast_statement.c' ]
 
-mCc_lib = library('mCc', mCc_src,
+
+mCc_visit_src = ['src/ast/visit/ast_visit_assignment.c',
+'src/ast/visit/ast_visit_declaration.c',
+'src/ast/visit/ast_visit_expression.c',
+'src/ast/visit/ast_visit_function.c',							
+'src/ast/visit/ast_visit_identifier.c',							
+'src/ast/visit/ast_visit_literal.c',
+'src/ast/visit/ast_visit_program.c',
+'src/ast/visit/ast_visit_statement.c']
+
+
+mCc_print_src = ['src/ast/print/ast_basic_printing.c', 
+'src/ast/print/ast_print_assignment.c',
+'src/ast/print/ast_print_declaration.c', 
+'src/ast/print/ast_print_expression.c',
+'src/ast/print/ast_print_function.c',							
+'src/ast/print/ast_print_identifier.c',							
+'src/ast/print/ast_print_literal.c',
+'src/ast/print/ast_print_program.c',
+'src/ast/print/ast_print_statement.c']
+
+
+mCc_lib = library('mCc', mCc_ast_src, mCc_visit_src, mCc_print_src, lgen.process('src/scanner.l'),
+            pgen.process('src/parser.y'),
                   c_args: '-D_POSIX_C_SOURCE=200809L',
                   include_directories: mCc_inc)
+
 
 # ----------------------------------------------------------------- EXECUTABLES
 

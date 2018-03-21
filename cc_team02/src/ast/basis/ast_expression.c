@@ -56,10 +56,66 @@ mCc_ast_new_expression_parenth(struct mCc_ast_expression *expression)
 
 /*added*/
 struct mCc_ast_expression *
-mCc_ast_new_expression_unary_op(struct mCc_ast_expression *expression)
+mCc_ast_new_expression_unary_op(enum mCc_ast_unary_op op,
+                                struct mCc_ast_expression *expression)
 {
-	/* TODO */
-	return NULL;
+	assert(expression);
+
+	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
+	if (!expr) {
+		return NULL;
+	}
+
+	expr->unary_op = op;
+	expr->unary_rhs = expression;
+
+	return expr;
+}
+
+struct mCc_ast_expression *
+mCc_ast_new_expression_identifier(struct mCc_ast_identifier *identifier)
+{
+	assert(identifier);
+
+	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
+	if (!expr) {
+		return NULL;
+	}
+
+	expr->identifier = identifier;
+
+	return expr;
+}
+
+struct mCc_ast_expression *mCc_ast_new_expression_array_identifier(
+    struct mCc_ast_identifier *array_identifier,
+    struct mCc_ast_expression *array_index_expression)
+{
+	assert(array_identifier);
+	assert(array_index_expression);
+
+	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
+	if (!expr) {
+		return NULL;
+	}
+	expr->array_identifier = array_identifier;
+	expr->array_index_expression = array_index_expression;
+
+	return expr;
+}
+
+struct mCc_ast_expression *mCc_ast_new_expression_function_call(
+    struct mCc_ast_function_call *function_call)
+{
+	assert(function_call);
+
+	struct mCc_ast_expression *expr = malloc(sizeof(*expr));
+	if (!expr) {
+		return NULL;
+	}
+	expr->function_call = function_call;
+
+	return expr;
 }
 
 void mCc_ast_delete_expression(struct mCc_ast_expression *expression)
@@ -81,15 +137,20 @@ void mCc_ast_delete_expression(struct mCc_ast_expression *expression)
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_CALL_EXPR:
-		/*TODO*/
+		mCc_ast_delete_function_call(expression->function_call);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER:
-		/*TODO*/
+		mCc_ast_delete_identifier(expression->identifier);
+		break;
+
+	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY:
+		mCc_ast_delete_identifier(expression->array_identifier);
+		mCc_ast_delete_expression(expression->array_index_expression);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_UNARY_OP:
-		/*TODO*/
+		mCc_ast_delete_expression(expression->unary_rhs);
 		break;
 	}
 

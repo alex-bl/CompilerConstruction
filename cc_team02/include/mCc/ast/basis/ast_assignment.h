@@ -1,9 +1,9 @@
 #ifndef MCC_AST_ASSIGNMENT_H
 #define MCC_AST_ASSIGNMENT_H
 
-#include "mCc/ast/basis/ast_node.h"
-#include "mCc/ast/basis/ast_identifier.h"
 #include "mCc/ast/basis/ast_expression.h"
+#include "mCc/ast/basis/ast_identifier.h"
+#include "mCc/ast/basis/ast_node.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,17 +34,15 @@ struct mCc_ast_assignment {
 };
 
 struct mCc_ast_assignment *mCc_ast_new_primitive_assignment(
-    const char *identifier,
+    struct mCc_ast_identifier *identifier,
     struct mCc_ast_expression *assigned_expresion_value);
 
 struct mCc_ast_assignment *
-mCc_ast_new_array_assignment(const char *identifier,
+mCc_ast_new_array_assignment(struct mCc_ast_identifier *identifier,
                              struct mCc_ast_expression *index,
                              struct mCc_ast_expression *value);
 
-void mCc_ast_delete_primitive_assignment(struct mCc_ast_assignment *name);
-
-void mCc_ast_delete_array_assignment(struct mCc_ast_assignment *name);
+void mCc_ast_delete_assignment(struct mCc_ast_assignment *name);
 
 #ifdef __cplusplus
 }

@@ -11,15 +11,18 @@ set(cc_team02_VERSION_MAJOR 1)
 set(cc_team02_VERSION_MINOR 0)
 
 # set global compiler flags (append them)
-string(APPEND CMAKE_C_FLAGS "-std=c11 -Wall -Werror")
-string(APPEND CMAKE_CXX_FLAGS "-std=c++14 -Wall -Werror")
+string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Werror")
+string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Werror")
+
+# enable this to see the exact commands form cmake
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 # build-type
 set(CMAKE_BUILD_TYPE Debug)
 
 # gtest download-dest
-set(GTEST_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/googletest-release-1.8.0")
-set(GBENCHMARK_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/googlebenchmark-release-1.3.0")
+set(GTEST_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/cmake/googletest-release1.8.0")
+set(GBENCHMARK_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/cmake/googlebenchmark-release-1.3.0")
 
 #============================================================ doxygen config
 set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/doc")
