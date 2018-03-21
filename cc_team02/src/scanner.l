@@ -53,6 +53,9 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 "{"               { return TK_LBRACE; }
 "}"               { return TK_RBRACE; }
 
+"["               { return TK_LBRACKET; }
+"]"               { return TK_RBRACKET; }
+
 "<"               { return TK_LESS; }
 ">"               { return TK_GREATER; }
 

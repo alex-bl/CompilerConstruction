@@ -29,14 +29,24 @@ void mCc_parser_error();
 %token <const char*>        STRING_LITERAL "string literal"
 %token <bool>               BOOL_LITERAL "bool literal"
 
+%token INT_TYPE "integer type"
+%token FLOAT_TYPE "float type"
+%token STRING_TYPE "string type"
+%token BOOL_TYPE "bool type"
+
 %token IF    "if"
+%token ELSE  "else"
 %token WHILE "while"
+%token RETURN "return"
 
 %token LPARENTH "("
 %token RPARENTH ")"
 
 %token LBRACE "{"
 %token RBRACE "}"
+
+%token LBRACKET "["
+%token RBRACKET "]"
 
 %token PLUS  "+"
 %token MINUS "-"
@@ -64,6 +74,14 @@ void mCc_parser_error();
 toplevel : expression { *result = $1; }
          ;
 
+declaration : type IDENTIFIER
+		    | type LBRACKET INT_LITERAL RBRACKET IDENTIFIER
+			;
+
+assignment : IDENTIFIER "=" expression
+		   | IDENTIFIER LBRACKET expression RBRACKET "=" expression
+		   ;
+
 binary_op : PLUS  { $$ = MCC_AST_BINARY_OP_ADD; }
           | MINUS { $$ = MCC_AST_BINARY_OP_SUB; }
           | ASTER { $$ = MCC_AST_BINARY_OP_MUL; }
@@ -71,6 +89,10 @@ binary_op : PLUS  { $$ = MCC_AST_BINARY_OP_ADD; }
           ;
 
 single_expr : literal                         { $$ = mCc_ast_new_expression_literal($1); }
+			| IDENTIFIER
+			| IDENTIFIER LBRACKET expression RBRACKET
+			| call_expr
+			| unary_op expression
             | LPARENTH expression RPARENTH    { $$ = mCc_ast_new_expression_parenth($2); }
             ;
 
@@ -80,7 +102,42 @@ expression : single_expr                      { $$ = $1;                        
 
 literal : INT_LITERAL   { $$ = mCc_ast_new_literal_int($1);   }
         | FLOAT_LITERAL { $$ = mCc_ast_new_literal_float($1); }
+		| BOOL_LITERAL     /*Todo*/
+		| STRING_LITERAL   /*Todo*/
         ;
+
+type : INT_TYPE 	/*Todo*/
+	 | FLOAT_TYPE	/*Todo*/
+     | BOOL_TYPE	/*Todo*/
+	 | STRING_TYPE	/*Todo*/
+	 ;
+
+statement : if_stmt
+		  | while_stmt
+		  | ret_stmt
+		  | declaration ";"
+		  | assignment ";"
+		  | expression ";"
+		  | compound_stmt
+		  ;
+
+if_stmt : IF LPARENTH expression RPARENTH statement
+		| IF LPARENTH expression RPARENTH statement ELSE statement
+		;
+
+while_stmt : WHILE LPARENTH expression RPARENTH statement
+		   ;
+
+ret_stmt : RETURN ";"
+	     | RETURN expression ";"
+		 ;
+
+compound_stmt : LBRACE RBRACE
+			  | LBRACE statement RBRACE
+			  ;
+
+
+
 
 %%
 
