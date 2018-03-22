@@ -53,6 +53,8 @@ void mCc_parser_error();
 %token ASTER "*"
 %token SLASH "/"
 
+%token NEGATION "!"
+
 %token LESSEQ "<="
 %token LESS "<"
 %token GREATEREQ ">="
@@ -74,70 +76,104 @@ void mCc_parser_error();
 toplevel : expression { *result = $1; }
          ;
 
-declaration : type IDENTIFIER
-		    | type LBRACKET INT_LITERAL RBRACKET IDENTIFIER
+declaration : type IDENTIFIER									{ $$ = mCc_ast_new_primitive_declaration($1, $2); }
+		    | type LBRACKET INT_LITERAL RBRACKET IDENTIFIER		{ $$ = mCc_ast_new_array_declaration($1, $5, $3); }
 			;
 
-assignment : IDENTIFIER "=" expression
-		   | IDENTIFIER LBRACKET expression RBRACKET "=" expression
+assignment : IDENTIFIER "=" expression								{ $$ = mCc_ast_new_primitive_assignment($1, $3); }
+		   | IDENTIFIER LBRACKET expression RBRACKET "=" expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $5); }
 		   ;
 
-binary_op : PLUS  { $$ = MCC_AST_BINARY_OP_ADD; }
-          | MINUS { $$ = MCC_AST_BINARY_OP_SUB; }
-          | ASTER { $$ = MCC_AST_BINARY_OP_MUL; }
-          | SLASH { $$ = MCC_AST_BINARY_OP_DIV; }
-          ;
+unary_op	: 	MINUS		{ $$ = MCC_AST_UNARY_OP_MINUS; }
+			|	NEGATION	{ $$ = MCC_AST_UNARY_OP_NEGATION; }
+			;
+			
+binary_op	:	PLUS 		{ $$ = MCC_AST_BINARY_OP_ADD; }
+          	|	MINUS		{ $$ = MCC_AST_BINARY_OP_SUB; }
+          	|	ASTER		{ $$ = MCC_AST_BINARY_OP_MUL; }
+          	|	SLASH		{ $$ = MCC_AST_BINARY_OP_DIV; }
+			|	LESSEQ		{ $$ = MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN; }
+			| 	LESS		{ $$ = MCC_AST_BINARY_OP_LESS_THAN; }
+			| 	GREATEREQ	{ $$ = MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN; }
+			|	GREATER		{ $$ = MCC_AST_BINARY_OP_GREATER_THAN; }
+			|	OR			{ $$ = MCC_AST_BINARY_OP_OR; }
+			|	AND			{ $$ = MCC_AST_BINARY_OP_AND; }
+			|	EQUALS		{ $$ = MCC_AST_BINARY_OP_EQUALS; }
+			|	NOTEQUALS	{ $$ = MCC_AST_BINARY_OP_NOT_EQUALS; }
+          	;
 
-single_expr : literal                         { $$ = mCc_ast_new_expression_literal($1); }
-			| IDENTIFIER
-			| IDENTIFIER LBRACKET expression RBRACKET
-			| call_expr
-			| unary_op expression
-            | LPARENTH expression RPARENTH    { $$ = mCc_ast_new_expression_parenth($2); }
+single_expr : literal                      			    { $$ = mCc_ast_new_expression_literal($1); }
+			| IDENTIFIER								{ $$ = mCc_ast_new_identifier($1); }
+			| IDENTIFIER LBRACKET expression RBRACKET	{ $$ = mCc_ast_new_expression_array_identifier($1, $3); }
+			| call_expr									{ $$ = mCc_ast_new_expression_function_call($1);}
+			| unary_op expression						{ $$ = mCc_ast_new_expression_unary_op($1, $2); }
+            | LPARENTH expression RPARENTH    			{ $$ = mCc_ast_new_expression_parenth($2); }
             ;
 
-expression : single_expr                      { $$ = $1;                                           }
+expression : single_expr                      { $$ = $1; }
            | single_expr binary_op expression { $$ = mCc_ast_new_expression_binary_op($2, $1, $3); }
            ;
 
 literal : INT_LITERAL   { $$ = mCc_ast_new_literal_int($1);   }
         | FLOAT_LITERAL { $$ = mCc_ast_new_literal_float($1); }
-		| BOOL_LITERAL     /*Todo*/
-		| STRING_LITERAL   /*Todo*/
+		| BOOL_LITERAL  { $$ = mCc_ast_new_literal_bool($1);  }
+		| STRING_LITERAL { $$ = mCc_ast_new_literal_string($1); }
         ;
 
-type : INT_TYPE 	/*Todo*/
-	 | FLOAT_TYPE	/*Todo*/
-     | BOOL_TYPE	/*Todo*/
-	 | STRING_TYPE	/*Todo*/
-	 ;
-
-statement : if_stmt
-		  | while_stmt
-		  | ret_stmt
-		  | declaration ";"
-		  | assignment ";"
-		  | expression ";"
-		  | compound_stmt
-		  ;
-
-if_stmt : IF LPARENTH expression RPARENTH statement
-		| IF LPARENTH expression RPARENTH statement ELSE statement
+type	:	INT_TYPE 	/*Todo*/
+		|	FLOAT_TYPE	/*Todo*/
+		|	BOOL_TYPE	/*Todo*/
+		|	STRING_TYPE	/*Todo*/
 		;
 
-while_stmt : WHILE LPARENTH expression RPARENTH statement
-		   ;
+statement   :   if_stmt
+            |   while_stmt
+            |   ret_stmt
+            |   declaration ";"
+            |   assignment ";"
+            |   expression ";"
+            |   compound_stmt
+            ;
 
-ret_stmt : RETURN ";"
-	     | RETURN expression ";"
-		 ;
+if_stmt :   IF LPARENTH expression RPARENTH statement
+        |   IF LPARENTH expression RPARENTH statement ELSE statement
+        ;
 
-compound_stmt : LBRACE RBRACE
-			  | LBRACE statement RBRACE
-			  ;
+while_stmt  :   WHILE LPARENTH expression RPARENTH statement
+            ;
+
+ret_stmt    :  RETURN ";"
+            |  RETURN expression ";"
+            ;
+
+compound_stmt   : LBRACE RBRACE
+                | LBRACE statement RBRACE
+                ;
+
+function_def    :   function_def_return_type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
+                |   function_def_return_type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); }
+                ;
 
 
+function_def_return_type   	:   "void"
+							|	type
+							;
 
+parameters  :   declaration
+            |   parameters "," declaration
+            ;
+
+call_expr	:	IDENTIFIER LPARENTH RPARENTH			
+			|	IDENTIFIER LPARENTH arguments RPARENTH
+			;
+
+arguments	:	expression
+			| 	expression "," arguments
+			;
+
+program	:	function_def
+		|	function_def program
+		;
 
 %%
 
