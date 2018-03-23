@@ -74,7 +74,7 @@ endforeach
 
 gtest = dependency('gtest', fallback: ['gtest', 'gtest_main_dep'])
 
-mCc_uts = [ 'parser','ast_build' ]
+mCc_uts = [ 'parser','builder','printer' ]
 
 foreach ut : mCc_uts
     t = executable('ut_' + ut.underscorify(), 'test/' + ut + '.cpp',

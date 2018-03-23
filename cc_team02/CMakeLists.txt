@@ -79,7 +79,11 @@ include(GoogleTest)
 # is it that much simple? googleTest is already a module => https://cmake.org/cmake/help/v3.9/module/GoogleTest.html
 
 #create list: add all tests manually here (file-names without *.cpp)
-set(unit_test_list "parser" "ast_build")
+set(unit_test_list "parser" "builder" "printer")
+
+# custom test-target to enforce a rebuild (see https://stackoverflow.com/questions/733475/cmake-ctest-make-test-doesnt-build-tests)
+# add -V for verbose-info on tests
+add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND})
 
 foreach(entry_name ${unit_test_list})
 	# build and link
@@ -92,7 +96,14 @@ foreach(entry_name ${unit_test_list})
 					EXTRA_ARGS ""
 					TEST_PREFIX "mCc_test_"
 					TEST_SUFFIX ".tst"
-					TEST_LIST "list_of_exec_tests")	
+					TEST_LIST "list_of_exec_tests")
+	# copy executables to test-directory
+	set_target_properties(${entry_name}_test_exec PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/test
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/test)
+							
+	# force a rebuild
+	add_dependencies(build_and_test ${entry_name}_test_exec)	
 endforeach(entry_name)
 
 # enabling valgrind => target test_memcheck
