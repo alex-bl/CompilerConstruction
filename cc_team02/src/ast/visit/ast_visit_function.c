@@ -15,6 +15,7 @@ void mCc_ast_visit_function_def(struct mCc_ast_function_def *function_def,
 
 	visit_if_pre_order(function_def, visitor->function_def, visitor);
 
+	visit(function_def, visitor->function_def_type, visitor);
 	mCc_ast_visit_identifier(function_def->identifier, visitor);
 	mCc_ast_visit_statement(function_def->first_statement, visitor);
 	mCc_ast_visit_declaration(function_def->first_parameter, visitor);
