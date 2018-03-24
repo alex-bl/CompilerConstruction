@@ -4,89 +4,92 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define DOT_OUTPUT_DIR "./DOT_"
+#define DOT_OUTPUT_DIR "DOT_"
 #define DOT_FILE_SUFFIX ".dot"
 #define NAME_SIZE 64
 
+/**
+ * This file lists tests that print given expressions out in a file to test the
+ * graph-correctness manually. It just tests the print-functionality without
+ * assertions. The ast-construction is tested in "builder.cpp".
+ */
+
+/**
+ * Builds the file-name
+ *
+ * @param buffer
+ * 			Where name is copied
+ * @param size
+ * 			The size
+ * @param file_name
+ * 			The file-name
+ */
 void build_file_name(char buffer[], size_t size, const char *file_name)
 {
 	snprintf(buffer, size, "%s%s%s", DOT_OUTPUT_DIR, file_name,
 	         DOT_FILE_SUFFIX);
 }
 
-TEST(AstPrint, PrintInt)
+FILE *open_file(const char *file_name)
+{
+	char dot_file_name[NAME_SIZE];
+
+	build_file_name(dot_file_name, sizeof(dot_file_name), file_name);
+
+	return fopen(dot_file_name, "w");
+}
+
+void test_print_ast_literal(struct mCc_ast_literal *lit, const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_literal(fp, lit);
+
+	fclose(fp);
+	mCc_ast_delete_literal(lit);
+}
+
+void test_print_ast_expression(struct mCc_ast_expression *expr,
+                               const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_expression(fp, expr);
+
+	fclose(fp);
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(AstPrintBasic, PrintInt)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(12);
-	char dot_file_name[NAME_SIZE];
 
-	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_INT);
-	ASSERT_EQ(lit->i_value, 12);
-
-	build_file_name(dot_file_name, sizeof(dot_file_name), "print_lit_int");
-
-	FILE *fp = fopen(dot_file_name, "w");
-
-	mCc_ast_print_dot_literal(fp, lit);
-
-	fclose(fp);
-	mCc_ast_delete_literal(lit);
+	test_print_ast_literal(lit, "literal_int");
 }
 
-TEST(AstPrint, PrintFloat)
+TEST(AstPrintBasic, PrintFloat)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_float(1.22);
-	char dot_file_name[NAME_SIZE];
 
-	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_FLOAT);
-	ASSERT_EQ(lit->f_value, 1.22);
-
-	build_file_name(dot_file_name, sizeof(dot_file_name), "print_lit_float");
-
-	FILE *fp = fopen(dot_file_name, "w");
-
-	mCc_ast_print_dot_literal(fp, lit);
-
-	fclose(fp);
-	mCc_ast_delete_literal(lit);
+	test_print_ast_literal(lit, "literal_float");
 }
 
-TEST(AstPrint, PrintBool)
+TEST(AstPrintBasic, PrintBool)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_bool(true);
-	char dot_file_name[NAME_SIZE];
 
-	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_BOOL);
-	ASSERT_EQ(lit->b_value, true);
-
-	build_file_name(dot_file_name, sizeof(dot_file_name), "print_lit_bool");
-
-	FILE *fp = fopen(dot_file_name, "w");
-
-	mCc_ast_print_dot_literal(fp, lit);
-
-	fclose(fp);
-	mCc_ast_delete_literal(lit);
+	test_print_ast_literal(lit, "literal_bool");
 }
 
-TEST(AstPrint, PrintString)
+TEST(AstPrintBasic, PrintString)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
-	char dot_file_name[NAME_SIZE];
 
-	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_STRING);
-	ASSERT_EQ(lit->s_value, "test");
-
-	build_file_name(dot_file_name, sizeof(dot_file_name), "print_lit_string");
-
-	FILE *fp = fopen(dot_file_name, "w");
-
-	mCc_ast_print_dot_literal(fp, lit);
-
-	fclose(fp);
-	mCc_ast_delete_literal(lit);
+	test_print_ast_literal(lit, "literal_string");
 }
 
-TEST(AstPrint, PrintExpressionLiteral)
+/*===========================================================================
+ * expresion tests*/
+
+TEST(AstPrintExpression, PrintExpressionBinaryOp)
 {
 	struct mCc_ast_literal *lit_left = mCc_ast_new_literal_int(4);
 	struct mCc_ast_literal *lit_right = mCc_ast_new_literal_int(1);
@@ -96,14 +99,65 @@ TEST(AstPrint, PrintExpressionLiteral)
 	        MCC_AST_BINARY_OP_MUL, mCc_ast_new_expression_literal(lit_left),
 	        mCc_ast_new_expression_literal(lit_right));
 
-	char dot_file_name[NAME_SIZE];
-
-	build_file_name(dot_file_name, sizeof(dot_file_name), "print_expression");
-
-	FILE *fp = fopen(dot_file_name, "w");
-
-	mCc_ast_print_dot_expression(fp, expression_binary_op);
-
-	fclose(fp);
-	mCc_ast_delete_expression(expression_binary_op);
+	test_print_ast_expression(expression_binary_op, "expression_binary");
 }
+
+TEST(AstPrintExpression, PrintExpressionBinaryOpAdvanced)
+{
+	struct mCc_ast_literal *lit_left_1 = mCc_ast_new_literal_int(4);
+	struct mCc_ast_literal *lit_right_1 = mCc_ast_new_literal_int(1);
+
+	struct mCc_ast_literal *lit_left_2 = mCc_ast_new_literal_float(3.4);
+	struct mCc_ast_literal *lit_right_2 = mCc_ast_new_literal_float(2.3);
+
+	struct mCc_ast_expression *left_side = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_ADD, mCc_ast_new_expression_literal(lit_left_1),
+	    mCc_ast_new_expression_literal(lit_right_1));
+
+	struct mCc_ast_expression *right_side = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_DIV, mCc_ast_new_expression_literal(lit_left_2),
+	    mCc_ast_new_expression_literal(lit_right_2));
+
+	struct mCc_ast_expression *expression_binary_op =
+	    mCc_ast_new_expression_binary_op(MCC_AST_BINARY_OP_EQUALS, left_side,
+	                                     right_side);
+
+	test_print_ast_expression(expression_binary_op,
+	                          "expression_binary_advanced");
+}
+
+TEST(AstPrintExpression, PrintExpressionUnaryOp)
+{
+	struct mCc_ast_literal *lit_right = mCc_ast_new_literal_int(1);
+
+	struct mCc_ast_expression *expression_unary_op =
+	    mCc_ast_new_expression_unary_op(
+	        MCC_AST_UNARY_OP_NEGATION,
+	        mCc_ast_new_expression_literal(lit_right));
+
+	test_print_ast_expression(expression_unary_op, "expression_unary");
+}
+
+TEST(AstPrintExpression, PrintExpressionParenth)
+{
+	struct mCc_ast_literal *lit_right = mCc_ast_new_literal_int(1);
+
+	struct mCc_ast_expression *expression_parent =
+	    mCc_ast_new_expression_parenth(
+	        mCc_ast_new_expression_literal(lit_right));
+
+	test_print_ast_expression(expression_parent, "expression_parenth");
+}
+/*
+ * Identifier currently not implemented...
+ *
+TEST(AstPrintExpression, PrintExpressionIdentifier)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("val");
+
+	struct mCc_ast_expression *expression_identifier =
+	    mCc_ast_new_expression_identifier(identifier);
+
+	test_print_ast_expression(expression_identifier, "expression_identifier");
+}
+*/
