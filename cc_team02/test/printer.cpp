@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define DOT_OUTPUT_DIR "./bin/test/"
+#define DOT_OUTPUT_DIR "./DOT_"
 #define DOT_FILE_SUFFIX ".dot"
 #define NAME_SIZE 64
 

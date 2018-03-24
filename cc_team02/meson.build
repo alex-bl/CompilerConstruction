@@ -43,7 +43,8 @@ mCc_visit_src = ['src/ast/visit/ast_visit_assignment.c',
 'src/ast/visit/ast_visit_statement.c']
 
 
-mCc_print_src = ['src/ast/print/ast_basic_printing.c', 
+mCc_print_src = ['src/ast/print/ast_basic_printing.c',
+'src/ast/print/ast_print.c', 
 'src/ast/print/ast_print_assignment.c',
 'src/ast/print/ast_print_declaration.c', 
 'src/ast/print/ast_print_expression.c',

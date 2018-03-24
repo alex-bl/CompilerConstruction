@@ -97,10 +97,11 @@ foreach(entry_name ${unit_test_list})
 					TEST_PREFIX "mCc_test_"
 					TEST_SUFFIX ".tst"
 					TEST_LIST "list_of_exec_tests")
-	# copy executables to test-directory
-	set_target_properties(${entry_name}_test_exec PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/test
-		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/test)
+	# copy executables to test-directory => NOTE: it does not easily works with meson to specify an output-path, so leave it out for
+	# compatability issues with meson
+	# set_target_properties(${entry_name}_test_exec PROPERTIES
+	#	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/test
+	#	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/test)
 							
 	# force a rebuild
 	add_dependencies(build_and_test ${entry_name}_test_exec)	
