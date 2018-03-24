@@ -14,6 +14,8 @@
  * assertions. The ast-construction is tested in "builder.cpp".
  */
 
+/*===========================================================================
+ * test infrastructure*/
 /**
  * Builds the file-name
  *
@@ -58,28 +60,30 @@ void test_print_ast_expression(struct mCc_ast_expression *expr,
 	mCc_ast_delete_expression(expr);
 }
 
-TEST(AstPrintBasic, PrintInt)
+/*===========================================================================
+ * literal tests*/
+TEST(AstPrintLiteral, PrintLiteralInt)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(12);
 
 	test_print_ast_literal(lit, "literal_int");
 }
 
-TEST(AstPrintBasic, PrintFloat)
+TEST(AstPrintLiteral, PrintLiteralFloat)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_float(1.22);
 
 	test_print_ast_literal(lit, "literal_float");
 }
 
-TEST(AstPrintBasic, PrintBool)
+TEST(AstPrintLiteral, PrintLiteralBool)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_bool(true);
 
 	test_print_ast_literal(lit, "literal_bool");
 }
 
-TEST(AstPrintBasic, PrintString)
+TEST(AstPrintLiteral, PrintLiteralString)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
 
@@ -126,6 +130,28 @@ TEST(AstPrintExpression, PrintExpressionBinaryOpAdvanced)
 	                          "expression_binary_advanced");
 }
 
+TEST(AstPrintExpression, PrintExpressionBinaryOpUnbalanced)
+{
+	struct mCc_ast_literal *lit_left_1 = mCc_ast_new_literal_int(4);
+
+	struct mCc_ast_literal *lit_left_2 = mCc_ast_new_literal_float(3.4);
+	struct mCc_ast_literal *lit_right_2 = mCc_ast_new_literal_float(2.3);
+
+	struct mCc_ast_expression *left_side =
+	    mCc_ast_new_expression_literal(lit_left_1);
+
+	struct mCc_ast_expression *right_side = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_SUB, mCc_ast_new_expression_literal(lit_left_2),
+	    mCc_ast_new_expression_literal(lit_right_2));
+
+	struct mCc_ast_expression *expression_binary_op =
+	    mCc_ast_new_expression_binary_op(MCC_AST_BINARY_OP_NOT_EQUALS,
+	                                     left_side, right_side);
+
+	test_print_ast_expression(expression_binary_op,
+	                          "expression_binary_unbalanced");
+}
+
 TEST(AstPrintExpression, PrintExpressionUnaryOp)
 {
 	struct mCc_ast_literal *lit_right = mCc_ast_new_literal_int(1);
@@ -153,11 +179,11 @@ TEST(AstPrintExpression, PrintExpressionParenth)
  *
 TEST(AstPrintExpression, PrintExpressionIdentifier)
 {
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("val");
+    struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("val");
 
-	struct mCc_ast_expression *expression_identifier =
-	    mCc_ast_new_expression_identifier(identifier);
+    struct mCc_ast_expression *expression_identifier =
+        mCc_ast_new_expression_identifier(identifier);
 
-	test_print_ast_expression(expression_identifier, "expression_identifier");
+    test_print_ast_expression(expression_identifier, "expression_identifier");
 }
 */
