@@ -1,5 +1,5 @@
 #include "mCc/ast.h"
-#include "mCc/ast/print/ast_print_literal.h"
+#include "mCc/ast_print.h"
 #include "gtest/gtest.h"
 #include <stdbool.h>
 #include <stddef.h>
@@ -16,7 +16,7 @@ void build_file_name(char buffer[], size_t size, const char *file_name)
 
 TEST(AstPrint, PrintInt)
 {
-	mCc_ast_literal *lit = mCc_ast_new_literal_int(12);
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(12);
 	char dot_file_name[NAME_SIZE];
 
 	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_INT);
@@ -34,7 +34,7 @@ TEST(AstPrint, PrintInt)
 
 TEST(AstPrint, PrintFloat)
 {
-	mCc_ast_literal *lit = mCc_ast_new_literal_float(1.22);
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_float(1.22);
 	char dot_file_name[NAME_SIZE];
 
 	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_FLOAT);
@@ -70,7 +70,7 @@ TEST(AstPrint, PrintBool)
 
 TEST(AstPrint, PrintString)
 {
-	mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
 	char dot_file_name[NAME_SIZE];
 
 	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_STRING);
@@ -84,4 +84,26 @@ TEST(AstPrint, PrintString)
 
 	fclose(fp);
 	mCc_ast_delete_literal(lit);
+}
+
+TEST(AstPrint, PrintExpressionLiteral)
+{
+	struct mCc_ast_literal *lit_left = mCc_ast_new_literal_int(4);
+	struct mCc_ast_literal *lit_right = mCc_ast_new_literal_int(1);
+
+	struct mCc_ast_expression *expression_binary_op =
+	    mCc_ast_new_expression_binary_op(
+	        MCC_AST_BINARY_OP_MUL, mCc_ast_new_expression_literal(lit_left),
+	        mCc_ast_new_expression_literal(lit_right));
+
+	char dot_file_name[NAME_SIZE];
+
+	build_file_name(dot_file_name, sizeof(dot_file_name), "print_expression");
+
+	FILE *fp = fopen(dot_file_name, "w");
+
+	mCc_ast_print_dot_expression(fp, expression_binary_op);
+
+	fclose(fp);
+	mCc_ast_delete_expression(expression_binary_op);
 }

@@ -5,8 +5,7 @@
 #include "mCc/ast/print/ast_print_identifier.h"
 #include "mCc/ast/visit/ast_visit_identifier.h"
 
-static void print_dot_identifier(struct mCc_ast_identifier *identifier,
-                                 void *data)
+void mCc_print_dot_identifier(struct mCc_ast_identifier *identifier, void *data)
 {
 	assert(identifier);
 	assert(data);
@@ -16,28 +15,4 @@ static void print_dot_identifier(struct mCc_ast_identifier *identifier,
 
 	FILE *out = data;
 	print_dot_node(out, identifier, label);
-}
-
-static struct mCc_ast_visitor print_dot_visitor(FILE *out)
-{
-	assert(out);
-
-	return (struct mCc_ast_visitor){
-
-		.identifier = print_dot_identifier
-	};
-}
-
-void mCc_ast_print_dot_identifier(FILE *out,
-                                  struct mCc_ast_identifier *identifier)
-{
-	assert(out);
-	assert(identifier);
-
-	print_dot_begin(out);
-
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
-	mCc_ast_visit_identifier(identifier, &visitor);
-
-	print_dot_end(out);
 }

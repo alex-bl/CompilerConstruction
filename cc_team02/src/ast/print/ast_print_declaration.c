@@ -15,7 +15,7 @@ const char *mCc_ast_print_literal_type(enum mCc_ast_literal_type type)
 	return "unknown type";
 }
 
-static void
+void
 mCc_print_dot_declaration_type(struct mCc_ast_declaration *declaration,
                                void *data)
 {
@@ -30,7 +30,7 @@ mCc_print_dot_declaration_type(struct mCc_ast_declaration *declaration,
 	print_dot_node(out, declaration, label);
 }
 
-static void
+void
 mCc_print_dot_declaration_primitive(struct mCc_ast_declaration *declaration,
                                     void *data)
 {
@@ -43,7 +43,7 @@ mCc_print_dot_declaration_primitive(struct mCc_ast_declaration *declaration,
 	               "declaration: identifier");
 }
 
-static void
+void
 mCc_print_dot_declaration_array(struct mCc_ast_declaration *declaration,
                                 void *data)
 {
@@ -58,34 +58,4 @@ mCc_print_dot_declaration_array(struct mCc_ast_declaration *declaration,
 	//TODO: correct?
 //	print_dot_edge(out, declaration,declaration->size,
 //	               "declaration arr: size");
-}
-
-static struct mCc_ast_visitor print_dot_visitor(FILE *out)
-{
-	assert(out);
-
-	return (struct mCc_ast_visitor){
-
-		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
-		.order = MCC_AST_VISIT_PRE_ORDER,
-		.userdata = out,
-
-		.declaration_type = mCc_print_dot_declaration_type,
-		.declaration_primitive = mCc_print_dot_declaration_primitive,
-		.declaration_array = mCc_print_dot_declaration_array
-	};
-}
-
-void mCc_ast_print_dot_declaration(FILE *out,
-                                   struct mCc_ast_declaration *declaration)
-{
-	assert(out);
-	assert(declaration);
-
-	print_dot_begin(out);
-
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
-	mCc_ast_visit_declaration(declaration, &visitor);
-
-	print_dot_end(out);
 }
