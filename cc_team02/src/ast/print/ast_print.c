@@ -37,7 +37,6 @@ static struct mCc_ast_visitor print_dot_visitor(FILE *out)
 		.assignment_array = mCc_print_dot_assignment_array,
 
 		//.declaration
-		.declaration_type = mCc_print_dot_declaration_type,
 		.declaration_primitive = mCc_print_dot_declaration_primitive,
 		.declaration_array = mCc_print_dot_declaration_array,
 

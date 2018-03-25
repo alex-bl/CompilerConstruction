@@ -52,6 +52,7 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		visit_if_pre_order(expression, visitor->expression_array_identifier,
 		                   visitor);
 		mCc_ast_visit_identifier(expression->array_identifier, visitor);
+		mCc_ast_visit_expression(expression->array_index_expression, visitor);
 		visit_if_post_order(expression, visitor->expression_array_identifier,
 		                    visitor);
 		break;
