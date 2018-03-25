@@ -31,7 +31,8 @@ add_library(mCc_visit SHARED ast/visit/ast_visit_assignment.c
 							ast/visit/ast_visit_statement.c)
 
 # prints
-add_library(mCc_print SHARED ast/print/ast_basic_printing.c 
+add_library(mCc_print SHARED ast/print/ast_basic_printing.c
+							ast/print/ast_print.c 
 							ast/print/ast_print_assignment.c
 							ast/print/ast_print_declaration.c 
 							ast/print/ast_print_expression.c
