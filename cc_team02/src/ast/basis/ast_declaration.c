@@ -34,8 +34,15 @@ mCc_ast_new_array_declaration(enum mCc_ast_literal_type data_type,
 	return declaration;
 }
 
-void mCc_ast_delete_declaration(struct mCc_ast_declaration *name)
+void mCc_ast_delete_declaration(struct mCc_ast_declaration *declaration)
 {
-	mCc_ast_delete_declaration(name);
-	free(name);
+
+	if (declaration->data_type==MCC_AST_DECLARATION_PRIMITIVE) {
+		mCc_ast_delete_identifier(declaration->identifier);
+	} else if (declaration->data_type==MCC_AST_DECLARATION_PRIMITIVE) {
+		mCc_ast_delete_array_identifier(declaration->array_identifier);
+		mCc_ast_delete_size(declaration->size);
+	}
+	mCc_ast_delete_declaration_type(declaration->data_type);
+	free(declaration);
 }

@@ -15,8 +15,8 @@ struct mCc_ast_identifier *mCc_ast_new_identifier(const char *name)
 	return ident;
 }
 
-void mCc_ast_delete_identifier(struct mCc_ast_identifier *name)
+void mCc_ast_delete_identifier(struct mCc_ast_identifier *ident)
 {
-	mCc_ast_delete_identifier(name);
-	free(name);
+	mCc_ast_delete_identifier_name(ident->identifier_name);
+	free(ident);
 }
