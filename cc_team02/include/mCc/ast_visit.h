@@ -2,7 +2,6 @@
 #define MCC_AST_VISIT_H
 
 #include "mCc/ast.h"
-
 // TODO: put this thing here?
 
 #define visit(node, callback, visitor) \
@@ -77,6 +76,11 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_expression_cb expression_binary_op;
 	mCc_ast_visit_expression_cb expression_parenth;
 
+	mCc_ast_visit_expression_cb expression_function_call;
+	mCc_ast_visit_expression_cb expression_identifier;
+	mCc_ast_visit_expression_cb expression_array_identifier;
+	mCc_ast_visit_expression_cb expression_unary_op;
+
 	// literal
 	mCc_ast_visit_literal_cb literal;
 	mCc_ast_visit_literal_cb literal_int;
@@ -91,17 +95,14 @@ struct mCc_ast_visitor {
 
 	// declaration
 	mCc_ast_visit_declaration_cb declaration;
+	mCc_ast_visit_declaration_cb declaration_type;
 	mCc_ast_visit_declaration_cb declaration_primitive;
 	mCc_ast_visit_declaration_cb declaration_array;
 
 	// function
 	mCc_ast_visit_function_call_cb function_call;
 	mCc_ast_visit_function_def_cb function_def;
-	mCc_ast_visit_function_def_cb function_def_void;
-	mCc_ast_visit_function_def_cb function_def_int;
-	mCc_ast_visit_function_def_cb function_def_float;
-	mCc_ast_visit_function_def_cb function_def_bool;
-	mCc_ast_visit_function_def_cb function_def_string;
+	mCc_ast_visit_function_def_cb function_def_type;
 
 	// identifier
 	mCc_ast_visit_identifier_cb identifier;
@@ -109,12 +110,14 @@ struct mCc_ast_visitor {
 	// program
 	mCc_ast_visit_program_cb program;
 
-	// program
-	mCc_ast_visit_program_cb statement;
+	// statement
+	mCc_ast_visit_statement_cb statement;
 	mCc_ast_visit_statement_cb statement_if;
 	mCc_ast_visit_statement_cb statement_while;
 	mCc_ast_visit_statement_cb statement_return;
-	mCc_ast_visit_statement_cb statement_compound;
+	mCc_ast_visit_statement_cb statement_declaration;
+	mCc_ast_visit_statement_cb statement_assignment;
+	mCc_ast_visit_statement_cb statement_expression;
 };
 
 #ifdef __cplusplus

@@ -20,11 +20,11 @@ void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
 		break;
 
 	case MCC_AST_LITERAL_TYPE_BOOL:
-		/*TODO*/
+		visit(literal, visitor->literal_bool, visitor);
 		break;
 
 	case MCC_AST_LITERAL_TYPE_STRING:
-		/*TODO*/
+		visit(literal, visitor->literal_string, visitor);
 		break;
 	}
 
