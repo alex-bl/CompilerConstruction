@@ -1,6 +1,6 @@
-#include <stddef.h>
-
 #include "mCc/ast/basis/ast_program.h"
+#include <stddef.h>
+#include <stdlib.h>
 
 struct mCc_ast_program *
 mCc_ast_new_program(struct mCc_ast_function_def *function_defs)

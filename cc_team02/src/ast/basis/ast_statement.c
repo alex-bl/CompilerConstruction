@@ -2,6 +2,8 @@
 
 #include "mCc/ast/basis/ast_statement.h"
 
+// TODO: initialize next_statement explicitly with NULL
+
 struct mCc_ast_statement *
 mCc_ast_new_if_statement(struct mCc_ast_expression *condition_expr,
                          struct mCc_ast_statement *if_stmt,

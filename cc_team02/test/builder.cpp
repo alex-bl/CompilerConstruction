@@ -90,3 +90,46 @@ TEST(AstBuildExpression, CreateExpressionUnaryOp)
 
 	mCc_ast_delete_expression(exp);
 }
+
+TEST(AstBuildExpression, CreateExpressionParent)
+{
+	mCc_ast_literal *lit = mCc_ast_new_literal_float(2.1);
+	mCc_ast_expression *exp = mCc_ast_new_expression_literal(lit);
+	mCc_ast_expression *parenth = mCc_ast_new_expression_parenth(exp);
+
+	ASSERT_EQ(parenth->type, MCC_AST_EXPRESSION_TYPE_PARENTH);
+	ASSERT_EQ(parenth->expression->literal->f_value, 2.1);
+
+	mCc_ast_delete_expression(exp);
+}
+
+TEST(AstBuildExpression, CreateExpressionIdentifier)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("myVar");
+	struct mCc_ast_expression *expression_identifier =
+	    mCc_ast_new_expression_identifier(identifier);
+
+	ASSERT_EQ(expression_identifier->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
+	ASSERT_EQ(expression_identifier->identifier->identifier_name, "myVar");
+}
+
+TEST(AstBuildExpression, CreateExpressionArrayIdentifier)
+{
+	struct mCc_ast_identifier *identifier_arr = mCc_ast_new_identifier("myVarArr");
+	mCc_ast_literal *lit_index = mCc_ast_new_literal_int(2);
+	mCc_ast_expression *expression_arr_index = mCc_ast_new_expression_literal(lit_index);
+
+	struct mCc_ast_expression *expression_array_identifier =
+	    mCc_ast_new_expression_array_identifier(identifier_arr,expression_arr_index);
+
+	ASSERT_EQ(expression_array_identifier->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY);
+	ASSERT_EQ(expression_array_identifier->array_identifier->identifier_name, "myVarArr");
+	ASSERT_EQ(expression_array_identifier->array_index_expression->literal->i_value,2);
+}
+/**
+ * TODO: implement
+ */
+TEST(AstBuildExpression, CreateExpressionFunctionCall)
+{
+	ASSERT_TRUE(false);
+}

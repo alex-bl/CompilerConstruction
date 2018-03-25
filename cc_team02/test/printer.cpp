@@ -60,6 +60,25 @@ void test_print_ast_expression(struct mCc_ast_expression *expr,
 	mCc_ast_delete_expression(expr);
 }
 
+void test_print_ast_identifier(struct mCc_ast_identifier *identifier,
+                               const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_identifier(fp, identifier);
+
+	fclose(fp);
+	mCc_ast_delete_identifier(identifier);
+}
+
+void test_print_ast_declaration(struct mCc_ast_declaration *declaration,
+                                const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_declaration(fp, declaration);
+
+	fclose(fp);
+	mCc_ast_delete_declaration(declaration);
+}
 /*===========================================================================
  * literal tests*/
 TEST(AstPrintLiteral, PrintLiteralInt)
@@ -174,16 +193,130 @@ TEST(AstPrintExpression, PrintExpressionParenth)
 
 	test_print_ast_expression(expression_parent, "expression_parenth");
 }
-/*
- * Identifier currently not implemented...
- *
+
 TEST(AstPrintExpression, PrintExpressionIdentifier)
 {
-    struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("val");
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("val");
 
-    struct mCc_ast_expression *expression_identifier =
-        mCc_ast_new_expression_identifier(identifier);
+	struct mCc_ast_expression *expression_identifier =
+	    mCc_ast_new_expression_identifier(identifier);
 
-    test_print_ast_expression(expression_identifier, "expression_identifier");
+	test_print_ast_expression(expression_identifier, "expression_identifier");
 }
-*/
+
+TEST(AstPrintExpression, PrintExpressionIdentifierUnaryOp)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("isBinary");
+	struct mCc_ast_expression *expression_identifier =
+	    mCc_ast_new_expression_identifier(identifier);
+
+	struct mCc_ast_expression *expression_unary_op =
+	    mCc_ast_new_expression_unary_op(MCC_AST_UNARY_OP_NEGATION,
+	                                    expression_identifier);
+
+	test_print_ast_expression(expression_unary_op,
+	                          "expression_identifier_unary");
+}
+
+TEST(AstPrintExpression, PrintExpressionArrayIdentifier)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("arr");
+
+	struct mCc_ast_literal *index_left = mCc_ast_new_literal_int(2);
+	struct mCc_ast_literal *index_right = mCc_ast_new_literal_int(3);
+
+	struct mCc_ast_expression *left_side =
+	    mCc_ast_new_expression_literal(index_left);
+	struct mCc_ast_expression *right_side =
+	    mCc_ast_new_expression_literal(index_right);
+
+	struct mCc_ast_expression *expression_index =
+	    mCc_ast_new_expression_binary_op(MCC_AST_BINARY_OP_ADD, left_side,
+	                                     right_side);
+
+	struct mCc_ast_expression *expression_arr_identifier =
+	    mCc_ast_new_expression_array_identifier(identifier, expression_index);
+
+	test_print_ast_expression(expression_arr_identifier,
+	                          "expression_identifier_array");
+}
+
+/**
+ * TODO: implement
+ */
+TEST(AstPrintExpression, PrintExpressionFunctionCall)
+{
+	// reminder
+	ASSERT_TRUE(false);
+}
+
+/*===========================================================================
+ * identifier tests*/
+
+TEST(AstPrintIdentifier, PrintIdentifier)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("myVar");
+	test_print_ast_identifier(identifier, "identifier_simple");
+}
+
+/*===========================================================================
+ * declaration tests*/
+
+TEST(AstPrintDeclaration, PrintDeclarationPrimitive)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("myFloat");
+	struct mCc_ast_declaration *declaration_primitive =
+	    mCc_ast_new_primitive_declaration(MCC_AST_LITERAL_TYPE_FLOAT,
+	                                      identifier);
+	test_print_ast_declaration(declaration_primitive, "declaration_primitive");
+}
+
+TEST(AstPrintDeclaration, PrintDeclarationArray)
+{
+	struct mCc_ast_identifier *identifier =
+	    mCc_ast_new_identifier("myFloatArr");
+	struct mCc_ast_declaration *declaration_array =
+	    mCc_ast_new_array_declaration(MCC_AST_LITERAL_TYPE_FLOAT, identifier,
+	                                  100);
+	test_print_ast_declaration(declaration_array, "declaration_array");
+}
+
+TEST(AstPrintDeclaration, PrintDeclarationConcated)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("myFloat");
+	struct mCc_ast_declaration *declaration_concated =
+	    mCc_ast_new_primitive_declaration(MCC_AST_LITERAL_TYPE_FLOAT,
+	                                      identifier);
+
+	struct mCc_ast_identifier *identifier_arr =
+	    mCc_ast_new_identifier("myFloatArr");
+	struct mCc_ast_declaration *declaration_array =
+	    mCc_ast_new_array_declaration(MCC_AST_LITERAL_TYPE_FLOAT,
+	                                  identifier_arr, 100);
+
+	// do a concatenation
+	declaration_concated->next_declaration = declaration_array;
+
+	test_print_ast_declaration(declaration_concated, "declaration_concated");
+}
+
+/*===========================================================================
+ * program tests*/
+
+/**
+ * TODO: implement
+ */
+TEST(AstPrintProgram, PrintProgramFunctionSimple)
+{
+	// reminder
+	ASSERT_TRUE(false);
+}
+
+/**
+ * TODO: implement
+ */
+TEST(AstPrintProgram, PrintProgramFunctionConcated)
+{
+	// reminder
+	ASSERT_TRUE(false);
+}

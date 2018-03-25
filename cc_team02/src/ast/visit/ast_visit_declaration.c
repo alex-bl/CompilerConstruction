@@ -16,9 +16,11 @@ void mCc_ast_visit_declaration(struct mCc_ast_declaration *declaration,
 		visit_if_pre_order(declaration, visitor->declaration_primitive,
 		                   visitor);
 
-		visit(declaration, visitor->declaration_type, visitor);
 		mCc_ast_visit_identifier(declaration->identifier, visitor);
-		mCc_ast_visit_declaration(declaration->next_declaration, visitor);
+		// do not visit if NULL
+		if (declaration->next_declaration) {
+			mCc_ast_visit_declaration(declaration->next_declaration, visitor);
+		}
 
 		visit_if_post_order(declaration, visitor->declaration_primitive,
 		                    visitor);
@@ -26,9 +28,12 @@ void mCc_ast_visit_declaration(struct mCc_ast_declaration *declaration,
 	case MCC_AST_DECLARATION_ARRAY:
 		visit_if_pre_order(declaration, visitor->declaration_array, visitor);
 
-		visit(declaration, visitor->declaration_type, visitor);
 		mCc_ast_visit_identifier(declaration->array_identifier, visitor);
-		mCc_ast_visit_declaration(declaration->next_declaration, visitor);
+
+		// do not visit if NULL
+		if (declaration->next_declaration) {
+			mCc_ast_visit_declaration(declaration->next_declaration, visitor);
+		}
 
 		visit_if_post_order(declaration, visitor->declaration_array, visitor);
 		break;

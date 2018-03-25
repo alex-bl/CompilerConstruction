@@ -93,7 +93,7 @@ void mCc_print_dot_expression_identifier_array(
 	print_dot_edge(out, expression, expression->array_identifier,
 	               "identifier_arr");
 	print_dot_edge(out, expression, expression->array_index_expression,
-	               "arr_index_expr");
+	               "[arr_index]");
 }
 
 void mCc_print_dot_expression_function_call(
