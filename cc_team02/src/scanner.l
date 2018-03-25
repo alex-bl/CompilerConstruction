@@ -16,7 +16,7 @@
 int_literal   -?[0-9]+
 float_literal -?[0-9]+\.[0-9]+
 
-string_literal "[^\"]*"
+string_literal \"[^\"\n]*\"
 bool_literal   true|false
 
 int_type       int
@@ -32,14 +32,19 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 
 %%
 
+{int_type}		  { return TK_INT_TYPE; }
+{float_type}	  { return TK_FLOAT_TYPE; }
+{bool_type}		  { return TK_BOOL_TYPE; }
+{string_type}	  { return TK_STRING_TYPE; }
+
+{if_keyword}	  { return TK_IF_KEYWORD; }
+{while_keyword}	  { return TK_WHILE_KEYWORD; }
+{return_keyword}  { return TK_RETURN_KEYWORD; }
+
 {int_literal}     { yylval->TK_INT_LITERAL = atol(yytext); return TK_INT_LITERAL; }
-
 {float_literal}   { yylval->TK_FLOAT_LITERAL = atof(yytext); return TK_FLOAT_LITERAL; }
-
 {bool_literal}    { yylval->TK_BOOL_LITERAL = yytext; return TK_BOOL_LITERAL; }
-
 {string_literal}  { yylval->TK_STRING_LITERAL = yytext; return TK_STRING_LITERAL; }
-
 {identifier}      { yylval->TK_STRING_LITERAL = yytext; return TK_IDENTIFIER; }
 
 "+"               { return TK_PLUS; }
