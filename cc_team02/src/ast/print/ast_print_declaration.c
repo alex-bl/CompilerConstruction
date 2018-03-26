@@ -20,7 +20,7 @@ static void print_next_declaration_edge(FILE *out,
 {
 	if (declaration->next_declaration) {
 		print_dot_edge(out, declaration, declaration->next_declaration,
-		               "next_declaration");
+		               "next");
 	}
 }
 
