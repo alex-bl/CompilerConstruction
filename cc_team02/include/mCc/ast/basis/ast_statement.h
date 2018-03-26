@@ -70,7 +70,7 @@ struct mCc_ast_statement *
 mCc_ast_new_while_statement(struct mCc_ast_expression *loop_expr,
                             struct mCc_ast_statement *while_stmt);
 struct mCc_ast_statement *
-mCc_ast_new_return_statement(struct mCc_ast_statement *return_stmt);
+mCc_ast_new_return_statement(struct mCc_ast_expression *return_stmt);
 
 struct mCc_ast_statement *
 mCc_ast_new_expression_statement(struct mCc_ast_expression *expression_stmt);

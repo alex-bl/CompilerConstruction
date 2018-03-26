@@ -241,13 +241,41 @@ TEST(AstPrintExpression, PrintExpressionArrayIdentifier)
 	                          "expression_identifier_array");
 }
 
-/**
- * TODO: implement
- */
-TEST(AstPrintExpression, PrintExpressionFunctionCall)
+TEST(AstPrintExpression, PrintExpressionFunctionCallSimple)
 {
-	// reminder
-	ASSERT_TRUE(false);
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(2);
+	struct mCc_ast_expression *param = mCc_ast_new_expression_literal(lit);
+
+	struct mCc_ast_function_call *function_call =
+	    mCc_ast_new_parameterized_function_call(identifier, param);
+
+	struct mCc_ast_expression *expr_function_call =
+	    mCc_ast_new_expression_function_call(function_call);
+
+	test_print_ast_expression(expr_function_call,
+	                          "expression_function_call_args");
+}
+
+TEST(AstPrintExpression, PrintExpressionFunctionCallConcated)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
+	struct mCc_ast_literal *lit_1 = mCc_ast_new_literal_int(2);
+	struct mCc_ast_literal *lit_2 = mCc_ast_new_literal_int(3);
+
+	struct mCc_ast_expression *param_1 = mCc_ast_new_expression_literal(lit_1);
+	struct mCc_ast_expression *param_2 = mCc_ast_new_expression_literal(lit_2);
+	// concat
+	param_1->next_expr = param_2;
+
+	struct mCc_ast_function_call *function_call =
+	    mCc_ast_new_parameterized_function_call(identifier, param_1);
+
+	struct mCc_ast_expression *expr_function_call =
+	    mCc_ast_new_expression_function_call(function_call);
+
+	test_print_ast_expression(expr_function_call,
+	                          "expression_function_call_concatted_args");
 }
 
 /*===========================================================================
@@ -255,7 +283,7 @@ TEST(AstPrintExpression, PrintExpressionFunctionCall)
 
 TEST(AstPrintIdentifier, PrintIdentifier)
 {
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("myVar");
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_var");
 	test_print_ast_identifier(identifier, "identifier_simple");
 }
 
@@ -264,7 +292,7 @@ TEST(AstPrintIdentifier, PrintIdentifier)
 
 TEST(AstPrintDeclaration, PrintDeclarationPrimitive)
 {
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("myFloat");
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_float");
 	struct mCc_ast_declaration *declaration_primitive =
 	    mCc_ast_new_primitive_declaration(MCC_AST_LITERAL_TYPE_FLOAT,
 	                                      identifier);
@@ -274,7 +302,7 @@ TEST(AstPrintDeclaration, PrintDeclarationPrimitive)
 TEST(AstPrintDeclaration, PrintDeclarationArray)
 {
 	struct mCc_ast_identifier *identifier =
-	    mCc_ast_new_identifier("myFloatArr");
+	    mCc_ast_new_identifier("my_float_arr");
 	struct mCc_ast_declaration *declaration_array =
 	    mCc_ast_new_array_declaration(MCC_AST_LITERAL_TYPE_FLOAT, identifier,
 	                                  100);
@@ -283,13 +311,13 @@ TEST(AstPrintDeclaration, PrintDeclarationArray)
 
 TEST(AstPrintDeclaration, PrintDeclarationConcated)
 {
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("myFloat");
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_float");
 	struct mCc_ast_declaration *declaration_concated =
 	    mCc_ast_new_primitive_declaration(MCC_AST_LITERAL_TYPE_FLOAT,
 	                                      identifier);
 
 	struct mCc_ast_identifier *identifier_arr =
-	    mCc_ast_new_identifier("myFloatArr");
+	    mCc_ast_new_identifier("my_float_arr");
 	struct mCc_ast_declaration *declaration_array =
 	    mCc_ast_new_array_declaration(MCC_AST_LITERAL_TYPE_FLOAT,
 	                                  identifier_arr, 100);

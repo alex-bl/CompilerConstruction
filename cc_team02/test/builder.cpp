@@ -105,31 +105,45 @@ TEST(AstBuildExpression, CreateExpressionParent)
 
 TEST(AstBuildExpression, CreateExpressionIdentifier)
 {
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("myVar");
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_var");
 	struct mCc_ast_expression *expression_identifier =
 	    mCc_ast_new_expression_identifier(identifier);
 
 	ASSERT_EQ(expression_identifier->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
-	ASSERT_EQ(expression_identifier->identifier->identifier_name, "myVar");
+	ASSERT_EQ(expression_identifier->identifier->identifier_name, "my_var");
 }
 
 TEST(AstBuildExpression, CreateExpressionArrayIdentifier)
 {
-	struct mCc_ast_identifier *identifier_arr = mCc_ast_new_identifier("myVarArr");
+	struct mCc_ast_identifier *identifier_arr =
+	    mCc_ast_new_identifier("my_var_arr");
 	mCc_ast_literal *lit_index = mCc_ast_new_literal_int(2);
-	mCc_ast_expression *expression_arr_index = mCc_ast_new_expression_literal(lit_index);
+	mCc_ast_expression *expression_arr_index =
+	    mCc_ast_new_expression_literal(lit_index);
 
 	struct mCc_ast_expression *expression_array_identifier =
-	    mCc_ast_new_expression_array_identifier(identifier_arr,expression_arr_index);
+	    mCc_ast_new_expression_array_identifier(identifier_arr,
+	                                            expression_arr_index);
 
-	ASSERT_EQ(expression_array_identifier->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY);
-	ASSERT_EQ(expression_array_identifier->array_identifier->identifier_name, "myVarArr");
-	ASSERT_EQ(expression_array_identifier->array_index_expression->literal->i_value,2);
+	ASSERT_EQ(expression_array_identifier->type,
+	          MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY);
+	ASSERT_EQ(expression_array_identifier->array_identifier->identifier_name,
+	          "my_var_arr");
+	ASSERT_EQ(
+	    expression_array_identifier->array_index_expression->literal->i_value,
+	    2);
 }
-/**
- * TODO: implement
- */
+
 TEST(AstBuildExpression, CreateExpressionFunctionCall)
 {
-	ASSERT_TRUE(false);
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(2);
+	struct mCc_ast_expression *param = mCc_ast_new_expression_literal(lit);
+
+	struct mCc_ast_function_call *function_call =
+	    mCc_ast_new_parameterized_function_call(identifier, param);
+
+	ASSERT_EQ(function_call->identifier->identifier_name, "my_func");
+	ASSERT_EQ(function_call->first_argument->literal->i_value, 2);
 }
+
