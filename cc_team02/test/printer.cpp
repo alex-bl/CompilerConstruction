@@ -384,6 +384,24 @@ TEST(AstPrintAssignment, PrintAssignmentPrimitive)
 	test_print_ast_assignment(assignment, "assignment_primitive");
 }
 
+TEST(AstPrintAssignment, PrintAssignmentArray)
+{
+
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_float(3.4);
+	struct mCc_ast_expression *lit_expr = mCc_ast_new_expression_literal(lit);
+
+	struct mCc_ast_literal *arr_index = mCc_ast_new_literal_int(0);
+	struct mCc_ast_expression *arr_index_expr =
+	    mCc_ast_new_expression_literal(arr_index);
+
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_arr");
+
+	struct mCc_ast_assignment *assignment =
+	    mCc_ast_new_array_assignment(identifier, arr_index_expr, lit_expr);
+
+	test_print_ast_assignment(assignment, "assignment_arr");
+}
+
 /*===========================================================================
  * function tests*/
 TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
