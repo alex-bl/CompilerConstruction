@@ -159,6 +159,7 @@ TEST(AstBuildAssignment, CreateAssignmentPrimitive)
 
 	struct mCc_ast_assignment *primitive_assignment = mCc_ast_new_primitive_assignment(identifier, assigned_expresion_value);
 
+	ASSERT_EQ(primitive_assignment->assignment_type, MCC_AST_ASSIGNMENT_PRIMITIVE);
 	ASSERT_EQ(primitive_assignment->identifier->identifier_name, "my_ident");
 	ASSERT_EQ(primitive_assignment->assigned_expression->literal->i_value, 14);
 }
@@ -174,7 +175,55 @@ TEST(AstBuildAssignment, CreateAssignmentArray)
 	struct mCc_ast_assignment *primitive_assignment =
 			mCc_ast_new_array_assignment(identifier, assigned_expresion_index, assigned_expresion_value);
 
+	ASSERT_EQ(primitive_assignment->assignment_type, MCC_AST_ASSIGNMENT_ARRAY);
 	ASSERT_EQ(primitive_assignment->identifier->identifier_name, "my_ident");
 	ASSERT_EQ(primitive_assignment->array_index_expression->literal->i_value, 15);
 	ASSERT_EQ(primitive_assignment->array_assigned_expression->literal->s_value, "value");
 }
+
+
+/*=========================================================== Declaration*/
+
+TEST(AstBuildDeclaration, CreateDeclarationPrimitive)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_1");
+	enum mCc_ast_literal_type data_type = MCC_AST_LITERAL_TYPE_INT;
+
+	struct mCc_ast_declaration *primitive_declaration =
+			mCc_ast_new_primitive_declaration(data_type, identifier);
+
+	ASSERT_EQ(primitive_declaration->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
+	ASSERT_EQ(primitive_declaration->data_type, MCC_AST_LITERAL_TYPE_INT);
+	ASSERT_EQ(primitive_declaration->identifier->identifier_name, "my_ident_1");
+}
+
+TEST(AstBuildDeclaration, CreateDeclarationArray)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_2");
+	enum mCc_ast_literal_type data_type = MCC_AST_LITERAL_TYPE_STRING;
+	size_t size=13;
+
+	struct mCc_ast_declaration *primitive_declaration =
+			mCc_ast_new_array_declaration(data_type, identifier, size);
+
+	ASSERT_EQ(primitive_declaration->declaration_type, MCC_AST_DECLARATION_ARRAY);
+	ASSERT_EQ(primitive_declaration->data_type, MCC_AST_LITERAL_TYPE_STRING);
+	ASSERT_EQ(primitive_declaration->identifier->identifier_name, "my_ident_2");
+	ASSERT_EQ(primitive_declaration->size, size);
+}
+
+/*=========================================================== Function*/
+
+//TODO
+
+/*=========================================================== Identifier*/
+
+//TODO
+
+/*=========================================================== Program*/
+
+//TODO
+
+/*=========================================================== Statement*/
+
+//TODO
