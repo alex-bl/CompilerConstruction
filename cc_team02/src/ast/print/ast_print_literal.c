@@ -1,13 +1,11 @@
-#include <stdlib.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #include "mCc/ast/print/ast_basic_printing.h"
 #include "mCc/ast/print/ast_print_literal.h"
 #include "mCc/ast/visit/ast_visit_literal.h"
 
-#define LABEL_SIZE 64
-
-static void print_dot_literal_int(struct mCc_ast_literal *literal, void *data)
+void mCc_print_dot_literal_int(struct mCc_ast_literal *literal, void *data)
 {
 	assert(literal);
 	assert(data);
@@ -19,7 +17,7 @@ static void print_dot_literal_int(struct mCc_ast_literal *literal, void *data)
 	print_dot_node(out, literal, label);
 }
 
-static void print_dot_literal_float(struct mCc_ast_literal *literal, void *data)
+void mCc_print_dot_literal_float(struct mCc_ast_literal *literal, void *data)
 {
 	assert(literal);
 	assert(data);
@@ -31,31 +29,27 @@ static void print_dot_literal_float(struct mCc_ast_literal *literal, void *data)
 	print_dot_node(out, literal, label);
 }
 
-
-static struct mCc_ast_visitor print_dot_visitor(FILE *out)
+void mCc_print_dot_literal_bool(struct mCc_ast_literal *literal, void *data)
 {
-	assert(out);
+	assert(literal);
+	assert(data);
 
-	return (struct mCc_ast_visitor){
-		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
-		.order = MCC_AST_VISIT_PRE_ORDER,
+	char label[LABEL_SIZE] = { 0 };
+	snprintf(label, sizeof(label), "%s",
+	         literal->b_value == true ? "true" : "false");
 
-		.userdata = out,
-
-		.literal_int = print_dot_literal_int,
-		.literal_float = print_dot_literal_float,
-	};
+	FILE *out = data;
+	print_dot_node(out, literal, label);
 }
 
-void mCc_ast_print_dot_literal(FILE *out, struct mCc_ast_literal *literal)
+void mCc_print_dot_literal_string(struct mCc_ast_literal *literal, void *data)
 {
-	assert(out);
 	assert(literal);
+	assert(data);
 
-	print_dot_begin(out);
+	char label[LABEL_SIZE] = { 0 };
+	snprintf(label, sizeof(label), "%s", literal->s_value);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
-	mCc_ast_visit_literal(literal, &visitor);
-
-	print_dot_end(out);
+	FILE *out = data;
+	print_dot_node(out, literal, label);
 }

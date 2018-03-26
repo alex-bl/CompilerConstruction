@@ -66,6 +66,7 @@ mCc_ast_new_expression_unary_op(enum mCc_ast_unary_op op,
 		return NULL;
 	}
 
+	expr->type=MCC_AST_EXPRESSION_TYPE_UNARY_OP;
 	expr->unary_op = op;
 	expr->unary_rhs = expression;
 
@@ -82,6 +83,7 @@ mCc_ast_new_expression_identifier(struct mCc_ast_identifier *identifier)
 		return NULL;
 	}
 
+	expr->type=MCC_AST_EXPRESSION_TYPE_IDENTIFIER;
 	expr->identifier = identifier;
 
 	return expr;
@@ -98,6 +100,8 @@ struct mCc_ast_expression *mCc_ast_new_expression_array_identifier(
 	if (!expr) {
 		return NULL;
 	}
+
+	expr->type=MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY;
 	expr->array_identifier = array_identifier;
 	expr->array_index_expression = array_index_expression;
 
@@ -113,6 +117,8 @@ struct mCc_ast_expression *mCc_ast_new_expression_function_call(
 	if (!expr) {
 		return NULL;
 	}
+
+	expr->type=MCC_AST_EXPRESSION_TYPE_CALL_EXPR;
 	expr->function_call = function_call;
 
 	return expr;

@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void mCc_ast_print_dot_program(FILE *out, struct mCc_ast_program *program);
+void mCc_print_dot_program(struct mCc_ast_program *program, void *data);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,8 @@
 #include <assert.h>
 
 #include "mCc/ast/visit/ast_visit_expression.h"
+#include "mCc/ast/visit/ast_visit_function.h"
+#include "mCc/ast/visit/ast_visit_identifier.h"
 #include "mCc/ast/visit/ast_visit_literal.h"
 
 void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
@@ -32,19 +34,33 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_CALL_EXPR:
-		/*TODO*/
+		visit_if_pre_order(expression, visitor->expression_function_call,
+		                   visitor);
+		mCc_ast_visit_function_call(expression->function_call, visitor);
+		visit_if_post_order(expression, visitor->expression_function_call,
+		                    visitor);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER:
-		/*TODO*/
+		visit_if_pre_order(expression, visitor->expression_identifier, visitor);
+		mCc_ast_visit_identifier(expression->identifier, visitor);
+		visit_if_post_order(expression, visitor->expression_identifier,
+		                    visitor);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY:
-		/*TODO*/
+		visit_if_pre_order(expression, visitor->expression_array_identifier,
+		                   visitor);
+		mCc_ast_visit_identifier(expression->array_identifier, visitor);
+		visit_if_post_order(expression, visitor->expression_array_identifier,
+		                    visitor);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_UNARY_OP:
-		/*TODO*/
+		visit_if_pre_order(expression, visitor->expression_unary_op, visitor);
+		mCc_ast_visit_expression(expression->unary_rhs, visitor);
+		visit_if_post_order(expression, visitor->expression_unary_op, visitor);
+
 		break;
 	}
 

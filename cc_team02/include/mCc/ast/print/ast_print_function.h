@@ -9,11 +9,12 @@
 extern "C" {
 #endif
 
-void mCc_ast_print_dot_function_def(FILE *out,
-                                    struct mCc_ast_function_def *function_def);
+void mCc_print_dot_function_type(struct mCc_ast_function_def *def, void *data);
 
-void mCc_ast_print_dot_function_call(
-    FILE *out, struct mCc_ast_function_call *function_call);
+void mCc_print_dot_function_def(struct mCc_ast_function_def *def, void *data);
+
+void mCc_print_dot_function_call(struct mCc_ast_function_call *call,
+                                 void *data);
 
 #ifdef __cplusplus
 }

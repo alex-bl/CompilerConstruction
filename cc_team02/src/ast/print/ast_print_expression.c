@@ -24,8 +24,17 @@ const char *mCc_ast_print_binary_op(enum mCc_ast_binary_op op)
 	return "unknown op";
 }
 
-static void print_dot_expression_literal(struct mCc_ast_expression *expression,
-                                         void *data)
+const char *mCc_ast_print_unary_op(enum mCc_ast_unary_op op)
+{
+	switch (op) {
+	case MCC_AST_UNARY_OP_MINUS: return "-";
+	case MCC_AST_UNARY_OP_NEGATION: return "!";
+	}
+	return "unknown op";
+}
+
+void mCc_print_dot_expression_literal(struct mCc_ast_expression *expression,
+                                      void *data)
 {
 	assert(expression);
 	assert(data);
@@ -35,9 +44,8 @@ static void print_dot_expression_literal(struct mCc_ast_expression *expression,
 	print_dot_edge(out, expression, expression->literal, "literal");
 }
 
-static void
-print_dot_expression_binary_op(struct mCc_ast_expression *expression,
-                               void *data)
+void mCc_print_dot_expression_binary_op(struct mCc_ast_expression *expression,
+                                        void *data)
 {
 	assert(expression);
 	assert(data);
@@ -52,8 +60,8 @@ print_dot_expression_binary_op(struct mCc_ast_expression *expression,
 	print_dot_edge(out, expression, expression->rhs, "rhs");
 }
 
-static void print_dot_expression_parenth(struct mCc_ast_expression *expression,
-                                         void *data)
+void mCc_print_dot_expression_parenth(struct mCc_ast_expression *expression,
+                                      void *data)
 {
 	assert(expression);
 	assert(data);
@@ -63,32 +71,53 @@ static void print_dot_expression_parenth(struct mCc_ast_expression *expression,
 	print_dot_edge(out, expression, expression->expression, "expression");
 }
 
-static struct mCc_ast_visitor print_dot_visitor(FILE *out)
+void mCc_print_dot_expression_identifier(struct mCc_ast_expression *expression,
+                                         void *data)
 {
-	assert(out);
+	assert(expression);
+	assert(data);
 
-	return (struct mCc_ast_visitor){
-		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
-		.order = MCC_AST_VISIT_PRE_ORDER,
-
-		.userdata = out,
-
-		.expression_literal = print_dot_expression_literal,
-		.expression_binary_op = print_dot_expression_binary_op,
-		.expression_parenth = print_dot_expression_parenth,
-	};
+	FILE *out = data;
+	print_dot_node(out, expression, "expr: identifier");
+	print_dot_edge(out, expression, expression->identifier, "identifier");
 }
 
-void mCc_ast_print_dot_expression(FILE *out,
-                                  struct mCc_ast_expression *expression)
+void mCc_print_dot_expression_identifier_array(
+    struct mCc_ast_expression *expression, void *data)
 {
-	assert(out);
 	assert(expression);
+	assert(data);
 
-	print_dot_begin(out);
+	FILE *out = data;
+	print_dot_node(out, expression, "expr: identifier_arr");
+	print_dot_edge(out, expression, expression->array_identifier,
+	               "identifier_arr");
+	print_dot_edge(out, expression, expression->array_index_expression,
+	               "arr_index_expr");
+}
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
-	mCc_ast_visit_expression(expression, &visitor);
+void mCc_print_dot_expression_function_call(
+    struct mCc_ast_expression *expression, void *data)
+{
+	assert(expression);
+	assert(data);
 
-	print_dot_end(out);
+	FILE *out = data;
+	print_dot_node(out, expression, "expr: function_call");
+	print_dot_edge(out, expression, expression->function_call, "function_call");
+}
+
+void mCc_print_dot_expression_unary_op(struct mCc_ast_expression *expression,
+                                       void *data)
+{
+	assert(expression);
+	assert(data);
+
+	char label[LABEL_SIZE] = { 0 };
+	snprintf(label, sizeof(label), "expr: %s",
+	         mCc_ast_print_unary_op(expression->op));
+
+	FILE *out = data;
+	print_dot_node(out, expression, label);
+	print_dot_edge(out, expression, expression->unary_rhs, "rhs");
 }

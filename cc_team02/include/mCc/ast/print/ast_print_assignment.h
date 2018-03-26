@@ -9,8 +9,11 @@
 extern "C" {
 #endif
 
-void mCc_ast_print_dot_assignment(FILE *out,
-                                  struct mCc_ast_assignment *assignment);
+void mCc_print_dot_assignment_primitive(struct mCc_ast_assignment *assignment,
+                                        void *data);
+
+void mCc_print_dot_assignment_array(struct mCc_ast_assignment *assignment,
+                                    void *data);
 
 #ifdef __cplusplus
 }
