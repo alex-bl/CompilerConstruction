@@ -324,7 +324,14 @@ TEST(AstBuildFunction, CreateFunctionCallParameterized)
 
 /*=========================================================== Identifier*/
 
-//TODO
+TEST(AstBuildFunction, CreateIdentifier)
+{
+	const char *name="identifier_name";
+
+	struct mCc_ast_identifier *identifier =	mCc_ast_new_identifier(name);
+
+	ASSERT_EQ(identifier->identifier_name, "identifier_name");
+}
 
 /*=========================================================== Program*/
 
