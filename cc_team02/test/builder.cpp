@@ -160,7 +160,7 @@ TEST(AstBuildAssignment, CreateAssignmentPrimitive)
 	struct mCc_ast_assignment *primitive_assignment = mCc_ast_new_primitive_assignment(identifier, assigned_expresion_value);
 
 	ASSERT_EQ(primitive_assignment->identifier->identifier_name, "my_ident");
-	ASSERT_EQ(primitive_assignment->assigned_expression, 14);
+	ASSERT_EQ(primitive_assignment->assigned_expression->literal->i_value, 14);
 }
 
 TEST(AstBuildAssignment, CreateAssignmentArray)
@@ -175,6 +175,6 @@ TEST(AstBuildAssignment, CreateAssignmentArray)
 			mCc_ast_new_array_assignment(identifier, assigned_expresion_index, assigned_expresion_value);
 
 	ASSERT_EQ(primitive_assignment->identifier->identifier_name, "my_ident");
-	ASSERT_EQ(primitive_assignment->array_index_expression, 15);
-	ASSERT_EQ(primitive_assignment->array_assigned_expression, "value");
+	ASSERT_EQ(primitive_assignment->array_index_expression->literal->i_value, 15);
+	ASSERT_EQ(primitive_assignment->array_assigned_expression->literal->s_value, "value");
 }
