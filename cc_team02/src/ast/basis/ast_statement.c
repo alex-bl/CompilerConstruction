@@ -1,6 +1,7 @@
-#include <stddef.h>
-
 #include "mCc/ast/basis/ast_statement.h"
+#include <assert.h>
+#include <stddef.h>
+#include <stdlib.h>
 
 // TODO: initialize next_statement explicitly with NULL
 
@@ -14,10 +15,10 @@ mCc_ast_new_if_statement(struct mCc_ast_expression *condition_expr,
 		return NULL;
 	}
 
-	statement->statement_type=MCC_AST_STATEMENT_IF;
-	statement->condition_expression=condition_expr;
-	statement->if_statement=if_stmt;
-	statement->else_statement=else_stmt;
+	statement->statement_type = MCC_AST_STATEMENT_IF;
+	statement->condition_expression = condition_expr;
+	statement->if_statement = if_stmt;
+	statement->else_statement = else_stmt;
 
 	return statement;
 }
@@ -31,22 +32,22 @@ mCc_ast_new_while_statement(struct mCc_ast_expression *loop_expr,
 		return NULL;
 	}
 
-	statement->statement_type=MCC_AST_STATEMENT_WHILE;
-	statement->loop_condition_expression=loop_expr;
-	statement->while_statement=while_stmt;
+	statement->statement_type = MCC_AST_STATEMENT_WHILE;
+	statement->loop_condition_expression = loop_expr;
+	statement->while_statement = while_stmt;
 
 	return statement;
 }
 struct mCc_ast_statement *
-mCc_ast_new_return_statement(struct mCc_ast_statement *return_stmt)
+mCc_ast_new_return_statement(struct mCc_ast_expression *return_expression)
 {
 	struct mCc_ast_statement *statement = malloc(sizeof(*statement));
 	if (!statement) {
 		return NULL;
 	}
 
-	statement->statement_type=MCC_AST_STATEMENT_RETURN;
-	statement->return_expression=return_stmt;
+	statement->statement_type = MCC_AST_STATEMENT_RETURN;
+	statement->return_expression = return_expression;
 
 	return statement;
 }
@@ -59,8 +60,8 @@ mCc_ast_new_expression_statement(struct mCc_ast_expression *expression_stmt)
 		return NULL;
 	}
 
-	statement->statement_type=MCC_AST_STATEMENT_EXPRESSION;
-	statement->expression=expression_stmt;
+	statement->statement_type = MCC_AST_STATEMENT_EXPRESSION;
+	statement->expression = expression_stmt;
 
 	return statement;
 }
@@ -73,8 +74,8 @@ mCc_ast_new_declaration_statement(struct mCc_ast_declaration *declaration)
 		return NULL;
 	}
 
-	statement->statement_type=MCC_AST_STATEMENT_DECLARATION;
-	statement->declaration=declaration;
+	statement->statement_type = MCC_AST_STATEMENT_DECLARATION;
+	statement->declaration = declaration;
 
 	return statement;
 }
@@ -87,8 +88,8 @@ mCc_ast_new_assign_statement(struct mCc_ast_assignment *assignment)
 		return NULL;
 	}
 
-	statement->statement_type=MCC_AST_STATEMENT_ASSIGNMENT;
-	statement->assignment=assignment;
+	statement->statement_type = MCC_AST_STATEMENT_ASSIGNMENT;
+	statement->assignment = assignment;
 
 	return statement;
 }

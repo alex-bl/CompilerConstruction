@@ -27,13 +27,17 @@ int main(void)
 	//	return EXIT_SUCCESS;
 
 	// just for testing/debugging purposes
-	struct mCc_ast_identifier *identifier =
-	    mCc_ast_new_identifier("myFloatArr");
-	struct mCc_ast_declaration *declaration_array =
-	    mCc_ast_new_array_declaration(MCC_AST_LITERAL_TYPE_FLOAT, identifier,
-	                                  100);
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(2);
+	struct mCc_ast_expression *param = mCc_ast_new_expression_literal(lit);
 
-	mCc_ast_print_dot_declaration(stdout, declaration_array);
+	struct mCc_ast_function_call *function_call =
+	    mCc_ast_new_parameterized_function_call(identifier, param);
+
+	struct mCc_ast_expression *expr_function_call =
+	    mCc_ast_new_expression_function_call(function_call);
+
+	mCc_ast_print_dot_expression(stdout, expr_function_call);
 
 	return EXIT_SUCCESS;
 }
