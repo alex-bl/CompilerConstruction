@@ -401,7 +401,8 @@ TEST(AstBuildFunction, CreateStatementIf)
 	ASSERT_EQ(statement->if_statement->assignment->array_index_expression->literal->f_value, 78.9);
 	ASSERT_EQ(statement->if_statement->assignment->array_assigned_expression->expression->identifier->identifier_name, "my_ident_11");
 
-	ASSERT_EQ(statement->else_statement->expression->type, MCC_AST_STATEMENT_RETURN);
+	ASSERT_EQ(statement->else_statement->expression->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
+	ASSERT_EQ(statement->else_statement->statement_type, MCC_AST_STATEMENT_RETURN);
 	ASSERT_EQ(statement->else_statement->expression->identifier->identifier_name, "my_ident_12");
 }
 
@@ -420,7 +421,8 @@ TEST(AstBuildFunction, CreateStatementWhile)
 
 	ASSERT_EQ(statement->while_statement->declaration->data_type, MCC_AST_LITERAL_TYPE_STRING);
 	ASSERT_EQ(statement->while_statement->declaration->identifier->identifier_name, "my_ident_14");
-	ASSERT_EQ(statement->loop_condition_expression->identifier, MCC_AST_LITERAL_TYPE_STRING);
+	ASSERT_EQ(statement->loop_condition_expression->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
+	ASSERT_EQ(statement->loop_condition_expression->identifier->identifier_name, "my_ident_13");
 }
 
 TEST(AstBuildFunction, CreateStatementReturn)
