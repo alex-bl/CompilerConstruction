@@ -1,7 +1,8 @@
-
-#include "mCc/ast/basis/ast_assignment.h"
+#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
+
+#include "mCc/ast/basis/ast_assignment.h"
 
 struct mCc_ast_assignment *mCc_ast_new_primitive_assignment(
     struct mCc_ast_identifier *identifier,

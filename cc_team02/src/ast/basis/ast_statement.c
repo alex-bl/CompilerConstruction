@@ -1,4 +1,6 @@
+#include <assert.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "mCc/ast/basis/ast_statement.h"
 
@@ -14,6 +16,8 @@ mCc_ast_new_if_statement(struct mCc_ast_expression *condition_expr,
 		return NULL;
 	}
 
+	//set explicitly to null
+	statement->next_statement=NULL;
 	statement->statement_type=MCC_AST_STATEMENT_IF;
 	statement->condition_expression=condition_expr;
 	statement->if_statement=if_stmt;
@@ -31,6 +35,8 @@ mCc_ast_new_while_statement(struct mCc_ast_expression *loop_expr,
 		return NULL;
 	}
 
+	//set explicitly to null
+	statement->next_statement=NULL;
 	statement->statement_type=MCC_AST_STATEMENT_WHILE;
 	statement->loop_condition_expression=loop_expr;
 	statement->while_statement=while_stmt;
@@ -45,6 +51,8 @@ mCc_ast_new_return_statement(struct mCc_ast_statement *return_stmt)
 		return NULL;
 	}
 
+	//set explicitly to null
+	statement->next_statement=NULL;
 	statement->statement_type=MCC_AST_STATEMENT_RETURN;
 	statement->return_expression=return_stmt;
 
@@ -59,6 +67,8 @@ mCc_ast_new_expression_statement(struct mCc_ast_expression *expression_stmt)
 		return NULL;
 	}
 
+	//set explicitly to null
+	statement->next_statement=NULL;
 	statement->statement_type=MCC_AST_STATEMENT_EXPRESSION;
 	statement->expression=expression_stmt;
 
@@ -73,6 +83,8 @@ mCc_ast_new_declaration_statement(struct mCc_ast_declaration *declaration)
 		return NULL;
 	}
 
+	//set explicitly to null
+	statement->next_statement=NULL;
 	statement->statement_type=MCC_AST_STATEMENT_DECLARATION;
 	statement->declaration=declaration;
 
@@ -87,6 +99,8 @@ mCc_ast_new_assign_statement(struct mCc_ast_assignment *assignment)
 		return NULL;
 	}
 
+	//set explicitly to null
+	statement->next_statement=NULL;
 	statement->statement_type=MCC_AST_STATEMENT_ASSIGNMENT;
 	statement->assignment=assignment;
 
