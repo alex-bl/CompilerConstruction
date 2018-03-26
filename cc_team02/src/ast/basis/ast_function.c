@@ -2,15 +2,22 @@
 
 #include "mCc/ast/basis/ast_function.h"
 
-/*---------------------------------------------------------------- function
- * definition*/
+/*----------------- function definition-----------------*/
 struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
     struct mCc_ast_identifier *identifier,
     enum mCc_ast_function_return_type return_type,
     struct mCc_ast_statement *stmts)
 {
-	/* TODO */
-	return NULL;
+	struct mCc_ast_function_def *function = malloc(sizeof(*function));
+	if (!function) {
+		return NULL;
+	}
+
+	function->identifier=identifier;
+	function->return_type = return_type;
+	function->first_statement=stmts;
+
+	return function;
 }
 
 struct mCc_ast_function_def *mCc_ast_new_parameterized_function_def(
@@ -18,33 +25,56 @@ struct mCc_ast_function_def *mCc_ast_new_parameterized_function_def(
     enum mCc_ast_function_return_type return_type,
     struct mCc_ast_declaration *params, struct mCc_ast_statement *stmts)
 {
-	/* TODO */
-	return NULL;
+	struct mCc_ast_function_def function=mCc_ast_new_non_parameterized_function_def(identifier, return_type, stmts);
+	function->first_parameter=params;
+	return function;
 }
 
 void mCc_ast_delete_function_def(struct mCc_ast_function_def *function_def)
 {
-	/*TODO*/
+	mCc_ast_delete_identifier(function_def->identifier);
+	mCc_ast_delete_return_type(function_def->return_type);
+	mCc_ast_delete_statement(function_def->first_statement);
+	if (function_def->first_parameter!=NULL) {
+		mCc_ast_delete_parameter(function_def->first_parameter);
+	}
+	free(function_def);
 }
 
-/*---------------------------------------------------------------------function
- * call*/
+/*-----------------function call-----------------*/
 struct mCc_ast_function_call *
 mCc_ast_new_parameterized_function_call(struct mCc_ast_identifier *identifier,
                                         struct mCc_ast_expression *args)
 {
-	/* TODO */
-	return NULL;
+	struct mCc_ast_function_call *function = malloc(sizeof(*function));
+	if (!function) {
+		return NULL;
+	}
+
+	function->identifier=identifier;
+	function->first_argument=args;
+
+	return function;
 }
 
 struct mCc_ast_function_call *mCc_ast_new_non_parameterized_function_call(
     struct mCc_ast_identifier *identifier)
 {
-	/* TODO */
-	return NULL;
+	struct mCc_ast_function_call *function = malloc(sizeof(*function));
+	if (!function) {
+		return NULL;
+	}
+
+	function->identifier=identifier;
+
+	return function;
 }
 
 void mCc_ast_delete_function_call(struct mCc_ast_function_call *function_call)
 {
-	/* TODO */
+	mCc_ast_delete_identifier(function_call->identifier);
+	if (function_call->first_argument!=NULL) {
+		mCc_ast_delete_argument(function_call->first_argument);
+	}
+	free(function_call);
 }
