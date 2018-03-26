@@ -79,6 +79,37 @@ void test_print_ast_declaration(struct mCc_ast_declaration *declaration,
 	fclose(fp);
 	mCc_ast_delete_declaration(declaration);
 }
+
+void test_print_ast_program(struct mCc_ast_program *program,
+                            const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_program(fp, program);
+
+	fclose(fp);
+	mCc_ast_delete_program(program);
+}
+
+void test_print_ast_function_def(struct mCc_ast_function_def *function,
+                                 const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_function_def(fp, function);
+
+	fclose(fp);
+	mCc_ast_delete_function_def(function);
+}
+
+void test_print_ast_function_call(struct mCc_ast_function_call *function,
+                                  const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_function_call(fp, function);
+
+	fclose(fp);
+	mCc_ast_delete_function_call(function);
+}
+
 /*===========================================================================
  * literal tests*/
 TEST(AstPrintLiteral, PrintLiteralInt)
@@ -329,6 +360,44 @@ TEST(AstPrintDeclaration, PrintDeclarationConcated)
 }
 
 /*===========================================================================
+ * function tests*/
+TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
+{
+	ASSERT_TRUE(false);
+}
+
+TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
+{
+	ASSERT_TRUE(false);
+}
+
+TEST(AstPrintFunctionCall, PrintFunctionCallSimple)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
+	struct mCc_ast_function_call *function_call =
+	    mCc_ast_new_non_parameterized_function_call(identifier);
+
+	test_print_ast_function_call(function_call, "function_call_simple");
+}
+
+TEST(AstPrintFunctionCall, PrintFunctionCallConcated)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
+	struct mCc_ast_literal *lit_1 = mCc_ast_new_literal_int(2);
+	struct mCc_ast_literal *lit_2 = mCc_ast_new_literal_int(3);
+
+	struct mCc_ast_expression *param_1 = mCc_ast_new_expression_literal(lit_1);
+	struct mCc_ast_expression *param_2 = mCc_ast_new_expression_literal(lit_2);
+
+	param_1->next_expr = param_2;
+
+	struct mCc_ast_function_call *function_call =
+	    mCc_ast_new_parameterized_function_call(identifier, param_1);
+
+	test_print_ast_function_call(function_call, "function_call_concated");
+}
+
+/*===========================================================================
  * program tests*/
 
 /**
@@ -336,7 +405,6 @@ TEST(AstPrintDeclaration, PrintDeclarationConcated)
  */
 TEST(AstPrintProgram, PrintProgramFunctionSimple)
 {
-	// reminder
 	ASSERT_TRUE(false);
 }
 

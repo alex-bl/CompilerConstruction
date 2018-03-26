@@ -28,16 +28,11 @@ int main(void)
 
 	// just for testing/debugging purposes
 	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
-	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(2);
-	struct mCc_ast_expression *param = mCc_ast_new_expression_literal(lit);
-
 	struct mCc_ast_function_call *function_call =
-	    mCc_ast_new_parameterized_function_call(identifier, param);
+	    mCc_ast_new_non_parameterized_function_call(identifier);
 
-	struct mCc_ast_expression *expr_function_call =
-	    mCc_ast_new_expression_function_call(function_call);
 
-	mCc_ast_print_dot_expression(stdout, expr_function_call);
+	mCc_ast_print_dot_function_call(stdout, function_call);
 
 	return EXIT_SUCCESS;
 }
