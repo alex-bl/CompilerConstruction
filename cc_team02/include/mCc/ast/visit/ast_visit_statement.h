@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void mCc_ast_visit_next_statement(struct mCc_ast_statement *statement,
+void mCc_ast_visit_optional_next_statement(struct mCc_ast_statement *statement,
                               struct mCc_ast_visitor *visitor);
 
 void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
