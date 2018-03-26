@@ -147,3 +147,34 @@ TEST(AstBuildExpression, CreateExpressionFunctionCall)
 	ASSERT_EQ(function_call->first_argument->literal->i_value, 2);
 }
 
+
+/*=========================================================== Assignment*/
+
+
+TEST(AstBuildAssignment, CreateAssignmentPrimitive)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident");
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(14);
+	struct mCc_ast_expression *assigned_expresion_value = mCc_ast_new_expression_literal(lit);
+
+	struct mCc_ast_assignment *primitive_assignment = mCc_ast_new_primitive_assignment(identifier, assigned_expresion_value);
+
+	ASSERT_EQ(primitive_assignment->identifier->identifier_name, "my_ident");
+	ASSERT_EQ(primitive_assignment->assigned_expression, 14);
+}
+
+TEST(AstBuildAssignment, CreateAssignmentArray)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident");
+	struct mCc_ast_literal *index = mCc_ast_new_literal_int(15);
+	struct mCc_ast_expression *assigned_expresion_index = mCc_ast_new_expression_literal(index);
+	struct mCc_ast_literal *value = mCc_ast_new_literal_string("value");
+	struct mCc_ast_expression *assigned_expresion_value = mCc_ast_new_expression_literal(value);
+
+	struct mCc_ast_assignment *primitive_assignment =
+			mCc_ast_new_array_assignment(identifier, assigned_expresion_index, assigned_expresion_value);
+
+	ASSERT_EQ(primitive_assignment->identifier->identifier_name, "my_ident");
+	ASSERT_EQ(primitive_assignment->array_index_expression, 15);
+	ASSERT_EQ(primitive_assignment->array_assigned_expression, "value");
+}
