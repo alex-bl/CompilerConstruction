@@ -335,7 +335,39 @@ TEST(AstBuildFunction, CreateIdentifier)
 
 /*=========================================================== Program*/
 
-//TODO
+TEST(AstBuildFunction, CreateProgram)
+{
+	struct mCc_ast_identifier *identifier_function = mCc_ast_new_identifier("my_ident_8");
+	enum mCc_ast_function_return_type return_type_function = MCC_AST_FUNCTION_RETURN_TYPE_FLOAT;
+
+	struct mCc_ast_identifier *identifier_assignment=mCc_ast_new_identifier("my_ident_9");
+
+	enum mCc_ast_unary_op op=MCC_AST_UNARY_OP_MINUS;
+	struct mCc_ast_literal *bool_literal=mCc_ast_new_literal_bool(1);
+	struct mCc_ast_expression *expression=mCc_ast_new_expression_literal(bool_literal);
+	struct mCc_ast_expression *assigned_expresion_value=mCc_ast_new_expression_unary_op(op, expression);
+
+	struct mCc_ast_assignment *assignment_function=mCc_ast_new_primitive_assignment(identifier_assignment, assigned_expresion_value);
+
+	struct mCc_ast_statement *stmts =
+			mCc_ast_new_assign_statement(assignment_function);
+
+	//Building Function
+	struct mCc_ast_function_def *function_defs =
+			mCc_ast_new_non_parameterized_function_def(identifier_function, return_type_function, stmts);
+
+	struct mCc_ast_program *program =	mCc_ast_new_program(function_defs);
+
+	ASSERT_EQ(program->first_function_def->identifier->identifier_name, "my_ident_8");
+	ASSERT_EQ(program->first_function_def->return_type, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assignment_type, MCC_AST_ASSIGNMENT_PRIMITIVE);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->identifier->identifier_name, "my_ident_9");
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->type, MCC_AST_EXPRESSION_TYPE_UNARY_OP);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_op, MCC_AST_UNARY_OP_MINUS);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->expression->type, MCC_AST_EXPRESSION_TYPE_LITERAL);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->expression->literal->type, MCC_AST_LITERAL_TYPE_BOOL);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->expression->literal->b_value, 1);
+}
 
 /*=========================================================== Statement*/
 
