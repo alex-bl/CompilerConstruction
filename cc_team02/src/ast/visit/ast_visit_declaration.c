@@ -1,7 +1,14 @@
-#include <assert.h>
-
 #include "mCc/ast/visit/ast_visit_declaration.h"
 #include "mCc/ast/visit/ast_visit_identifier.h"
+#include <assert.h>
+
+void mCc_visit_next_declaration(struct mCc_ast_declaration *declaration,
+                                struct mCc_ast_visitor *visitor)
+{
+	if (declaration && declaration->next_declaration) {
+		mCc_ast_visit_declaration(declaration->next_declaration, visitor);
+	}
+}
 
 void mCc_ast_visit_declaration(struct mCc_ast_declaration *declaration,
                                struct mCc_ast_visitor *visitor)

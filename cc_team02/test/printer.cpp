@@ -110,6 +110,16 @@ void test_print_ast_function_call(struct mCc_ast_function_call *function,
 	mCc_ast_delete_function_call(function);
 }
 
+void test_print_ast_assignment(struct mCc_ast_assignment *assignment,
+                               const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_assignment(fp, assignment);
+
+	fclose(fp);
+	mCc_ast_delete_assignment(assignment);
+}
+
 /*===========================================================================
  * literal tests*/
 TEST(AstPrintLiteral, PrintLiteralInt)
@@ -357,6 +367,21 @@ TEST(AstPrintDeclaration, PrintDeclarationConcated)
 	declaration_concated->next_declaration = declaration_array;
 
 	test_print_ast_declaration(declaration_concated, "declaration_concated");
+}
+/*===========================================================================
+ * assignment tests*/
+
+TEST(AstPrintAssignment, PrintAssignmentPrimitive)
+{
+
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(2);
+	struct mCc_ast_expression *lit_expr = mCc_ast_new_expression_literal(lit);
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_var");
+
+	struct mCc_ast_assignment *assignment =
+	    mCc_ast_new_primitive_assignment(identifier, lit_expr);
+
+	test_print_ast_assignment(assignment, "assignment_primitive");
 }
 
 /*===========================================================================
