@@ -56,5 +56,22 @@ struct mCc_ast_literal *mCc_ast_new_literal_string(const char *value)
 void mCc_ast_delete_literal(struct mCc_ast_literal *literal)
 {
 	assert(literal);
+	switch (literal->type) {
+	case MCC_AST_LITERAL_TYPE_INT:
+		mCc_ast_delete_literal(literal->i_value);
+		break;
+
+	case MCC_AST_LITERAL_TYPE_FLOAT:
+		mCc_ast_delete_literal(literal->f_value);
+		break;
+
+	case MCC_AST_LITERAL_TYPE_BOOL:
+		mCc_ast_delete_literal(literal->b_value);
+		break;
+
+	case MCC_AST_LITERAL_TYPE_STRING:
+		mCc_ast_delete_literal(literal->s_value);
+		break;
+	}
 	free(literal);
 }
