@@ -19,6 +19,7 @@ struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
 	function->first_statement = stmts;
 	// set explicitly to null
 	function->next_function_def = NULL;
+	function->first_parameter = NULL;
 
 	return function;
 }
@@ -38,29 +39,16 @@ struct mCc_ast_function_def *mCc_ast_new_parameterized_function_def(
 void mCc_ast_delete_function_def(struct mCc_ast_function_def *function_def)
 {
 	mCc_ast_delete_identifier(function_def->identifier);
-	mCc_ast_delete_statement(function_def->first_statement);
-	if (function_def->first_parameter != NULL) {
+	if (function_def->first_statement) {
+		mCc_ast_delete_statement(function_def->first_statement);
+	}
+	if (function_def->first_parameter) {
 		mCc_ast_delete_declaration(function_def->first_parameter);
 	}
 	free(function_def);
 }
 
 /*-----------------function call-----------------*/
-struct mCc_ast_function_call *
-mCc_ast_new_parameterized_function_call(struct mCc_ast_identifier *identifier,
-                                        struct mCc_ast_expression *args)
-{
-	struct mCc_ast_function_call *function = malloc(sizeof(*function));
-	if (!function) {
-		return NULL;
-	}
-
-	function->identifier = identifier;
-	function->first_argument = args;
-
-	return function;
-}
-
 struct mCc_ast_function_call *mCc_ast_new_non_parameterized_function_call(
     struct mCc_ast_identifier *identifier)
 {
@@ -70,6 +58,19 @@ struct mCc_ast_function_call *mCc_ast_new_non_parameterized_function_call(
 	}
 
 	function->identifier = identifier;
+	// explicitly set to null
+	function->first_argument = NULL;
+
+	return function;
+}
+
+struct mCc_ast_function_call *
+mCc_ast_new_parameterized_function_call(struct mCc_ast_identifier *identifier,
+                                        struct mCc_ast_expression *args)
+{
+	struct mCc_ast_function_call *function =
+	    mCc_ast_new_non_parameterized_function_call(identifier);
+	function->first_argument = args;
 
 	return function;
 }
