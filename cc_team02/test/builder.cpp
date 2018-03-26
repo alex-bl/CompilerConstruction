@@ -214,8 +214,83 @@ TEST(AstBuildDeclaration, CreateDeclarationArray)
 
 /*=========================================================== Function*/
 
-//TODO
+TEST(AstBuildFunction, CreateFunctionDefNonParameterized)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_3");
+	enum mCc_ast_function_return_type return_type = MCC_AST_FUNCTION_RETURN_TYPE_VOID;
 
+	//Building if/else statement:
+	struct mCc_ast_literal *literal=mCc_ast_new_literal_bool(1);
+	struct mCc_ast_expression *condition_expr=mCc_ast_new_expression_literal(literal);
+
+	struct mCc_ast_identifier *identifier_else = mCc_ast_new_identifier("my_ident_4");
+	enum mCc_ast_literal_type data_type = MCC_AST_LITERAL_TYPE_INT;
+	struct mCc_ast_declaration *primitive_declaration =
+			mCc_ast_new_primitive_declaration(data_type, identifier_else);
+	struct mCc_ast_statement *if_stmt=mCc_ast_new_declaration_statement(primitive_declaration);
+
+	mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
+	mCc_ast_expression *exp = mCc_ast_new_expression_literal(lit);
+	struct mCc_ast_statement *else_stmt=mCc_ast_new_expression_statement(exp);
+
+	struct mCc_ast_statement *stmts =
+			mCc_ast_new_if_statement(condition_expr, if_stmt, else_stmt);
+
+	//Building Function
+	struct mCc_ast_function_def *function =
+			mCc_ast_new_non_parameterized_function_def(identifier, return_type, stmts);
+
+	ASSERT_EQ(function->identifier->identifier_name, "my_ident_3");
+	ASSERT_EQ(function->return_type, MCC_AST_FUNCTION_RETURN_TYPE_VOID);
+	ASSERT_EQ(function->first_statement->if_statement->declaration->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
+	ASSERT_EQ(function->first_statement->if_statement->declaration->data_type, MCC_AST_LITERAL_TYPE_INT);
+	ASSERT_EQ(function->first_statement->if_statement->declaration->identifier->identifier_name, "my_ident_4");
+	ASSERT_EQ(function->first_statement->else_statement->expression->literal->s_value, "test");
+	ASSERT_EQ(function->first_statement->condition_expression->literal->b_value, 1);
+}
+
+TEST(AstBuildFunction, CreateFunctionDefParameterized)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_7");
+	enum mCc_ast_function_return_type return_type = MCC_AST_FUNCTION_RETURN_TYPE_BOOL;
+
+	//Building if/else statement:
+	struct mCc_ast_literal *literal=mCc_ast_new_literal_bool(1);
+	struct mCc_ast_expression *condition_expr=mCc_ast_new_expression_literal(literal);
+
+	struct mCc_ast_identifier *identifier_else = mCc_ast_new_identifier("my_ident_6");
+	enum mCc_ast_literal_type data_type = MCC_AST_LITERAL_TYPE_INT;
+	struct mCc_ast_declaration *primitive_declaration =
+			mCc_ast_new_primitive_declaration(data_type, identifier_else);
+	struct mCc_ast_statement *if_stmt=mCc_ast_new_declaration_statement(primitive_declaration);
+
+	mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
+	mCc_ast_expression *exp = mCc_ast_new_expression_literal(lit);
+	struct mCc_ast_statement *else_stmt=mCc_ast_new_expression_statement(exp);
+
+	struct mCc_ast_statement *stmts =
+			mCc_ast_new_if_statement(condition_expr, if_stmt, else_stmt);
+
+	//Building Paramaters:
+	enum mCc_ast_literal_type data_type_param=MCC_AST_LITERAL_TYPE_FLOAT;
+	struct mCc_ast_identifier *identifier_param=mCc_ast_new_identifier("my_ident_5");
+	struct mCc_ast_declaration *params=mCc_ast_new_primitive_declaration(data_type_param, identifier_param);
+
+	//Building Function
+	struct mCc_ast_function_def *function =
+			mCc_ast_new_parameterized_function_def(identifier, return_type, params, stmts);
+
+	ASSERT_EQ(function->identifier->identifier_name, "my_ident_7");
+	ASSERT_EQ(function->return_type, MCC_AST_FUNCTION_RETURN_TYPE_BOOL);
+	ASSERT_EQ(function->first_statement->if_statement->declaration->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
+	ASSERT_EQ(function->first_statement->if_statement->declaration->data_type, MCC_AST_LITERAL_TYPE_INT);
+	ASSERT_EQ(function->first_statement->if_statement->declaration->identifier->identifier_name, "my_ident_6");
+	ASSERT_EQ(function->first_statement->else_statement->expression->literal->s_value, "test");
+	ASSERT_EQ(function->first_parameter->data_type, MCC_AST_LITERAL_TYPE_FLOAT);
+	ASSERT_EQ(function->first_parameter->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
+	ASSERT_EQ(function->first_parameter->identifier->identifier_name, "my_ident_5");
+	ASSERT_EQ(function->first_statement->condition_expression->literal->b_value, 1);
+}
 /*=========================================================== Identifier*/
 
 //TODO
