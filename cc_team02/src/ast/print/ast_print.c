@@ -42,7 +42,6 @@ static struct mCc_ast_visitor print_dot_visitor(FILE *out)
 
 		.function_call = mCc_print_dot_function_call,
 		.function_def = mCc_print_dot_function_def,
-		.function_def_type = mCc_print_dot_function_type,
 
 		// identifier
 		.identifier = mCc_print_dot_identifier,

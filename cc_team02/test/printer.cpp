@@ -537,7 +537,8 @@ TEST(AstPrintStatement, PrintStatementReturn)
  * function tests*/
 TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
 {
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_bool_function");
+	struct mCc_ast_identifier *identifier =
+	    mCc_ast_new_identifier("my_bool_function");
 	struct mCc_ast_literal *return_expr_lit = mCc_ast_new_literal_bool(true);
 	struct mCc_ast_expression *return_expression =
 	    mCc_ast_new_expression_literal(return_expr_lit);
@@ -555,7 +556,27 @@ TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
 
 TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
 {
-	ASSERT_TRUE(false);
+	struct mCc_ast_identifier *identifier =
+	    mCc_ast_new_identifier("my_bool_function");
+	struct mCc_ast_literal *return_expr_lit = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *return_expression =
+	    mCc_ast_new_expression_literal(return_expr_lit);
+
+	struct mCc_ast_statement *return_statement =
+	    mCc_ast_new_return_statement(return_expression);
+
+	struct mCc_ast_identifier *identifier_dec =
+	    mCc_ast_new_identifier("my_float_var");
+	struct mCc_ast_declaration *declaration_primitive =
+	    mCc_ast_new_primitive_declaration(MCC_AST_LITERAL_TYPE_FLOAT,
+	                                      identifier_dec);
+
+	struct mCc_ast_function_def *function_def =
+	    mCc_ast_new_parameterized_function_def(
+	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT,
+	        declaration_primitive, return_statement);
+
+	test_print_ast_function_def(function_def, "function_def_parameter");
 }
 
 TEST(AstPrintFunctionCall, PrintFunctionCallSimple)
@@ -587,19 +608,61 @@ TEST(AstPrintFunctionCall, PrintFunctionCallConcated)
 /*===========================================================================
  * program tests*/
 
-/**
- * TODO: implement
- */
 TEST(AstPrintProgram, PrintProgramFunctionSimple)
 {
-	ASSERT_TRUE(false);
+
+	struct mCc_ast_identifier *identifier =
+	    mCc_ast_new_identifier("my_bool_function");
+	struct mCc_ast_literal *return_expr_lit = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *return_expression =
+	    mCc_ast_new_expression_literal(return_expr_lit);
+
+	struct mCc_ast_statement *return_statement =
+	    mCc_ast_new_return_statement(return_expression);
+
+	struct mCc_ast_function_def *function_def =
+	    mCc_ast_new_non_parameterized_function_def(
+	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT, return_statement);
+
+	struct mCc_ast_program *program = mCc_ast_new_program(function_def);
+
+	test_print_ast_program(program, "program_simple");
 }
 
-/**
- * TODO: implement
- */
 TEST(AstPrintProgram, PrintProgramFunctionConcated)
 {
-	// reminder
-	ASSERT_TRUE(false);
+	struct mCc_ast_identifier *identifier_f1 =
+	    mCc_ast_new_identifier("my_bool_function");
+	struct mCc_ast_literal *return_expr_lit_f1 = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *return_expression_f1 =
+	    mCc_ast_new_expression_literal(return_expr_lit_f1);
+
+	struct mCc_ast_statement *return_statement_f1 =
+	    mCc_ast_new_return_statement(return_expression_f1);
+
+	struct mCc_ast_function_def *function_def_1 =
+	    mCc_ast_new_non_parameterized_function_def(
+	        identifier_f1, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT,
+	        return_statement_f1);
+
+	struct mCc_ast_identifier *identifier_f2 =
+	    mCc_ast_new_identifier("my_void_function");
+	struct mCc_ast_literal *test_expr_lit_f2 = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *assignment_expression_f2 =
+	    mCc_ast_new_expression_literal(test_expr_lit_f2);
+
+	struct mCc_ast_statement *test_statement_f2 =
+	    mCc_ast_new_expression_statement(assignment_expression_f2);
+
+	struct mCc_ast_function_def *function_def_2 =
+	    mCc_ast_new_non_parameterized_function_def(
+	        identifier_f2, MCC_AST_FUNCTION_RETURN_TYPE_VOID,
+	        test_statement_f2);
+
+	function_def_1->next_function_def = function_def_2;
+
+	struct mCc_ast_program *program = mCc_ast_new_program(function_def_1);
+
+	test_print_ast_program(program, "program_concated");
+
 }

@@ -25,19 +25,6 @@ static void optionally_print_dot_edge(FILE *out, const void *src,
 	}
 }
 
-void mCc_print_dot_function_type(struct mCc_ast_function_def *def, void *data)
-{
-	assert(def);
-	assert(data);
-
-	char label[LABEL_SIZE] = { 0 };
-	snprintf(label, sizeof(label), "%s",
-	         print_dot_return_type(def->return_type));
-
-	FILE *out = data;
-	print_dot_node(out, def, label);
-}
-
 void mCc_print_dot_function_def(struct mCc_ast_function_def *def, void *data)
 {
 	assert(def);
