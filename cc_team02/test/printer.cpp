@@ -120,6 +120,16 @@ void test_print_ast_assignment(struct mCc_ast_assignment *assignment,
 	mCc_ast_delete_assignment(assignment);
 }
 
+void test_print_ast_statement(struct mCc_ast_statement *statement,
+                              const char *file_name)
+{
+	FILE *fp = open_file(file_name);
+	mCc_ast_print_dot_statement(fp, statement);
+
+	fclose(fp);
+	mCc_ast_delete_statement(statement);
+}
+
 /*===========================================================================
  * literal tests*/
 TEST(AstPrintLiteral, PrintLiteralInt)
@@ -403,10 +413,144 @@ TEST(AstPrintAssignment, PrintAssignmentArray)
 }
 
 /*===========================================================================
+ * statement tests*/
+
+TEST(AstPrintStatement, PrintStatementExpression)
+{
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_string("test_string");
+	struct mCc_ast_expression *lit_expr = mCc_ast_new_expression_literal(lit);
+	struct mCc_ast_statement *statement =
+	    mCc_ast_new_expression_statement(lit_expr);
+
+	test_print_ast_statement(statement, "statement_expression");
+}
+
+TEST(AstPrintStatement, PrintStatementDeclaration)
+{
+
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_var");
+	struct mCc_ast_declaration *declaration = mCc_ast_new_primitive_declaration(
+	    MCC_AST_LITERAL_TYPE_STRING, identifier);
+
+	struct mCc_ast_statement *statement =
+	    mCc_ast_new_declaration_statement(declaration);
+
+	test_print_ast_statement(statement, "statement_declaration");
+}
+
+TEST(AstPrintStatement, PrintStatementAssignment)
+{
+	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(2);
+	struct mCc_ast_expression *lit_expr = mCc_ast_new_expression_literal(lit);
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_var");
+
+	struct mCc_ast_assignment *assignment =
+	    mCc_ast_new_primitive_assignment(identifier, lit_expr);
+
+	struct mCc_ast_statement *statement =
+	    mCc_ast_new_assign_statement(assignment);
+	test_print_ast_statement(statement, "statement_assignment");
+}
+
+TEST(AstPrintStatement, PrintStatementIf)
+{
+	struct mCc_ast_literal *condition = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *condition_expr =
+	    mCc_ast_new_expression_literal(condition);
+
+	struct mCc_ast_literal *lit_if = mCc_ast_new_literal_int(2);
+	struct mCc_ast_expression *lit_expr_if =
+	    mCc_ast_new_expression_literal(lit_if);
+	struct mCc_ast_identifier *identifier_if = mCc_ast_new_identifier("my_var");
+
+	struct mCc_ast_assignment *assignment_if =
+	    mCc_ast_new_primitive_assignment(identifier_if, lit_expr_if);
+	struct mCc_ast_statement *if_statement =
+	    mCc_ast_new_assign_statement(assignment_if);
+
+	struct mCc_ast_literal *lit_else = mCc_ast_new_literal_int(14);
+	struct mCc_ast_expression *lit_expr_else =
+	    mCc_ast_new_expression_literal(lit_else);
+	struct mCc_ast_identifier *identifier_else =
+	    mCc_ast_new_identifier("my_var");
+
+	struct mCc_ast_assignment *assignment_else =
+	    mCc_ast_new_primitive_assignment(identifier_else, lit_expr_else);
+
+	struct mCc_ast_statement *else_statement =
+	    mCc_ast_new_assign_statement(assignment_else);
+
+	struct mCc_ast_statement *if_else_statement =
+	    mCc_ast_new_if_statement(condition_expr, if_statement, else_statement);
+
+	test_print_ast_statement(if_else_statement, "statement_if");
+}
+
+TEST(AstPrintStatement, PrintStatementWhile)
+{
+	struct mCc_ast_literal *condition = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *condition_expr =
+	    mCc_ast_new_expression_literal(condition);
+
+	struct mCc_ast_literal *lit_1 = mCc_ast_new_literal_int(2);
+	struct mCc_ast_expression *lit_expr_1 =
+	    mCc_ast_new_expression_literal(lit_1);
+	struct mCc_ast_identifier *identifier_1 = mCc_ast_new_identifier("my_var");
+
+	struct mCc_ast_assignment *assignment_1 =
+	    mCc_ast_new_primitive_assignment(identifier_1, lit_expr_1);
+	struct mCc_ast_statement *statement_1 =
+	    mCc_ast_new_assign_statement(assignment_1);
+
+	struct mCc_ast_literal *lit_2 = mCc_ast_new_literal_int(14);
+	struct mCc_ast_expression *lit_expr_2 =
+	    mCc_ast_new_expression_literal(lit_2);
+	struct mCc_ast_identifier *identifier_2 =
+	    mCc_ast_new_identifier("my_second_var");
+
+	struct mCc_ast_assignment *assignment_2 =
+	    mCc_ast_new_primitive_assignment(identifier_2, lit_expr_2);
+
+	struct mCc_ast_statement *statement_2 =
+	    mCc_ast_new_assign_statement(assignment_2);
+
+	statement_1->next_statement = statement_2;
+
+	struct mCc_ast_statement *while_statement =
+	    mCc_ast_new_while_statement(condition_expr, statement_1);
+
+	test_print_ast_statement(while_statement, "statement_while");
+}
+
+TEST(AstPrintStatement, PrintStatementReturn)
+{
+	struct mCc_ast_literal *return_expr_lit = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *return_expression =
+	    mCc_ast_new_expression_literal(return_expr_lit);
+
+	struct mCc_ast_statement *return_statement =
+	    mCc_ast_new_return_statement(return_expression);
+	test_print_ast_statement(return_statement, "statement_return");
+}
+
+/*===========================================================================
  * function tests*/
 TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
 {
-	ASSERT_TRUE(false);
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_bool_function");
+	struct mCc_ast_literal *return_expr_lit = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *return_expression =
+	    mCc_ast_new_expression_literal(return_expr_lit);
+
+	struct mCc_ast_statement *return_statement =
+	    mCc_ast_new_return_statement(return_expression);
+
+	struct mCc_ast_function_def *function_def =
+	    mCc_ast_new_non_parameterized_function_def(
+	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT, return_statement);
+
+	test_print_ast_function_def(function_def,
+	                            "function_def_parameterless_simple");
 }
 
 TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
