@@ -1,4 +1,5 @@
 #include "mCc/ast/basis/ast_function.h"
+#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -16,6 +17,8 @@ struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
 	function->identifier = identifier;
 	function->return_type = return_type;
 	function->first_statement = stmts;
+	// set explicitly to null
+	function->next_function_def = NULL;
 
 	return function;
 }
