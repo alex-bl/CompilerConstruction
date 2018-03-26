@@ -291,6 +291,37 @@ TEST(AstBuildFunction, CreateFunctionDefParameterized)
 	ASSERT_EQ(function->first_parameter->identifier->identifier_name, "my_ident_5");
 	ASSERT_EQ(function->first_statement->condition_expression->literal->b_value, 1);
 }
+
+//Function Calls:
+
+TEST(AstBuildFunction, CreateFunctionCallNonParameterized)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_7");
+
+	//Building Function
+	struct mCc_ast_function_call *function =
+			mCc_ast_new_non_parameterized_function_call(identifier);
+
+	ASSERT_EQ(function->identifier->identifier_name, "my_ident_7");
+}
+
+TEST(AstBuildFunction, CreateFunctionCallParameterized)
+{
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_3");
+
+	//Building Paramaters:
+	struct mCc_ast_literal *literal_exp=mCc_ast_new_literal_float(45.67);
+	struct mCc_ast_expression *args=mCc_ast_new_expression_literal(literal_exp);
+
+	//Building Function
+	struct mCc_ast_function_call *function =
+			mCc_ast_new_parameterized_function_call(identifier, args);
+
+	ASSERT_EQ(function->identifier->identifier_name, "my_ident_7");
+	ASSERT_EQ(function->first_argument->expression->literal->f_value, 45.67);
+	ASSERT_EQ(function->first_argument->expression->literal->type, MCC_AST_LITERAL_TYPE_FLOAT);
+}
+
 /*=========================================================== Identifier*/
 
 //TODO
