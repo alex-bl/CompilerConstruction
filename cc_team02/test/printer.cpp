@@ -548,7 +548,7 @@ TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
 
 	struct mCc_ast_function_def *function_def =
 	    mCc_ast_new_non_parameterized_function_def(
-	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT, return_statement);
+	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_BOOL, return_statement);
 
 	test_print_ast_function_def(function_def,
 	                            "function_def_parameterless_simple");
@@ -573,7 +573,7 @@ TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
 
 	struct mCc_ast_function_def *function_def =
 	    mCc_ast_new_parameterized_function_def(
-	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT,
+	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_BOOL,
 	        declaration_primitive, return_statement);
 
 	test_print_ast_function_def(function_def, "function_def_parameter");
@@ -622,7 +622,7 @@ TEST(AstPrintProgram, PrintProgramFunctionSimple)
 
 	struct mCc_ast_function_def *function_def =
 	    mCc_ast_new_non_parameterized_function_def(
-	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT, return_statement);
+	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_BOOL, return_statement);
 
 	struct mCc_ast_program *program = mCc_ast_new_program(function_def);
 
@@ -642,7 +642,7 @@ TEST(AstPrintProgram, PrintProgramFunctionConcated)
 
 	struct mCc_ast_function_def *function_def_1 =
 	    mCc_ast_new_non_parameterized_function_def(
-	        identifier_f1, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT,
+	        identifier_f1, MCC_AST_FUNCTION_RETURN_TYPE_BOOL,
 	        return_statement_f1);
 
 	struct mCc_ast_identifier *identifier_f2 =
@@ -664,5 +664,4 @@ TEST(AstPrintProgram, PrintProgramFunctionConcated)
 	struct mCc_ast_program *program = mCc_ast_new_program(function_def_1);
 
 	test_print_ast_program(program, "program_concated");
-
 }

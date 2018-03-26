@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+void mCc_print_dot_function_def(struct mCc_ast_function_def *def, void *data);
+
 void mCc_print_dot_function_call(struct mCc_ast_function_call *call,
                                  void *data);
 
