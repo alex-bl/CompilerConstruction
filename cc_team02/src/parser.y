@@ -2,7 +2,7 @@
 
 %define api.pure full
 %lex-param   {void *scanner}
-%parse-param {void *scanner} {struct mCc_ast_expression** result}
+%parse-param {void *scanner} {struct mCc_ast_program** result}
 
 %define parse.trace
 %define parse.error verbose
@@ -23,7 +23,7 @@ void mCc_parser_error();
 
 %token END 0 "EOF"
 
-%token <struct mCc_ast_identifier *> IDENTIFIER "IDENTIFIER"
+%token <struct mCc_ast_identifier* > 		IDENTIFIER "IDENTIFIER"
 %token <long>   			INT_LITERAL   "integer literal"
 %token <double> 			FLOAT_LITERAL "float literal"
 %token <const char*>        STRING_LITERAL "string literal"
@@ -33,11 +33,12 @@ void mCc_parser_error();
 %token FLOAT_TYPE "float type"
 %token STRING_TYPE "string type"
 %token BOOL_TYPE "bool type"
+%token VOID_TYPE "void type"
 
-%token IF    "if"
-%token ELSE  "else"
-%token WHILE "while"
-%token RETURN "return"
+%token IF_KEYWORD    "if"
+%token ELSE_KEYWORD  "else"
+%token WHILE_KEYWORD "while"
+%token RETURN_KEYWORD "return"
 
 %token LPARENTH "("
 %token RPARENTH ")"
@@ -66,22 +67,23 @@ void mCc_parser_error();
 
 %type <enum mCc_ast_binary_op> binary_op
 %type <enum mCc_ast_unary_op> unary_op
+%type <enum mCc_ast_literal_type> type
+%type <enum mCc_ast_function_return_type> function_def_return_type
 
 %type <struct mCc_ast_expression *> expression single_expr parameters arguments
 %type <struct mCc_ast_literal *> literal
 %type <struct mCc_ast_assignment *> assignment
 %type <struct mCc_ast_declaration *> declaration
-%type <struct mCc_ast_function_def *> function_def
-%type <struct mCc_ast_statement *> statement if_stmt while_stmt ret_stmt compound_stmt
-%type <mCc_ast_function_call *> call_expr
-%type <mCc_ast_new_program *> program
-%type <mCc_ast_function_return_type *> type function_def_return_type
+%type <struct mCc_ast_function_def *> function_def function_list
+%type <struct mCc_ast_statement *> statement if_stmt while_stmt ret_stmt compound_stmt statement_list
+%type <struct mCc_ast_function_call *> call_expr
+%type <struct mCc_ast_program *> program
 
 %start toplevel
 
 %%
 
-toplevel : expression { *result = $1; }
+toplevel : program { *result = $1; }
          ;
 
 declaration : type IDENTIFIER									{ $$ = mCc_ast_new_primitive_declaration($1, $2); }
@@ -128,10 +130,10 @@ literal : INT_LITERAL   { $$ = mCc_ast_new_literal_int($1);   }
 		| STRING_LITERAL { $$ = mCc_ast_new_literal_string($1); }
         ;
 
-type	:	INT_TYPE 	/*Todo*/
-		|	FLOAT_TYPE	/*Todo*/
-		|	BOOL_TYPE	/*Todo*/
-		|	STRING_TYPE	/*Todo*/
+type	:	INT_TYPE 	{ $$ = MCC_AST_LITERAL_TYPE_INT; }
+		|	FLOAT_TYPE	{ $$ = MCC_AST_LITERAL_TYPE_FLOAT; }
+		|	BOOL_TYPE	{ $$ = MCC_AST_LITERAL_TYPE_BOOL; }
+		|	STRING_TYPE	{ $$ = MCC_AST_LITERAL_TYPE_STRING; }
 		;
 
 statement   :   if_stmt			{ $$ = $1; }
@@ -143,52 +145,103 @@ statement   :   if_stmt			{ $$ = $1; }
             |   compound_stmt	{ $$ = $1; }
             ;
 
-if_stmt :   IF LPARENTH expression RPARENTH statement					{ $$ = mCc_ast_new_if_statement($3, $5, NULL); } /*else part missing, check if passing NULL is possible*/
-        |   IF LPARENTH expression RPARENTH statement ELSE statement	{ $$ = mCc_ast_new_if_statement($3, $5, $7); }
+statement_list	:	statement_list statement	{
+													struct mCc_ast_statement* t = $1;
+													if(t != NULL){
+														$$ = $2;
+													}else{
+														while(t->next_statement != NULL){
+															t = t->next_statement;
+														}
+														t->next_statement = $2;
+														$$ = $1;
+													}
+												}
+				|	statement					{ $$ = $1;}
+				;
+
+if_stmt :   IF_KEYWORD LPARENTH expression RPARENTH statement							{ $$ = mCc_ast_new_if_statement($3, $5, NULL); } /*else part missing, check if passing NULL is possible*/
+        |   IF_KEYWORD LPARENTH expression RPARENTH statement ELSE_KEYWORD statement	{ $$ = mCc_ast_new_if_statement($3, $5, $7); }
         ;
 
-while_stmt  :   WHILE LPARENTH expression RPARENTH statement			{ $$ = mCc_ast_new_while_statement($3, $5); }
+while_stmt  :   WHILE_KEYWORD LPARENTH expression RPARENTH statement			{ $$ = mCc_ast_new_while_statement($3, $5); }
             ;
 
-ret_stmt    :  RETURN ";"												{ $$ = mCc_ast_new_return_statement(NULL); } /*check if return with no expression is possible*/
-            |  RETURN expression ";"									{ $$ = mCc_ast_new_return_statement($2); }
+ret_stmt    :  RETURN_KEYWORD ";"												{ $$ = mCc_ast_new_return_statement(NULL); } /*check if return with no expression is possible*/
+            |  RETURN_KEYWORD expression ";"									{ $$ = mCc_ast_new_return_statement($2); }
             ;
 
-compound_stmt   : LBRACE RBRACE
-                | LBRACE statement RBRACE		{ $$ = $2; }
+compound_stmt   : LBRACE RBRACE								{ $$ = NULL;}
+                | LBRACE statement_list RBRACE				{ 
+																$$ = $2;
+															 }
                 ;
 
 function_def    :   function_def_return_type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
                 |   function_def_return_type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); }
                 ;
 
+function_list	:	function_list function_def	{ 
+													struct mCc_ast_function_def* t = $1;
+													if(t == NULL){
+														$$ = $2;
+													}else{
+														while(t->next_function_def != NULL){
+															t = t->next_function_def;
+														}
+														t->next_function_def = $2;
+														$$ = $1;
+													}
+													
+												}
+				|	function_def				{ $$ = $1;}
+				;
 
-function_def_return_type   	:   "void"
-							|	type
+function_def_return_type   	:   VOID_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_VOID;}
+							|	INT_TYPE 	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_INT; }
+							|	FLOAT_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_FLOAT; }
+							|	BOOL_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_BOOL; }
+							|	STRING_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_STRING; }
 							;
 
 parameters  :   declaration					{ $$ = $1; }
             |   parameters "," declaration	{
-												$$ = $3;
-												$$->next_declaration = $1;
+												struct mCc_ast_declaration* t = $1;
+												if(t == NULL){
+													$$ = $3;
+												}else{
+													while(t->next_declaration != NULL){
+														t = t->next_declaration;
+													}
+													t->next_declaration = $3;
+													$$ = $1;
+												}
 											}
             ;
 
-call_expr	:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_function_call($1); }
+call_expr	:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_new_non_parameterized_function_call($1); }
 			|	IDENTIFIER LPARENTH arguments RPARENTH	{ $$ = mCc_ast_new_parameterized_function_call($1, $3);}
 			;
 
 arguments	:	expression					{ $$ = $1; }
-			| 	arguments "," expression 	/*Don't know how to */
+			| 	arguments "," expression 	{
+												struct mCc_ast_expression* t = $1;
+												if(t == NULL){
+													$$ = $3;
+												}else{
+													while(t->next_expr != NULL){
+														t = t->next_expr;
+													}
+													t->next_expr = $3;
+													$$ = $1;
+												}
+
+											}
 			;
 
-program	:	function_def			{ $$ = $1; }
-		|	program function_def 	{
-										$$ = mCc_ast_new_program($2);
-									  	$$->next_program = $1;
-									}
-		;
 
+program	:	function_list			{ $$ = mCc_ast_new_program($1); }
+		;
 %%
 
 #include <assert.h>
