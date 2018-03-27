@@ -52,6 +52,8 @@ configure_file (
 # add the binary tree to the search path for include files
 # so that we will find the headers
 include_directories("${PROJECT_SOURCE_DIR}/include" ${CMAKE_CURRENT_BINARY_DIR})
+# include test-utils-header also => separated from source
+include_directories("${PROJECT_SOURCE_DIR}/test/include" ${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(src)
 
@@ -67,6 +69,8 @@ target_link_libraries(mC_to_dot mCc_lib)
 # test deps => target 'gtest'
 # test => run tests
 add_subdirectory("test")
+add_subdirectory("test/bin")
+
 include(CTest)
 # add native gtest support
 include(GoogleTest)
@@ -110,8 +114,8 @@ add_custom_target(build_and_test_memcheck
 
 foreach(entry_name ${unit_test_list})
 	# build and link
-	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)	
-	target_link_libraries(${entry_name}_test_exec mCc_lib gtest_main)
+	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)
+	target_link_libraries(${entry_name}_test_exec mCc_lib mCc_test_utils gtest_main)
 	# pass the test_exec to ctest => after COMMAND set args
 	# add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 	# native gtest support since cmake 3.9?
