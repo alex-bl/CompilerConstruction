@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void mCc_visit_next_function_def(struct mCc_ast_function_def *function_def,
+void mCc_ast_visit_optional_next_function_def(struct mCc_ast_function_def *function_def,
                                  struct mCc_ast_visitor *visitor);
 
 void mCc_ast_visit_function_def(struct mCc_ast_function_def *function_def,

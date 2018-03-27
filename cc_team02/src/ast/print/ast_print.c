@@ -1,7 +1,6 @@
 #include "mCc/ast_print.h"
-#include "mCc/ast_visit.h"
 #include "mCc/ast_print_visitors.h"
-
+#include "mCc/ast_visit.h"
 #include <assert.h>
 
 //"global" visitor needed

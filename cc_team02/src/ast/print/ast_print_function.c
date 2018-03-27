@@ -16,14 +16,6 @@ static const char *print_dot_return_type(enum mCc_ast_function_return_type type)
 	return "unknown type";
 }
 
-static void optionally_print_dot_edge(FILE *out, const void *src,
-                                      const void *dest, const char *label)
-{
-	if (dest) {
-		print_dot_edge(out, src, dest, label);
-	}
-}
-
 void mCc_print_dot_function_def(struct mCc_ast_function_def *def, void *data)
 {
 	assert(def);
@@ -38,9 +30,9 @@ void mCc_print_dot_function_def(struct mCc_ast_function_def *def, void *data)
 	// TODO:
 	// print_dot_edge(out, def, def->return_type, "func: type");
 	print_dot_edge(out, def, def->identifier, "identifier");
-	optionally_print_dot_edge(out, def, def->first_parameter, "parameter");
-	optionally_print_dot_edge(out, def, def->first_statement, "statement");
-	optionally_print_dot_edge(out, def, def->next_function_def, "next");
+	print_dot_edge_if_dest_exists(out, def, def->first_parameter, "parameter");
+	print_dot_edge_if_dest_exists(out, def, def->first_statement, "statement");
+	print_dot_edge_if_dest_exists(out, def, def->next_function_def, "next");
 }
 
 void mCc_print_dot_function_call(struct mCc_ast_function_call *call, void *data)
@@ -51,5 +43,5 @@ void mCc_print_dot_function_call(struct mCc_ast_function_call *call, void *data)
 	FILE *out = data;
 	print_dot_node(out, call, "function_call()");
 	print_dot_edge(out, call, call->identifier, "identifier");
-	optionally_print_dot_edge(out, call, call->first_argument, "argument");
+	print_dot_edge_if_dest_exists(out, call, call->first_argument, "argument");
 }
