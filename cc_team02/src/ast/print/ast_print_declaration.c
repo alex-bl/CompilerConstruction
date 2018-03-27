@@ -4,7 +4,7 @@
 #include "mCc/ast/print/ast_print_declaration.h"
 #include "mCc/ast/visit/ast_visit_declaration.h"
 
-const char *mCc_ast_print_literal_type(enum mCc_ast_literal_type type)
+static const char *mCc_ast_print_literal_type(enum mCc_ast_literal_type type)
 {
 	switch (type) {
 	case MCC_AST_LITERAL_TYPE_INT: return "int";
@@ -15,47 +15,47 @@ const char *mCc_ast_print_literal_type(enum mCc_ast_literal_type type)
 	return "unknown type";
 }
 
-void
-mCc_print_dot_declaration_type(struct mCc_ast_declaration *declaration,
-                               void *data)
+static void print_next_declaration_edge(FILE *out,
+                                        struct mCc_ast_declaration *declaration)
+{
+	if (declaration->next_declaration) {
+		print_dot_edge(out, declaration, declaration->next_declaration,
+		               "next_declaration");
+	}
+}
+
+void mCc_print_dot_declaration_primitive(
+    struct mCc_ast_declaration *declaration, void *data)
 {
 	assert(declaration);
 	assert(data);
 
-	char label[LABEL_SIZE] = { 0 };
-	snprintf(label, sizeof(label), "dec type: %s",
+	char label[LABEL_SIZE];
+	snprintf(label, sizeof(label), "declaration: %s",
 	         mCc_ast_print_literal_type(declaration->declaration_type));
 
 	FILE *out = data;
 	print_dot_node(out, declaration, label);
+	print_dot_edge(out, declaration, declaration->identifier, "identifier");
+	print_next_declaration_edge(out, declaration);
 }
 
-void
-mCc_print_dot_declaration_primitive(struct mCc_ast_declaration *declaration,
-                                    void *data)
-{
-	assert(declaration);
-	assert(data);
-
-	FILE *out = data;
-	print_dot_node(out, declaration, "declaration");
-	print_dot_edge(out, declaration, declaration->identifier,
-	               "declaration: identifier");
-}
-
-void
-mCc_print_dot_declaration_array(struct mCc_ast_declaration *declaration,
-                                void *data)
+void mCc_print_dot_declaration_array(struct mCc_ast_declaration *declaration,
+                                     void *data)
 {
 
 	assert(declaration);
 	assert(data);
 
+	char label_declaration[LABEL_SIZE];
+	snprintf(label_declaration, sizeof(label_declaration),
+	         "declaration: %s[%lu]",
+	         mCc_ast_print_literal_type(declaration->declaration_type),
+	         declaration->size);
+
 	FILE *out = data;
-	print_dot_node(out, declaration, "declaration arr");
+	print_dot_node(out, declaration, label_declaration);
 	print_dot_edge(out, declaration, declaration->array_identifier,
-	               "declaration arr: identifier");
-	//TODO: correct?
-//	print_dot_edge(out, declaration,declaration->size,
-//	               "declaration arr: size");
+	               "identifier");
+	print_next_declaration_edge(out, declaration);
 }

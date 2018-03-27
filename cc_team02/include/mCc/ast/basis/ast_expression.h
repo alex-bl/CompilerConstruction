@@ -26,6 +26,7 @@ struct mCc_ast_expression {
 	struct mCc_ast_node node;
 
 	enum mCc_ast_expression_type type;
+	struct mCc_ast_expression *next_expr;
 	union {
 		/* MCC_AST_EXPRESSION_TYPE_LITERAL */
 		struct mCc_ast_literal *literal;

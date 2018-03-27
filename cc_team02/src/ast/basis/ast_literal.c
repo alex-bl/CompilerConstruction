@@ -1,8 +1,7 @@
+#include "mCc/ast/basis/ast_literal.h"
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
-
-#include "mCc/ast/basis/ast_literal.h"
 
 struct mCc_ast_literal *mCc_ast_new_literal_int(long value)
 {
