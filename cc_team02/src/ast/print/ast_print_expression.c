@@ -38,7 +38,7 @@ static void print_next_expression_edge(FILE *out,
 {
 	if (expression->next_expr) {
 		print_dot_edge(out, expression, expression->next_expr,
-		               "next_expression");
+		               "next");
 	}
 }
 
@@ -78,8 +78,8 @@ void mCc_print_dot_expression_parenth(struct mCc_ast_expression *expression,
 	assert(data);
 
 	FILE *out = data;
-	print_dot_node(out, expression, "( )");
-	print_dot_edge(out, expression, expression->expression, "expression");
+	print_dot_node(out, expression, "expr: ( )");
+	print_dot_edge(out, expression, expression->expression, "of-type");
 	print_next_expression_edge(out, expression);
 }
 
@@ -104,9 +104,9 @@ void mCc_print_dot_expression_identifier_array(
 	FILE *out = data;
 	print_dot_node(out, expression, "expr: identifier_arr");
 	print_dot_edge(out, expression, expression->array_identifier,
-	               "identifier_arr");
+	               "identifier");
 	print_dot_edge(out, expression, expression->array_index_expression,
-	               "[arr_index]");
+	               "[index]");
 	print_next_expression_edge(out, expression);
 }
 
@@ -118,7 +118,7 @@ void mCc_print_dot_expression_function_call(
 
 	FILE *out = data;
 	print_dot_node(out, expression, "expr: function_call");
-	print_dot_edge(out, expression, expression->function_call, "function_call");
+	print_dot_edge(out, expression, expression->function_call, "of-type");
 	print_next_expression_edge(out, expression);
 }
 

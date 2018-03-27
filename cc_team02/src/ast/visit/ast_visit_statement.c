@@ -5,11 +5,11 @@
 #include "mCc/ast/visit/ast_visit_expression.h"
 #include "mCc/ast/visit/ast_visit_statement.h"
 
-static void visit_next_statement(struct mCc_ast_statement *statement,
-                                 struct mCc_ast_visitor *visitor)
+void mCc_ast_visit_optional_next_statement(struct mCc_ast_statement *statement,
+                              struct mCc_ast_visitor *visitor)
 {
-	if (statement->next_statement) {
-		mCc_ast_visit_statement(statement->next_statement, visitor);
+	if (statement) {
+		mCc_ast_visit_statement(statement, visitor);
 	}
 }
 
@@ -29,7 +29,7 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		mCc_ast_visit_statement(statement->if_statement, visitor);
 		mCc_ast_visit_statement(statement->else_statement, visitor);
 
-		visit_next_statement(statement, visitor);
+		mCc_ast_visit_optional_next_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_if, visitor);
 		break;
@@ -39,17 +39,18 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		mCc_ast_visit_expression(statement->loop_condition_expression, visitor);
 		mCc_ast_visit_statement(statement->while_statement, visitor);
 
-		visit_next_statement(statement, visitor);
+		mCc_ast_visit_optional_next_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_while, visitor);
 		break;
 	case MCC_AST_STATEMENT_RETURN:
 		visit_if_pre_order(statement, visitor->statement_return, visitor);
 
-		mCc_ast_visit_expression(statement->return_expression, visitor);
+		//there can also be no return type
+		mCc_ast_visit_optional_next_expression(statement->return_expression, visitor);
 
 		// TODO: required here? Does dead-code after return throws an error?
-		visit_next_statement(statement, visitor);
+		mCc_ast_visit_optional_next_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_return, visitor);
 
@@ -60,7 +61,7 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_declaration(statement->declaration, visitor);
 
-		visit_next_statement(statement, visitor);
+		mCc_ast_visit_optional_next_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_declaration, visitor);
 
@@ -70,7 +71,7 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_assignment(statement->assignment, visitor);
 
-		visit_next_statement(statement, visitor);
+		mCc_ast_visit_optional_next_statement(statement->next_statement, visitor);
 		visit_if_post_order(statement, visitor->statement_assignment, visitor);
 
 		break;
@@ -79,7 +80,7 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_expression(statement->expression, visitor);
 
-		visit_next_statement(statement, visitor);
+		mCc_ast_visit_optional_next_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_expression, visitor);
 

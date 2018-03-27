@@ -27,17 +27,21 @@ int main(void)
 	//	return EXIT_SUCCESS;
 
 	// just for testing/debugging purposes
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
-	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(2);
-	struct mCc_ast_expression *param = mCc_ast_new_expression_literal(lit);
+	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_bool_function");
+	struct mCc_ast_literal *return_expr_lit = mCc_ast_new_literal_bool(true);
+	struct mCc_ast_expression *return_expression =
+	    mCc_ast_new_expression_literal(return_expr_lit);
 
-	struct mCc_ast_function_call *function_call =
-	    mCc_ast_new_parameterized_function_call(identifier, param);
+	struct mCc_ast_statement *return_statement =
+	    mCc_ast_new_return_statement(return_expression);
 
-	struct mCc_ast_expression *expr_function_call =
-	    mCc_ast_new_expression_function_call(function_call);
+	struct mCc_ast_function_def *function_def =
+	    mCc_ast_new_non_parameterized_function_def(
+	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT, return_statement);
 
-	mCc_ast_print_dot_expression(stdout, expr_function_call);
+
+	mCc_ast_print_dot_function_def(stdout, function_def);
+	mCc_ast_delete_function_def(function_def);
 
 	return EXIT_SUCCESS;
 }
