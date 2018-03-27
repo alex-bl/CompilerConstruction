@@ -1,7 +1,6 @@
-#include <stdio.h>
-#include <assert.h>
-
 #include "mCc/ast/print/ast_basic_printing.h"
+#include <assert.h>
+#include <stdio.h>
 
 void print_dot_begin(FILE *out)
 {
@@ -37,4 +36,12 @@ void print_dot_edge(FILE *out, const void *src_node, const void *dst_node,
 
 	fprintf(out, "\t\"%p\" -> \"%p\" [label=\"%s\"];\n", src_node, dst_node,
 	        label);
+}
+
+void print_dot_edge_if_dest_exists(FILE *out, const void *src_node,
+                                   const void *dst_node, const char *label)
+{
+	if (dst_node) {
+		print_dot_edge(out, src_node, dst_node, label);
+	}
 }

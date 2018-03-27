@@ -1,8 +1,7 @@
+#include "mCc/ast/basis/ast_declaration.h"
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
-
-#include "mCc/ast/basis/ast_declaration.h"
 
 struct mCc_ast_declaration *
 mCc_ast_new_primitive_declaration(enum mCc_ast_literal_type data_type,
@@ -42,10 +41,17 @@ mCc_ast_new_array_declaration(enum mCc_ast_literal_type data_type,
 
 void mCc_ast_delete_declaration(struct mCc_ast_declaration *declaration)
 {
+	assert(declaration);
+
 	if (declaration->declaration_type == MCC_AST_DECLARATION_PRIMITIVE) {
 		mCc_ast_delete_identifier(declaration->identifier);
 	} else if (declaration->declaration_type == MCC_AST_DECLARATION_ARRAY) {
 		mCc_ast_delete_identifier(declaration->array_identifier);
 	}
+
+	if (declaration->next_declaration) {
+		mCc_ast_delete_declaration(declaration->next_declaration);
+	}
+
 	free(declaration);
 }

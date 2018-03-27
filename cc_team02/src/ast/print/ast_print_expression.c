@@ -1,9 +1,8 @@
+#include "mCc/ast/print/ast_print_expression.h"
+#include "mCc/ast/print/ast_basic_printing.h"
+#include "mCc/ast/visit/ast_visit_expression.h"
 #include <assert.h>
 #include <stdlib.h>
-
-#include "mCc/ast/print/ast_basic_printing.h"
-#include "mCc/ast/print/ast_print_expression.h"
-#include "mCc/ast/visit/ast_visit_expression.h"
 
 const char *mCc_ast_print_binary_op(enum mCc_ast_binary_op op)
 {
@@ -33,15 +32,6 @@ const char *mCc_ast_print_unary_op(enum mCc_ast_unary_op op)
 	return "unknown op";
 }
 
-static void print_next_expression_edge(FILE *out,
-                                       struct mCc_ast_expression *expression)
-{
-	if (expression->next_expr) {
-		print_dot_edge(out, expression, expression->next_expr,
-		               "next");
-	}
-}
-
 void mCc_print_dot_expression_literal(struct mCc_ast_expression *expression,
                                       void *data)
 {
@@ -51,7 +41,8 @@ void mCc_print_dot_expression_literal(struct mCc_ast_expression *expression,
 	FILE *out = data;
 	print_dot_node(out, expression, "expr: lit");
 	print_dot_edge(out, expression, expression->literal, "literal");
-	print_next_expression_edge(out, expression);
+	print_dot_edge_if_dest_exists(out, expression, expression->next_expr,
+	                              "next");
 }
 
 void mCc_print_dot_expression_binary_op(struct mCc_ast_expression *expression,
@@ -68,7 +59,8 @@ void mCc_print_dot_expression_binary_op(struct mCc_ast_expression *expression,
 	print_dot_node(out, expression, label);
 	print_dot_edge(out, expression, expression->lhs, "lhs");
 	print_dot_edge(out, expression, expression->rhs, "rhs");
-	print_next_expression_edge(out, expression);
+	print_dot_edge_if_dest_exists(out, expression, expression->next_expr,
+	                              "next");
 }
 
 void mCc_print_dot_expression_parenth(struct mCc_ast_expression *expression,
@@ -80,7 +72,8 @@ void mCc_print_dot_expression_parenth(struct mCc_ast_expression *expression,
 	FILE *out = data;
 	print_dot_node(out, expression, "expr: ( )");
 	print_dot_edge(out, expression, expression->expression, "of-type");
-	print_next_expression_edge(out, expression);
+	print_dot_edge_if_dest_exists(out, expression, expression->next_expr,
+	                              "next");
 }
 
 void mCc_print_dot_expression_identifier(struct mCc_ast_expression *expression,
@@ -92,7 +85,8 @@ void mCc_print_dot_expression_identifier(struct mCc_ast_expression *expression,
 	FILE *out = data;
 	print_dot_node(out, expression, "expr: identifier");
 	print_dot_edge(out, expression, expression->identifier, "identifier");
-	print_next_expression_edge(out, expression);
+	print_dot_edge_if_dest_exists(out, expression, expression->next_expr,
+	                              "next");
 }
 
 void mCc_print_dot_expression_identifier_array(
@@ -103,11 +97,11 @@ void mCc_print_dot_expression_identifier_array(
 
 	FILE *out = data;
 	print_dot_node(out, expression, "expr: identifier_arr");
-	print_dot_edge(out, expression, expression->array_identifier,
-	               "identifier");
+	print_dot_edge(out, expression, expression->array_identifier, "identifier");
 	print_dot_edge(out, expression, expression->array_index_expression,
 	               "[index]");
-	print_next_expression_edge(out, expression);
+	print_dot_edge_if_dest_exists(out, expression, expression->next_expr,
+	                              "next");
 }
 
 void mCc_print_dot_expression_function_call(
@@ -119,7 +113,8 @@ void mCc_print_dot_expression_function_call(
 	FILE *out = data;
 	print_dot_node(out, expression, "expr: function_call");
 	print_dot_edge(out, expression, expression->function_call, "of-type");
-	print_next_expression_edge(out, expression);
+	print_dot_edge_if_dest_exists(out, expression, expression->next_expr,
+	                              "next");
 }
 
 void mCc_print_dot_expression_unary_op(struct mCc_ast_expression *expression,
@@ -135,5 +130,6 @@ void mCc_print_dot_expression_unary_op(struct mCc_ast_expression *expression,
 	FILE *out = data;
 	print_dot_node(out, expression, label);
 	print_dot_edge(out, expression, expression->unary_rhs, "rhs");
-	print_next_expression_edge(out, expression);
+	print_dot_edge_if_dest_exists(out, expression, expression->next_expr,
+	                              "next");
 }
