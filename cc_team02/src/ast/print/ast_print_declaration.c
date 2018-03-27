@@ -22,7 +22,7 @@ void mCc_print_dot_declaration_primitive(
 
 	char label[LABEL_SIZE];
 	snprintf(label, sizeof(label), "declaration: %s",
-	         mCc_ast_print_literal_type(declaration->declaration_type));
+	         mCc_ast_print_literal_type(declaration->data_type));
 
 	FILE *out = data;
 	print_dot_node(out, declaration, label);
@@ -34,15 +34,13 @@ void mCc_print_dot_declaration_primitive(
 void mCc_print_dot_declaration_array(struct mCc_ast_declaration *declaration,
                                      void *data)
 {
-
 	assert(declaration);
 	assert(data);
 
 	char label_declaration[LABEL_SIZE];
-	snprintf(label_declaration, sizeof(label_declaration),
-	         "declaration: %s[%lu]",
-	         mCc_ast_print_literal_type(declaration->declaration_type),
-	         declaration->size);
+	snprintf(
+	    label_declaration, sizeof(label_declaration), "declaration: %s[%lu]",
+	    mCc_ast_print_literal_type(declaration->data_type), declaration->size);
 
 	FILE *out = data;
 	print_dot_node(out, declaration, label_declaration);
