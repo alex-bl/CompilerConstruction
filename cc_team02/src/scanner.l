@@ -23,6 +23,7 @@ int_type       int
 float_type     float
 bool_type      bool
 string_type    string
+void_type      void
 
 if_keyword     if
 while_keyword  while
@@ -36,6 +37,7 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 {float_type}	  { return TK_FLOAT_TYPE; }
 {bool_type}		  { return TK_BOOL_TYPE; }
 {string_type}	  { return TK_STRING_TYPE; }
+{void_type}       { return TK_VOID_TYPE; }
 
 {if_keyword}	  { return TK_IF_KEYWORD; }
 {while_keyword}	  { return TK_WHILE_KEYWORD; }
