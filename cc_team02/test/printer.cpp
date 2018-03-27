@@ -264,28 +264,22 @@ TEST(AstPrintStatement, PrintStatementAssignment)
 
 TEST(AstPrintStatement, PrintStatementIf)
 {
-	struct mCc_ast_expression *condition_expr =
-	    mCc_ast_new_expression_literal(mCc_ast_new_literal_bool(true));
-
 	struct mCc_ast_assignment *assignment_if =
 	    mCc_test_build_test_assignment("my_var", 2);
 
 	struct mCc_ast_assignment *assignment_else =
 	    mCc_test_build_test_assignment("my_var", 14);
 
-	struct mCc_ast_statement *if_else_statement = mCc_ast_new_if_statement(
-	    condition_expr, mCc_ast_new_assign_statement(assignment_if),
-	    mCc_ast_new_assign_statement(assignment_else));
+	struct mCc_ast_statement *if_else_statement =
+	    mCc_ast_new_if_statement(mCc_test_build_test_lit_expression_bool(true),
+	                             mCc_ast_new_assign_statement(assignment_if),
+	                             mCc_ast_new_assign_statement(assignment_else));
 
 	test_print_ast_statement(if_else_statement, "statement_if");
 }
 
 TEST(AstPrintStatement, PrintStatementWhile)
 {
-	struct mCc_ast_literal *condition = mCc_ast_new_literal_bool(true);
-	struct mCc_ast_expression *condition_expr =
-	    mCc_ast_new_expression_literal(condition);
-
 	struct mCc_ast_statement *statement_1 = mCc_ast_new_assign_statement(
 	    mCc_test_build_test_assignment("my_var", 2));
 
@@ -294,19 +288,16 @@ TEST(AstPrintStatement, PrintStatementWhile)
 
 	statement_1->next_statement = statement_2;
 
-	struct mCc_ast_statement *while_statement =
-	    mCc_ast_new_while_statement(condition_expr, statement_1);
+	struct mCc_ast_statement *while_statement = mCc_ast_new_while_statement(
+	    mCc_test_build_test_lit_expression_bool(true), statement_1);
 
 	test_print_ast_statement(while_statement, "statement_while");
 }
 
 TEST(AstPrintStatement, PrintStatementReturn)
 {
-	struct mCc_ast_expression *return_expression =
-	    mCc_ast_new_expression_literal(mCc_ast_new_literal_bool(true));
-
-	struct mCc_ast_statement *return_statement =
-	    mCc_ast_new_return_statement(return_expression);
+	struct mCc_ast_statement *return_statement = mCc_ast_new_return_statement(
+	    mCc_test_build_test_lit_expression_bool(true));
 	test_print_ast_statement(return_statement, "statement_return");
 }
 
@@ -316,12 +307,9 @@ TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
 {
 	struct mCc_ast_identifier *identifier =
 	    mCc_ast_new_identifier("my_bool_function");
-	struct mCc_ast_literal *return_expr_lit = mCc_ast_new_literal_bool(true);
-	struct mCc_ast_expression *return_expression =
-	    mCc_ast_new_expression_literal(return_expr_lit);
 
-	struct mCc_ast_statement *return_statement =
-	    mCc_ast_new_return_statement(return_expression);
+	struct mCc_ast_statement *return_statement = mCc_ast_new_return_statement(
+	    mCc_test_build_test_lit_expression_bool(true));
 
 	struct mCc_ast_function_def *function_def =
 	    mCc_ast_new_non_parameterized_function_def(

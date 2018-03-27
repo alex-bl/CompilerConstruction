@@ -69,6 +69,7 @@ target_link_libraries(mC_to_dot mCc_lib)
 # test deps => target 'gtest'
 # test => run tests
 add_subdirectory("test")
+# test-utils
 add_subdirectory("test/bin")
 
 include(CTest)
