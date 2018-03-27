@@ -23,7 +23,7 @@ void mCc_parser_error();
 
 %token END 0 "EOF"
 
-%token IDENTIFIER "IDENTIFIER"
+%token <struct mCc_ast_identifier *> IDENTIFIER "IDENTIFIER"
 %token <long>   			INT_LITERAL   "integer literal"
 %token <double> 			FLOAT_LITERAL "float literal"
 %token <const char*>        STRING_LITERAL "string literal"
@@ -65,9 +65,17 @@ void mCc_parser_error();
 %token NOTEQUALS "!="
 
 %type <enum mCc_ast_binary_op> binary_op
+%type <enum mCc_ast_unary_op> unary_op
 
-%type <struct mCc_ast_expression *> expression single_expr
+%type <struct mCc_ast_expression *> expression single_expr parameters arguments
 %type <struct mCc_ast_literal *> literal
+%type <struct mCc_ast_assignment *> assignment
+%type <struct mCc_ast_declaration *> declaration
+%type <struct mCc_ast_function_def *> function_def
+%type <struct mCc_ast_statement *> statement if_stmt while_stmt ret_stmt compound_stmt
+%type <mCc_ast_function_call *> call_expr
+%type <mCc_ast_new_program *> program
+%type <mCc_ast_function_return_type *> type function_def_return_type
 
 %start toplevel
 
@@ -81,7 +89,7 @@ declaration : type IDENTIFIER									{ $$ = mCc_ast_new_primitive_declaration($
 			;
 
 assignment : IDENTIFIER "=" expression								{ $$ = mCc_ast_new_primitive_assignment($1, $3); }
-		   | IDENTIFIER LBRACKET expression RBRACKET "=" expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $5); }
+		   | IDENTIFIER LBRACKET expression RBRACKET "=" expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $6); }
 		   ;
 
 unary_op	: 	MINUS		{ $$ = MCC_AST_UNARY_OP_MINUS; }
@@ -126,28 +134,28 @@ type	:	INT_TYPE 	/*Todo*/
 		|	STRING_TYPE	/*Todo*/
 		;
 
-statement   :   if_stmt
-            |   while_stmt
-            |   ret_stmt
-            |   declaration ";"
-            |   assignment ";"
-            |   expression ";"
-            |   compound_stmt
+statement   :   if_stmt			{ $$ = $1; }
+            |   while_stmt		{ $$ = $1; }
+            |   ret_stmt		{ $$ = $1; }
+            |   declaration ";" { $$ = $1; }
+            |   assignment ";"  { $$ = $1; }
+            |   expression ";"  { $$ = $1; }
+            |   compound_stmt	{ $$ = $1; }
             ;
 
-if_stmt :   IF LPARENTH expression RPARENTH statement
-        |   IF LPARENTH expression RPARENTH statement ELSE statement
+if_stmt :   IF LPARENTH expression RPARENTH statement					{ $$ = mCc_ast_new_if_statement($3, $5, NULL); } /*else part missing, check if passing NULL is possible*/
+        |   IF LPARENTH expression RPARENTH statement ELSE statement	{ $$ = mCc_ast_new_if_statement($3, $5, $7); }
         ;
 
-while_stmt  :   WHILE LPARENTH expression RPARENTH statement
+while_stmt  :   WHILE LPARENTH expression RPARENTH statement			{ $$ = mCc_ast_new_while_statement($3, $5); }
             ;
 
-ret_stmt    :  RETURN ";"
-            |  RETURN expression ";"
+ret_stmt    :  RETURN ";"												{ $$ = mCc_ast_new_return_statement(NULL); } /*check if return with no expression is possible*/
+            |  RETURN expression ";"									{ $$ = mCc_ast_new_return_statement($2); }
             ;
 
 compound_stmt   : LBRACE RBRACE
-                | LBRACE statement RBRACE
+                | LBRACE statement RBRACE		{ $$ = $2; }
                 ;
 
 function_def    :   function_def_return_type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
@@ -159,20 +167,26 @@ function_def_return_type   	:   "void"
 							|	type
 							;
 
-parameters  :   declaration
-            |   parameters "," declaration
+parameters  :   declaration					{ $$ = $1; }
+            |   parameters "," declaration	{
+												$$ = $3;
+												$$->next_declaration = $1;
+											}
             ;
 
-call_expr	:	IDENTIFIER LPARENTH RPARENTH			
-			|	IDENTIFIER LPARENTH arguments RPARENTH
+call_expr	:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_function_call($1); }
+			|	IDENTIFIER LPARENTH arguments RPARENTH	{ $$ = mCc_ast_new_parameterized_function_call($1, $3);}
 			;
 
-arguments	:	expression
-			| 	expression "," arguments
+arguments	:	expression					{ $$ = $1; }
+			| 	arguments "," expression 	/*Don't know how to */
 			;
 
-program	:	function_def
-		|	function_def program
+program	:	function_def			{ $$ = $1; }
+		|	program function_def 	{
+										$$ = mCc_ast_new_program($2);
+									  	$$->next_program = $1;
+									}
 		;
 
 %%
