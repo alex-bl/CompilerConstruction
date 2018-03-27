@@ -310,21 +310,21 @@ TEST(AstBuildFunction, CreateFunctionCallParameterized)
 	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_3");
 
 	//Building Paramaters:
-	struct mCc_ast_literal *literal_exp=mCc_ast_new_literal_float(45.67);
+	struct mCc_ast_literal *literal_exp=mCc_ast_new_literal_float(2.3);
 	struct mCc_ast_expression *args=mCc_ast_new_expression_literal(literal_exp);
 
 	//Building Function
 	struct mCc_ast_function_call *function =
 			mCc_ast_new_parameterized_function_call(identifier, args);
 
-	ASSERT_EQ(function->identifier->identifier_name, "my_ident_7");
-	ASSERT_EQ(function->first_argument->expression->literal->f_value, 45.67);
-	ASSERT_EQ(function->first_argument->expression->literal->type, MCC_AST_LITERAL_TYPE_FLOAT);
+	ASSERT_EQ(function->identifier->identifier_name, "my_ident_3");
+	ASSERT_EQ(function->first_argument->literal->f_value, 2.3);
+	ASSERT_EQ(function->first_argument->literal->type, MCC_AST_LITERAL_TYPE_FLOAT);
 }
 
 /*=========================================================== Identifier*/
 
-TEST(AstBuildFunction, CreateIdentifier)
+TEST(AstBuildIdentifier, CreateIdentifier)
 {
 	const char *name="identifier_name";
 
@@ -335,7 +335,7 @@ TEST(AstBuildFunction, CreateIdentifier)
 
 /*=========================================================== Program*/
 
-TEST(AstBuildFunction, CreateProgram)
+TEST(AstBuildProgram, CreateProgram)
 {
 	struct mCc_ast_identifier *identifier_function = mCc_ast_new_identifier("my_ident_8");
 	enum mCc_ast_function_return_type return_type_function = MCC_AST_FUNCTION_RETURN_TYPE_FLOAT;
@@ -364,14 +364,14 @@ TEST(AstBuildFunction, CreateProgram)
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->identifier->identifier_name, "my_ident_9");
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->type, MCC_AST_EXPRESSION_TYPE_UNARY_OP);
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_op, MCC_AST_UNARY_OP_MINUS);
-	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->expression->type, MCC_AST_EXPRESSION_TYPE_LITERAL);
-	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->expression->literal->type, MCC_AST_LITERAL_TYPE_BOOL);
-	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->expression->literal->b_value, 1);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_rhs->type, MCC_AST_EXPRESSION_TYPE_LITERAL);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_rhs->literal->type, MCC_AST_LITERAL_TYPE_BOOL);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_rhs->literal->b_value, 1);
 }
 
 /*=========================================================== Statement*/
 
-TEST(AstBuildFunction, CreateStatementIf)
+TEST(AstBuildStatement, CreateStatementIf)
 {
 	//Building Expression
 	struct mCc_ast_identifier *identifier_expression=mCc_ast_new_identifier("my_ident_9");
@@ -379,7 +379,7 @@ TEST(AstBuildFunction, CreateStatementIf)
 
 	//Builiding if Statement
 	struct mCc_ast_identifier *identifier_assignment=mCc_ast_new_identifier("my_ident_10");
-	struct mCc_ast_literal *index_literal=mCc_ast_new_literal_int(78.9);
+	struct mCc_ast_literal *index_literal=mCc_ast_new_literal_float(4.7);
 	struct mCc_ast_expression *index_assignment=mCc_ast_new_expression_literal(index_literal);
 	struct mCc_ast_identifier *identifier_assignment_value=mCc_ast_new_identifier("my_ident_11");
 	struct mCc_ast_expression *value_assignment=mCc_ast_new_expression_identifier(identifier_assignment_value);
@@ -393,20 +393,22 @@ TEST(AstBuildFunction, CreateStatementIf)
 
 	struct mCc_ast_statement *statement =	mCc_ast_new_if_statement(condition_expr, if_stmt, else_stmt);
 
-	ASSERT_EQ(statement->expression->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
-	ASSERT_EQ(statement->expression->identifier->identifier_name, "my_ident_9");
+	ASSERT_EQ(statement->condition_expression->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
+	ASSERT_EQ(statement->condition_expression->identifier->identifier_name, "my_ident_9");
 
+	ASSERT_EQ(statement->if_statement->statement_type, MCC_AST_STATEMENT_ASSIGNMENT);
 	ASSERT_EQ(statement->if_statement->assignment->identifier->identifier_name, "my_ident_10");
 	ASSERT_EQ(statement->if_statement->assignment->assignment_type, MCC_AST_ASSIGNMENT_ARRAY);
-	ASSERT_EQ(statement->if_statement->assignment->array_index_expression->literal->f_value, 78.9);
-	ASSERT_EQ(statement->if_statement->assignment->array_assigned_expression->expression->identifier->identifier_name, "my_ident_11");
+	ASSERT_EQ(statement->if_statement->assignment->array_index_expression->literal->f_value, 4.7);
+	ASSERT_EQ(statement->if_statement->assignment->array_assigned_expression->identifier->identifier_name, "my_ident_11");
 
-	ASSERT_EQ(statement->else_statement->expression->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
 	ASSERT_EQ(statement->else_statement->statement_type, MCC_AST_STATEMENT_RETURN);
-	ASSERT_EQ(statement->else_statement->expression->identifier->identifier_name, "my_ident_12");
+	ASSERT_EQ(statement->else_statement->return_expression->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
+	ASSERT_EQ(statement->else_statement->statement_type, MCC_AST_STATEMENT_RETURN);
+	ASSERT_EQ(statement->else_statement->return_expression->identifier->identifier_name, "my_ident_12");
 }
 
-TEST(AstBuildFunction, CreateStatementWhile)
+TEST(AstBuildStatement, CreateStatementWhile)
 {
 	struct mCc_ast_identifier *identifier_loop=mCc_ast_new_identifier("my_ident_13");
 	struct mCc_ast_expression *loop_expression=mCc_ast_new_expression_identifier(identifier_loop);
@@ -425,7 +427,7 @@ TEST(AstBuildFunction, CreateStatementWhile)
 	ASSERT_EQ(statement->loop_condition_expression->identifier->identifier_name, "my_ident_13");
 }
 
-TEST(AstBuildFunction, CreateStatementReturn)
+TEST(AstBuildStatement, CreateStatementReturn)
 {
 	struct mCc_ast_identifier *identifier_return=mCc_ast_new_identifier("my_ident_15");
 	struct mCc_ast_expression *return_expression=mCc_ast_new_expression_identifier(identifier_return);
@@ -436,7 +438,7 @@ TEST(AstBuildFunction, CreateStatementReturn)
 	ASSERT_EQ(statement->return_expression->identifier->identifier_name, "my_ident_15");
 }
 
-TEST(AstBuildFunction, CreateStatementExpression)
+TEST(AstBuildStatement, CreateStatementExpression)
 {
 	struct mCc_ast_literal *literal=mCc_ast_new_literal_int(577);
 	struct mCc_ast_expression *expression=mCc_ast_new_expression_literal(literal);
@@ -447,7 +449,7 @@ TEST(AstBuildFunction, CreateStatementExpression)
 	ASSERT_EQ(statement->expression->literal->i_value, 577);
 }
 
-TEST(AstBuildFunction, CreateStatementDeclaration)
+TEST(AstBuildStatement, CreateStatementDeclaration)
 {
 	enum mCc_ast_literal_type data_type=MCC_AST_LITERAL_TYPE_BOOL;
 	struct mCc_ast_identifier *identifier=mCc_ast_new_identifier("my_ident_16");
@@ -460,7 +462,7 @@ TEST(AstBuildFunction, CreateStatementDeclaration)
 	ASSERT_EQ(statement->declaration->identifier->identifier_name, "my_ident_16");
 }
 
-TEST(AstBuildFunction, CreateStatementAssignment)
+TEST(AstBuildStatement, CreateStatementAssignment)
 {
 	struct mCc_ast_identifier *identifier=mCc_ast_new_identifier("my_ident_17");
 	struct mCc_ast_literal *literal=mCc_ast_new_literal_float(55.23);
