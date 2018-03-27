@@ -2,7 +2,7 @@
 
 %define api.pure full
 %lex-param   {void *scanner}
-%parse-param {void *scanner} {struct mCc_ast_program** result}
+%parse-param {void *scanner} {struct mCc_ast_expression** result}{struct mCc_ast_program** result_p}
 
 %define parse.trace
 %define parse.error verbose
@@ -16,10 +16,15 @@
 
 int mCc_parser_lex();
 void mCc_parser_error();
+
+//#define loc(ast_node, ast_sloc) \
+//	(ast_node)->node.sloc.start_col = (ast_sloc).first_column;
 %}
 
 %define api.value.type union
 %define api.token.prefix {TK_}
+
+
 
 %token END 0 "EOF"
 
@@ -56,6 +61,10 @@ void mCc_parser_error();
 
 %token NEGATION "!"
 
+%token SEMICOLON ";"
+%token COMMA ","
+
+%token ASSIGNMENT "="
 %token LESSEQ "<="
 %token LESS "<"
 %token GREATEREQ ">="
@@ -70,10 +79,10 @@ void mCc_parser_error();
 %type <enum mCc_ast_literal_type> type
 %type <enum mCc_ast_function_return_type> function_def_return_type
 
-%type <struct mCc_ast_expression *> expression single_expr parameters arguments
+%type <struct mCc_ast_expression *> expression single_expr arguments
 %type <struct mCc_ast_literal *> literal
 %type <struct mCc_ast_assignment *> assignment
-%type <struct mCc_ast_declaration *> declaration
+%type <struct mCc_ast_declaration *> declaration parameters
 %type <struct mCc_ast_function_def *> function_def function_list
 %type <struct mCc_ast_statement *> statement if_stmt while_stmt ret_stmt compound_stmt statement_list
 %type <struct mCc_ast_function_call *> call_expr
@@ -83,15 +92,16 @@ void mCc_parser_error();
 
 %%
 
-toplevel : program { *result = $1; }
+toplevel : expression { *result = $1; printf("expression\n");}
+		 | program {printf("program\n"); *result_p = $1; }
          ;
 
 declaration : type IDENTIFIER									{ $$ = mCc_ast_new_primitive_declaration($1, $2); }
 		    | type LBRACKET INT_LITERAL RBRACKET IDENTIFIER		{ $$ = mCc_ast_new_array_declaration($1, $5, $3); }
 			;
 
-assignment : IDENTIFIER "=" expression								{ $$ = mCc_ast_new_primitive_assignment($1, $3); }
-		   | IDENTIFIER LBRACKET expression RBRACKET "=" expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $6); }
+assignment : IDENTIFIER ASSIGNMENT expression								{ $$ = mCc_ast_new_primitive_assignment($1, $3); }
+		   | IDENTIFIER LBRACKET expression RBRACKET ASSIGNMENT expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $6); }
 		   ;
 
 unary_op	: 	MINUS		{ $$ = MCC_AST_UNARY_OP_MINUS; }
@@ -113,7 +123,7 @@ binary_op	:	PLUS 		{ $$ = MCC_AST_BINARY_OP_ADD; }
           	;
 
 single_expr : literal                      			    { $$ = mCc_ast_new_expression_literal($1); }
-			| IDENTIFIER								{ $$ = mCc_ast_new_identifier($1); }
+			| IDENTIFIER								{ $$ = mCc_ast_new_expression_identifier($1); }
 			| IDENTIFIER LBRACKET expression RBRACKET	{ $$ = mCc_ast_new_expression_array_identifier($1, $3); }
 			| call_expr									{ $$ = mCc_ast_new_expression_function_call($1);}
 			| unary_op expression						{ $$ = mCc_ast_new_expression_unary_op($1, $2); }
@@ -124,10 +134,10 @@ expression : single_expr                      { $$ = $1; }
            | single_expr binary_op expression { $$ = mCc_ast_new_expression_binary_op($2, $1, $3); }
            ;
 
-literal : INT_LITERAL   { $$ = mCc_ast_new_literal_int($1);   }
-        | FLOAT_LITERAL { $$ = mCc_ast_new_literal_float($1); }
-		| BOOL_LITERAL  { $$ = mCc_ast_new_literal_bool($1);  }
-		| STRING_LITERAL { $$ = mCc_ast_new_literal_string($1); }
+literal : INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1);   }
+        | FLOAT_LITERAL 	{ $$ = mCc_ast_new_literal_float($1); }
+		| BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1);  }
+		| STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); }
         ;
 
 type	:	INT_TYPE 	{ $$ = MCC_AST_LITERAL_TYPE_INT; }
@@ -136,18 +146,9 @@ type	:	INT_TYPE 	{ $$ = MCC_AST_LITERAL_TYPE_INT; }
 		|	STRING_TYPE	{ $$ = MCC_AST_LITERAL_TYPE_STRING; }
 		;
 
-statement   :   if_stmt			{ $$ = $1; }
-            |   while_stmt		{ $$ = $1; }
-            |   ret_stmt		{ $$ = $1; }
-            |   declaration ";" { $$ = $1; }
-            |   assignment ";"  { $$ = $1; }
-            |   expression ";"  { $$ = $1; }
-            |   compound_stmt	{ $$ = $1; }
-            ;
-
 statement_list	:	statement_list statement	{
 													struct mCc_ast_statement* t = $1;
-													if(t != NULL){
+													if(t == NULL){
 														$$ = $2;
 													}else{
 														while(t->next_statement != NULL){
@@ -155,10 +156,22 @@ statement_list	:	statement_list statement	{
 														}
 														t->next_statement = $2;
 														$$ = $1;
+														
 													}
 												}
 				|	statement					{ $$ = $1;}
 				;
+
+statement   :   if_stmt			{ $$ = $1; }
+            |   while_stmt		{ $$ = $1; }
+            |   ret_stmt		{ $$ = $1; }
+            |   declaration SEMICOLON { $$ = mCc_ast_new_declaration_statement($1); }
+            |   assignment SEMICOLON  { $$ = mCc_ast_new_assign_statement($1); }
+            |   expression SEMICOLON  { $$ = mCc_ast_new_expression_statement($1); }
+            |   compound_stmt	{ $$ = $1; }
+            ;
+
+
 
 if_stmt :   IF_KEYWORD LPARENTH expression RPARENTH statement							{ $$ = mCc_ast_new_if_statement($3, $5, NULL); } /*else part missing, check if passing NULL is possible*/
         |   IF_KEYWORD LPARENTH expression RPARENTH statement ELSE_KEYWORD statement	{ $$ = mCc_ast_new_if_statement($3, $5, $7); }
@@ -167,14 +180,14 @@ if_stmt :   IF_KEYWORD LPARENTH expression RPARENTH statement							{ $$ = mCc_a
 while_stmt  :   WHILE_KEYWORD LPARENTH expression RPARENTH statement			{ $$ = mCc_ast_new_while_statement($3, $5); }
             ;
 
-ret_stmt    :  RETURN_KEYWORD ";"												{ $$ = mCc_ast_new_return_statement(NULL); } /*check if return with no expression is possible*/
-            |  RETURN_KEYWORD expression ";"									{ $$ = mCc_ast_new_return_statement($2); }
+ret_stmt    :  RETURN_KEYWORD SEMICOLON												{ $$ = mCc_ast_new_return_statement(NULL); } /*check if return with no expression is possible*/
+            |  RETURN_KEYWORD expression SEMICOLON									{ $$ = mCc_ast_new_return_statement($2); }
             ;
 
-compound_stmt   : LBRACE RBRACE								{ $$ = NULL;}
-                | LBRACE statement_list RBRACE				{ 
+compound_stmt   : LBRACE statement_list RBRACE				{ 
 																$$ = $2;
 															 }
+				| LBRACE  RBRACE								{ $$ = NULL;}
                 ;
 
 function_def    :   function_def_return_type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
@@ -205,7 +218,7 @@ function_def_return_type   	:   VOID_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_VO
 							;
 
 parameters  :   declaration					{ $$ = $1; }
-            |   parameters "," declaration	{
+            |   parameters COMMA declaration	{
 												struct mCc_ast_declaration* t = $1;
 												if(t == NULL){
 													$$ = $3;
@@ -224,7 +237,7 @@ call_expr	:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_new_non_parameteri
 			;
 
 arguments	:	expression					{ $$ = $1; }
-			| 	arguments "," expression 	{
+			| 	arguments COMMA expression 	{
 												struct mCc_ast_expression* t = $1;
 												if(t == NULL){
 													$$ = $3;
@@ -281,9 +294,11 @@ struct mCc_parser_result mCc_parser_parse_file(FILE *input)
 		.status = MCC_PARSER_STATUS_OK,
 	};
 
-	if (yyparse(scanner, &result.expression) != 0) {
+	if (yyparse(scanner, &result.expression, &result.program) != 0) {
 		result.status = MCC_PARSER_STATUS_UNKNOWN_ERROR;
 	}
+
+
 
 	mCc_parser_lex_destroy(scanner);
 
