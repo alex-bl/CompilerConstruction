@@ -1,8 +1,7 @@
+#include "mCc/ast/basis/ast_expression.h"
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
-
-#include "mCc/ast/basis/ast_expression.h"
 
 struct mCc_ast_expression *
 mCc_ast_new_expression_literal(struct mCc_ast_literal *literal)
@@ -172,6 +171,10 @@ void mCc_ast_delete_expression(struct mCc_ast_expression *expression)
 	case MCC_AST_EXPRESSION_TYPE_UNARY_OP:
 		mCc_ast_delete_expression(expression->unary_rhs);
 		break;
+	}
+
+	if (expression->next_expr) {
+		mCc_ast_delete_expression(expression->next_expr);
 	}
 
 	free(expression);
