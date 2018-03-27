@@ -81,9 +81,32 @@ include(GoogleTest)
 #create list: add all tests manually here (file-names without *.cpp)
 set(unit_test_list "parser" "builder" "printer")
 
+#================================================================ valgrind
+
 # custom test-target to enforce a rebuild (see https://stackoverflow.com/questions/733475/cmake-ctest-make-test-doesnt-build-tests)
 # add -V for verbose-info on tests
 add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND})
+
+# enabling valgrind => target test_memcheck
+# taken from:
+# https://stackoverflow.com/questions/40325957/how-do-i-add-valgrind-tests-to-my-cmake-test-target
+add_custom_target(build_and_test_memcheck
+    COMMAND ${CMAKE_CTEST_COMMAND} 
+        --force-new-ctest-process --test-action memcheck
+    COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
+
+# Is this enough or should there be a custom valgring-target?
+# configure memcheck => see https://stackoverflow.com/questions/9303711/how-do-i-make-ctest-run-a-program-with-valgrind-without-dart
+# Is this working? => set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
+
+# Custom valgrind-target:
+# - https://stackoverflow.com/questions/9303711/how-do-i-make-ctest-run-a-program-with-valgrind-without-dart
+# - https://github.com/fletcher/c-template/blob/master/CMakeLists.txt
+
+# Notes: Valgrind reports a false positive memleak on every run in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21
+# See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802778
+
+#=============================================================== gtest-execution
 
 foreach(entry_name ${unit_test_list})
 	# build and link
@@ -104,16 +127,9 @@ foreach(entry_name ${unit_test_list})
 	#	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/test)
 							
 	# force a rebuild
-	add_dependencies(build_and_test ${entry_name}_test_exec)	
+	add_dependencies(build_and_test ${entry_name}_test_exec)
+	add_dependencies(build_and_test_memcheck ${entry_name}_test_exec)	
 endforeach(entry_name)
-
-# enabling valgrind => target test_memcheck
-# taken from:
-# https://stackoverflow.com/questions/40325957/how-do-i-add-valgrind-tests-to-my-cmake-test-target
-add_custom_target(test_memcheck
-    COMMAND ${CMAKE_CTEST_COMMAND} 
-        --force-new-ctest-process --test-action memcheck
-    COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
 
 #================================================================= benchmark
 
