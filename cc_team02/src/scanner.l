@@ -34,17 +34,6 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 
 %%
 
-%{
-    extern first_tok;
-    
-    if(first_tok){
-        int holdtok = first_tok;
-        first_tok = 0;
-        return holdtok;
-    }
-
-%}
-
 {int_type}		  { return TK_INT_TYPE; }
 {float_type}	  { return TK_FLOAT_TYPE; }
 {bool_type}		  { return TK_BOOL_TYPE; }
