@@ -50,7 +50,7 @@ Additional minimal prerequisites for a build with **cmake**:
 - libcurl4-openssl-dev 7.47.0
 - cmake 3.9.6
 
-Please note that the downloaded files need to be installed manually using ```./bootstrap --system-curl``` to [ensure ssl-support](https://stackoverflow.com/questions/29816529/unsupported-protocol-while-download-tar-gz-package) (which is needed to automatically download external projects)
+Please note that the downloaded files need to be installed manually using ```./bootstrap --system-curl``` to [ensure ssl-support](https://stackoverflow.com/questions/29816529/unsupported-protocol-while-download-tar-gz-package) (which is needed to automatically download external projects).
 
 Build steps:
 
