@@ -56,14 +56,14 @@ Please not that the downloaded files need to be installed manually using ```./bo
 
 This section lists the available targets that can be build.
 
-| Target        | Description	| Additional notes  | Available for |   
-| ------------- |-------------	|------------------	|---------------|   
-| all			| Self explanatory | -	| both	|   
-| clean			| Self explanatory      |   -			| both	|   
-| doxygen		| Builds the documentation      |    - 			| both	|   
-| test			| Runs all gtests (unit)	| - | both |   
-| build_and_test| Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild | cmake |   
-| build_and_test_memcheck | Runs all gtests together with valgrind | To run tests with valgrind in meson use ```$ meson test --wrap=valgrind``` (see [here](https://github.com/mesonbuild/meson/blob/master/docs/markdown/Unit-tests.md)) | both |   
-| integration_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration) | both |   
-| benchmark		| Runs all benchmarks	| It is currently not used, but maybe in the future: Meson suports it "out of the box" | meson |   
-| run_benchmarks | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. | cmake |   
+| Target        | Description	| Additional notes  | For cmake | For meson|   
+| ------------- |-------------	|------------------	|---------------|-------|   
+| all			| Self explanatory | -	| yes | yes |   
+| clean			| Self explanatory      |   -			|  yes 	|   yes |   
+| doxygen		| Builds the documentation      |    - 			|  yes 	|    yes |   
+| test			| Runs all gtests (unit)	| - | yes |  yes |   
+| build_and_test| Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild |  Yes  | No |  
+| build_and_test_memcheck | Runs all gtests together with valgrind | To run tests with valgrind in meson use ```$ meson test --wrap=valgrind``` (see [here](https://github.com/mesonbuild/meson/blob/master/docs/markdown/Unit-tests.md)) |  Yes  | No |  
+| integration_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration) | Yes  | Yes |  
+| benchmark		| Runs all benchmarks	| It is currently not used, but maybe in the future: Meson suports it "out of the box" | No | Yes |  
+| run_benchmarks | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. | Yes  | No |  
