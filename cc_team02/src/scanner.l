@@ -27,6 +27,7 @@ string_type    string
 void_type      void
 
 if_keyword     if
+else_keyword   else
 while_keyword  while
 return_keyword return
 
@@ -41,6 +42,7 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 {void_type}       { return TK_VOID_TYPE; }
 
 {if_keyword}	  { return TK_IF_KEYWORD; }
+{else_keyword}    { return TK_ELSE_KEYWORD; }
 {while_keyword}	  { return TK_WHILE_KEYWORD; }
 {return_keyword}  { return TK_RETURN_KEYWORD; }
 
