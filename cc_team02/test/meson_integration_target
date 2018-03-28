@@ -1,7 +1,8 @@
 #!/bin/bash
-# change path to mCc => make it runnable via meson run_target
+# navigate the meson build dir and rebuild the mCc target manually
 
-MCC=./builddir/mCc
-export MCC
+cd $1;
+ninja mCc;
 
-./test/integration
+# after that, run the integration-test script
+./../test/integration

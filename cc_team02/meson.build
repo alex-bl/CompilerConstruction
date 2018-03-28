@@ -95,6 +95,11 @@ foreach ut : mCc_uts
     test(ut, t)
 endforeach
 
+# -------------------------------------------------------------------- INTEGRATION TESTS
+
+integration = run_target('integration_test',
+  command : ['test/meson_integration_target',meson.current_build_dir()])
+
 # ------------------------------------------------------------------ BENCHMARKS
 
 mCc_benchs = [ ['parser/binary_op',         '100000'],
@@ -126,9 +131,3 @@ if doxygen.found()
 
         html_doc = run_target('doc', command: [doxygen, doxyfile])
 endif
-
-# -------------------------------------------------------------------- Integration tests
-
-integration = run_target('integration_test',
-  command : 'test/meson_integration_target')
-  
