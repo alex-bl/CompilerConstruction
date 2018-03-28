@@ -1,0 +1,7 @@
+#!/bin/bash
+# change path to mCc => make it runnable via meson run_target
+
+MCC=./builddir/mCc
+export MCC
+
+./test/integration

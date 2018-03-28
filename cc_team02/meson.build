@@ -126,3 +126,9 @@ if doxygen.found()
 
         html_doc = run_target('doc', command: [doxygen, doxyfile])
 endif
+
+# -------------------------------------------------------------------- Integration tests
+
+integration = run_target('integration_tests',
+  command : 'test/meson_integration_target')
+  

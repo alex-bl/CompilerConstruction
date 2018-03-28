@@ -111,6 +111,14 @@ add_custom_target(build_and_test_memcheck
 # Notes: Valgrind reports a false positive memleak on every run in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21
 # See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802778
 
+#=============================================================== integration tests
+# use provided shell-script
+add_custom_target(integraton_test
+	COMMAND echo "============================================================================="
+	COMMAND ${PROJECT_SOURCE_DIR}/test/integration
+	COMMAND echo "=============================================================================")
+add_dependencies(integraton_test mCc)
+
 #=============================================================== gtest-execution
 
 foreach(entry_name ${unit_test_list})
@@ -138,6 +146,10 @@ endforeach(entry_name)
 
 #================================================================= benchmark
 
+# custom benchmark-target => run all benchmark-binaries within shell-script
+add_custom_target(run_benchmarks
+    COMMAND ${CMAKE_BINARY_DIR}/bench/execute_bench.sh)
+
 add_subdirectory("benchmark")
 # do the same as for testing, but with benchmark
 set(my_benchmark_list "just_try")
@@ -151,12 +163,9 @@ foreach(entry_name ${my_benchmark_list})
 	# copy executables to bench-directory
 	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
 		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bench/bin
-		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bench/bin)		
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bench/bin)
+	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
 endforeach(entry_name)
-
-# custom benchmark-target => run all benchmark-binaries within shell-script
-add_custom_target(run_benchmarks
-    COMMAND ${CMAKE_BINARY_DIR}/bench/execute_bench.sh)
 
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-
