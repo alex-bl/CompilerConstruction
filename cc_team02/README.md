@@ -58,10 +58,10 @@ This section lists the available targets that can be build.
 
 | Target        | Description	| Additional notes  | For cmake | For meson|   
 | ------------- |-------------	|------------------	|---------------|-------|   
-| all			| Self explanatory | -	| yes | yes |   
-| clean			| Self explanatory      |   -			|  yes 	|   yes |   
-| doxygen		| Builds the documentation      |    - 			|  yes 	|    yes |   
-| test			| Runs all gtests (unit)	| - | yes |  yes |   
+| all			| Self explanatory | -	| Yes | Yes |   
+| clean			| Self explanatory      |   -			|  Yes 	|   Yes |   
+| doxygen		| Builds the documentation      |    - 			|  Yes 	|    Yes |   
+| test			| Runs all gtests (unit)	| - | Yes |  Yes |   
 | build_and_test| Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild |  Yes  | No |  
 | build_and_test_memcheck | Runs all gtests together with valgrind | To run tests with valgrind in meson use ```$ meson test --wrap=valgrind``` (see [here](https://github.com/mesonbuild/meson/blob/master/docs/markdown/Unit-tests.md)) |  Yes  | No |  
 | integration_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration) | Yes  | Yes |  
