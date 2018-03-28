@@ -113,11 +113,11 @@ add_custom_target(build_and_test_memcheck
 
 #=============================================================== integration tests
 # use provided shell-script
-add_custom_target(integraton_test
+add_custom_target(integration_test
 	COMMAND echo "============================================================================="
 	COMMAND ${PROJECT_SOURCE_DIR}/test/integration
 	COMMAND echo "=============================================================================")
-add_dependencies(integraton_test mCc)
+add_dependencies(integration_test mCc)
 
 #=============================================================== gtest-execution
 
