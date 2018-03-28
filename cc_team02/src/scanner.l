@@ -11,6 +11,7 @@
 #include "parser.tab.h"
 
 #define YYSTYPE MCC_PARSER_STYPE
+
 %}
 
 int_literal   -?[0-9]+
@@ -33,6 +34,17 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 
 %%
 
+%{
+    extern first_tok;
+    
+    if(first_tok){
+        int holdtok = first_tok;
+        first_tok = 0;
+        return holdtok;
+    }
+
+%}
+
 {int_type}		  { return TK_INT_TYPE; }
 {float_type}	  { return TK_FLOAT_TYPE; }
 {bool_type}		  { return TK_BOOL_TYPE; }
@@ -45,9 +57,12 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 
 {int_literal}     { yylval->TK_INT_LITERAL = atol(yytext); return TK_INT_LITERAL; }
 {float_literal}   { yylval->TK_FLOAT_LITERAL = atof(yytext); return TK_FLOAT_LITERAL; }
-{bool_literal}    { yylval->TK_BOOL_LITERAL = yytext; return TK_BOOL_LITERAL; }
-{string_literal}  { yylval->TK_STRING_LITERAL = yytext; return TK_STRING_LITERAL; }
-{identifier}      { yylval->TK_STRING_LITERAL = yytext; return TK_IDENTIFIER; }
+{bool_literal}    { yylval->TK_BOOL_LITERAL = strdup(yytext); return TK_BOOL_LITERAL; }
+{string_literal}  { yylval->TK_STRING_LITERAL = strdup(yytext); return TK_STRING_LITERAL; }
+{identifier}      { 
+                    yylval->TK_IDENTIFIER = mCc_ast_new_identifier(strdup(yytext));
+                    return TK_IDENTIFIER;
+                  }
 
 "+"               { return TK_PLUS; }
 "-"               { return TK_MINUS; }
