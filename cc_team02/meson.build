@@ -129,6 +129,6 @@ endif
 
 # -------------------------------------------------------------------- Integration tests
 
-integration = run_target('integration_tests',
+integration = run_target('integration_test',
   command : 'test/meson_integration_target')
   
