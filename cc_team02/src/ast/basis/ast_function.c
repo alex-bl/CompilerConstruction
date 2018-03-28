@@ -38,12 +38,17 @@ struct mCc_ast_function_def *mCc_ast_new_parameterized_function_def(
 
 void mCc_ast_delete_function_def(struct mCc_ast_function_def *function_def)
 {
+	assert(function_def);
+
 	mCc_ast_delete_identifier(function_def->identifier);
 	if (function_def->first_statement) {
 		mCc_ast_delete_statement(function_def->first_statement);
 	}
 	if (function_def->first_parameter) {
 		mCc_ast_delete_declaration(function_def->first_parameter);
+	}
+	if (function_def->next_function_def) {
+		mCc_ast_delete_function_def(function_def->next_function_def);
 	}
 	free(function_def);
 }
@@ -77,8 +82,10 @@ mCc_ast_new_parameterized_function_call(struct mCc_ast_identifier *identifier,
 
 void mCc_ast_delete_function_call(struct mCc_ast_function_call *function_call)
 {
+	assert(function_call);
+
 	mCc_ast_delete_identifier(function_call->identifier);
-	if (function_call->first_argument != NULL) {
+	if (function_call->first_argument) {
 		mCc_ast_delete_expression(function_call->first_argument);
 	}
 	free(function_call);

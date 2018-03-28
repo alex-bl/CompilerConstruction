@@ -1,6 +1,5 @@
-#include <assert.h>
-
 #include "mCc/ast/visit/ast_visit_literal.h"
+#include <assert.h>
 
 void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
                            struct mCc_ast_visitor *visitor)
