@@ -38,8 +38,8 @@ Build steps:
 1. Clone or download the code-base.
 2. Build ninja-infrastructure: ```$ meson builddir```
 3. Move into builddir: ```$ cd builddir```
-4. Run ninja to build the project: ```$ ninja```
-5. Execute targets (See possible targets)
+4. (Optional) Run ninja to build the whole project: ```$ ninja```
+5. Execute targets (See possible targets) via: ```$ ninja <target>```
 
 ### CMake
 
@@ -51,6 +51,15 @@ Additional minimal prerequisites for a build with **cmake**:
 - cmake 3.9.6
 
 Please not that the downloaded files need to be installed manually using ```./bootstrap --system-curl``` to ensure ssl-support (which is needed to automatically download external projects)
+
+Build steps:
+
+1. Clone or download the code-base.
+2. Create the directory where to store the makefiles + binaries: ```$ mkdir build```
+3. Move to the build-directory: ```$ cd build```
+4. Build cmake-infrastructure: ```$ cmake ../```
+5. (Optional) Build the whole project: ```$ make all```
+6. Execute targets (See possible targets) via: ```$ make <target>```
 
 ### Targets
 
