@@ -28,6 +28,8 @@ pgen = generator(bison,
 # --------------------------------------------------------------------- LIBRARY
 
 mCc_inc = include_directories('include')
+mCc_test_inc = include_directories('test/include')
+
 
 mCc_ast_src = ['src/ast/basis/ast_assignment.c','src/ast/basis/ast_declaration.c','src/ast/basis/ast_expression.c','src/ast/basis/ast_function.c',
 'src/ast/basis/ast_identifier.c','src/ast/basis/ast_literal.c','src/ast/basis/ast_program.c','src/ast/basis/ast_statement.c' ]
@@ -54,12 +56,19 @@ mCc_print_src = ['src/ast/print/ast_basic_printing.c',
 'src/ast/print/ast_print_program.c',
 'src/ast/print/ast_print_statement.c']
 
+# test utils
+mCc_test_src = ['test/bin/mCc_test_utils.c']
+
 
 mCc_lib = library('mCc', mCc_ast_src, mCc_visit_src, mCc_print_src, lgen.process('src/scanner.l'),
             pgen.process('src/parser.y'),
                   c_args: '-D_POSIX_C_SOURCE=200809L',
                   include_directories: mCc_inc)
 
+# test utils
+mCc_test_lib = library('mCc_test', mCc_test_src,
+                  include_directories: [mCc_inc,mCc_test_inc],
+                  link_with: mCc_lib)
 
 # ----------------------------------------------------------------- EXECUTABLES
 
@@ -79,8 +88,8 @@ mCc_uts = [ 'parser','builder','printer' ]
 
 foreach ut : mCc_uts
     t = executable('ut_' + ut.underscorify(), 'test/' + ut + '.cpp',
-                   include_directories: mCc_inc,
-                   link_with: mCc_lib,
+                   include_directories: [mCc_inc, mCc_test_inc],
+                   link_with: [mCc_lib, mCc_test_lib],
                    dependencies: gtest)
 
     test(ut, t)
