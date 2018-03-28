@@ -4,8 +4,8 @@ See [here](README_original.md) for the original README about the given template.
 
 ## Content
 
-- cc_team02 using cmake
-- template provided from https://github.com/W4RH4WK/mCc setup with cmake
+- cc_team02 (the full code-base)
+- The template provided from https://github.com/W4RH4WK/mCc setup with cmake
 
 ## Internal notes
 
@@ -56,7 +56,7 @@ Please not that the downloaded files need to be installed manually using ```./bo
 
 This section lists the available targets that can be build.
 
-| Target        | Desctiption	| Additional notes  | Available for |   
+| Target        | Description	| Additional notes  | Available for |   
 | ------------- |-------------	|------------------	|---------------|   
 | all			| Self explanatory | -	| cmake, meson	|   
 | clean			| Self explanatory      |   -			| cmake, meson	|   
@@ -65,5 +65,5 @@ This section lists the available targets that can be build.
 | build_and_test| Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild | cmake |   
 | build_and_test_memcheck | Runs all gtests together with valgrind | To run tests with valgrind in meson use ```$ meson test --wrap=valgrind``` (see [here](https://github.com/mesonbuild/meson/blob/master/docs/markdown/Unit-tests.md)) | cmake, meson |   
 | integration_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration) | cmake, meson |   
-| benchmark		| Runs all benchmarks	| It is currently not used, but maybe in the future | meson |   
-| run_benchmarks | Runs all benchmarks | It is currently not used, but maybe in the future | cmake |   
+| benchmark		| Runs all benchmarks	| It is currently not used, but maybe in the future: Meson suports it "out of the box" | meson |   
+| run_benchmarks | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. | cmake |   
