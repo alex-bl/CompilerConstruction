@@ -1,8 +1,8 @@
 %define api.prefix {mCc_parser_}
 
 %define api.pure full
-%lex-param   {void *scanner}
-%parse-param {void *scanner} {struct mCc_ast_expression** result}{struct mCc_ast_program** result_p}
+%lex-param   {void *scanner} 
+%parse-param {void *scanner} {struct mCc_ast_expression** result}{struct mCc_ast_program** result_p}{struct mCc_ast_statement** result_s}{struct mCc_ast_assignment** result_a}{struct mCc_ast_declaration** result_d}
 
 %define parse.trace
 %define parse.error verbose
@@ -17,8 +17,6 @@
 int mCc_parser_lex();
 void mCc_parser_error();
 
-//#define loc(ast_node, ast_sloc) \
-//	(ast_node)->node.sloc.start_col = (ast_sloc).first_column;
 %}
 
 %define api.value.type union
@@ -33,6 +31,12 @@ void mCc_parser_error();
 %token <double> 			FLOAT_LITERAL "float literal"
 %token <const char*>        STRING_LITERAL "string literal"
 %token <bool>               BOOL_LITERAL "bool literal"
+
+%token START_STATEMENT
+%token START_EXPRESSION
+%token START_ASSIGNMENT
+%token START_DECLARATION
+%token START_PROGRAM
 
 %token INT_TYPE "integer type"
 %token FLOAT_TYPE "float type"
@@ -92,8 +96,11 @@ void mCc_parser_error();
 
 %%
 
-toplevel : expression { *result = $1; printf("expression\n");}
-		 | program {printf("program\n"); *result_p = $1; }
+toplevel : assignment { printf("assignment\n"); *result_a = $1;}
+		 | declaration { printf("declaration\n"); *result_d = $1;}
+		 | statement  { printf("statement\n"); *result_s = $1;}
+		 | expression { printf("expression\n"); *result = $1;}
+		 | program 	  { printf("program\n"); *result_p = $1; }
          ;
 
 declaration : type IDENTIFIER									{ $$ = mCc_ast_new_primitive_declaration($1, $2); }
@@ -285,16 +292,17 @@ struct mCc_parser_result mCc_parser_parse_string(const char *input)
 struct mCc_parser_result mCc_parser_parse_file(FILE *input)
 {
 	assert(input);
-
+	
 	yyscan_t scanner;
+	
 	mCc_parser_lex_init(&scanner);
 	mCc_parser_set_in(input, scanner);
 
 	struct mCc_parser_result result = {
 		.status = MCC_PARSER_STATUS_OK,
 	};
-
-	if (yyparse(scanner, &result.expression, &result.program) != 0) {
+	
+	if (yyparse(scanner, &result.expression, &result.program, &result.statement, &result.assignment, &result.declaration) != 0) {
 		result.status = MCC_PARSER_STATUS_UNKNOWN_ERROR;
 	}
 
