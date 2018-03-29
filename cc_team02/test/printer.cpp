@@ -159,6 +159,23 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallConcated)
 	                          "expression_function_call_concatted_args");
 }
 
+TEST(AstPrintExpression, PrintExpressionMulUnaryTest)
+{
+	struct mCc_ast_expression *lit_right_unary =
+	    mCc_ast_new_expression_unary_op(
+	        MCC_AST_UNARY_OP_MINUS, mCc_test_build_test_lit_expression(192));
+
+	struct mCc_ast_expression *plus = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_ADD, lit_right_unary,
+	    mCc_test_build_test_lit_expression_float(3.14));
+
+	struct mCc_ast_expression *parenth = mCc_ast_new_expression_parenth(plus);
+
+	struct mCc_ast_expression *mul = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_MUL, mCc_test_build_test_lit_expression(42), parenth);
+	test_print_ast_expression(mul, "expression_mul_unary");
+}
+
 /*===========================================================================
  * identifier tests*/
 
@@ -278,6 +295,30 @@ TEST(AstPrintStatement, PrintStatementIf)
 	test_print_ast_statement(if_else_statement, "statement_if");
 }
 
+TEST(AstPrintStatement, PrintStatementEmptyIfStmt)
+{
+	struct mCc_ast_assignment *assignment_else =
+	    mCc_test_build_test_assignment("my_var", 14);
+
+	struct mCc_ast_statement *if_else_statement = mCc_ast_new_if_statement(
+	    mCc_test_build_test_lit_expression_bool(true), NULL,
+	    mCc_ast_new_assign_statement(assignment_else));
+
+	test_print_ast_statement(if_else_statement, "statement_if_if_empty");
+}
+
+TEST(AstPrintStatement, PrintStatementEmptyElse)
+{
+	struct mCc_ast_assignment *assignment_if =
+	    mCc_test_build_test_assignment("my_var", 2);
+
+	struct mCc_ast_statement *if_else_statement = mCc_ast_new_if_statement(
+	    mCc_test_build_test_lit_expression_bool(true),
+	    mCc_ast_new_assign_statement(assignment_if), NULL);
+
+	test_print_ast_statement(if_else_statement, "statement_if_else_empty");
+}
+
 TEST(AstPrintStatement, PrintStatementWhile)
 {
 	struct mCc_ast_statement *statement_1 = mCc_ast_new_assign_statement(
@@ -292,6 +333,14 @@ TEST(AstPrintStatement, PrintStatementWhile)
 	    mCc_test_build_test_lit_expression_bool(true), statement_1);
 
 	test_print_ast_statement(while_statement, "statement_while");
+}
+
+TEST(AstPrintStatement, PrintStatementWhileEmpty)
+{
+	struct mCc_ast_statement *while_statement = mCc_ast_new_while_statement(
+	    mCc_test_build_test_lit_expression_bool(true), NULL);
+
+	test_print_ast_statement(while_statement, "statement_while_empty");
 }
 
 TEST(AstPrintStatement, PrintStatementReturn)
