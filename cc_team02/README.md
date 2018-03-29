@@ -31,15 +31,16 @@ This is the recommended build-tool to use for building the project, because cmak
 Additional minimal prerequisites for a build with **meson**:   
 
 - meson 0.45.0  
-
+- ninja 1.5.1   
 
 Build steps:
 
 1. Clone or download the code-base.
 2. Build ninja-infrastructure: ```$ meson builddir```
-3. Move into builddir: ```$ cd builddir```
-4. (Optional) Run ninja to build the whole project: ```$ ninja```
-5. Execute targets (See possible targets) via: ```$ ninja <target>```
+3. If you want to build in debug-mode, use ```$ meson builddir --buildtype=debug```
+4. Move into builddir: ```$ cd builddir```
+5. (Optional) Run ninja to build the whole project: ```$ ninja```
+6. Execute targets (See possible targets) via: ```$ ninja <target>```
 
 ### CMake
 
@@ -58,8 +59,9 @@ Build steps:
 2. Create the directory where to store the makefiles + binaries: ```$ mkdir build```
 3. Move to the build-directory: ```$ cd build```
 4. Build cmake-infrastructure: ```$ cmake ../```
-5. (Optional) Build the whole project: ```$ make all```
-6. Execute targets (See possible targets) via: ```$ make <target>```
+5. If you want to build in debug-mode, use: ```$ cmake -DCMAKE_BUILD_TYPE:STRING=Debug ../```
+6. (Optional) Build the whole project: ```$ make all```
+7. Execute targets (See possible targets) via: ```$ make <target>```
 
 ### Targets
 

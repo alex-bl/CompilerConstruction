@@ -18,8 +18,13 @@ string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Werror")
 # enable this to see the exact commands form cmake
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-# build-type
-set(CMAKE_BUILD_TYPE Debug)
+if(NOT CMAKE_BUILD_TYPE)
+	# if no build-type was specified, use release
+	set(CMAKE_BUILD_TYPE Release)
+	message(STATUS "No build-type set: Using default " ${CMAKE_BUILD_TYPE})
+endif()
+
+message(STATUS "Build-type: " ${CMAKE_BUILD_TYPE})
 
 # gtest download-dest
 set(GTEST_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/cmake/googletest-release1.8.0")
