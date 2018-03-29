@@ -113,8 +113,10 @@ void mCc_ast_delete_statement(struct mCc_ast_statement *stmt)
 	switch (stmt->statement_type) {
 	case MCC_AST_STATEMENT_IF:
 		mCc_ast_delete_expression(stmt->condition_expression);
-		mCc_ast_delete_statement(stmt->if_statement);
 
+		if (stmt->if_statement) {
+			mCc_ast_delete_statement(stmt->if_statement);
+		}
 		if (stmt->else_statement) {
 			mCc_ast_delete_statement(stmt->else_statement);
 		}
@@ -122,7 +124,9 @@ void mCc_ast_delete_statement(struct mCc_ast_statement *stmt)
 
 	case MCC_AST_STATEMENT_WHILE:
 		mCc_ast_delete_expression(stmt->loop_condition_expression);
-		mCc_ast_delete_statement(stmt->while_statement);
+		if (stmt->while_statement) {
+			mCc_ast_delete_statement(stmt->while_statement);
+		}
 		break;
 
 	case MCC_AST_STATEMENT_RETURN:

@@ -31,8 +31,14 @@ mCc_inc = include_directories('include')
 mCc_test_inc = include_directories('test/include')
 
 
-mCc_ast_src = ['src/ast/basis/ast_assignment.c','src/ast/basis/ast_declaration.c','src/ast/basis/ast_expression.c','src/ast/basis/ast_function.c',
-'src/ast/basis/ast_identifier.c','src/ast/basis/ast_literal.c','src/ast/basis/ast_program.c','src/ast/basis/ast_statement.c' ]
+mCc_ast_src = ['src/ast/basis/ast_assignment.c',
+'src/ast/basis/ast_declaration.c',
+'src/ast/basis/ast_expression.c',
+'src/ast/basis/ast_function.c',
+'src/ast/basis/ast_identifier.c',
+'src/ast/basis/ast_literal.c',
+'src/ast/basis/ast_program.c',
+'src/ast/basis/ast_statement.c' ]
 
 
 mCc_visit_src = ['src/ast/visit/ast_visit_assignment.c',
@@ -60,13 +66,13 @@ mCc_print_src = ['src/ast/print/ast_basic_printing.c',
 mCc_test_src = ['test/bin/mCc_test_utils.c']
 
 
-mCc_lib = library('mCc', mCc_ast_src, mCc_visit_src, mCc_print_src, lgen.process('src/scanner.l'),
+mCc_lib = shared_library('mCc', mCc_ast_src, mCc_visit_src, mCc_print_src, lgen.process('src/scanner.l'),
             pgen.process('src/parser.y'),
                   c_args: '-D_POSIX_C_SOURCE=200809L',
                   include_directories: mCc_inc)
 
 # test utils
-mCc_test_lib = library('mCc_test', mCc_test_src,
+mCc_test_lib = shared_library('mCc_test', mCc_test_src,
                   include_directories: [mCc_inc,mCc_test_inc],
                   link_with: mCc_lib)
 
@@ -94,6 +100,11 @@ foreach ut : mCc_uts
 
     test(ut, t)
 endforeach
+
+# -------------------------------------------------------------------- INTEGRATION TESTS
+
+integration = run_target('integration_test',
+  command : ['test/meson_integration_target',meson.current_build_dir()])
 
 # ------------------------------------------------------------------ BENCHMARKS
 
