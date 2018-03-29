@@ -21,26 +21,26 @@ extern "C" {
 void build_file_name(char buffer[], size_t size, const char *file_name);
 
 FILE *open_file(const char *file_name);
-void test_print_ast_literal(struct mCc_ast_literal *lit, const char *file_name);
+void test_print_and_free_ast_literal(struct mCc_ast_literal *lit, const char *file_name);
 
-void test_print_ast_expression(struct mCc_ast_expression *expr,
+void test_print_and_free_ast_expression(struct mCc_ast_expression *expr,
                                const char *file_name);
-void test_print_ast_identifier(struct mCc_ast_identifier *identifier,
+void test_print_and_free_ast_identifier(struct mCc_ast_identifier *identifier,
                                const char *file_name);
-void test_print_ast_declaration(struct mCc_ast_declaration *declaration,
+void test_print_and_free_ast_declaration(struct mCc_ast_declaration *declaration,
                                 const char *file_name);
-void test_print_ast_program(struct mCc_ast_program *program,
+void test_print_and_free_ast_program(struct mCc_ast_program *program,
                             const char *file_name);
-void test_print_ast_function_def(struct mCc_ast_function_def *function,
+void test_print_and_free_ast_function_def(struct mCc_ast_function_def *function,
                                  const char *file_name);
 
-void test_print_ast_function_call(struct mCc_ast_function_call *function,
+void test_print_and_free_ast_function_call(struct mCc_ast_function_call *function,
                                   const char *file_name);
 
-void test_print_ast_assignment(struct mCc_ast_assignment *assignment,
+void test_print_and_free_ast_assignment(struct mCc_ast_assignment *assignment,
                                const char *file_name);
 
-void test_print_ast_statement(struct mCc_ast_statement *statement,
+void test_print_and_free_ast_statement(struct mCc_ast_statement *statement,
                               const char *file_name);
 
 /*================================================== commonly needed mocks for

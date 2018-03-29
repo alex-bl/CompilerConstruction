@@ -10,28 +10,28 @@ TEST(AstPrintLiteral, PrintLiteralInt)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_int(12);
 
-	test_print_ast_literal(lit, "literal_int");
+	test_print_and_free_ast_literal(lit, "literal_int");
 }
 
 TEST(AstPrintLiteral, PrintLiteralFloat)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_float(1.22);
 
-	test_print_ast_literal(lit, "literal_float");
+	test_print_and_free_ast_literal(lit, "literal_float");
 }
 
 TEST(AstPrintLiteral, PrintLiteralBool)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_bool(true);
 
-	test_print_ast_literal(lit, "literal_bool");
+	test_print_and_free_ast_literal(lit, "literal_bool");
 }
 
 TEST(AstPrintLiteral, PrintLiteralString)
 {
 	struct mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
 
-	test_print_ast_literal(lit, "literal_string");
+	test_print_and_free_ast_literal(lit, "literal_string");
 }
 
 /*===========================================================================
@@ -42,7 +42,7 @@ TEST(AstPrintExpression, PrintExpressionBinaryOp)
 	struct mCc_ast_expression *expression_binary_op =
 	    mCc_test_build_test_binary_expression(4, 2, MCC_AST_BINARY_OP_MUL);
 
-	test_print_ast_expression(expression_binary_op, "expression_binary");
+	test_print_and_free_ast_expression(expression_binary_op, "expression_binary");
 }
 
 TEST(AstPrintExpression, PrintExpressionBinaryOpAdvanced)
@@ -57,7 +57,7 @@ TEST(AstPrintExpression, PrintExpressionBinaryOpAdvanced)
 	    mCc_ast_new_expression_binary_op(MCC_AST_BINARY_OP_EQUALS, left_side,
 	                                     right_side);
 
-	test_print_ast_expression(expression_binary_op,
+	test_print_and_free_ast_expression(expression_binary_op,
 	                          "expression_binary_advanced");
 }
 
@@ -72,7 +72,7 @@ TEST(AstPrintExpression, PrintExpressionBinaryOpUnbalanced)
 	    mCc_ast_new_expression_binary_op(MCC_AST_BINARY_OP_NOT_EQUALS,
 	                                     left_side, right_side);
 
-	test_print_ast_expression(expression_binary_op,
+	test_print_and_free_ast_expression(expression_binary_op,
 	                          "expression_binary_unbalanced");
 }
 
@@ -83,7 +83,7 @@ TEST(AstPrintExpression, PrintExpressionUnaryOp)
 	        MCC_AST_UNARY_OP_NEGATION,
 	        mCc_ast_new_expression_literal(mCc_ast_new_literal_bool(false)));
 
-	test_print_ast_expression(expression_unary_op, "expression_unary");
+	test_print_and_free_ast_expression(expression_unary_op, "expression_unary");
 }
 
 TEST(AstPrintExpression, PrintExpressionParenth)
@@ -91,7 +91,7 @@ TEST(AstPrintExpression, PrintExpressionParenth)
 	struct mCc_ast_expression *expression_parent =
 	    mCc_ast_new_expression_parenth(mCc_test_build_test_lit_expression(1));
 
-	test_print_ast_expression(expression_parent, "expression_parenth");
+	test_print_and_free_ast_expression(expression_parent, "expression_parenth");
 }
 
 TEST(AstPrintExpression, PrintExpressionIdentifier)
@@ -99,7 +99,7 @@ TEST(AstPrintExpression, PrintExpressionIdentifier)
 	struct mCc_ast_expression *expression_identifier =
 	    mCc_ast_new_expression_identifier(mCc_ast_new_identifier("val"));
 
-	test_print_ast_expression(expression_identifier, "expression_identifier");
+	test_print_and_free_ast_expression(expression_identifier, "expression_identifier");
 }
 
 TEST(AstPrintExpression, PrintExpressionIdentifierUnaryOp)
@@ -109,7 +109,7 @@ TEST(AstPrintExpression, PrintExpressionIdentifierUnaryOp)
 	        MCC_AST_UNARY_OP_NEGATION,
 	        mCc_test_build_test_identifier("is_binary"));
 
-	test_print_ast_expression(expression_unary_op,
+	test_print_and_free_ast_expression(expression_unary_op,
 	                          "expression_identifier_unary");
 }
 
@@ -124,7 +124,7 @@ TEST(AstPrintExpression, PrintExpressionArrayIdentifier)
 	    mCc_ast_new_expression_array_identifier(mCc_ast_new_identifier("arr"),
 	                                            expression_index);
 
-	test_print_ast_expression(expression_arr_identifier,
+	test_print_and_free_ast_expression(expression_arr_identifier,
 	                          "expression_identifier_array");
 }
 
@@ -138,7 +138,7 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallSimple)
 	struct mCc_ast_expression *expr_function_call =
 	    mCc_ast_new_expression_function_call(function_call);
 
-	test_print_ast_expression(expr_function_call,
+	test_print_and_free_ast_expression(expr_function_call,
 	                          "expression_function_call_args");
 }
 
@@ -155,7 +155,7 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallConcated)
 	    mCc_ast_new_expression_function_call(
 	        mCc_ast_new_parameterized_function_call(identifier, param_1));
 
-	test_print_ast_expression(expr_function_call,
+	test_print_and_free_ast_expression(expr_function_call,
 	                          "expression_function_call_concatted_args");
 }
 
@@ -173,7 +173,7 @@ TEST(AstPrintExpression, PrintExpressionMulUnaryTest)
 
 	struct mCc_ast_expression *mul = mCc_ast_new_expression_binary_op(
 	    MCC_AST_BINARY_OP_MUL, mCc_test_build_test_lit_expression(42), parenth);
-	test_print_ast_expression(mul, "expression_mul_unary");
+	test_print_and_free_ast_expression(mul, "expression_mul_unary");
 }
 
 /*===========================================================================
@@ -182,7 +182,7 @@ TEST(AstPrintExpression, PrintExpressionMulUnaryTest)
 TEST(AstPrintIdentifier, PrintIdentifier)
 {
 	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_var");
-	test_print_ast_identifier(identifier, "identifier_simple");
+	test_print_and_free_ast_identifier(identifier, "identifier_simple");
 }
 
 /*===========================================================================
@@ -192,7 +192,7 @@ TEST(AstPrintDeclaration, PrintDeclarationPrimitive)
 {
 	struct mCc_ast_declaration *declaration_primitive =
 	    mCc_test_build_test_declaration("my_float", MCC_AST_LITERAL_TYPE_FLOAT);
-	test_print_ast_declaration(declaration_primitive, "declaration_primitive");
+	test_print_and_free_ast_declaration(declaration_primitive, "declaration_primitive");
 }
 
 TEST(AstPrintDeclaration, PrintDeclarationArray)
@@ -202,7 +202,7 @@ TEST(AstPrintDeclaration, PrintDeclarationArray)
 	struct mCc_ast_declaration *declaration_array =
 	    mCc_ast_new_array_declaration(MCC_AST_LITERAL_TYPE_FLOAT, identifier,
 	                                  100);
-	test_print_ast_declaration(declaration_array, "declaration_array");
+	test_print_and_free_ast_declaration(declaration_array, "declaration_array");
 }
 
 TEST(AstPrintDeclaration, PrintDeclarationConcated)
@@ -224,7 +224,7 @@ TEST(AstPrintDeclaration, PrintDeclarationConcated)
 	declaration_array->next_declaration = declaration_concated_other;
 	declaration_concated->next_declaration = declaration_array;
 
-	test_print_ast_declaration(declaration_concated, "declaration_concated");
+	test_print_and_free_ast_declaration(declaration_concated, "declaration_concated");
 }
 /*===========================================================================
  * assignment tests*/
@@ -234,7 +234,7 @@ TEST(AstPrintAssignment, PrintAssignmentPrimitive)
 	struct mCc_ast_assignment *assignment =
 	    mCc_test_build_test_assignment("my_var", 2);
 
-	test_print_ast_assignment(assignment, "assignment_primitive");
+	test_print_and_free_ast_assignment(assignment, "assignment_primitive");
 }
 
 TEST(AstPrintAssignment, PrintAssignmentArray)
@@ -244,7 +244,7 @@ TEST(AstPrintAssignment, PrintAssignmentArray)
 	    mCc_ast_new_identifier("my_arr"), mCc_test_build_test_lit_expression(0),
 	    mCc_test_build_test_lit_expression_float(3.4));
 
-	test_print_ast_assignment(assignment, "assignment_arr");
+	test_print_and_free_ast_assignment(assignment, "assignment_arr");
 }
 
 /*===========================================================================
@@ -258,7 +258,7 @@ TEST(AstPrintStatement, PrintStatementExpression)
 	struct mCc_ast_statement *statement =
 	    mCc_ast_new_expression_statement(lit_expr);
 
-	test_print_ast_statement(statement, "statement_expression");
+	test_print_and_free_ast_statement(statement, "statement_expression");
 }
 
 TEST(AstPrintStatement, PrintStatementDeclaration)
@@ -266,7 +266,7 @@ TEST(AstPrintStatement, PrintStatementDeclaration)
 	struct mCc_ast_statement *statement = mCc_ast_new_declaration_statement(
 	    mCc_test_build_test_declaration("my_var", MCC_AST_LITERAL_TYPE_STRING));
 
-	test_print_ast_statement(statement, "statement_declaration");
+	test_print_and_free_ast_statement(statement, "statement_declaration");
 }
 
 TEST(AstPrintStatement, PrintStatementAssignment)
@@ -276,7 +276,7 @@ TEST(AstPrintStatement, PrintStatementAssignment)
 
 	struct mCc_ast_statement *statement =
 	    mCc_ast_new_assign_statement(assignment);
-	test_print_ast_statement(statement, "statement_assignment");
+	test_print_and_free_ast_statement(statement, "statement_assignment");
 }
 
 TEST(AstPrintStatement, PrintStatementIf)
@@ -292,7 +292,7 @@ TEST(AstPrintStatement, PrintStatementIf)
 	                             mCc_ast_new_assign_statement(assignment_if),
 	                             mCc_ast_new_assign_statement(assignment_else));
 
-	test_print_ast_statement(if_else_statement, "statement_if");
+	test_print_and_free_ast_statement(if_else_statement, "statement_if");
 }
 
 TEST(AstPrintStatement, PrintStatementEmptyIfStmt)
@@ -304,7 +304,7 @@ TEST(AstPrintStatement, PrintStatementEmptyIfStmt)
 	    mCc_test_build_test_lit_expression_bool(true), NULL,
 	    mCc_ast_new_assign_statement(assignment_else));
 
-	test_print_ast_statement(if_else_statement, "statement_if_if_empty");
+	test_print_and_free_ast_statement(if_else_statement, "statement_if_if_empty");
 }
 
 TEST(AstPrintStatement, PrintStatementEmptyElse)
@@ -316,7 +316,7 @@ TEST(AstPrintStatement, PrintStatementEmptyElse)
 	    mCc_test_build_test_lit_expression_bool(true),
 	    mCc_ast_new_assign_statement(assignment_if), NULL);
 
-	test_print_ast_statement(if_else_statement, "statement_if_else_empty");
+	test_print_and_free_ast_statement(if_else_statement, "statement_if_else_empty");
 }
 
 TEST(AstPrintStatement, PrintStatementWhile)
@@ -332,7 +332,7 @@ TEST(AstPrintStatement, PrintStatementWhile)
 	struct mCc_ast_statement *while_statement = mCc_ast_new_while_statement(
 	    mCc_test_build_test_lit_expression_bool(true), statement_1);
 
-	test_print_ast_statement(while_statement, "statement_while");
+	test_print_and_free_ast_statement(while_statement, "statement_while");
 }
 
 TEST(AstPrintStatement, PrintStatementWhileEmpty)
@@ -340,14 +340,14 @@ TEST(AstPrintStatement, PrintStatementWhileEmpty)
 	struct mCc_ast_statement *while_statement = mCc_ast_new_while_statement(
 	    mCc_test_build_test_lit_expression_bool(true), NULL);
 
-	test_print_ast_statement(while_statement, "statement_while_empty");
+	test_print_and_free_ast_statement(while_statement, "statement_while_empty");
 }
 
 TEST(AstPrintStatement, PrintStatementReturn)
 {
 	struct mCc_ast_statement *return_statement = mCc_ast_new_return_statement(
 	    mCc_test_build_test_lit_expression_bool(true));
-	test_print_ast_statement(return_statement, "statement_return");
+	test_print_and_free_ast_statement(return_statement, "statement_return");
 }
 
 /*===========================================================================
@@ -364,7 +364,7 @@ TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
 	    mCc_ast_new_non_parameterized_function_def(
 	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_BOOL, return_statement);
 
-	test_print_ast_function_def(function_def,
+	test_print_and_free_ast_function_def(function_def,
 	                            "function_def_parameterless_simple");
 }
 
@@ -381,7 +381,7 @@ TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
 	                                        MCC_AST_LITERAL_TYPE_FLOAT),
 	        return_statement);
 
-	test_print_ast_function_def(function_def, "function_def_parameter");
+	test_print_and_free_ast_function_def(function_def, "function_def_parameter");
 }
 
 TEST(AstPrintFunctionCall, PrintFunctionCallSimple)
@@ -390,7 +390,7 @@ TEST(AstPrintFunctionCall, PrintFunctionCallSimple)
 	    mCc_ast_new_non_parameterized_function_call(
 	        mCc_ast_new_identifier("my_func"));
 
-	test_print_ast_function_call(function_call, "function_call_simple");
+	test_print_and_free_ast_function_call(function_call, "function_call_simple");
 }
 
 TEST(AstPrintFunctionCall, PrintFunctionCallConcated)
@@ -404,7 +404,7 @@ TEST(AstPrintFunctionCall, PrintFunctionCallConcated)
 	    mCc_ast_new_parameterized_function_call(
 	        mCc_ast_new_identifier("my_func"), param_1);
 
-	test_print_ast_function_call(function_call, "function_call_concated");
+	test_print_and_free_ast_function_call(function_call, "function_call_concated");
 }
 
 /*===========================================================================
@@ -420,7 +420,7 @@ TEST(AstPrintProgram, PrintProgramFunctionSimple)
 
 	struct mCc_ast_program *program = mCc_ast_new_program(function_def);
 
-	test_print_ast_program(program, "program_simple");
+	test_print_and_free_ast_program(program, "program_simple");
 }
 
 TEST(AstPrintProgram, PrintProgramFunctionConcated)
@@ -445,5 +445,5 @@ TEST(AstPrintProgram, PrintProgramFunctionConcated)
 
 	struct mCc_ast_program *program = mCc_ast_new_program(function_def_1);
 
-	test_print_ast_program(program, "program_concated");
+	test_print_and_free_ast_program(program, "program_concated");
 }
