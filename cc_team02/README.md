@@ -72,9 +72,13 @@ This section lists the available targets that can be build.
 | all			| Self explanatory | -	| Yes | Yes |   
 | clean			| Self explanatory      |   -			|  Yes 	|   Yes |   
 | doxygen		| Builds the documentation      |    - 			|  Yes 	|    Yes |   
-| test			| Runs all gtests (unit)	| - | Yes |  Yes |   
-| build_and_test| Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild. |  Yes  | No |  
-| build_and_test_memcheck | Runs all gtests together with valgrind | To run tests with valgrind in meson use ```$ meson test --wrap=valgrind``` (see [here](https://github.com/mesonbuild/meson/blob/master/docs/markdown/Unit-tests.md)). |  Yes  | No |  
-| integration_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration). | Yes  | Yes |  
+| test\*			| Runs all gtests (unit)	| - | Yes |  Yes |   
+| build\_and\_test\* | Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild. |  Yes  | No |  
+| build\_and\_test_memcheck\* | Runs all gtests together with valgrind | To run tests with valgrind in meson use ```$ meson test --wrap=valgrind``` (see [here](https://github.com/mesonbuild/meson/blob/master/docs/markdown/Unit-tests.md)). |  Yes  | No |  
+| integration\_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration). | Yes  | Yes |  
 | benchmark		| Runs all benchmarks	| It is currently not used, but maybe in the future: Meson suports it "out of the box". | No | Yes |  
-| run_benchmarks | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. | Yes  | No |  
+| run\_benchmarks | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. | Yes  | No |  
+
+\* Test-targets execute also printer-tests: They don't have any "gtest-assertions" but print the asts (dot-notation) into the build-directory. This dot files are named as follow:   
+
+```DOT_<test_name>.dot```
