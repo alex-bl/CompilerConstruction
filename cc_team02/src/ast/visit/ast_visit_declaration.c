@@ -2,7 +2,7 @@
 #include "mCc/ast/visit/ast_visit_identifier.h"
 #include <assert.h>
 
-void mCc_ast_visit_optional_next_declaration(
+void mCc_ast_visit_optional_declaration(
     struct mCc_ast_declaration *declaration, struct mCc_ast_visitor *visitor)
 {
 	if (declaration) {
@@ -24,7 +24,7 @@ void mCc_ast_visit_declaration(struct mCc_ast_declaration *declaration,
 		                   visitor);
 
 		mCc_ast_visit_identifier(declaration->identifier, visitor);
-		mCc_ast_visit_optional_next_declaration(declaration->next_declaration,
+		mCc_ast_visit_optional_declaration(declaration->next_declaration,
 		                                        visitor);
 
 		visit_if_post_order(declaration, visitor->declaration_primitive,
@@ -35,7 +35,7 @@ void mCc_ast_visit_declaration(struct mCc_ast_declaration *declaration,
 
 		mCc_ast_visit_identifier(declaration->array_identifier, visitor);
 
-		mCc_ast_visit_optional_next_declaration(declaration->next_declaration,
+		mCc_ast_visit_optional_declaration(declaration->next_declaration,
 		                                        visitor);
 
 		visit_if_post_order(declaration, visitor->declaration_array, visitor);

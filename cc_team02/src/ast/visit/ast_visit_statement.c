@@ -4,8 +4,8 @@
 #include "mCc/ast/visit/ast_visit_expression.h"
 #include <assert.h>
 
-void mCc_ast_visit_optional_next_statement(struct mCc_ast_statement *statement,
-                                           struct mCc_ast_visitor *visitor)
+void mCc_ast_visit_optional_statement(struct mCc_ast_statement *statement,
+                                      struct mCc_ast_visitor *visitor)
 {
 	if (statement) {
 		mCc_ast_visit_statement(statement, visitor);
@@ -25,11 +25,11 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		visit_if_pre_order(statement, visitor->statement_if, visitor);
 
 		mCc_ast_visit_expression(statement->condition_expression, visitor);
-		mCc_ast_visit_statement(statement->if_statement, visitor);
-		mCc_ast_visit_statement(statement->else_statement, visitor);
+		// if + else stmts may be empty
+		mCc_ast_visit_optional_statement(statement->if_statement, visitor);
+		mCc_ast_visit_optional_statement(statement->else_statement, visitor);
 
-		mCc_ast_visit_optional_next_statement(statement->next_statement,
-		                                      visitor);
+		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_if, visitor);
 		break;
@@ -37,10 +37,10 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		visit_if_pre_order(statement, visitor->statement_while, visitor);
 
 		mCc_ast_visit_expression(statement->loop_condition_expression, visitor);
-		mCc_ast_visit_statement(statement->while_statement, visitor);
+		// while-stmt may be empty
+		mCc_ast_visit_optional_statement(statement->while_statement, visitor);
 
-		mCc_ast_visit_optional_next_statement(statement->next_statement,
-		                                      visitor);
+		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_while, visitor);
 		break;
@@ -48,12 +48,11 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		visit_if_pre_order(statement, visitor->statement_return, visitor);
 
 		// there can also be no return type
-		mCc_ast_visit_optional_next_expression(statement->return_expression,
-		                                       visitor);
+		mCc_ast_visit_optional_expression(statement->return_expression,
+		                                  visitor);
 
 		// TODO: required here? Does dead-code after return throws an error?
-		mCc_ast_visit_optional_next_statement(statement->next_statement,
-		                                      visitor);
+		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_return, visitor);
 
@@ -64,8 +63,7 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_declaration(statement->declaration, visitor);
 
-		mCc_ast_visit_optional_next_statement(statement->next_statement,
-		                                      visitor);
+		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_declaration, visitor);
 
@@ -75,8 +73,7 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_assignment(statement->assignment, visitor);
 
-		mCc_ast_visit_optional_next_statement(statement->next_statement,
-		                                      visitor);
+		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 		visit_if_post_order(statement, visitor->statement_assignment, visitor);
 
 		break;
@@ -85,8 +82,7 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_expression(statement->expression, visitor);
 
-		mCc_ast_visit_optional_next_statement(statement->next_statement,
-		                                      visitor);
+		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_expression, visitor);
 
