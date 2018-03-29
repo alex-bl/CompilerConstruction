@@ -232,7 +232,7 @@ TEST(Parser, NestedExpression_1)
 	
 
 
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, subexpr->lhs->unary_rhs->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, subexpr->lhs->unary_rhs->literal->type);
 	ASSERT_EQ(192, subexpr->lhs->unary_rhs->literal->i_value);
 	
 	// subexpr -> rhs
@@ -330,7 +330,7 @@ TEST(Parser, IfStatement_1)
 	auto if_statement = result.statement;
 
 	ASSERT_EQ(MCC_AST_STATEMENT_IF, if_statement->statement_type);
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, if_statement->condition_expression->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, if_statement->condition_expression->literal->type);
 	//mCc_ast_delete_statement(if_statement);
 }
 
@@ -383,7 +383,7 @@ TEST(Parser, Declaration_1){
 	auto declaration = result.declaration;
 
 	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE, declaration->declaration_type);
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, declaration->data_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, declaration->data_type);
 	ASSERT_STREQ("a", declaration->identifier->identifier_name);
 	mCc_ast_delete_declaration(declaration);
 }
@@ -395,7 +395,7 @@ TEST(Parser, Declaration_2){
 	auto declaration = result.declaration;
 
 	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE, declaration->declaration_type);
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_BOOL, declaration->data_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, declaration->data_type);
 	ASSERT_STREQ("a", declaration->identifier->identifier_name);
 	mCc_ast_delete_declaration(declaration);
 }
@@ -407,7 +407,7 @@ TEST(Parser, Declaration_3){
 	auto declaration = result.declaration;
 
 	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE, declaration->declaration_type);
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_STRING, declaration->data_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING, declaration->data_type);
 	ASSERT_STREQ("a", declaration->identifier->identifier_name);
 	mCc_ast_delete_declaration(declaration);
 }
@@ -419,7 +419,7 @@ TEST(Parser, Declaration_4){
 	auto declaration = result.declaration;
 
 	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE, declaration->declaration_type);
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_FLOAT, declaration->data_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_FLOAT, declaration->data_type);
 	ASSERT_STREQ("a", declaration->identifier->identifier_name);
 	mCc_ast_delete_declaration(declaration);
 }
@@ -430,7 +430,7 @@ TEST(Parser, Literal_1){
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto assignment = result.assignment;
 
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_FLOAT, assignment->assigned_expression->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_FLOAT, assignment->assigned_expression->literal->type);
 	mCc_ast_delete_assignment(assignment);
 }
 
@@ -440,7 +440,7 @@ TEST(Parser, Literal_2){
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto assignment = result.assignment;
 
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_STRING, assignment->assigned_expression->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING, assignment->assigned_expression->literal->type);
 	mCc_ast_delete_assignment(assignment);
 }
 
@@ -450,7 +450,7 @@ TEST(Parser, Literal_3){
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto assignment = result.assignment;
 
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_BOOL, assignment->assigned_expression->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, assignment->assigned_expression->literal->type);
 	mCc_ast_delete_assignment(assignment);
 }
 
@@ -460,7 +460,7 @@ TEST(Parser, Literal_4){
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto assignment = result.assignment;
 
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, assignment->assigned_expression->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, assignment->assigned_expression->literal->type);
 	mCc_ast_delete_assignment(assignment);
 }
 
@@ -472,9 +472,9 @@ TEST(Parser, Function_1){
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto function = result.function_def;
 
-	ASSERT_EQ(MCC_AST_FUNCTION_RETURN_TYPE_INT, function->return_type);
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_BOOL, function->first_parameter->data_type);
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, function->first_parameter->next_declaration->data_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, function->return_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, function->first_parameter->data_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, function->first_parameter->next_declaration->data_type);
 	mCc_ast_delete_function_def(function);
 }
 
