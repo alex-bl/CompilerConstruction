@@ -159,6 +159,23 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallConcated)
 	                          "expression_function_call_concatted_args");
 }
 
+TEST(AstPrintExpression, PrintExpressionMulUnaryTest)
+{
+	struct mCc_ast_expression *lit_right_unary =
+	    mCc_ast_new_expression_unary_op(
+	        MCC_AST_UNARY_OP_MINUS, mCc_test_build_test_lit_expression(192));
+
+	struct mCc_ast_expression *plus = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_ADD, lit_right_unary,
+	    mCc_test_build_test_lit_expression_float(3.14));
+
+	struct mCc_ast_expression *parenth = mCc_ast_new_expression_parenth(plus);
+
+	struct mCc_ast_expression *mul = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_MUL, mCc_test_build_test_lit_expression(42), parenth);
+	test_print_ast_expression(mul, "expression_mul_unary");
+}
+
 /*===========================================================================
  * identifier tests*/
 
