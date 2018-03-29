@@ -66,13 +66,13 @@ mCc_test_build_test_binary_expression_float(float value_1, float value_2,
 
 struct mCc_ast_declaration *
 mCc_test_build_test_declaration(const char *identifier,
-                                enum mCc_ast_literal_type type);
+                                enum mCc_ast_data_type type);
 
 struct mCc_ast_assignment *
 mCc_test_build_test_assignment(const char *identifier, int value);
 
 struct mCc_ast_function_def *
-mCc_test_build_test_function_def(enum mCc_ast_function_return_type return_type,
+mCc_test_build_test_function_def(enum mCc_ast_data_type return_type,
                                  const char *identifier,
                                  struct mCc_ast_expression *return_expr);
 

@@ -3,33 +3,27 @@
 
 #include "mCc/ast/basis/ast_node.h"
 #include <stdbool.h>
+#include "ast_data_type.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-enum mCc_ast_literal_type {
-	MCC_AST_LITERAL_TYPE_INT,
-	MCC_AST_LITERAL_TYPE_FLOAT,
-	MCC_AST_LITERAL_TYPE_BOOL,
-	MCC_AST_LITERAL_TYPE_STRING
-};
-
 struct mCc_ast_literal {
 	struct mCc_ast_node node;
 
-	enum mCc_ast_literal_type type;
+	enum mCc_ast_data_type type;
 	union {
-		/* MCC_AST_LITERAL_TYPE_INT */
+		/* MCC_AST_DATA_TYPE_INT */
 		long i_value;
 
-		/* MCC_AST_LITERAL_TYPE_FLOAT */
+		/* MCC_AST_DATA_TYPE_FLOAT */
 		double f_value;
 
-		/* MCC_AST_LITERAL_TYPE_BOOL */
+		/* MCC_AST_DATA_TYPE_BOOL */
 		bool b_value;
 
-		/* MCC_AST_LITERAL_TYPE_STRING */
+		/* MCC_AST_DATA_TYPE_STRING */
 		const char *s_value;
 	};
 };

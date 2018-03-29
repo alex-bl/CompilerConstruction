@@ -42,7 +42,8 @@ TEST(AstPrintExpression, PrintExpressionBinaryOp)
 	struct mCc_ast_expression *expression_binary_op =
 	    mCc_test_build_test_binary_expression(4, 2, MCC_AST_BINARY_OP_MUL);
 
-	test_print_and_free_ast_expression(expression_binary_op, "expression_binary");
+	test_print_and_free_ast_expression(expression_binary_op,
+	                                   "expression_binary");
 }
 
 TEST(AstPrintExpression, PrintExpressionBinaryOpAdvanced)
@@ -58,7 +59,7 @@ TEST(AstPrintExpression, PrintExpressionBinaryOpAdvanced)
 	                                     right_side);
 
 	test_print_and_free_ast_expression(expression_binary_op,
-	                          "expression_binary_advanced");
+	                                   "expression_binary_advanced");
 }
 
 TEST(AstPrintExpression, PrintExpressionBinaryOpUnbalanced)
@@ -73,7 +74,7 @@ TEST(AstPrintExpression, PrintExpressionBinaryOpUnbalanced)
 	                                     left_side, right_side);
 
 	test_print_and_free_ast_expression(expression_binary_op,
-	                          "expression_binary_unbalanced");
+	                                   "expression_binary_unbalanced");
 }
 
 TEST(AstPrintExpression, PrintExpressionUnaryOp)
@@ -99,7 +100,8 @@ TEST(AstPrintExpression, PrintExpressionIdentifier)
 	struct mCc_ast_expression *expression_identifier =
 	    mCc_ast_new_expression_identifier(mCc_ast_new_identifier("val"));
 
-	test_print_and_free_ast_expression(expression_identifier, "expression_identifier");
+	test_print_and_free_ast_expression(expression_identifier,
+	                                   "expression_identifier");
 }
 
 TEST(AstPrintExpression, PrintExpressionIdentifierUnaryOp)
@@ -110,7 +112,7 @@ TEST(AstPrintExpression, PrintExpressionIdentifierUnaryOp)
 	        mCc_test_build_test_identifier("is_binary"));
 
 	test_print_and_free_ast_expression(expression_unary_op,
-	                          "expression_identifier_unary");
+	                                   "expression_identifier_unary");
 }
 
 TEST(AstPrintExpression, PrintExpressionArrayIdentifier)
@@ -125,7 +127,7 @@ TEST(AstPrintExpression, PrintExpressionArrayIdentifier)
 	                                            expression_index);
 
 	test_print_and_free_ast_expression(expression_arr_identifier,
-	                          "expression_identifier_array");
+	                                   "expression_identifier_array");
 }
 
 TEST(AstPrintExpression, PrintExpressionFunctionCallSimple)
@@ -139,7 +141,7 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallSimple)
 	    mCc_ast_new_expression_function_call(function_call);
 
 	test_print_and_free_ast_expression(expr_function_call,
-	                          "expression_function_call_args");
+	                                   "expression_function_call_args");
 }
 
 TEST(AstPrintExpression, PrintExpressionFunctionCallConcated)
@@ -155,8 +157,8 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallConcated)
 	    mCc_ast_new_expression_function_call(
 	        mCc_ast_new_parameterized_function_call(identifier, param_1));
 
-	test_print_and_free_ast_expression(expr_function_call,
-	                          "expression_function_call_concatted_args");
+	test_print_and_free_ast_expression(
+	    expr_function_call, "expression_function_call_concatted_args");
 }
 
 TEST(AstPrintExpression, PrintExpressionMulUnaryTest)
@@ -191,8 +193,9 @@ TEST(AstPrintIdentifier, PrintIdentifier)
 TEST(AstPrintDeclaration, PrintDeclarationPrimitive)
 {
 	struct mCc_ast_declaration *declaration_primitive =
-	    mCc_test_build_test_declaration("my_float", MCC_AST_LITERAL_TYPE_FLOAT);
-	test_print_and_free_ast_declaration(declaration_primitive, "declaration_primitive");
+	    mCc_test_build_test_declaration("my_float", MCC_AST_DATA_TYPE_FLOAT);
+	test_print_and_free_ast_declaration(declaration_primitive,
+	                                    "declaration_primitive");
 }
 
 TEST(AstPrintDeclaration, PrintDeclarationArray)
@@ -200,31 +203,29 @@ TEST(AstPrintDeclaration, PrintDeclarationArray)
 	struct mCc_ast_identifier *identifier =
 	    mCc_ast_new_identifier("my_float_arr");
 	struct mCc_ast_declaration *declaration_array =
-	    mCc_ast_new_array_declaration(MCC_AST_LITERAL_TYPE_FLOAT, identifier,
-	                                  100);
+	    mCc_ast_new_array_declaration(MCC_AST_DATA_TYPE_FLOAT, identifier, 100);
 	test_print_and_free_ast_declaration(declaration_array, "declaration_array");
 }
 
 TEST(AstPrintDeclaration, PrintDeclarationConcated)
 {
 	struct mCc_ast_declaration *declaration_concated =
-	    mCc_test_build_test_declaration("my_float", MCC_AST_LITERAL_TYPE_FLOAT);
+	    mCc_test_build_test_declaration("my_float", MCC_AST_DATA_TYPE_FLOAT);
 
 	struct mCc_ast_declaration *declaration_concated_other =
-	    mCc_test_build_test_declaration("my_other_float",
-	                                    MCC_AST_LITERAL_TYPE_FLOAT);
+	    mCc_test_build_test_declaration("my_other_float", MCC_AST_DATA_TYPE_FLOAT);
 
 	struct mCc_ast_identifier *identifier_arr =
 	    mCc_ast_new_identifier("my_float_arr");
 	struct mCc_ast_declaration *declaration_array =
-	    mCc_ast_new_array_declaration(MCC_AST_LITERAL_TYPE_FLOAT,
-	                                  identifier_arr, 100);
+	    mCc_ast_new_array_declaration(MCC_AST_DATA_TYPE_FLOAT, identifier_arr, 100);
 
 	// do a concatenation
 	declaration_array->next_declaration = declaration_concated_other;
 	declaration_concated->next_declaration = declaration_array;
 
-	test_print_and_free_ast_declaration(declaration_concated, "declaration_concated");
+	test_print_and_free_ast_declaration(declaration_concated,
+	                                    "declaration_concated");
 }
 /*===========================================================================
  * assignment tests*/
@@ -264,7 +265,7 @@ TEST(AstPrintStatement, PrintStatementExpression)
 TEST(AstPrintStatement, PrintStatementDeclaration)
 {
 	struct mCc_ast_statement *statement = mCc_ast_new_declaration_statement(
-	    mCc_test_build_test_declaration("my_var", MCC_AST_LITERAL_TYPE_STRING));
+	    mCc_test_build_test_declaration("my_var", MCC_AST_DATA_TYPE_STRING));
 
 	test_print_and_free_ast_statement(statement, "statement_declaration");
 }
@@ -304,7 +305,8 @@ TEST(AstPrintStatement, PrintStatementEmptyIfStmt)
 	    mCc_test_build_test_lit_expression_bool(true), NULL,
 	    mCc_ast_new_assign_statement(assignment_else));
 
-	test_print_and_free_ast_statement(if_else_statement, "statement_if_if_empty");
+	test_print_and_free_ast_statement(if_else_statement,
+	                                  "statement_if_if_empty");
 }
 
 TEST(AstPrintStatement, PrintStatementEmptyElse)
@@ -316,7 +318,8 @@ TEST(AstPrintStatement, PrintStatementEmptyElse)
 	    mCc_test_build_test_lit_expression_bool(true),
 	    mCc_ast_new_assign_statement(assignment_if), NULL);
 
-	test_print_and_free_ast_statement(if_else_statement, "statement_if_else_empty");
+	test_print_and_free_ast_statement(if_else_statement,
+	                                  "statement_if_else_empty");
 }
 
 TEST(AstPrintStatement, PrintStatementWhile)
@@ -362,10 +365,10 @@ TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
 
 	struct mCc_ast_function_def *function_def =
 	    mCc_ast_new_non_parameterized_function_def(
-	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_BOOL, return_statement);
+	        identifier, MCC_AST_DATA_TYPE_BOOL, return_statement);
 
 	test_print_and_free_ast_function_def(function_def,
-	                            "function_def_parameterless_simple");
+	                                     "function_def_parameterless_simple");
 }
 
 TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
@@ -375,13 +378,12 @@ TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
 
 	struct mCc_ast_function_def *function_def =
 	    mCc_ast_new_parameterized_function_def(
-	        mCc_ast_new_identifier("my_bool_function"),
-	        MCC_AST_FUNCTION_RETURN_TYPE_BOOL,
-	        mCc_test_build_test_declaration("my_float_var",
-	                                        MCC_AST_LITERAL_TYPE_FLOAT),
+	        mCc_ast_new_identifier("my_bool_function"), MCC_AST_DATA_TYPE_BOOL,
+	        mCc_test_build_test_declaration("my_float_var", MCC_AST_DATA_TYPE_FLOAT),
 	        return_statement);
 
-	test_print_and_free_ast_function_def(function_def, "function_def_parameter");
+	test_print_and_free_ast_function_def(function_def,
+	                                     "function_def_parameter");
 }
 
 TEST(AstPrintFunctionCall, PrintFunctionCallSimple)
@@ -390,7 +392,8 @@ TEST(AstPrintFunctionCall, PrintFunctionCallSimple)
 	    mCc_ast_new_non_parameterized_function_call(
 	        mCc_ast_new_identifier("my_func"));
 
-	test_print_and_free_ast_function_call(function_call, "function_call_simple");
+	test_print_and_free_ast_function_call(function_call,
+	                                      "function_call_simple");
 }
 
 TEST(AstPrintFunctionCall, PrintFunctionCallConcated)
@@ -404,7 +407,8 @@ TEST(AstPrintFunctionCall, PrintFunctionCallConcated)
 	    mCc_ast_new_parameterized_function_call(
 	        mCc_ast_new_identifier("my_func"), param_1);
 
-	test_print_and_free_ast_function_call(function_call, "function_call_concated");
+	test_print_and_free_ast_function_call(function_call,
+	                                      "function_call_concated");
 }
 
 /*===========================================================================
@@ -415,7 +419,7 @@ TEST(AstPrintProgram, PrintProgramFunctionSimple)
 
 	struct mCc_ast_function_def *function_def =
 	    mCc_test_build_test_function_def(
-	        MCC_AST_FUNCTION_RETURN_TYPE_BOOL, "my_bool_function",
+	        MCC_AST_DATA_TYPE_BOOL, "my_bool_function",
 	        mCc_test_build_test_lit_expression_bool(true));
 
 	struct mCc_ast_program *program = mCc_ast_new_program(function_def);
@@ -427,16 +431,16 @@ TEST(AstPrintProgram, PrintProgramFunctionConcated)
 {
 	struct mCc_ast_function_def *function_def_1 =
 	    mCc_test_build_test_function_def(
-	        MCC_AST_FUNCTION_RETURN_TYPE_BOOL, "my_bool_function",
+	        MCC_AST_DATA_TYPE_BOOL, "my_bool_function",
 	        mCc_test_build_test_lit_expression_bool(true));
 
 	struct mCc_ast_function_def *function_def_2 =
-	    mCc_test_build_test_function_def(MCC_AST_FUNCTION_RETURN_TYPE_VOID,
-	                                     "my_void_function", NULL);
+	    mCc_test_build_test_function_def(MCC_AST_DATA_TYPE_VOID, "my_void_function",
+	                                     NULL);
 
 	struct mCc_ast_function_def *function_def_3 =
 	    mCc_test_build_test_function_def(
-	        MCC_AST_FUNCTION_RETURN_TYPE_INT, "my_int_function",
+	        MCC_AST_DATA_TYPE_INT, "my_int_function",
 	        mCc_test_build_test_lit_expression(10));
 
 	// concat

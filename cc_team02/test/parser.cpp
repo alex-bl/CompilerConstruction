@@ -20,14 +20,14 @@ TEST(Parser, BinaryOp_1)
 	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->lhs->type);
 
 	// root -> lhs -> literal
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, expr->lhs->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, expr->lhs->literal->type);
 	ASSERT_EQ(192, expr->lhs->literal->i_value);
 
 	// root -> rhs
 	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->rhs->type);
 
 	// root -> rhs -> literal
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_FLOAT, expr->rhs->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_FLOAT, expr->rhs->literal->type);
 	ASSERT_EQ(3.14, expr->rhs->literal->f_value);
 
 	mCc_ast_delete_expression(expr);
@@ -50,7 +50,7 @@ TEST(Parser, NestedExpression_1)
 	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->lhs->type);
 
 	// root -> lhs -> literal
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, expr->lhs->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, expr->lhs->literal->type);
 	ASSERT_EQ(42, expr->lhs->literal->i_value);
 
 	// root -> rhs
@@ -66,14 +66,14 @@ TEST(Parser, NestedExpression_1)
 	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, subexpr->lhs->type);
 
 	// subexpr -> lhs -> literal
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_INT, subexpr->lhs->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, subexpr->lhs->literal->type);
 	ASSERT_EQ(-192, subexpr->lhs->literal->i_value);
 
 	// subexpr -> rhs
 	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, subexpr->rhs->type);
 
 	// subexpr -> rhs -> literal
-	ASSERT_EQ(MCC_AST_LITERAL_TYPE_FLOAT, subexpr->rhs->literal->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_FLOAT, subexpr->rhs->literal->type);
 	ASSERT_EQ(3.14, subexpr->rhs->literal->f_value);
 
 	mCc_ast_delete_expression(expr);

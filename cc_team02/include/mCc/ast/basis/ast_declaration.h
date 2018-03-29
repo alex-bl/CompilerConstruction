@@ -20,7 +20,7 @@ struct mCc_ast_declaration {
 	struct mCc_ast_node node;
 
 	enum mCc_ast_declaration_type declaration_type;
-	enum mCc_ast_literal_type data_type;
+	enum mCc_ast_data_type data_type;
 
 	struct mCc_ast_declaration *next_declaration;
 
@@ -37,11 +37,11 @@ struct mCc_ast_declaration {
 };
 
 struct mCc_ast_declaration *
-mCc_ast_new_primitive_declaration(enum mCc_ast_literal_type data_type,
+mCc_ast_new_primitive_declaration(enum mCc_ast_data_type data_type,
                                   struct mCc_ast_identifier *identifier);
 
 struct mCc_ast_declaration *
-mCc_ast_new_array_declaration(enum mCc_ast_literal_type data_type,
+mCc_ast_new_array_declaration(enum mCc_ast_data_type data_type,
                               struct mCc_ast_identifier *identifier,
                               size_t size);
 
