@@ -87,7 +87,7 @@ void mCc_parser_error();
 
 %type <enum mCc_ast_binary_op> binary_op binary_op_add binary_op_mul
 %type <enum mCc_ast_unary_op> unary_op
-%type <enum mCc_ast_literal_type> type VOID_TYPE
+%type <enum mCc_ast_data_type> type VOID_TYPE
 %type <enum mCc_ast_function_return_type> function_def_return_type
 
 %type <struct mCc_ast_expression *> expression single_expr arguments single_expr_lev1 single_expr_lev2
@@ -171,10 +171,10 @@ literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1);   }
 		| STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); }
         ;
 
-type:	INT_TYPE 	{ $$ = MCC_AST_LITERAL_TYPE_INT; }
-	|	FLOAT_TYPE	{ $$ = MCC_AST_LITERAL_TYPE_FLOAT; }
-	|	BOOL_TYPE	{ $$ = MCC_AST_LITERAL_TYPE_BOOL; }
-	|	STRING_TYPE	{ $$ = MCC_AST_LITERAL_TYPE_STRING; }
+type:	INT_TYPE 	{ $$ = MCC_AST_DATA_TYPE_INT; }
+	|	FLOAT_TYPE	{ $$ = MCC_AST_DATA_TYPE_FLOAT; }
+	|	BOOL_TYPE	{ $$ = MCC_AST_DATA_TYPE_BOOL; }
+	|	STRING_TYPE	{ $$ = MCC_AST_DATA_TYPE_STRING; }
 	;
 
 statement_list:	statement_list statement	{
@@ -222,15 +222,10 @@ compound_stmt: LBRACE statement_list RBRACE					{
             ;
 
 
-function_def_return_type:   VOID_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_VOID;}
-						|	INT_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_INT; }
-						|	FLOAT_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_FLOAT; }
-						|   BOOL_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_BOOL; }
-						|	STRING_TYPE	{ $$ = MCC_AST_FUNCTION_RETURN_TYPE_STRING;}
-						;
 
-function_def:   type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, MCC_AST_FUNCTION_RETURN_TYPE_INT, $5); }
-        	|   type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, MCC_AST_FUNCTION_RETURN_TYPE_INT, $4, $6); }
+
+function_def:   type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
+        	|   type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); }
 	//		|	VOID_TYPE IDENTIFIER LPARENTH RPARENTH compound_stmt		{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
 	//		|	VOID_TYPE IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); }
 			;
