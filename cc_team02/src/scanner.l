@@ -14,8 +14,8 @@
 
 %}
 
-int_literal   -?[0-9]+
-float_literal -?[0-9]+\.[0-9]+
+int_literal   [0-9]+
+float_literal [0-9]+\.[0-9]+
 
 string_literal \"[^\"\n]*\"
 bool_literal   true|false
@@ -80,6 +80,8 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 "="               { return TK_ASSIGNMENT; }
 ";"               { return TK_SEMICOLON; }
 ","               { return TK_COMMA; }
+
+"!"               { return TK_NEGATION; }
 
 "&&"              { return TK_AND; }
 "||"              { return TK_OR; }
