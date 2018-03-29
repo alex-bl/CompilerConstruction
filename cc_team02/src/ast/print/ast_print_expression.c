@@ -40,7 +40,8 @@ void mCc_print_dot_expression_literal(struct mCc_ast_expression *expression,
 
 	FILE *out = data;
 	print_dot_node(out, expression, "expr: lit");
-	print_dot_edge(out, expression, expression->literal, "literal");
+	print_dot_edge(out, expression, expression->literal,
+	               print_data_type(expression->literal->type));
 	print_dot_edge_if_dest_exists(out, expression, expression->next_expr,
 	                              "next");
 }

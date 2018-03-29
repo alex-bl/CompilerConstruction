@@ -27,21 +27,25 @@ int main(void)
 	//	return EXIT_SUCCESS;
 
 	// just for testing/debugging purposes
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_bool_function");
-	struct mCc_ast_literal *return_expr_lit = mCc_ast_new_literal_bool(true);
-	struct mCc_ast_expression *return_expression =
-	    mCc_ast_new_expression_literal(return_expr_lit);
 
-	struct mCc_ast_statement *return_statement =
-	    mCc_ast_new_return_statement(return_expression);
+	struct mCc_ast_expression *lit_left =
+	    mCc_ast_new_expression_literal(mCc_ast_new_literal_int(42));
+	struct mCc_ast_expression *lit_right =
+	    mCc_ast_new_expression_literal(mCc_ast_new_literal_float(3.14));
+	struct mCc_ast_expression *lit_right_unary =
+	    mCc_ast_new_expression_unary_op(
+	        MCC_AST_UNARY_OP_MINUS,
+	        mCc_ast_new_expression_literal(mCc_ast_new_literal_int(192)));
+	struct mCc_ast_expression *plus = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_MUL, lit_right_unary, lit_right);
 
-	struct mCc_ast_function_def *function_def =
-	    mCc_ast_new_non_parameterized_function_def(
-	        identifier, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT, return_statement);
+	struct mCc_ast_expression *parenth = mCc_ast_new_expression_parenth(plus);
 
+	struct mCc_ast_expression *mul = mCc_ast_new_expression_binary_op(
+	    MCC_AST_BINARY_OP_MUL, lit_left, parenth);
 
-	mCc_ast_print_dot_function_def(stdout, function_def);
-	mCc_ast_delete_function_def(function_def);
+	mCc_ast_print_dot_expression(stdout, mul);
+	mCc_ast_delete_expression(mul);
 
 	return EXIT_SUCCESS;
 }

@@ -9,7 +9,7 @@ TEST(AstBuildLiteral, CreateLiteralInt)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_int(12);
 
-	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_INT);
+	ASSERT_EQ(lit->type, MCC_AST_DATA_TYPE_INT);
 	ASSERT_EQ(lit->i_value, 12);
 
 	mCc_ast_delete_literal(lit);
@@ -19,7 +19,7 @@ TEST(AstBuildLiteral, CreateLiteralFloat)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_float(1.2);
 
-	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_FLOAT);
+	ASSERT_EQ(lit->type, MCC_AST_DATA_TYPE_FLOAT);
 	ASSERT_EQ(lit->f_value, 1.2);
 
 	mCc_ast_delete_literal(lit);
@@ -29,7 +29,7 @@ TEST(AstBuildLiteral, CreateLiteralBool)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_bool(true);
 
-	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_BOOL);
+	ASSERT_EQ(lit->type, MCC_AST_DATA_TYPE_BOOL);
 	ASSERT_EQ(lit->b_value, true);
 
 	mCc_ast_delete_literal(lit);
@@ -39,7 +39,7 @@ TEST(AstBuildLiteral, CreateLiteralString)
 {
 	mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
 
-	ASSERT_EQ(lit->type, MCC_AST_LITERAL_TYPE_STRING);
+	ASSERT_EQ(lit->type, MCC_AST_DATA_TYPE_STRING);
 	ASSERT_EQ(lit->s_value, "test");
 
 	mCc_ast_delete_literal(lit);
@@ -187,27 +187,27 @@ TEST(AstBuildAssignment, CreateAssignmentArray)
 TEST(AstBuildDeclaration, CreateDeclarationPrimitive)
 {
 	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_1");
-	enum mCc_ast_literal_type data_type = MCC_AST_LITERAL_TYPE_INT;
+	enum mCc_ast_data_type data_type = MCC_AST_DATA_TYPE_INT;
 
 	struct mCc_ast_declaration *primitive_declaration =
 			mCc_ast_new_primitive_declaration(data_type, identifier);
 
 	ASSERT_EQ(primitive_declaration->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
-	ASSERT_EQ(primitive_declaration->data_type, MCC_AST_LITERAL_TYPE_INT);
+	ASSERT_EQ(primitive_declaration->data_type, MCC_AST_DATA_TYPE_INT);
 	ASSERT_EQ(primitive_declaration->identifier->identifier_name, "my_ident_1");
 }
 
 TEST(AstBuildDeclaration, CreateDeclarationArray)
 {
 	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_2");
-	enum mCc_ast_literal_type data_type = MCC_AST_LITERAL_TYPE_STRING;
+	enum mCc_ast_data_type data_type = MCC_AST_DATA_TYPE_STRING;
 	size_t size=13;
 
 	struct mCc_ast_declaration *primitive_declaration =
 			mCc_ast_new_array_declaration(data_type, identifier, size);
 
 	ASSERT_EQ(primitive_declaration->declaration_type, MCC_AST_DECLARATION_ARRAY);
-	ASSERT_EQ(primitive_declaration->data_type, MCC_AST_LITERAL_TYPE_STRING);
+	ASSERT_EQ(primitive_declaration->data_type, MCC_AST_DATA_TYPE_STRING);
 	ASSERT_EQ(primitive_declaration->identifier->identifier_name, "my_ident_2");
 	ASSERT_EQ(primitive_declaration->size, size);
 }
@@ -217,14 +217,14 @@ TEST(AstBuildDeclaration, CreateDeclarationArray)
 TEST(AstBuildFunction, CreateFunctionDefNonParameterized)
 {
 	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_3");
-	enum mCc_ast_function_return_type return_type = MCC_AST_FUNCTION_RETURN_TYPE_VOID;
+	enum mCc_ast_data_type return_type = MCC_AST_DATA_TYPE_VOID;
 
 	//Building if/else statement:
 	struct mCc_ast_literal *literal=mCc_ast_new_literal_bool(1);
 	struct mCc_ast_expression *condition_expr=mCc_ast_new_expression_literal(literal);
 
 	struct mCc_ast_identifier *identifier_else = mCc_ast_new_identifier("my_ident_4");
-	enum mCc_ast_literal_type data_type = MCC_AST_LITERAL_TYPE_INT;
+	enum mCc_ast_data_type data_type = MCC_AST_DATA_TYPE_INT;
 	struct mCc_ast_declaration *primitive_declaration =
 			mCc_ast_new_primitive_declaration(data_type, identifier_else);
 	struct mCc_ast_statement *if_stmt=mCc_ast_new_declaration_statement(primitive_declaration);
@@ -241,9 +241,9 @@ TEST(AstBuildFunction, CreateFunctionDefNonParameterized)
 			mCc_ast_new_non_parameterized_function_def(identifier, return_type, stmts);
 
 	ASSERT_EQ(function->identifier->identifier_name, "my_ident_3");
-	ASSERT_EQ(function->return_type, MCC_AST_FUNCTION_RETURN_TYPE_VOID);
+	ASSERT_EQ(function->return_type, MCC_AST_DATA_TYPE_VOID);
 	ASSERT_EQ(function->first_statement->if_statement->declaration->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
-	ASSERT_EQ(function->first_statement->if_statement->declaration->data_type, MCC_AST_LITERAL_TYPE_INT);
+	ASSERT_EQ(function->first_statement->if_statement->declaration->data_type, MCC_AST_DATA_TYPE_INT);
 	ASSERT_EQ(function->first_statement->if_statement->declaration->identifier->identifier_name, "my_ident_4");
 	ASSERT_EQ(function->first_statement->else_statement->expression->literal->s_value, "test");
 	ASSERT_EQ(function->first_statement->condition_expression->literal->b_value, 1);
@@ -252,14 +252,14 @@ TEST(AstBuildFunction, CreateFunctionDefNonParameterized)
 TEST(AstBuildFunction, CreateFunctionDefParameterized)
 {
 	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_ident_7");
-	enum mCc_ast_function_return_type return_type = MCC_AST_FUNCTION_RETURN_TYPE_BOOL;
+	enum mCc_ast_data_type return_type = MCC_AST_DATA_TYPE_BOOL;
 
 	//Building if/else statement:
 	struct mCc_ast_literal *literal=mCc_ast_new_literal_bool(1);
 	struct mCc_ast_expression *condition_expr=mCc_ast_new_expression_literal(literal);
 
 	struct mCc_ast_identifier *identifier_else = mCc_ast_new_identifier("my_ident_6");
-	enum mCc_ast_literal_type data_type = MCC_AST_LITERAL_TYPE_INT;
+	enum mCc_ast_data_type data_type = MCC_AST_DATA_TYPE_INT;
 	struct mCc_ast_declaration *primitive_declaration =
 			mCc_ast_new_primitive_declaration(data_type, identifier_else);
 	struct mCc_ast_statement *if_stmt=mCc_ast_new_declaration_statement(primitive_declaration);
@@ -272,7 +272,7 @@ TEST(AstBuildFunction, CreateFunctionDefParameterized)
 			mCc_ast_new_if_statement(condition_expr, if_stmt, else_stmt);
 
 	//Building Paramaters:
-	enum mCc_ast_literal_type data_type_param=MCC_AST_LITERAL_TYPE_FLOAT;
+	enum mCc_ast_data_type data_type_param=MCC_AST_DATA_TYPE_FLOAT;
 	struct mCc_ast_identifier *identifier_param=mCc_ast_new_identifier("my_ident_5");
 	struct mCc_ast_declaration *params=mCc_ast_new_primitive_declaration(data_type_param, identifier_param);
 
@@ -281,12 +281,12 @@ TEST(AstBuildFunction, CreateFunctionDefParameterized)
 			mCc_ast_new_parameterized_function_def(identifier, return_type, params, stmts);
 
 	ASSERT_EQ(function->identifier->identifier_name, "my_ident_7");
-	ASSERT_EQ(function->return_type, MCC_AST_FUNCTION_RETURN_TYPE_BOOL);
+	ASSERT_EQ(function->return_type, MCC_AST_DATA_TYPE_BOOL);
 	ASSERT_EQ(function->first_statement->if_statement->declaration->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
-	ASSERT_EQ(function->first_statement->if_statement->declaration->data_type, MCC_AST_LITERAL_TYPE_INT);
+	ASSERT_EQ(function->first_statement->if_statement->declaration->data_type, MCC_AST_DATA_TYPE_INT);
 	ASSERT_EQ(function->first_statement->if_statement->declaration->identifier->identifier_name, "my_ident_6");
 	ASSERT_EQ(function->first_statement->else_statement->expression->literal->s_value, "test");
-	ASSERT_EQ(function->first_parameter->data_type, MCC_AST_LITERAL_TYPE_FLOAT);
+	ASSERT_EQ(function->first_parameter->data_type, MCC_AST_DATA_TYPE_FLOAT);
 	ASSERT_EQ(function->first_parameter->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
 	ASSERT_EQ(function->first_parameter->identifier->identifier_name, "my_ident_5");
 	ASSERT_EQ(function->first_statement->condition_expression->literal->b_value, 1);
@@ -319,7 +319,7 @@ TEST(AstBuildFunction, CreateFunctionCallParameterized)
 
 	ASSERT_EQ(function->identifier->identifier_name, "my_ident_3");
 	ASSERT_EQ(function->first_argument->literal->f_value, 2.3);
-	ASSERT_EQ(function->first_argument->literal->type, MCC_AST_LITERAL_TYPE_FLOAT);
+	ASSERT_EQ(function->first_argument->literal->type, MCC_AST_DATA_TYPE_FLOAT);
 }
 
 /*=========================================================== Identifier*/
@@ -338,7 +338,7 @@ TEST(AstBuildIdentifier, CreateIdentifier)
 TEST(AstBuildProgram, CreateProgram)
 {
 	struct mCc_ast_identifier *identifier_function = mCc_ast_new_identifier("my_ident_8");
-	enum mCc_ast_function_return_type return_type_function = MCC_AST_FUNCTION_RETURN_TYPE_FLOAT;
+	enum mCc_ast_data_type return_type_function = MCC_AST_DATA_TYPE_FLOAT;
 
 	struct mCc_ast_identifier *identifier_assignment=mCc_ast_new_identifier("my_ident_9");
 
@@ -359,13 +359,13 @@ TEST(AstBuildProgram, CreateProgram)
 	struct mCc_ast_program *program =	mCc_ast_new_program(function_defs);
 
 	ASSERT_EQ(program->first_function_def->identifier->identifier_name, "my_ident_8");
-	ASSERT_EQ(program->first_function_def->return_type, MCC_AST_FUNCTION_RETURN_TYPE_FLOAT);
+	ASSERT_EQ(program->first_function_def->return_type, MCC_AST_DATA_TYPE_FLOAT);
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->assignment_type, MCC_AST_ASSIGNMENT_PRIMITIVE);
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->identifier->identifier_name, "my_ident_9");
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->type, MCC_AST_EXPRESSION_TYPE_UNARY_OP);
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_op, MCC_AST_UNARY_OP_MINUS);
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_rhs->type, MCC_AST_EXPRESSION_TYPE_LITERAL);
-	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_rhs->literal->type, MCC_AST_LITERAL_TYPE_BOOL);
+	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_rhs->literal->type, MCC_AST_DATA_TYPE_BOOL);
 	ASSERT_EQ(program->first_function_def->first_statement->assignment->assigned_expression->unary_rhs->literal->b_value, 1);
 }
 
@@ -414,14 +414,14 @@ TEST(AstBuildStatement, CreateStatementWhile)
 	struct mCc_ast_expression *loop_expression=mCc_ast_new_expression_identifier(identifier_loop);
 	struct mCc_ast_expression *loop_expr=loop_expression;
 
-	enum mCc_ast_literal_type data_type=MCC_AST_LITERAL_TYPE_STRING;
+	enum mCc_ast_data_type data_type=MCC_AST_DATA_TYPE_STRING;
 	struct mCc_ast_identifier *identifier_declaration=mCc_ast_new_identifier("my_ident_14");
 	struct mCc_ast_declaration *declaration=mCc_ast_new_primitive_declaration(data_type, identifier_declaration);
 	struct mCc_ast_statement *while_stmt=mCc_ast_new_declaration_statement(declaration);
 
 	struct mCc_ast_statement *statement =	mCc_ast_new_while_statement(loop_expr, while_stmt);
 
-	ASSERT_EQ(statement->while_statement->declaration->data_type, MCC_AST_LITERAL_TYPE_STRING);
+	ASSERT_EQ(statement->while_statement->declaration->data_type, MCC_AST_DATA_TYPE_STRING);
 	ASSERT_EQ(statement->while_statement->declaration->identifier->identifier_name, "my_ident_14");
 	ASSERT_EQ(statement->loop_condition_expression->type, MCC_AST_EXPRESSION_TYPE_IDENTIFIER);
 	ASSERT_EQ(statement->loop_condition_expression->identifier->identifier_name, "my_ident_13");
@@ -451,13 +451,13 @@ TEST(AstBuildStatement, CreateStatementExpression)
 
 TEST(AstBuildStatement, CreateStatementDeclaration)
 {
-	enum mCc_ast_literal_type data_type=MCC_AST_LITERAL_TYPE_BOOL;
+	enum mCc_ast_data_type data_type=MCC_AST_DATA_TYPE_BOOL;
 	struct mCc_ast_identifier *identifier=mCc_ast_new_identifier("my_ident_16");
 	struct mCc_ast_declaration *declaration=mCc_ast_new_primitive_declaration(data_type, identifier);
 
 	struct mCc_ast_statement *statement =	mCc_ast_new_declaration_statement(declaration);
 
-	ASSERT_EQ(statement->declaration->data_type, MCC_AST_LITERAL_TYPE_BOOL);
+	ASSERT_EQ(statement->declaration->data_type, MCC_AST_DATA_TYPE_BOOL);
 	ASSERT_EQ(statement->declaration->declaration_type, MCC_AST_DECLARATION_PRIMITIVE);
 	ASSERT_EQ(statement->declaration->identifier->identifier_name, "my_ident_16");
 }
@@ -473,6 +473,6 @@ TEST(AstBuildStatement, CreateStatementAssignment)
 
 	ASSERT_EQ(statement->assignment->identifier->identifier_name, "my_ident_17");
 	ASSERT_EQ(statement->assignment->assigned_expression->type, MCC_AST_EXPRESSION_TYPE_LITERAL);
-	ASSERT_EQ(statement->assignment->assigned_expression->literal->type, MCC_AST_LITERAL_TYPE_FLOAT);
+	ASSERT_EQ(statement->assignment->assigned_expression->literal->type, MCC_AST_DATA_TYPE_FLOAT);
 	ASSERT_EQ(statement->assignment->assigned_expression->literal->f_value, 55.23);
 }
