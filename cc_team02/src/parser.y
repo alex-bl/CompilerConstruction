@@ -88,7 +88,6 @@ void mCc_parser_error();
 %type <enum mCc_ast_binary_op> binary_op binary_op_add binary_op_mul
 %type <enum mCc_ast_unary_op> unary_op
 %type <enum mCc_ast_data_type> type VOID_TYPE
-%type <enum mCc_ast_function_return_type> function_def_return_type
 
 %type <struct mCc_ast_expression *> expression single_expr arguments single_expr_lev1 single_expr_lev2
 %type <struct mCc_ast_literal *> literal
@@ -125,33 +124,34 @@ unary_op: 	MINUS		{ $$ = MCC_AST_UNARY_OP_MINUS; }
 		;
 			
 binary_op:	LESSEQ		{ $$ = MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN; }
-			| 	LESS		{ $$ = MCC_AST_BINARY_OP_LESS_THAN; }
-			| 	GREATEREQ	{ $$ = MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN; }
-			|	GREATER		{ $$ = MCC_AST_BINARY_OP_GREATER_THAN; }
-			|	OR			{ $$ = MCC_AST_BINARY_OP_OR; }
-			|	AND			{ $$ = MCC_AST_BINARY_OP_AND; }
-			|	EQUALS		{ $$ = MCC_AST_BINARY_OP_EQUALS; }
-			|	NOTEQUALS	{ $$ = MCC_AST_BINARY_OP_NOT_EQUALS; }
-          	;
+		 | 	LESS		{ $$ = MCC_AST_BINARY_OP_LESS_THAN; }
+		 | 	GREATEREQ	{ $$ = MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN; }
+		 |	GREATER		{ $$ = MCC_AST_BINARY_OP_GREATER_THAN; }
+		 |	OR			{ $$ = MCC_AST_BINARY_OP_OR; }
+		 |	AND			{ $$ = MCC_AST_BINARY_OP_AND; }
+		 |	EQUALS		{ $$ = MCC_AST_BINARY_OP_EQUALS; }
+		 |	NOTEQUALS	{ $$ = MCC_AST_BINARY_OP_NOT_EQUALS; }
+         ;
 
 binary_op_add:	PLUS 		{ $$ = MCC_AST_BINARY_OP_ADD; }
-          	|	MINUS		{ $$ = MCC_AST_BINARY_OP_SUB; }
-			;
+          	 |	MINUS		{ $$ = MCC_AST_BINARY_OP_SUB; }
+			 ;
 
 binary_op_mul:	ASTER		{ $$ = MCC_AST_BINARY_OP_MUL; }
-          	|	SLASH		{ $$ = MCC_AST_BINARY_OP_DIV; }
-			;
+             |	SLASH		{ $$ = MCC_AST_BINARY_OP_DIV; }
+			 ;
 
 
 single_expr:  literal                      			    { $$ = mCc_ast_new_expression_literal($1); }
-			| unary_op INT_LITERAL						{ $$ = mCc_ast_new_expression_unary_op($1, mCc_ast_new_expression_literal(mCc_ast_new_literal_int($2)));}
-			| unary_op FLOAT_LITERAL					{ $$ = mCc_ast_new_expression_unary_op($1, mCc_ast_new_expression_literal(mCc_ast_new_literal_float($2)));}
-			| IDENTIFIER								{ $$ = mCc_ast_new_expression_identifier($1); }
-			| IDENTIFIER LBRACKET expression RBRACKET	{ $$ = mCc_ast_new_expression_array_identifier($1, $3); }
-			| call_expr									{ $$ = mCc_ast_new_expression_function_call($1);}
-			| unary_op expression						{ $$ = mCc_ast_new_expression_unary_op($1, $2); }
-            | LPARENTH expression RPARENTH    			{ $$ = mCc_ast_new_expression_parenth($2); }
-            ;
+		   | unary_op INT_LITERAL						{ $$ = mCc_ast_new_expression_unary_op($1, mCc_ast_new_expression_literal(mCc_ast_new_literal_int($2)));}
+		   | unary_op FLOAT_LITERAL						{ $$ = mCc_ast_new_expression_unary_op($1, mCc_ast_new_expression_literal(mCc_ast_new_literal_float($2)));}
+		   | IDENTIFIER									{ $$ = mCc_ast_new_expression_identifier($1); }
+		   | IDENTIFIER LBRACKET expression RBRACKET	{ $$ = mCc_ast_new_expression_array_identifier($1, $3); }
+	       | call_expr									{ $$ = mCc_ast_new_expression_function_call($1);}
+		   | unary_op expression						{ $$ = mCc_ast_new_expression_unary_op($1, $2); }
+           | LPARENTH expression RPARENTH    			{ $$ = mCc_ast_new_expression_parenth($2); }
+		  // | error										{ yyerror(scanner, "error");}
+           ;											
 
 single_expr_lev1:	single_expr_lev2 binary_op_add single_expr_lev1	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3);}
 				|	single_expr_lev2								{ $$ = $1;}
@@ -166,10 +166,10 @@ expression: single_expr_lev1 binary_op expression { $$ = mCc_ast_new_expression_
         ;
 
 literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1);   }
-    	| FLOAT_LITERAL 	{ $$ = mCc_ast_new_literal_float($1); }
-		| BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1);  }
-		| STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); }
-        ;
+       | FLOAT_LITERAL 	{ $$ = mCc_ast_new_literal_float($1); }
+	   | BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1);  }
+	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); }
+       ;
 
 type:	INT_TYPE 	{ $$ = MCC_AST_DATA_TYPE_INT; }
 	|	FLOAT_TYPE	{ $$ = MCC_AST_DATA_TYPE_FLOAT; }
@@ -209,7 +209,7 @@ if_stmt:    IF_KEYWORD LPARENTH expression RPARENTH statement							{ $$ = mCc_a
         ;
 
 while_stmt:   WHILE_KEYWORD LPARENTH expression RPARENTH statement			{ $$ = mCc_ast_new_while_statement($3, $5); }
-        ;
+          ;
 
 ret_stmt:  RETURN_KEYWORD SEMICOLON												{ $$ = mCc_ast_new_return_statement(NULL); } /*check if return with no expression is possible*/
     	|  RETURN_KEYWORD expression SEMICOLON									{ $$ = mCc_ast_new_return_statement($2); }
@@ -226,8 +226,8 @@ compound_stmt: LBRACE statement_list RBRACE					{
 
 function_def:   type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
         	|   type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); }
-	//		|	VOID_TYPE IDENTIFIER LPARENTH RPARENTH compound_stmt		{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
-	//		|	VOID_TYPE IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); }
+			|	VOID_TYPE IDENTIFIER LPARENTH RPARENTH compound_stmt		{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); }
+			|	VOID_TYPE IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); }
 			;
 
 function_list:	function_list function_def	{ 
@@ -291,7 +291,11 @@ program:	function_list			{ $$ = mCc_ast_new_program($1); }
 
 #include "scanner.h"
 
-void yyerror(yyscan_t *scanner, const char *msg) {}
+void yyerror(yyscan_t *scanner, const char *msg) {
+
+	printf("Message: %s\n", msg);
+	printf("Hello World!\n");
+}
 
 struct mCc_parser_result mCc_parser_parse_string(const char *input)
 {
