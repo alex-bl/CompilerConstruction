@@ -32,7 +32,7 @@ FILE *open_file(const char *file_name)
 	return fopen(dot_file_name, "w");
 }
 
-void test_print_ast_literal(struct mCc_ast_literal *lit, const char *file_name)
+void test_print_and_free_ast_literal(struct mCc_ast_literal *lit, const char *file_name)
 {
 	FILE *fp = open_file(file_name);
 	mCc_ast_print_dot_literal(fp, lit);
@@ -41,7 +41,7 @@ void test_print_ast_literal(struct mCc_ast_literal *lit, const char *file_name)
 	mCc_ast_delete_literal(lit);
 }
 
-void test_print_ast_expression(struct mCc_ast_expression *expr,
+void test_print_and_free_ast_expression(struct mCc_ast_expression *expr,
                                const char *file_name)
 {
 	FILE *fp = open_file(file_name);
@@ -51,7 +51,7 @@ void test_print_ast_expression(struct mCc_ast_expression *expr,
 	mCc_ast_delete_expression(expr);
 }
 
-void test_print_ast_identifier(struct mCc_ast_identifier *identifier,
+void test_print_and_free_ast_identifier(struct mCc_ast_identifier *identifier,
                                const char *file_name)
 {
 	FILE *fp = open_file(file_name);
@@ -61,7 +61,7 @@ void test_print_ast_identifier(struct mCc_ast_identifier *identifier,
 	mCc_ast_delete_identifier(identifier);
 }
 
-void test_print_ast_declaration(struct mCc_ast_declaration *declaration,
+void test_print_and_free_ast_declaration(struct mCc_ast_declaration *declaration,
                                 const char *file_name)
 {
 	FILE *fp = open_file(file_name);
@@ -71,7 +71,7 @@ void test_print_ast_declaration(struct mCc_ast_declaration *declaration,
 	mCc_ast_delete_declaration(declaration);
 }
 
-void test_print_ast_program(struct mCc_ast_program *program,
+void test_print_and_free_ast_program(struct mCc_ast_program *program,
                             const char *file_name)
 {
 	FILE *fp = open_file(file_name);
@@ -81,7 +81,7 @@ void test_print_ast_program(struct mCc_ast_program *program,
 	mCc_ast_delete_program(program);
 }
 
-void test_print_ast_function_def(struct mCc_ast_function_def *function,
+void test_print_and_free_ast_function_def(struct mCc_ast_function_def *function,
                                  const char *file_name)
 {
 	FILE *fp = open_file(file_name);
@@ -91,7 +91,7 @@ void test_print_ast_function_def(struct mCc_ast_function_def *function,
 	mCc_ast_delete_function_def(function);
 }
 
-void test_print_ast_function_call(struct mCc_ast_function_call *function,
+void test_print_and_free_ast_function_call(struct mCc_ast_function_call *function,
                                   const char *file_name)
 {
 	FILE *fp = open_file(file_name);
@@ -101,7 +101,7 @@ void test_print_ast_function_call(struct mCc_ast_function_call *function,
 	mCc_ast_delete_function_call(function);
 }
 
-void test_print_ast_assignment(struct mCc_ast_assignment *assignment,
+void test_print_and_free_ast_assignment(struct mCc_ast_assignment *assignment,
                                const char *file_name)
 {
 	FILE *fp = open_file(file_name);
@@ -111,7 +111,7 @@ void test_print_ast_assignment(struct mCc_ast_assignment *assignment,
 	mCc_ast_delete_assignment(assignment);
 }
 
-void test_print_ast_statement(struct mCc_ast_statement *statement,
+void test_print_and_free_ast_statement(struct mCc_ast_statement *statement,
                               const char *file_name)
 {
 	FILE *fp = open_file(file_name);
@@ -166,7 +166,7 @@ mCc_test_build_test_binary_expression_float(float value_1, float value_2,
 
 struct mCc_ast_declaration *
 mCc_test_build_test_declaration(const char *identifier,
-                                enum mCc_ast_literal_type type)
+                                enum mCc_ast_data_type type)
 {
 	return mCc_ast_new_primitive_declaration(
 	    type, mCc_ast_new_identifier(identifier));
@@ -181,7 +181,7 @@ mCc_test_build_test_assignment(const char *identifier, int value)
 }
 
 struct mCc_ast_function_def *
-mCc_test_build_test_function_def(enum mCc_ast_function_return_type return_type,
+mCc_test_build_test_function_def(enum mCc_ast_data_type return_type,
                                  const char *identifier,
                                  struct mCc_ast_expression *return_expr)
 {

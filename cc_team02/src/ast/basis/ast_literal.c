@@ -10,7 +10,7 @@ struct mCc_ast_literal *mCc_ast_new_literal_int(long value)
 		return NULL;
 	}
 
-	lit->type = MCC_AST_LITERAL_TYPE_INT;
+	lit->type = MCC_AST_DATA_TYPE_INT;
 	lit->i_value = value;
 	return lit;
 }
@@ -22,7 +22,7 @@ struct mCc_ast_literal *mCc_ast_new_literal_float(double value)
 		return NULL;
 	}
 
-	lit->type = MCC_AST_LITERAL_TYPE_FLOAT;
+	lit->type = MCC_AST_DATA_TYPE_FLOAT;
 	lit->f_value = value;
 	return lit;
 }
@@ -35,7 +35,7 @@ struct mCc_ast_literal *mCc_ast_new_literal_bool(bool value)
 		return NULL;
 	}
 
-	lit->type = MCC_AST_LITERAL_TYPE_BOOL;
+	lit->type = MCC_AST_DATA_TYPE_BOOL;
 	lit->b_value = value;
 	return lit;
 }
@@ -47,7 +47,7 @@ struct mCc_ast_literal *mCc_ast_new_literal_string(const char *value)
 		return NULL;
 	}
 
-	lit->type = MCC_AST_LITERAL_TYPE_STRING;
+	lit->type = MCC_AST_DATA_TYPE_STRING;
 	lit->s_value = value;
 	return lit;
 }
