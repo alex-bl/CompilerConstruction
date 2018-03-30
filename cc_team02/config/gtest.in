@@ -22,7 +22,7 @@ ExternalProject_Add(googletest
   URL				"https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
   DOWNLOAD_DIR		"${GTEST_DOWNLOAD_DESTINATION}"
   SOURCE_DIR        "${GTEST_DOWNLOAD_DESTINATION}/googletest-src"
-  BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googletest-build"
+  BINARY_DIR        "${GTEST_DOWNLOAD_DESTINATION}/googletest-build"
   CONFIGURE_COMMAND ""
   BUILD_COMMAND     ""
   INSTALL_COMMAND   ""
