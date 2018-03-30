@@ -386,6 +386,18 @@ TEST(Parser, ReturnStatement_2){
 	mCc_ast_delete_statement(statement);
 }
 
+TEST(Parser, NestedStatement_1){
+	const char input[] = "while(5){if(5){return 5;}}";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto statement = result.statement;
+
+	ASSERT_EQ(MCC_AST_STATEMENT_RETURN, statement->while_statement->if_statement->statement_type);
+	ASSERT_EQ(5, statement->while_statement->if_statement->return_expression->literal->i_value);
+	
+	mCc_ast_delete_statement(statement);
+}
+
 
 TEST(Parser, Declaration_1){
 	const char input[] = "int a";
@@ -541,6 +553,16 @@ TEST(Parser, CallExpression_3){
 	ASSERT_STREQ("bla", call_expr->function_call->first_argument->function_call->identifier->identifier_name);
 
 	mCc_ast_delete_expression(call_expr);
+}
+
+TEST(Parser, Program_1){
+	const char input[] = "int get_num(){} string get_string(){}";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto program = result.program;
+
+	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING, program->first_function_def->next_function_def->return_type);
+	mCc_ast_delete_program(program);
 }
 
 
