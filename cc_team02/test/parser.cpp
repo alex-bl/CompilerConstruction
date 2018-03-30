@@ -345,6 +345,17 @@ TEST(Parser, IfStatement_2)
 	mCc_ast_delete_statement(statement);
 }
 
+TEST(Parser, IfStatement_3)
+{
+	const char input[] = " if(5){if(true){}else{float a;}}";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto statement = result.statement;
+
+	ASSERT_EQ(MCC_AST_DATA_TYPE_FLOAT, statement->if_statement->else_statement->declaration->data_type);
+	mCc_ast_delete_statement(statement);
+}
+
 TEST(Parser, WhileStatement_1){
 	const char input[] = "while(5){}";
 	auto result = mCc_parser_parse_string(input);
@@ -472,10 +483,66 @@ TEST(Parser, Function_1){
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto function = result.function_def;
 
+	//test first parameter
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, function->return_type);
 	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, function->first_parameter->data_type);
+
+	//test second parameter
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, function->first_parameter->next_declaration->data_type);
+
+	//test statement
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, function->first_statement->declaration->data_type);
 	mCc_ast_delete_function_def(function);
 }
+
+
+TEST(Parser, CallExpression_1){
+	const char input[] = "foo()";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto call_expr = result.expression;
+
+	ASSERT_STREQ("foo" , call_expr->function_call->identifier->identifier_name);
+	mCc_ast_delete_expression(call_expr);
+}
+
+TEST(Parser, CallExpression_2){
+	const char input[] = "foo(-5,5+4, a, true)";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto call_expr = result.expression;
+
+	//test first argument
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_UNARY_OP, call_expr->function_call->first_argument->type);
+	ASSERT_EQ(5, call_expr->function_call->first_argument->unary_rhs->literal->i_value);
+
+	//test second argument
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, call_expr->function_call->first_argument->next_expr->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_ADD, call_expr->function_call->first_argument->next_expr->op);
+	ASSERT_EQ(4, call_expr->function_call->first_argument->next_expr->rhs->literal->i_value);
+
+	//test third argument
+	ASSERT_STREQ("a", call_expr->function_call->first_argument->next_expr->next_expr->identifier->identifier_name);
+
+	//test fourth argument
+	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, call_expr->function_call->first_argument->next_expr->next_expr->next_expr->literal->type);
+
+	mCc_ast_delete_expression(call_expr);
+}
+
+TEST(Parser, CallExpression_3){
+	const char input[] = "foo(bla())";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto call_expr = result.expression;
+
+	//test first argument
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_CALL_EXPR, call_expr->function_call->first_argument->type);
+	ASSERT_STREQ("bla", call_expr->function_call->first_argument->function_call->identifier->identifier_name);
+
+	mCc_ast_delete_expression(call_expr);
+}
+
+
 
 
