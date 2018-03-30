@@ -4,7 +4,7 @@ This repository contains everything related to the compiler construction course.
 
 ## Table of contents
 
-This section provides a basic overview on the project.   
+This section provides a basic overview on the project.  
    
 - [Project description](cc_team02/README.md): Lists all required prerequisites for building the code base. It also describes how to build the project as well as supported targets.
 

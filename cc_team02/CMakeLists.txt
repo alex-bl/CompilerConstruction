@@ -12,8 +12,8 @@ set(cc_team02_VERSION_MINOR 0)
 
 # set global compiler flags (append them)
 # append -Wextra when all ast-implmentations are provided
-string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Werror")
-string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Werror")
+string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Wextra")
+string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Wextra")
 
 # enable this to see the exact commands form cmake
 set(CMAKE_VERBOSE_MAKEFILE OFF)
