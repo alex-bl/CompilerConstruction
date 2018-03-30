@@ -33,7 +33,7 @@ Additional minimal prerequisites for a build with **meson**:
 - meson 0.45.0  
 - ninja 1.5.1   
 
-Build steps:
+Manual build steps:
 
 1. Clone or download the code-base.
 2. Build ninja-infrastructure: ```$ meson builddir```
@@ -41,6 +41,13 @@ Build steps:
 4. Move into builddir: ```$ cd builddir```
 5. (Optional) Run ninja to build the whole project: ```$ ninja```
 6. Execute targets (See possible targets) via: ```$ ninja <target>```
+
+Using the setup-wrapper:
+
+1. Clone or download the code-base.
+2. Build ninja-infrastructure: ```$ ./setup-wrapper meson "<meson-args>"```
+3. Move into builddir: ```$ cd builddir```
+4. Execute targets (See possible targets) via: ```$ ninja <target>```
 
 ### CMake
 
@@ -53,7 +60,7 @@ Additional minimal prerequisites for a build with **cmake**:
 
 Please note that the downloaded files need to be installed manually using ```./bootstrap --system-curl``` to [ensure ssl-support](https://stackoverflow.com/questions/29816529/unsupported-protocol-while-download-tar-gz-package) (which is needed to automatically download external projects).
 
-Build steps:
+Manual build steps:
 
 1. Clone or download the code-base.
 2. Create the directory where to store the makefiles + binaries: ```$ mkdir build```
@@ -62,6 +69,15 @@ Build steps:
 5. If you want to build in debug-mode, use: ```$ cmake -DCMAKE_BUILD_TYPE:STRING=Debug ../```
 6. (Optional) Build the whole project: ```$ make all```
 7. Execute targets (See possible targets) via: ```$ make <target>```
+
+Using the setup-wrapper:
+
+1. Clone or download the code-base.
+2. Build cmake-infrastructure: ```$ ./setup-wrapper cmake "<cmake-args>"```
+3. Move to the build-directory: ```$ cd build```
+4. Execute targets (See possible targets) via: ```$ make <target>```
+
+**Note**: If there occur strange error-messages from cmake, try to delete the build-directory.
 
 ### Targets
 

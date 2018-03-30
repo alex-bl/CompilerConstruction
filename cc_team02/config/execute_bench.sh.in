@@ -1,7 +1,0 @@
-
-echo"";
-for entry in bench/bin/*; do
-	echo "=====================start benchmark========================\n";
-	./$entry --benchmark_color=false;
-	echo "\n=====================end benchmark==========================\n";
-done

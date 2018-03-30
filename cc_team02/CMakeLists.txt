@@ -26,9 +26,11 @@ endif()
 
 message(STATUS "Build-type: " ${CMAKE_BUILD_TYPE})
 
-# gtest download-dest
-set(GTEST_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/cmake/googletest-release1.8.0")
-set(GBENCHMARK_DOWNLOAD_DESTINATION "${PROJECT_SOURCE_DIR}/subprojects/cmake/googlebenchmark-release-1.3.0")
+# base dir for sub-projects
+set(SUB_PROJECTS_BASE_DIR "${CMAKE_BINARY_DIR}/subprojects")
+
+set(GTEST_DOWNLOAD_DESTINATION "${SUB_PROJECTS_BASE_DIR}/googletest-release1.8.0")
+set(GBENCHMARK_DOWNLOAD_DESTINATION "${SUB_PROJECTS_BASE_DIR}/googlebenchmark-release-1.3.0")
 
 #============================================================ doxygen config
 set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/doc")
@@ -43,13 +45,13 @@ set(DOXYGEN_GENERATE_XML NO)
 # to the source code
 configure_file (
   "${PROJECT_SOURCE_DIR}/config/config.h.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/config/config.h"
+  "${CMAKE_BINARY_DIR}/config/config.h"
   )
 
 # configure bench_execution shell-script
 configure_file (
-  "${PROJECT_SOURCE_DIR}/config/execute_bench.sh.in"
-  "${CMAKE_BINARY_DIR}/bench/execute_bench.sh"
+  "${PROJECT_SOURCE_DIR}/config/run_benchmarks.in"
+  "${CMAKE_BINARY_DIR}/utils/run_benchmarks"
   )
    
 #=================================================================== building
@@ -73,9 +75,9 @@ target_link_libraries(mC_to_dot mCc_lib)
 
 # test deps => target 'gtest'
 # test => run tests
-add_subdirectory("test")
+add_subdirectory("test" "${GTEST_DOWNLOAD_DESTINATION}")
 # test-utils
-add_subdirectory("test/bin")
+add_subdirectory("test/utils" "${CMAKE_BINARY_DIR}/test/utils")
 
 include(CTest)
 # add native gtest support
@@ -140,9 +142,9 @@ foreach(entry_name ${unit_test_list})
 					TEST_LIST "list_of_exec_tests")
 	# copy executables to test-directory => NOTE: it does not easily works with meson to specify an output-path, so leave it out for
 	# compatability issues with meson
-	# set_target_properties(${entry_name}_test_exec PROPERTIES
-	#	RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin/test
-	#	RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/test)
+	 set_target_properties(${entry_name}_test_exec PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/test
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/test)
 							
 	# force a rebuild
 	add_dependencies(build_and_test ${entry_name}_test_exec)
@@ -153,9 +155,9 @@ endforeach(entry_name)
 
 # custom benchmark-target => run all benchmark-binaries within shell-script
 add_custom_target(run_benchmarks
-    COMMAND ${CMAKE_BINARY_DIR}/bench/execute_bench.sh)
+    COMMAND ${CMAKE_BINARY_DIR}/utils/run_benchmarks)
 
-add_subdirectory("benchmark")
+add_subdirectory("benchmark" "${GBENCHMARK_DOWNLOAD_DESTINATION}")
 # do the same as for testing, but with benchmark
 set(my_benchmark_list "just_try")
 
@@ -167,8 +169,8 @@ foreach(entry_name ${my_benchmark_list})
 	target_link_libraries(${entry_name}_benchmark_exec benchmark)
 	# copy executables to bench-directory
 	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bench/bin
-		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bench/bin)
+		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/benchmark
+		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/benchmark)
 	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
 endforeach(entry_name)
 

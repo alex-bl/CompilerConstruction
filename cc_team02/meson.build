@@ -63,7 +63,7 @@ mCc_print_src = ['src/ast/print/ast_basic_printing.c',
 'src/ast/print/ast_print_statement.c']
 
 # test utils
-mCc_test_src = ['test/bin/mCc_test_utils.c']
+mCc_test_src = ['test/utils/mCc_test_utils.c']
 
 
 mCc_lib = shared_library('mCc', mCc_ast_src, mCc_visit_src, mCc_print_src, lgen.process('src/scanner.l'),

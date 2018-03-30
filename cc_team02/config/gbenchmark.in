@@ -13,7 +13,7 @@ ExternalProject_Add(googlebenchmark
   URL				"https://github.com/google/benchmark/archive/v1.3.0.tar.gz"
   DOWNLOAD_DIR		"${GBENCHMARK_DOWNLOAD_DESTINATION}"
   SOURCE_DIR        "${GBENCHMARK_DOWNLOAD_DESTINATION}/googlebenchmark-src"
-  BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/googlebenchmark-build"
+  BINARY_DIR        "${GBENCHMARK_DOWNLOAD_DESTINATION}/googlebenchmark-build"
   CONFIGURE_COMMAND ""
   BUILD_COMMAND     ""
   INSTALL_COMMAND   ""
