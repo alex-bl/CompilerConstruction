@@ -4,19 +4,19 @@ See [here](README_original.md) for the original README about the given template.
 
 ## Content
 
-- cc_team02 (the full code-base)
-- The template provided from https://github.com/W4RH4WK/mCc setup with cmake
+Contains the cc_team02 full code-base.
+
 
 ## Internal notes
 
-This section contains internal notes about the given template.   
+This section contains internal notes about the project.   
 See [issues](https://github.com/YusufIpek/CompilerConstruction/issues) for project progress and additional information.
 
 ## Setup
 
-This section describes the minimal prerequisites, the build steps as well as a detailed description about the different targets. This project offers a build configuration for both build-tools **meson** and **cmake**.
+This section describes the minimal prerequisites, the build steps as well as a detailed description about the different targets. This project offers a build configuration for both build-systems **meson** and **cmake**.
 
-Minimal prerequisites for both build-tools:  
+Minimal prerequisites for both build-systems:  
 
 - flex 2.6.0  
 - bison (GNU Bison) 3.0.4 
@@ -25,7 +25,7 @@ Minimal prerequisites for both build-tools:
 
 ### Meson
   
-This is the recommended build-tool to use for building the project, because cmake requires some extra dependencies that are not so easy to enforce (see next section). Therefore please use mason if you want less configuration/installation effort.
+This is the recommended build-system to use for building the project, because cmake requires some extra dependencies that are not so easy to enforce (see next section). Therefore please use mason if you want less configuration/installation effort.
 
 
 Additional minimal prerequisites for a build with **meson**:   
@@ -44,7 +44,7 @@ Build steps:
 
 ### CMake
 
-This build-tool is used for developing because it exists for longer than meson (which is very new) and hence it provides already a good tool support for IDEs. It is not considered the "default-build-tool" for this project because it requires more effort to setup. But it is a nice build-tool too.
+This build-system is used for developing because it exists for longer than meson (which is very new) and hence it provides already a good tool support for IDEs. It is not considered the "default-build-system" for this project because it requires more effort to setup. But it is a nice build-system too.
 
 Additional minimal prerequisites for a build with **cmake**:
 
