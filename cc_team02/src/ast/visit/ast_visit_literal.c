@@ -1,4 +1,5 @@
 #include "mCc/ast/visit/ast_visit_literal.h"
+
 #include <assert.h>
 
 void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
@@ -10,7 +11,9 @@ void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
 	visit_if_pre_order(literal, visitor->literal, visitor);
 
 	switch (literal->type) {
-	case MCC_AST_DATA_TYPE_INT: visit(literal, visitor->literal_int, visitor); break;
+	case MCC_AST_DATA_TYPE_INT:
+		visit(literal, visitor->literal_int, visitor);
+		break;
 
 	case MCC_AST_DATA_TYPE_FLOAT:
 		visit(literal, visitor->literal_float, visitor);

@@ -1,8 +1,8 @@
 #include "mCc/ast/print/ast_print_expression.h"
-#include "mCc/ast/print/ast_basic_printing.h"
-#include "mCc/ast/visit/ast_visit_expression.h"
+
 #include <assert.h>
-#include <stdlib.h>
+
+#include "mCc/ast/print/ast_basic_printing.h"
 
 const char *mCc_ast_print_binary_op(enum mCc_ast_binary_op op)
 {

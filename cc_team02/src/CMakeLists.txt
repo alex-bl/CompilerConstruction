@@ -42,14 +42,11 @@ add_library(mCc_print SHARED ast/print/ast_basic_printing.c
 							ast/print/ast_print_program.c														
 							ast/print/ast_print_statement.c)
 
-# intermediate linking of libraries
-target_link_libraries(mCc_print mCc_ast mCc_visit)
-
 # setup mCc_lib
 add_library(mCc_lib SHARED ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})
 
 # link remaining
-target_link_libraries(mCc_lib mCc_print)
+target_link_libraries(mCc_lib mCc_print mCc_visit mCc_ast)
 
 set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 

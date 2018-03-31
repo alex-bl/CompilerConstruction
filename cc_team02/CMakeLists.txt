@@ -39,8 +39,13 @@ set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/doc")
 set(DOXYGEN_GENERATE_HTML YES)
 set(DOXYGEN_GENERATE_MAN NO)
 set(DOXYGEN_GENERATE_XML NO)
+#============================================================ valgrind config
+#message(STATUS "valgrind: " ${MEMORYCHECK_COMMAND})
+set(MCC_VALGRIND_ARGS "--leak-check=full --show-reachable=yes --track-origins=yes --error-exitcode=1")
+set(MCC_VALGRIND_SUPPRESSIONS "--suppressions=${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp")
+
+set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS}")
 #============================================================  
-  
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
@@ -52,6 +57,12 @@ configure_file (
 configure_file (
   "${PROJECT_SOURCE_DIR}/config/run_benchmarks.in"
   "${CMAKE_BINARY_DIR}/utils/run_benchmarks"
+  )
+
+# configure valgrind-suppression for false positive: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802778
+configure_file (
+  "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.21.supp.in"
+  "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
   )
    
 #=================================================================== building
@@ -105,7 +116,10 @@ add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND})
 add_custom_target(build_and_test_memcheck
     COMMAND ${CMAKE_CTEST_COMMAND} 
         --force-new-ctest-process --test-action memcheck
-    COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
+    # by having 100 unit-tests, a cat of such a number may not senseful => check log-file instead
+    #COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
+    COMMAND echo "Memcheck-log written to ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
+    )
 
 # Is this enough or should there be a custom valgring-target?
 # configure memcheck => see https://stackoverflow.com/questions/9303711/how-do-i-make-ctest-run-a-program-with-valgrind-without-dart

@@ -1,10 +1,10 @@
 # Compiler construction
 
-This repository contains everything related to the compiler construction course. 
+This repository contains everything related to the compiler construction course.
 
 ## Table of contents
 
-This section provides a basic overview on the project.  
+This section provides a basic overview on the project.
    
 - [Project description](cc_team02/README.md): Lists all required prerequisites for building the code base. It also describes how to build the project as well as supported targets.
 
@@ -14,4 +14,4 @@ This section provides a basic overview on the project.
 
 - [Setup hints](setup.md): Some collected notes about the installation of required tools, etc.
 
-- [Project status](https://github.com/YusufIpek/CompilerConstruction/issues): See this for the overall project status. 
+- [Project status](https://github.com/YusufIpek/CompilerConstruction/issues): See this for the overall project status.
