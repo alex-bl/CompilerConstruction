@@ -1,8 +1,9 @@
+#include <stdbool.h>
+#include <stddef.h>
+
 #include "mCc/ast.h"
 #include "mCc_test/mCc_test_utils.h"
 #include "gtest/gtest.h"
-#include <stdbool.h>
-#include <stddef.h>
 
 /*===========================================================================
  * literal tests*/
@@ -84,7 +85,8 @@ TEST(AstPrintExpression, PrintExpressionUnaryOp)
 	        MCC_AST_UNARY_OP_NEGATION,
 	        mCc_ast_new_expression_literal(mCc_ast_new_literal_bool(false)));
 
-	test_print_and_free_ast_expression(expression_unary_op, "PrintExpressionUnaryOp");
+	test_print_and_free_ast_expression(expression_unary_op,
+	                                   "PrintExpressionUnaryOp");
 }
 
 TEST(AstPrintExpression, PrintExpressionParenth)
@@ -92,7 +94,8 @@ TEST(AstPrintExpression, PrintExpressionParenth)
 	struct mCc_ast_expression *expression_parent =
 	    mCc_ast_new_expression_parenth(mCc_test_build_test_lit_expression(1));
 
-	test_print_and_free_ast_expression(expression_parent, "PrintExpressionParenth");
+	test_print_and_free_ast_expression(expression_parent,
+	                                   "PrintExpressionParenth");
 }
 
 TEST(AstPrintExpression, PrintExpressionIdentifier)
@@ -157,8 +160,8 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallConcated)
 	    mCc_ast_new_expression_function_call(
 	        mCc_ast_new_parameterized_function_call(identifier, param_1));
 
-	test_print_and_free_ast_expression(
-	    expr_function_call, "PrintExpressionFunctionCallConcated");
+	test_print_and_free_ast_expression(expr_function_call,
+	                                   "PrintExpressionFunctionCallConcated");
 }
 
 TEST(AstPrintExpression, PrintExpressionMulUnaryTest)
@@ -204,7 +207,8 @@ TEST(AstPrintDeclaration, PrintDeclarationArray)
 	    mCc_ast_new_identifier("my_float_arr");
 	struct mCc_ast_declaration *declaration_array =
 	    mCc_ast_new_array_declaration(MCC_AST_DATA_TYPE_FLOAT, identifier, 100);
-	test_print_and_free_ast_declaration(declaration_array, "PrintDeclarationArray");
+	test_print_and_free_ast_declaration(declaration_array,
+	                                    "PrintDeclarationArray");
 }
 
 TEST(AstPrintDeclaration, PrintDeclarationConcated)
@@ -213,12 +217,14 @@ TEST(AstPrintDeclaration, PrintDeclarationConcated)
 	    mCc_test_build_test_declaration("my_float", MCC_AST_DATA_TYPE_FLOAT);
 
 	struct mCc_ast_declaration *declaration_concated_other =
-	    mCc_test_build_test_declaration("my_other_float", MCC_AST_DATA_TYPE_FLOAT);
+	    mCc_test_build_test_declaration("my_other_float",
+	                                    MCC_AST_DATA_TYPE_FLOAT);
 
 	struct mCc_ast_identifier *identifier_arr =
 	    mCc_ast_new_identifier("my_float_arr");
 	struct mCc_ast_declaration *declaration_array =
-	    mCc_ast_new_array_declaration(MCC_AST_DATA_TYPE_FLOAT, identifier_arr, 100);
+	    mCc_ast_new_array_declaration(MCC_AST_DATA_TYPE_FLOAT, identifier_arr,
+	                                  100);
 
 	// do a concatenation
 	declaration_array->next_declaration = declaration_concated_other;
@@ -343,7 +349,8 @@ TEST(AstPrintStatement, PrintStatementWhileEmpty)
 	struct mCc_ast_statement *while_statement = mCc_ast_new_while_statement(
 	    mCc_test_build_test_lit_expression_bool(true), NULL);
 
-	test_print_and_free_ast_statement(while_statement, "PrintStatementWhileEmpty");
+	test_print_and_free_ast_statement(while_statement,
+	                                  "PrintStatementWhileEmpty");
 }
 
 TEST(AstPrintStatement, PrintStatementReturn)
@@ -379,7 +386,8 @@ TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
 	struct mCc_ast_function_def *function_def =
 	    mCc_ast_new_parameterized_function_def(
 	        mCc_ast_new_identifier("my_bool_function"), MCC_AST_DATA_TYPE_BOOL,
-	        mCc_test_build_test_declaration("my_float_var", MCC_AST_DATA_TYPE_FLOAT),
+	        mCc_test_build_test_declaration("my_float_var",
+	                                        MCC_AST_DATA_TYPE_FLOAT),
 	        return_statement);
 
 	test_print_and_free_ast_function_def(function_def,
@@ -435,8 +443,8 @@ TEST(AstPrintProgram, PrintProgramFunctionConcated)
 	        mCc_test_build_test_lit_expression_bool(true));
 
 	struct mCc_ast_function_def *function_def_2 =
-	    mCc_test_build_test_function_def(MCC_AST_DATA_TYPE_VOID, "my_void_function",
-	                                     NULL);
+	    mCc_test_build_test_function_def(MCC_AST_DATA_TYPE_VOID,
+	                                     "my_void_function", NULL);
 
 	struct mCc_ast_function_def *function_def_3 =
 	    mCc_test_build_test_function_def(

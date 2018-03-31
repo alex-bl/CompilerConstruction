@@ -1,9 +1,9 @@
 #ifndef MCC_AST_LITERAL_H
 #define MCC_AST_LITERAL_H
 
+#include "mCc/ast/basis/ast_data_type.h"
 #include "mCc/ast/basis/ast_node.h"
 #include <stdbool.h>
-#include "ast_data_type.h"
 
 #ifdef __cplusplus
 extern "C" {

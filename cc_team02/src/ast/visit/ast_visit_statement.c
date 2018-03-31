@@ -1,8 +1,10 @@
 #include "mCc/ast/visit/ast_visit_statement.h"
+
+#include <assert.h>
+
 #include "mCc/ast/visit/ast_visit_assignment.h"
 #include "mCc/ast/visit/ast_visit_declaration.h"
 #include "mCc/ast/visit/ast_visit_expression.h"
-#include <assert.h>
 
 void mCc_ast_visit_optional_statement(struct mCc_ast_statement *statement,
                                       struct mCc_ast_visitor *visitor)
