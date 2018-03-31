@@ -73,6 +73,7 @@ mCc_lib = shared_library('mCc', mCc_ast_src, mCc_visit_src, mCc_print_src, lgen.
 
 # test utils
 mCc_test_lib = shared_library('mCc_test', mCc_test_src,
+				c_args: '-D_POSIX_C_SOURCE=200809L',
                   include_directories: [mCc_inc,mCc_test_inc],
                   link_with: mCc_lib)
 

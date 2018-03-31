@@ -24,7 +24,8 @@ struct mCc_ast_literal {
 		bool b_value;
 
 		/* MCC_AST_DATA_TYPE_STRING */
-		const char *s_value;
+		/* It is not const intentionally! */
+		char *s_value;
 	};
 };
 
@@ -35,7 +36,7 @@ struct mCc_ast_literal *mCc_ast_new_literal_float(double value);
 /* added */
 struct mCc_ast_literal *mCc_ast_new_literal_bool(bool value);
 
-struct mCc_ast_literal *mCc_ast_new_literal_string(const char *value);
+struct mCc_ast_literal *mCc_ast_new_literal_string(char *value);
 
 void mCc_ast_delete_literal(struct mCc_ast_literal *literal);
 

@@ -31,7 +31,7 @@ TEST(AstPrintLiteral, PrintLiteralBool)
 
 TEST(AstPrintLiteral, PrintLiteralString)
 {
-	struct mCc_ast_literal *lit = mCc_ast_new_literal_string("test");
+	struct mCc_ast_literal *lit = mCc_test_build_test_lit_string("test");
 
 	test_print_and_free_ast_literal(lit, "PrintLiteralString");
 }
@@ -102,7 +102,7 @@ TEST(AstPrintExpression, PrintExpressionParenth)
 TEST(AstPrintExpression, PrintExpressionIdentifier)
 {
 	struct mCc_ast_expression *expression_identifier =
-	    mCc_ast_new_expression_identifier(mCc_ast_new_identifier("val"));
+	    mCc_test_build_test_identifier("val");
 
 	test_print_and_free_ast_expression(expression_identifier,
 	                                   "PrintExpressionIdentifier");
@@ -127,8 +127,8 @@ TEST(AstPrintExpression, PrintExpressionArrayIdentifier)
 	                                     mCc_test_build_test_lit_expression(3));
 
 	struct mCc_ast_expression *expression_arr_identifier =
-	    mCc_ast_new_expression_array_identifier(mCc_ast_new_identifier("arr"),
-	                                            expression_index);
+	    mCc_ast_new_expression_array_identifier(
+	        mCc_test_build_const_test_identifier("arr"), expression_index);
 
 	test_print_and_free_ast_expression(expression_arr_identifier,
 	                                   "PrintExpressionArrayIdentifier");
@@ -138,7 +138,7 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallSimple)
 {
 	struct mCc_ast_function_call *function_call =
 	    mCc_ast_new_parameterized_function_call(
-	        mCc_ast_new_identifier("my_func"),
+	        mCc_test_build_const_test_identifier("my_func"),
 	        mCc_test_build_test_lit_expression(2));
 
 	struct mCc_ast_expression *expr_function_call =
@@ -150,7 +150,8 @@ TEST(AstPrintExpression, PrintExpressionFunctionCallSimple)
 
 TEST(AstPrintExpression, PrintExpressionFunctionCallConcated)
 {
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_func");
+	struct mCc_ast_identifier *identifier =
+	    mCc_test_build_const_test_identifier("my_func");
 	struct mCc_ast_expression *param_1 = mCc_test_build_test_lit_expression(2);
 	struct mCc_ast_expression *param_2 = mCc_test_build_test_lit_expression(3);
 
@@ -187,7 +188,8 @@ TEST(AstPrintExpression, PrintExpressionMulUnaryTest)
 
 TEST(AstPrintIdentifier, PrintIdentifier)
 {
-	struct mCc_ast_identifier *identifier = mCc_ast_new_identifier("my_var");
+	struct mCc_ast_identifier *identifier =
+	    mCc_test_build_const_test_identifier("my_var");
 	test_print_and_free_ast_identifier(identifier, "PrintIdentifier");
 }
 
@@ -205,7 +207,7 @@ TEST(AstPrintDeclaration, PrintDeclarationPrimitive)
 TEST(AstPrintDeclaration, PrintDeclarationArray)
 {
 	struct mCc_ast_identifier *identifier =
-	    mCc_ast_new_identifier("my_float_arr");
+	    mCc_test_build_const_test_identifier("my_float_arr");
 	struct mCc_ast_declaration *declaration_array =
 	    mCc_ast_new_array_declaration(MCC_AST_DATA_TYPE_FLOAT, identifier, 100);
 	test_print_and_free_ast_declaration(declaration_array,
@@ -222,7 +224,7 @@ TEST(AstPrintDeclaration, PrintDeclarationConcated)
 	                                    MCC_AST_DATA_TYPE_FLOAT);
 
 	struct mCc_ast_identifier *identifier_arr =
-	    mCc_ast_new_identifier("my_float_arr");
+	    mCc_test_build_const_test_identifier("my_float_arr");
 	struct mCc_ast_declaration *declaration_array =
 	    mCc_ast_new_array_declaration(MCC_AST_DATA_TYPE_FLOAT, identifier_arr,
 	                                  100);
@@ -249,7 +251,8 @@ TEST(AstPrintAssignment, PrintAssignmentArray)
 {
 
 	struct mCc_ast_assignment *assignment = mCc_ast_new_array_assignment(
-	    mCc_ast_new_identifier("my_arr"), mCc_test_build_test_lit_expression(0),
+	    mCc_test_build_const_test_identifier("my_arr"),
+	    mCc_test_build_test_lit_expression(0),
 	    mCc_test_build_test_lit_expression_float(3.4));
 
 	test_print_and_free_ast_assignment(assignment, "PrintAssignmentArray");
@@ -261,7 +264,7 @@ TEST(AstPrintAssignment, PrintAssignmentArray)
 TEST(AstPrintStatement, PrintStatementExpression)
 {
 	struct mCc_ast_expression *lit_expr = mCc_ast_new_expression_literal(
-	    mCc_ast_new_literal_string("test_string"));
+	    mCc_test_build_test_lit_string("test_string"));
 
 	struct mCc_ast_statement *statement =
 	    mCc_ast_new_expression_statement(lit_expr);
@@ -366,7 +369,7 @@ TEST(AstPrintStatement, PrintStatementReturn)
 TEST(AstPrintFunctionDef, PrintFunctionDefSimple)
 {
 	struct mCc_ast_identifier *identifier =
-	    mCc_ast_new_identifier("my_bool_function");
+	    mCc_test_build_const_test_identifier("my_bool_function");
 
 	struct mCc_ast_statement *return_statement = mCc_ast_new_return_statement(
 	    mCc_test_build_test_lit_expression_bool(true));
@@ -386,7 +389,8 @@ TEST(AstPrintFunctionDef, PrintFunctionDefAdvanced)
 
 	struct mCc_ast_function_def *function_def =
 	    mCc_ast_new_parameterized_function_def(
-	        mCc_ast_new_identifier("my_bool_function"), MCC_AST_DATA_TYPE_BOOL,
+	        mCc_test_build_const_test_identifier("my_bool_function"),
+	        MCC_AST_DATA_TYPE_BOOL,
 	        mCc_test_build_test_declaration("my_float_var",
 	                                        MCC_AST_DATA_TYPE_FLOAT),
 	        return_statement);
@@ -399,7 +403,7 @@ TEST(AstPrintFunctionCall, PrintFunctionCallSimple)
 {
 	struct mCc_ast_function_call *function_call =
 	    mCc_ast_new_non_parameterized_function_call(
-	        mCc_ast_new_identifier("my_func"));
+	        mCc_test_build_const_test_identifier("my_func"));
 
 	test_print_and_free_ast_function_call(function_call,
 	                                      "PrintFunctionCallSimple");
@@ -414,7 +418,7 @@ TEST(AstPrintFunctionCall, PrintFunctionCallConcated)
 
 	struct mCc_ast_function_call *function_call =
 	    mCc_ast_new_parameterized_function_call(
-	        mCc_ast_new_identifier("my_func"), param_1);
+	        mCc_test_build_const_test_identifier("my_func"), param_1);
 
 	test_print_and_free_ast_function_call(function_call,
 	                                      "PrintFunctionCallConcated");
