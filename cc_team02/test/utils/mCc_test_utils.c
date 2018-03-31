@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "mCc/ast_print.h"
 
@@ -127,6 +128,12 @@ void test_print_and_free_ast_statement(struct mCc_ast_statement *statement,
 /*================================================== commonly needed mocks for
  * tests */
 
+struct mCc_ast_identifier *
+mCc_test_build_const_test_identifier(const char *identifier)
+{
+	return mCc_ast_new_identifier(strdup(identifier));
+}
+
 struct mCc_ast_expression *mCc_test_build_test_lit_expression(int value)
 {
 	return mCc_ast_new_expression_literal(mCc_ast_new_literal_int(value));
@@ -142,11 +149,16 @@ struct mCc_ast_expression *mCc_test_build_test_lit_expression_bool(bool value)
 	return mCc_ast_new_expression_literal(mCc_ast_new_literal_bool(value));
 }
 
+struct mCc_ast_literal *mCc_test_build_test_lit_string(const char *value)
+{
+	return mCc_ast_new_literal_string(strdup(value));
+}
+
 struct mCc_ast_expression *
 mCc_test_build_test_identifier(const char *identifier)
 {
 	return mCc_ast_new_expression_identifier(
-	    mCc_ast_new_identifier(identifier));
+	    mCc_test_build_const_test_identifier(identifier));
 }
 
 struct mCc_ast_expression *
@@ -172,14 +184,14 @@ mCc_test_build_test_declaration(const char *identifier,
                                 enum mCc_ast_data_type type)
 {
 	return mCc_ast_new_primitive_declaration(
-	    type, mCc_ast_new_identifier(identifier));
+	    type, mCc_test_build_const_test_identifier(identifier));
 }
 
 struct mCc_ast_assignment *
 mCc_test_build_test_assignment(const char *identifier, int value)
 {
 	return mCc_ast_new_primitive_assignment(
-	    mCc_ast_new_identifier(identifier),
+	    mCc_test_build_const_test_identifier(identifier),
 	    mCc_test_build_test_lit_expression(value));
 }
 
@@ -189,6 +201,6 @@ mCc_test_build_test_function_def(enum mCc_ast_data_type return_type,
                                  struct mCc_ast_expression *return_expr)
 {
 	return mCc_ast_new_non_parameterized_function_def(
-	    mCc_ast_new_identifier(identifier), return_type,
+	    mCc_test_build_const_test_identifier(identifier), return_type,
 	    (return_expr ? mCc_ast_new_expression_statement(return_expr) : NULL));
 }
