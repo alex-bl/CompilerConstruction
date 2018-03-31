@@ -26,8 +26,8 @@ Minimal prerequisites for both build-systems:
 - valgrind-3.11.0
 - doxygen 1.8.11
 
-### Meson
-  
+### Meson (recommended)
+
 This is the recommended build-system to use for building the project, because cmake requires some extra dependencies that are not so easy to enforce (see next section). Therefore please use mason if you want less configuration/installation effort.
 
 Additional minimal prerequisites for a build with **meson**:
@@ -35,7 +35,7 @@ Additional minimal prerequisites for a build with **meson**:
 - meson 0.45.0
 - ninja 1.5.1  
 
-Manual build steps:
+Manual build steps (**recommended**):
 
 1. Clone or download the code-base.
 2. Build ninja-infrastructure: `$ meson builddir`
@@ -44,7 +44,7 @@ Manual build steps:
 5. (Optional) Run ninja to build the whole project: `$ ninja`
 6. Execute targets (See possible targets) via: `$ ninja <target>`
 
-Using the setup-wrapper:
+Using the setup-wrapper (experimental):
 
 1. Clone or download the code-base.
 2. Build ninja-infrastructure: `$ ./setup-wrapper meson "<meson-args>"`
@@ -62,7 +62,7 @@ Additional minimal prerequisites for a build with **cmake**:
 
 Please note that the downloaded files need to be installed manually using `./bootstrap --system-curl` to [ensure ssl-support](https://stackoverflow.com/questions/29816529/unsupported-protocol-while-download-tar-gz-package) (which is needed to automatically download external projects).
 
-Manual build steps:
+Manual build steps (**recommended**):
 
 1. Clone or download the code-base.
 2. Create the directory where to store the makefiles + binaries: `$ mkdir build`
@@ -72,7 +72,7 @@ Manual build steps:
 6. (Optional) Build the whole project: `$ make all`
 7. Execute targets (See possible targets) via: `$ make <target>`
 
-Using the setup-wrapper:
+Using the setup-wrapper (experimental):
 
 1. Clone or download the code-base.
 2. Build cmake-infrastructure: `$ ./setup-wrapper cmake "<cmake-args>"`
