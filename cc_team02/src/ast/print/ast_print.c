@@ -1,7 +1,9 @@
 #include "mCc/ast_print.h"
+
+#include <assert.h>
+
 #include "mCc/ast_print_visitors.h"
 #include "mCc/ast_visit.h"
-#include <assert.h>
 
 //"global" visitor needed
 static struct mCc_ast_visitor print_dot_visitor(FILE *out)
