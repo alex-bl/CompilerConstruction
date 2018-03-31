@@ -1,8 +1,7 @@
-#include "gtest/gtest.h"
-#include <iostream>
-#include "mCc_test/mCc_test_utils.h"
 #include "mCc/ast.h"
 #include "mCc/parser.h"
+#include "mCc_test/mCc_test_utils.h"
+#include "gtest/gtest.h"
 
 
 TEST(Parser, BinaryOp_1)
@@ -35,6 +34,7 @@ TEST(Parser, BinaryOp_1)
 	mCc_ast_delete_expression(expr);
 }
 
+
 TEST(Parser, BinaryOp_2){
 	const char input[] = "192 > 3.14";
 	auto result = mCc_parser_parse_string(input);
@@ -49,6 +49,7 @@ TEST(Parser, BinaryOp_2){
 	mCc_ast_delete_expression(expr);
 
 }
+
 
 TEST(Parser, BinaryOp_3){
 	const char input[] = "192 < 3.14";
@@ -272,32 +273,37 @@ TEST(Parser, UnaryExpression_2){
 }
 
 
+
+
 TEST(Parser, UnaryExpression_3){
-	const char input[] = "!a";
+
+	const char input[] = "!true";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 
 	auto expression = result.expression;
+	
 
 	ASSERT_EQ(MCC_AST_UNARY_OP_NEGATION, expression->unary_op);
 	mCc_ast_delete_expression(expression);
 }
 
 
-
 TEST(Parser, MissingClosingParenthesis_1)
 {
 	const char input[] = "(42";
 	auto result = mCc_parser_parse_string(input);
-
 	ASSERT_NE(MCC_PARSER_STATUS_OK, result.status);
+	
 }
+
 
 TEST(Parser, Assignment_1)
 {
 	const char input[] = "a = 4";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
 	auto assignment = result.assignment;
 
 	ASSERT_EQ(4, assignment->assigned_expression->literal->i_value);
@@ -306,7 +312,24 @@ TEST(Parser, Assignment_1)
 	mCc_ast_delete_assignment(assignment);
 }
 
+
 TEST(Parser, Assignment_2)
+{
+	const char input[] = "a = \"london\"";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto assignment = result.assignment;
+
+	ASSERT_EQ(MCC_AST_ASSIGNMENT_PRIMITIVE, assignment->assignment_type);
+	ASSERT_STREQ("a", assignment->identifier->identifier_name);
+	ASSERT_STREQ("\"london\"", assignment->assigned_expression->literal->s_value);
+	
+	
+	mCc_ast_delete_assignment(assignment);
+}
+
+
+TEST(Parser, Assignment_3)
 {
 	const char input[] = "a[3] = 4";
 	auto result = mCc_parser_parse_string(input);
@@ -331,7 +354,7 @@ TEST(Parser, IfStatement_1)
 
 	ASSERT_EQ(MCC_AST_STATEMENT_IF, if_statement->statement_type);
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, if_statement->condition_expression->literal->type);
-	//mCc_ast_delete_statement(if_statement);
+	mCc_ast_delete_statement(if_statement);
 }
 
 TEST(Parser, IfStatement_2)
@@ -362,7 +385,7 @@ TEST(Parser, WhileStatement_1){
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto statement = result.statement;
 	ASSERT_EQ(MCC_AST_STATEMENT_WHILE, statement->statement_type);
-	//mCc_ast_delete_statement(statement);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, ReturnStatement_1){
@@ -464,6 +487,8 @@ TEST(Parser, Literal_2){
 	auto assignment = result.assignment;
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING, assignment->assigned_expression->literal->type);
+	ASSERT_STREQ("\"hallo\"", assignment->assigned_expression->literal->s_value);
+
 	mCc_ast_delete_assignment(assignment);
 }
 
@@ -564,7 +589,3 @@ TEST(Parser, Program_1){
 	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING, program->first_function_def->next_function_def->return_type);
 	mCc_ast_delete_program(program);
 }
-
-
-
-
