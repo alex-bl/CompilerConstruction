@@ -104,7 +104,7 @@ void mCc_parser_error();
 %%
 
 toplevel: assignment 	{ printf("assignment\n"); *result_a = $1;}
-		| function_def { printf("function\n"); *result_f = $1;}
+		| function_def	{ printf("function\n"); *result_f = $1;}
 		| declaration 	{ printf("declaration\n"); *result_d = $1;}
 		| statement  	{ printf("statement\n"); *result_s = $1;}
 		| expression 	{ printf("expression\n"); *result = $1;}
@@ -166,7 +166,7 @@ expression: single_expr_lev1 binary_op expression { $$ = mCc_ast_new_expression_
         ;
 
 literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1);   }
-       | FLOAT_LITERAL 	{ $$ = mCc_ast_new_literal_float($1); }
+       | FLOAT_LITERAL 		{ $$ = mCc_ast_new_literal_float($1); }
 	   | BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1);  }
 	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); }
        ;
@@ -293,8 +293,6 @@ program:	function_list			{ $$ = mCc_ast_new_program($1); }
 
 void yyerror(yyscan_t *scanner, const char *msg) {
 
-	printf("Message: %s\n", msg);
-	printf("Hello World!\n");
 }
 
 struct mCc_parser_result mCc_parser_parse_string(const char *input)
