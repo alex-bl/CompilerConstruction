@@ -2,9 +2,7 @@
 
 %define api.pure full
 %lex-param   {void *scanner} 
-%parse-param {void *scanner} {struct mCc_ast_expression** result}{struct mCc_ast_program** result_p}
-{struct mCc_ast_statement** result_s}{struct mCc_ast_assignment** result_a}{struct mCc_ast_declaration** result_d}
-{struct mCc_ast_function_def** result_f}
+%parse-param {void *scanner} {struct mCc_parser_result* result}
 
 %define parse.trace
 %define parse.error verbose
@@ -110,12 +108,12 @@ void mCc_parser_error();
 
 %%
 
-toplevel: assignment 	{ printf("assignment\n"); *result_a = $1;}
-		| function_def	{ printf("function\n"); *result_f = $1;}
-		| declaration 	{ printf("declaration\n"); *result_d = $1;}
-		| statement  	{ printf("statement\n"); *result_s = $1;}
-		| expression 	{ printf("expression\n"); *result = $1;}
-		| program 	  	{ printf("program\n"); *result_p = $1; } 
+toplevel: assignment 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_ASSIGNMENT; result->assignment = $1;}
+		| function_def	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_FUNCTION_DEF; result->function_def = $1;}
+		| declaration 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_DECLARATION; result->declaration = $1;}
+		| statement  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_STATEMENT; result->statement = $1;}
+		| expression 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_EXPRESSION; result->expression = $1;}
+		| program 	  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_PROGRAM; result->program = $1; } 
 		;
 
 declaration: type IDENTIFIER									{ $$ = mCc_ast_new_primitive_declaration($1, $2); loc($$, @1);}
@@ -175,7 +173,7 @@ expression: single_expr_lev1 binary_op expression { $$ = mCc_ast_new_expression_
 literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1); loc($$, @1); }
        | FLOAT_LITERAL 		{ $$ = mCc_ast_new_literal_float($1); loc($$, @1); }
 	   | BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1); loc($$, @1); }
-	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); loc($$, @1); }
+	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string(strdup($1)); loc($$, @1); }
        ;
 
 type:	INT_TYPE 	{ $$ = MCC_AST_DATA_TYPE_INT; }
@@ -301,8 +299,15 @@ program:	function_list			{ $$ = mCc_ast_new_program($1); loc($$, @1); }
 
 #include "scanner.h"
 
-void yyerror(yyscan_t *scanner, const char *msg) {
-
+void mCc_parser_error(
+    YYLTYPE *locp, yyscan_t *scanner, struct mCc_parser_result *result)
+{
+	result->status = MCC_PARSER_STATUS_SYNTAX_ERROR;
+	//just store error-location
+	result->error_location.sloc.start_line = locp->first_line;
+	result->error_location.sloc.start_col = locp->first_column;
+	result->error_location.sloc.end_line = locp->last_line;
+	result->error_location.sloc.end_col = locp->last_column;
 }
 
 struct mCc_parser_result mCc_parser_parse_string(const char *input)
@@ -337,14 +342,70 @@ struct mCc_parser_result mCc_parser_parse_file(FILE *input)
 		.status = MCC_PARSER_STATUS_OK,
 	};
 	
-	if (yyparse(scanner, &result.expression, &result.program, &result.statement,
-				 &result.assignment, &result.declaration, &result.function_def) != 0) {
-		result.status = MCC_PARSER_STATUS_UNKNOWN_ERROR;
-	}
-
-
+	if (yyparse(scanner, &result) != 0) {
+		// is already set inside the yyerror-function during parsing
+		//result.status = MCC_PARSER_STATUS_UNKNOWN_ERROR;
+	}	
 
 	mCc_parser_lex_destroy(scanner);
 
 	return result;
+}
+
+/*
+ * Free ast depending on the parsed-top-level and already parsed ast-elements
+ * (=> do cleanup if necessary)
+ */
+void mCc_parser_destroy_parser(struct mCc_parser_result result)
+{
+	switch (result.top_level_type) {
+	case MCC_PARSER_TOP_LEVEL_EXPRESSION:
+		if (result.expression) {
+			mCc_ast_delete_expression(result.expression);
+		}
+		break;
+	case MCC_PARSER_TOP_LEVEL_PROGRAM:
+		if (result.program) {
+			mCc_ast_delete_program(result.program);
+		}
+		break;
+	case MCC_PARSER_TOP_LEVEL_STATEMENT:
+		if (result.statement) {
+			mCc_ast_delete_statement(result.statement);
+		}
+		break;
+	case MCC_PARSER_TOP_LEVEL_ASSIGNMENT:
+		if (result.assignment) {
+			mCc_ast_delete_assignment(result.assignment);
+		}
+		break;
+	case MCC_PARSER_TOP_LEVEL_DECLARATION:
+		if (result.declaration) {
+			mCc_ast_delete_declaration(result.declaration);
+		}
+		break;
+	case MCC_PARSER_TOP_LEVEL_FUNCTION_DEF:
+		if (result.function_def) {
+			mCc_ast_delete_function_def(result.function_def);
+		}
+		break;
+	}
+}
+
+void mCc_parser_print_status(FILE *out, struct mCc_parser_result result)
+{
+	switch (result.status) {
+	case MCC_PARSER_STATUS_OK: fprintf(out, "Parsing successfull"); break;
+	case MCC_PARSER_STATUS_UNABLE_TO_OPEN_STREAM:
+		fprintf(out, "Could not open stream");
+		break;
+	case MCC_PARSER_STATUS_UNKNOWN_ERROR:
+		fprintf(out, "Unknown error occurred");
+		break;
+	case MCC_PARSER_STATUS_SYNTAX_ERROR:
+		fprintf(out, "Syntax error near line %d col %d",
+		        result.error_location.sloc.start_line,
+		        result.error_location.sloc.start_col);
+		break;
+	}
 }
