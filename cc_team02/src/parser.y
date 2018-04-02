@@ -395,15 +395,15 @@ void mCc_parser_destroy_parser(struct mCc_parser_result result)
 void mCc_parser_print_status(FILE *out, struct mCc_parser_result result)
 {
 	switch (result.status) {
-	case MCC_PARSER_STATUS_OK: fprintf(out, "Parsing successfull"); break;
+	case MCC_PARSER_STATUS_OK: fprintf(out, "Parsing successfull\n"); break;
 	case MCC_PARSER_STATUS_UNABLE_TO_OPEN_STREAM:
-		fprintf(out, "Could not open stream");
+		fprintf(out, "Could not open stream\n");
 		break;
 	case MCC_PARSER_STATUS_UNKNOWN_ERROR:
-		fprintf(out, "Unknown error occurred");
+		fprintf(out, "Unknown error occurred\n");
 		break;
 	case MCC_PARSER_STATUS_SYNTAX_ERROR:
-		fprintf(out, "Syntax error near line %d col %d",
+		fprintf(out, "Syntax error near line %d col %d\n",
 		        result.error_location.sloc.start_line,
 		        result.error_location.sloc.start_col);
 		break;
