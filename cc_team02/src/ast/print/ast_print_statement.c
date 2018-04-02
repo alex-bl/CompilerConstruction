@@ -1,8 +1,8 @@
 #include "mCc/ast/print/ast_print_statement.h"
-#include "mCc/ast/print/ast_basic_printing.h"
-#include "mCc/ast/visit/ast_visit_statement.h"
+
 #include <assert.h>
-#include <stdlib.h>
+
+#include "mCc/ast/print/ast_basic_printing.h"
 
 void mCc_print_dot_statement_if(struct mCc_ast_statement *statement, void *data)
 {

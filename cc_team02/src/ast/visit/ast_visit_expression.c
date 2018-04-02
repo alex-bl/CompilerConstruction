@@ -1,11 +1,13 @@
 #include "mCc/ast/visit/ast_visit_expression.h"
+
+#include <assert.h>
+
 #include "mCc/ast/visit/ast_visit_function.h"
 #include "mCc/ast/visit/ast_visit_identifier.h"
 #include "mCc/ast/visit/ast_visit_literal.h"
-#include <assert.h>
 
 void mCc_ast_visit_optional_expression(struct mCc_ast_expression *expr,
-                                            struct mCc_ast_visitor *visitor)
+                                       struct mCc_ast_visitor *visitor)
 {
 	if (expr) {
 		mCc_ast_visit_expression(expr, visitor);

@@ -2,7 +2,6 @@
 #define MCC_AST_VISIT_H
 
 #include "mCc/ast.h"
-// TODO: put this thing here?
 
 #define visit(node, callback, visitor) \
 	do { \

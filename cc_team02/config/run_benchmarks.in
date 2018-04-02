@@ -1,0 +1,17 @@
+#!/bin/bash
+
+NR_OF_BENCHMARKING_FILES=$(ls -1 benchmark/ | wc -l);
+COUNTER_FILES=0;
+
+echo;
+for entry in benchmark/*; do
+	CURRENT_BENCHMARK_ENTRY=$(echo $entry | rev | cut -d/ -f1 | rev);
+	echo "Executing benchmark $((COUNTER_FILES+1)) of $NR_OF_BENCHMARKING_FILES: $CURRENT_BENCHMARK_ENTRY"	
+	echo "============================================================";
+	echo;
+	./$entry --benchmark_color=false;
+	echo
+	echo "============================================================";
+	echo
+	COUNTER_FILES=$((COUNTER_FILES+1));
+done

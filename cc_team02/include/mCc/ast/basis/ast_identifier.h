@@ -9,10 +9,11 @@ extern "C" {
 
 struct mCc_ast_identifier {
 	struct mCc_ast_node node;
-	const char *identifier_name;
+	/* It is not const intentionally! */
+	char *identifier_name;
 };
 
-struct mCc_ast_identifier *mCc_ast_new_identifier(const char *name);
+struct mCc_ast_identifier *mCc_ast_new_identifier(char *name);
 
 void mCc_ast_delete_identifier(struct mCc_ast_identifier *name);
 

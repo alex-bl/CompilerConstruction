@@ -1,12 +1,12 @@
 #include "mCc/ast/basis/ast_function.h"
+
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 /*----------------- function definition-----------------*/
 struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
-    struct mCc_ast_identifier *identifier,
-    enum mCc_ast_function_return_type return_type,
+    struct mCc_ast_identifier *identifier, enum mCc_ast_data_type return_type,
     struct mCc_ast_statement *stmts)
 {
 	struct mCc_ast_function_def *function = malloc(sizeof(*function));
@@ -25,8 +25,7 @@ struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
 }
 
 struct mCc_ast_function_def *mCc_ast_new_parameterized_function_def(
-    struct mCc_ast_identifier *identifier,
-    enum mCc_ast_function_return_type return_type,
+    struct mCc_ast_identifier *identifier, enum mCc_ast_data_type return_type,
     struct mCc_ast_declaration *params, struct mCc_ast_statement *stmts)
 {
 	struct mCc_ast_function_def *function =

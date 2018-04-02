@@ -1,4 +1,5 @@
 #include "mCc/ast/basis/ast_assignment.h"
+
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>

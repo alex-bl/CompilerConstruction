@@ -1,10 +1,11 @@
 #include "mCc/ast/basis/ast_declaration.h"
+
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 struct mCc_ast_declaration *
-mCc_ast_new_primitive_declaration(enum mCc_ast_literal_type data_type,
+mCc_ast_new_primitive_declaration(enum mCc_ast_data_type data_type,
                                   struct mCc_ast_identifier *identifier)
 {
 	struct mCc_ast_declaration *declaration = malloc(sizeof(*declaration));
@@ -21,7 +22,7 @@ mCc_ast_new_primitive_declaration(enum mCc_ast_literal_type data_type,
 }
 
 struct mCc_ast_declaration *
-mCc_ast_new_array_declaration(enum mCc_ast_literal_type data_type,
+mCc_ast_new_array_declaration(enum mCc_ast_data_type data_type,
                               struct mCc_ast_identifier *identifier,
                               size_t size)
 {
