@@ -2,10 +2,12 @@
 
 %option batch
 %option bison-bridge
+%option bison-locations
 %option noinput
 %option nounput
 %option noyywrap
 %option reentrant
+%option yylineno
 %array
 
 %{
@@ -13,6 +15,31 @@
 
 #define YYSTYPE MCC_PARSER_STYPE
 
+#define YYLTYPE MCC_PARSER_LTYPE
+
+/* TODO:
+ * - track lines
+ * - take line breaks into account
+ */
+//#define YY_USER_ACTION \
+//	yylloc->first_column = yylloc->last_column; \
+//	yylloc->last_column += yyleng; \
+//	yylloc->first_line = yylloc->last_line; \
+//	yylloc->last_line = yylineno;
+
+//from https://stackoverflow.com/questions/656703/how-does-flex-support-bison-location-exactly/22125500#22125500
+#define YY_USER_ACTION \
+    yylloc->first_line = yylloc->last_line; \
+    yylloc->first_column = yylloc->last_column; \
+    for(int i = 0; yytext[i] != '\0'; i++) { \
+        if(yytext[i] == '\n') { \
+            yylloc->last_line++; \
+            yylloc->last_column = 0; \
+        } \
+        else { \
+            yylloc->last_column++; \
+        } \
+    }		
 %}
 
 int_literal   [0-9]+

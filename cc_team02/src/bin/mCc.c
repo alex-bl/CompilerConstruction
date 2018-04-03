@@ -30,16 +30,19 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	struct mCc_ast_expression *expr = NULL;
+	struct mCc_ast_program *prog = NULL;
 
 	/* parsing phase */
 	{
 		struct mCc_parser_result result = mCc_parser_parse_file(in);
 		fclose(in);
+
 		if (result.status != MCC_PARSER_STATUS_OK) {
+			mCc_parser_print_status(stderr, result);
+			mCc_parser_destroy_parser(result);
 			return EXIT_FAILURE;
 		}
-		expr = result.expression;
+		prog = result.program;
 	}
 
 	/*    TODO
@@ -51,7 +54,7 @@ int main(int argc, char *argv[])
 	 */
 
 	/* cleanup */
-	mCc_ast_delete_expression(expr);
+	mCc_ast_delete_program(prog);
 
 	return EXIT_SUCCESS;
 }
