@@ -3,7 +3,6 @@
 %option batch
 %option bison-bridge
 %option bison-locations
-%option noinput
 %option nounput
 %option noyywrap
 %option reentrant
@@ -61,6 +60,8 @@ return_keyword return
 
 identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 
+scomment       \/\/.*\n
+
 %%
 
 {int_type}		  { return TK_INT_TYPE; }
@@ -91,6 +92,29 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
                     yylval->TK_IDENTIFIER = mCc_ast_new_identifier(tmp);
                     return TK_IDENTIFIER;
                   }
+
+"/*"             {                
+                    char c;
+                    int done = 0;
+                    do{
+                        while((c=input(yyscanner)) != '*' && c != EOF){
+                             if(c == '\n'){
+                                yylloc->last_line++;   
+                            }
+                        }
+                        if(c == '*'){
+                            while((c=input(yyscanner)) == '*');
+                            if(c == '/'){
+                                done = 1;
+                            }
+                        }
+                        if(c == EOF){
+                            fprintf(stderr, "EOF in comment\n");
+                        }
+                    }while( done == 0 );
+                  }
+
+{scomment}        {}               
 
 "+"               { return TK_PLUS; }
 "-"               { return TK_MINUS; }
