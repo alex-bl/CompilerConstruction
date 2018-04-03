@@ -689,8 +689,6 @@ TEST(Parser, ParserSyntaxError)
 	ASSERT_EQ(0, result.error_location.sloc.start_col);
 	ASSERT_EQ(3, result.error_location.sloc.end_col);
 	ASSERT_EQ(3, result.error_location.sloc.start_line);
-
-	mCc_parser_destroy_parser(result);
 }
 
 
@@ -706,8 +704,6 @@ TEST(Parser, ParserSyntaxError_2)
 	ASSERT_EQ(17, result.error_location.sloc.start_col);
 	ASSERT_EQ(18, result.error_location.sloc.end_col);
 	ASSERT_EQ(1, result.error_location.sloc.start_line);
-
-	mCc_parser_destroy_parser(result);
 }
 
 TEST(Parser, ParserSyntaxError_3)
@@ -721,6 +717,46 @@ TEST(Parser, ParserSyntaxError_3)
 	ASSERT_EQ(4, result.error_location.sloc.start_col);
 	ASSERT_EQ(5, result.error_location.sloc.end_col);
 	ASSERT_EQ(1, result.error_location.sloc.start_line);
+}
+
+TEST(Parser, ParserSyntaxError_4)
+{
+	const char input[] = "foo((5,4)";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_SYNTAX_ERROR, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_EXPRESSION, result.top_level_type);
+
+	ASSERT_EQ(7, result.error_location.sloc.start_col);
+	ASSERT_EQ(8, result.error_location.sloc.end_col);
+	ASSERT_EQ(1, result.error_location.sloc.start_line);
+}
+
+
+TEST(Parser, Comments_1){
+	const char input[] = "//THIS is a comment!\nint foo;";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_STATEMENT, result.top_level_type);
+
+	auto statement = result.statement;
+
+	ASSERT_EQ(2, statement->node.sloc.start_line);
+
+	mCc_parser_destroy_parser(result);
+}
+
+TEST(Parser, CommentsMultiline){
+	const char input[] = "int a;/*This is another comment\n Hello\n World!*/\n bool foo;";
+	auto result = mCc_parser_parse_string(input);
+	
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_STATEMENT, result.top_level_type);
+
+	auto statement = result.statement;
+	ASSERT_EQ(1, statement->node.sloc.start_line);
+	ASSERT_EQ(4, statement->next_statement->node.sloc.start_line);
 
 	mCc_parser_destroy_parser(result);
 }
