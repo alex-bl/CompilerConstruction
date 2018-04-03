@@ -616,6 +616,7 @@ TEST(Parser, Program_1)
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto program = result.program;
 
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
 	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING,
 	          program->first_function_def->next_function_def->return_type);
 	mCc_ast_delete_program(program);
@@ -643,6 +644,8 @@ TEST(Parser, SourceLocation_SingleLineColumn)
 	EXPECT_EQ(MCC_AST_DATA_TYPE_INT, expr->expression->rhs->literal->type);
 	ASSERT_EQ(7, expr->expression->rhs->literal->node.sloc.start_col);
 	ASSERT_EQ(10, expr->expression->rhs->literal->node.sloc.end_col);
+
+	mCc_parser_destroy_parser(result);
 }
 
 TEST(Parser, SourceLocation_Row)
@@ -669,6 +672,8 @@ TEST(Parser, SourceLocation_Row)
 	EXPECT_EQ(MCC_AST_DATA_TYPE_INT, expr->expression->rhs->literal->type);
 	ASSERT_EQ(3, expr->expression->rhs->literal->node.sloc.start_line);
 	ASSERT_EQ(3, expr->expression->rhs->literal->node.sloc.end_line);
+
+	mCc_parser_destroy_parser(result);
 }
 
 
@@ -683,6 +688,36 @@ TEST(Parser, ParserSyntaxError)
 	ASSERT_EQ(0, result.error_location.sloc.start_col);
 	ASSERT_EQ(3, result.error_location.sloc.end_col);
 	ASSERT_EQ(3, result.error_location.sloc.start_line);
+
+	mCc_parser_destroy_parser(result);
+}
+
+TEST(Parser, ParserSyntaxError_2)
+{
+	const char input[] = "int foo(int bla)){}";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_SYNTAX_ERROR, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_EXPRESSION, result.top_level_type);
+
+	ASSERT_EQ(17, result.error_location.sloc.start_col);
+	ASSERT_EQ(18, result.error_location.sloc.end_col);
+	ASSERT_EQ(1, result.error_location.sloc.start_line);
+
+	mCc_parser_destroy_parser(result);
+}
+
+TEST(Parser, ParserSyntaxError_3)
+{
+	const char input[] = "5 +* 3";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_SYNTAX_ERROR, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_EXPRESSION, result.top_level_type);
+
+	ASSERT_EQ(4, result.error_location.sloc.start_col);
+	ASSERT_EQ(5, result.error_location.sloc.end_col);
+	ASSERT_EQ(1, result.error_location.sloc.start_line);
 
 	mCc_parser_destroy_parser(result);
 }
