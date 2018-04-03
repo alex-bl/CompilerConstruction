@@ -29,7 +29,14 @@ void mCc_parser_error();
 %define api.value.type union
 %define api.token.prefix {TK_}
 
-
+%destructor {mCc_ast_delete_expression($$);} expression single_expr_lev2
+%destructor {mCc_ast_delete_declaration($$);} parameters
+%destructor {mCc_ast_delete_identifier($$);} IDENTIFIER
+%destructor {mCc_ast_delete_literal($$);} literal
+%destructor {mCc_ast_delete_assignment($$);} assignment
+%destructor {mCc_ast_delete_function_def($$);} function_def
+%destructor {mCc_ast_delete_statement($$);} statement
+%destructor {mCc_ast_delete_program($$);} program
 
 %token END 0 "EOF"
 
@@ -173,7 +180,7 @@ expression: single_expr_lev1 binary_op expression { $$ = mCc_ast_new_expression_
 literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1); loc($$, @1); }
        | FLOAT_LITERAL 		{ $$ = mCc_ast_new_literal_float($1); loc($$, @1); }
 	   | BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1); loc($$, @1); }
-	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string(strdup($1)); loc($$, @1); }
+	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); loc($$, @1); }
        ;
 
 type:	INT_TYPE 	{ $$ = MCC_AST_DATA_TYPE_INT; }
