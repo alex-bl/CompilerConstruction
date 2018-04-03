@@ -316,11 +316,12 @@ TEST(Parser, Assignment_2)
 
 	ASSERT_EQ(MCC_AST_ASSIGNMENT_PRIMITIVE, assignment->assignment_type);
 	ASSERT_STREQ("a", assignment->identifier->identifier_name);
-	ASSERT_STREQ("\"london\"",
+	ASSERT_STREQ("london",
 	             assignment->assigned_expression->literal->s_value);
 
 	mCc_ast_delete_assignment(assignment);
 }
+
 
 TEST(Parser, Assignment_3)
 {
@@ -497,7 +498,7 @@ TEST(Parser, Literal_2)
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING,
 	          assignment->assigned_expression->literal->type);
-	ASSERT_STREQ("\"hallo\"",
+	ASSERT_STREQ("hallo",
 	             assignment->assigned_expression->literal->s_value);
 
 	mCc_ast_delete_assignment(assignment);
@@ -691,6 +692,8 @@ TEST(Parser, ParserSyntaxError)
 
 	mCc_parser_destroy_parser(result);
 }
+
+
 
 TEST(Parser, ParserSyntaxError_2)
 {
