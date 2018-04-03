@@ -77,12 +77,18 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 {int_literal}     { yylval->TK_INT_LITERAL = atol(yytext); return TK_INT_LITERAL; }
 {float_literal}   { yylval->TK_FLOAT_LITERAL = atof(yytext); return TK_FLOAT_LITERAL; }
 {bool_literal}    { yylval->TK_BOOL_LITERAL = strcmp(yytext, "true") == 0 ? true : false; return TK_BOOL_LITERAL; }
-{string_literal}  {   
-                    yylval->TK_STRING_LITERAL = strdup(yytext);
+{string_literal}  { 
+                    char* tmp = calloc(strlen(yytext)-1, sizeof(char));
+                    strncpy(tmp, &yytext[1], strlen(yytext)-2);
+                    tmp[strlen(yytext)-1] = '\0';  
+                    yylval->TK_STRING_LITERAL = tmp;
                     return TK_STRING_LITERAL;
                   }
 {identifier}      { 
-                    yylval->TK_IDENTIFIER = mCc_ast_new_identifier(strdup(yytext));
+                    char* tmp = calloc(strlen(yytext), sizeof(char));
+                    strcpy(tmp, yytext);
+                    //yylval->TK_IDENTIFIER = mCc_ast_new_identifier(strdup(yytext));
+                    yylval->TK_IDENTIFIER = mCc_ast_new_identifier(tmp);
                     return TK_IDENTIFIER;
                   }
 
