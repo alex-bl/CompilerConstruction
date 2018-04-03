@@ -100,7 +100,7 @@ TEST(AstBuildExpression, CreateExpressionParent)
 	ASSERT_EQ(parenth->type, MCC_AST_EXPRESSION_TYPE_PARENTH);
 	ASSERT_EQ(parenth->expression->literal->f_value, 2.1);
 
-	mCc_ast_delete_expression(exp);
+	mCc_ast_delete_expression(parenth);
 }
 
 TEST(AstBuildExpression, CreateExpressionIdentifier)
