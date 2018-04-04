@@ -5,10 +5,10 @@ int multiply(int num, int multiplicator)
 	result = 0;
 	int[10] arr;
 	
-	#stores 1/10 of the number in each array entry;
 	int i;
 	int j;
-	i = 0;	
+	i = 0;
+	
 	while (i < 10)
 	{
 		arr[i]=num/10;
