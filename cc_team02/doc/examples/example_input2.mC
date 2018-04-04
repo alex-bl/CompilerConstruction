@@ -4,7 +4,7 @@ void main()
 	int i;
 	int j;
 	int num;
-	int arr[250];
+	int[250] arr;
 	int swap;
 	
 	print("Please enter the number of elements");
@@ -23,21 +23,15 @@ void main()
 	}
 	
 	i = 0;
-	int condition;
-	int seccondition;
-	int k;
-	condition=num-1;
-	while (i < condition) {
+	while (i < (num-1)) {
 		j = 0;
-		seccondition=condition-i;
-		while (j < seccondition) {
+		while (j < (num-1-i)) {
 			#For decreasing order, use < ;
-			k=j+1;
-			if (arr[j] > arr[k])
+			if (arr[j] > arr[j+1])
 	    	{
 	       		swap = arr[j];
-	       		arr[j] = arr[k];
-	       		arr[k] = swap;
+	       		arr[j] = arr[j+1];
+	       		arr[j+1] = swap;
 	    	} 
 		    j = j + 1;
 		}
