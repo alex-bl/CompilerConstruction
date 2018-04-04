@@ -81,15 +81,12 @@ scomment       \/\/.*\n
 {string_literal}  { 
                     char* tmp = calloc(strlen(yytext)-1, sizeof(char));
                     strncpy(tmp, &yytext[1], strlen(yytext)-2);
-                    tmp[strlen(yytext)-1] = '\0';  
+                   // tmp[strlen(yytext)-1] = '\0';  
                     yylval->TK_STRING_LITERAL = tmp;
                     return TK_STRING_LITERAL;
                   }
 {identifier}      { 
-                    char* tmp = calloc(strlen(yytext), sizeof(char));
-                    strcpy(tmp, yytext);
-                    //yylval->TK_IDENTIFIER = mCc_ast_new_identifier(strdup(yytext));
-                    yylval->TK_IDENTIFIER = mCc_ast_new_identifier(tmp);
+                    yylval->TK_IDENTIFIER = mCc_ast_new_identifier(strdup(yytext));
                     return TK_IDENTIFIER;
                   }
 
