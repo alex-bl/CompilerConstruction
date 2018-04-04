@@ -1,28 +1,31 @@
 
-#include <stdio.h>
-
-int power(int n1, int n2);
-
-int main()
-{
-    int base, powerRaised, result;
-
-    printf("Enter base number: ");
-    scanf("%d",&base);
-
-    printf("Enter power number(positive integer): ");
-    scanf("%d",&powerRaised);
-
-    result = power(base, powerRaised);
-
-    printf("%d^%d = %d", base, powerRaised, result);
-    return 0;
-}
-
 int power(int base, int powerRaised)
 {
     if (powerRaised != 0)
         return (base*power(base, powerRaised-1));
     else
         return 1;
+}
+
+void main()
+{
+    int base;
+    int powerRaised;
+    int result;
+
+    print("Enter base number: ");
+    base = read_int();
+
+    print("Enter power number(positive integer): ");
+    powerRaised = read_int();
+
+    result = power(base, powerRaised);
+
+	print_int(base);
+	print("^");
+	print_int(powerRaised);
+	print(" = ");
+	print_int(result);
+	
+    return 0;
 }
