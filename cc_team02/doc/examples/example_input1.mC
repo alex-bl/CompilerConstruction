@@ -1,10 +1,3 @@
-/*
- * example_input1.c
- *
- *  Created on: 28.03.2018
- *      Author: 
- */
-
 
 #include <stdio.h>
 

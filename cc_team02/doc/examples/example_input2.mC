@@ -1,9 +1,3 @@
-/*
- * example_input2.c
- *
- *  Created on: 03.04.2018
- *      Author: 
- */
  
 #include <stdio.h>
 
@@ -25,7 +19,7 @@ int main()
 	{
 		for (j = 0 ; j < num - i - 1; j++)
 	 	{
-	   	if (arr[j] > arr[j+1]) /* For decreasing order, please use < */
+	   	if (arr[j] > arr[j+1]) /* For decreasing order, use < */
 	       {
 	       		swap = arr[j];
 	       		arr[j] = arr[j+1];
@@ -33,7 +27,6 @@ int main()
 	       }
 		}
 	}
-	
 	printf("Bubble sorting in ascending order:\n");
 	
 	for ( i = 0 ; i < num ; i++ )
@@ -42,5 +35,4 @@ int main()
 	}
 	
 	return 0;
-
 }
