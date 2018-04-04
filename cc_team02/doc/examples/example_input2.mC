@@ -1,38 +1,51 @@
- 
-#include <stdio.h>
 
-int main()
+void main()
 {
-	int i, j, num, arr[250], swap;
+	int i;
+	int j;
+	int num;
+	int[250] arr;
+	int swap;
 	
-	printf("Please enter the number of elements\n");
+	print("Please enter the number of elements");
+	print_nl();
+	num = read_int();
+
+	print("Enter ");
+	print_int(num);
+	print("numbers:");
+	print_nl();
 	
-	scanf("%d", &num);
-	printf("Enter %d numbers\n", num);
-	
-	for (i = 0; i < num; i++)
-	{
-		scanf("%d", &arr[i]);
+	i = 0;
+	while (i < num) {
+		arr[i]=read_int();
+		i = i + 1;
 	}
 	
-	for (i = 0 ; i < ( num - 1 ); i++)
-	{
-		for (j = 0 ; j < num - i - 1; j++)
-	 	{
-	   	if (arr[j] > arr[j+1]) /* For decreasing order, use < */
-	       {
+	i = 0;
+	while (i < (num-1)) {
+		j = 0;
+		while (j < (num-1-i)) {
+			#For decreasing order, use < ;
+			if (arr[j] > arr[j+1])
+	    	{
 	       		swap = arr[j];
 	       		arr[j] = arr[j+1];
 	       		arr[j+1] = swap;
-	       }
+	    	} 
+		    j = j + 1;
 		}
-	}
-	printf("Bubble sorting in ascending order:\n");
-	
-	for ( i = 0 ; i < num ; i++ )
-	{
-		printf("%d\n", arr[i]);
+		i = i + 1;
 	}
 	
-	return 0;
+	print("Bubble sorting in ascending order:");
+	print_nl();
+	
+	i = 0;
+	while (i < num) {
+		print_int(arr[i]);
+		print_nl();
+		i = i + 1;
+	}
+	
 }
