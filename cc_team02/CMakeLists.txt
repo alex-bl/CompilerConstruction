@@ -65,13 +65,28 @@ configure_file (
   "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
   )
    
-#=================================================================== building
+#=================================================================== headers
   
 # add the binary tree to the search path for include files
 # so that we will find the headers
 include_directories("${PROJECT_SOURCE_DIR}/include" ${CMAKE_CURRENT_BINARY_DIR})
 # include test-utils-header also => separated from source
 include_directories("${PROJECT_SOURCE_DIR}/test/include" ${CMAKE_CURRENT_BINARY_DIR})
+
+# external logging-lib
+include_directories("${PROJECT_SOURCE_DIR}/external/log/include" ${CMAKE_CURRENT_BINARY_DIR})
+# external hash-map
+include_directories("${PROJECT_SOURCE_DIR}/external/map/include" ${CMAKE_CURRENT_BINARY_DIR})
+
+#=================================================================== external-src
+
+add_subdirectory(external)
+
+# externals build as shared libraries:
+# ext_log_c
+# ext_map
+
+#=================================================================== src
 
 add_subdirectory(src)
 
@@ -89,6 +104,8 @@ target_link_libraries(mC_to_dot mCc_lib)
 add_subdirectory("test" "${GTEST_DOWNLOAD_DESTINATION}")
 # test-utils
 add_subdirectory("test/utils" "${CMAKE_BINARY_DIR}/test/utils")
+
+
 
 include(CTest)
 # add native gtest support
