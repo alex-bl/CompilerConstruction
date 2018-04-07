@@ -316,11 +316,12 @@ TEST(Parser, Assignment_2)
 
 	ASSERT_EQ(MCC_AST_ASSIGNMENT_PRIMITIVE, assignment->assignment_type);
 	ASSERT_STREQ("a", assignment->identifier->identifier_name);
-	ASSERT_STREQ("\"london\"",
+	ASSERT_STREQ("london",
 	             assignment->assigned_expression->literal->s_value);
 
 	mCc_ast_delete_assignment(assignment);
 }
+
 
 TEST(Parser, Assignment_3)
 {
@@ -497,7 +498,7 @@ TEST(Parser, Literal_2)
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING,
 	          assignment->assigned_expression->literal->type);
-	ASSERT_STREQ("\"hallo\"",
+	ASSERT_STREQ("hallo",
 	             assignment->assigned_expression->literal->s_value);
 
 	mCc_ast_delete_assignment(assignment);
@@ -616,6 +617,7 @@ TEST(Parser, Program_1)
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto program = result.program;
 
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
 	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING,
 	          program->first_function_def->next_function_def->return_type);
 	mCc_ast_delete_program(program);
@@ -643,6 +645,8 @@ TEST(Parser, SourceLocation_SingleLineColumn)
 	EXPECT_EQ(MCC_AST_DATA_TYPE_INT, expr->expression->rhs->literal->type);
 	ASSERT_EQ(7, expr->expression->rhs->literal->node.sloc.start_col);
 	ASSERT_EQ(10, expr->expression->rhs->literal->node.sloc.end_col);
+
+	mCc_parser_destroy_parser(result);
 }
 
 TEST(Parser, SourceLocation_Row)
@@ -669,6 +673,8 @@ TEST(Parser, SourceLocation_Row)
 	EXPECT_EQ(MCC_AST_DATA_TYPE_INT, expr->expression->rhs->literal->type);
 	ASSERT_EQ(3, expr->expression->rhs->literal->node.sloc.start_line);
 	ASSERT_EQ(3, expr->expression->rhs->literal->node.sloc.end_line);
+
+	mCc_parser_destroy_parser(result);
 }
 
 
@@ -683,6 +689,74 @@ TEST(Parser, ParserSyntaxError)
 	ASSERT_EQ(0, result.error_location.sloc.start_col);
 	ASSERT_EQ(3, result.error_location.sloc.end_col);
 	ASSERT_EQ(3, result.error_location.sloc.start_line);
+}
+
+
+
+TEST(Parser, ParserSyntaxError_2)
+{
+	const char input[] = "int foo(int bla)){}";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_SYNTAX_ERROR, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_EXPRESSION, result.top_level_type);
+
+	ASSERT_EQ(17, result.error_location.sloc.start_col);
+	ASSERT_EQ(18, result.error_location.sloc.end_col);
+	ASSERT_EQ(1, result.error_location.sloc.start_line);
+}
+
+TEST(Parser, ParserSyntaxError_3)
+{
+	const char input[] = "5 +* 3";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_SYNTAX_ERROR, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_EXPRESSION, result.top_level_type);
+
+	ASSERT_EQ(4, result.error_location.sloc.start_col);
+	ASSERT_EQ(5, result.error_location.sloc.end_col);
+	ASSERT_EQ(1, result.error_location.sloc.start_line);
+}
+
+TEST(Parser, ParserSyntaxError_4)
+{
+	const char input[] = "foo((5,4)";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_SYNTAX_ERROR, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_EXPRESSION, result.top_level_type);
+
+	ASSERT_EQ(7, result.error_location.sloc.start_col);
+	ASSERT_EQ(8, result.error_location.sloc.end_col);
+	ASSERT_EQ(1, result.error_location.sloc.start_line);
+}
+
+
+TEST(Parser, Comments_1){
+	const char input[] = "//THIS is a comment!\nint foo;";
+	auto result = mCc_parser_parse_string(input);
+
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_STATEMENT, result.top_level_type);
+
+	auto statement = result.statement;
+
+	ASSERT_EQ(2, statement->node.sloc.start_line);
+
+	mCc_parser_destroy_parser(result);
+}
+
+TEST(Parser, CommentsMultiline){
+	const char input[] = "int a;/*This is another comment\n Hello\n World!*/\n bool foo;";
+	auto result = mCc_parser_parse_string(input);
+	
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_STATEMENT, result.top_level_type);
+
+	auto statement = result.statement;
+	ASSERT_EQ(1, statement->node.sloc.start_line);
+	ASSERT_EQ(4, statement->next_statement->node.sloc.start_line);
 
 	mCc_parser_destroy_parser(result);
 }

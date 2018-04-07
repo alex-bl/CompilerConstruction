@@ -29,6 +29,16 @@ void mCc_parser_error();
 %define api.value.type union
 %define api.token.prefix {TK_}
 
+%destructor {mCc_ast_delete_expression($$);} expression single_expr_lev2 single_expr_lev1 single_expr arguments
+%destructor {mCc_ast_delete_function_call($$);} call_expr
+%destructor {mCc_ast_delete_declaration($$);} parameters 
+%destructor {mCc_ast_delete_identifier($$);} IDENTIFIER 
+%destructor {mCc_ast_delete_literal($$);} literal 
+%destructor {mCc_ast_delete_assignment($$);} assignment 
+%destructor {mCc_ast_delete_function_def($$);} function_def 
+%destructor {mCc_ast_delete_statement($$);} statement_list statement 
+%destructor {mCc_ast_delete_program($$);} program 
+%destructor {mCc_ast_delete_declaration($$);} declaration
 
 
 %token END 0 "EOF"
@@ -111,7 +121,7 @@ void mCc_parser_error();
 toplevel: assignment 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_ASSIGNMENT; result->assignment = $1;}
 		| function_def	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_FUNCTION_DEF; result->function_def = $1;}
 		| declaration 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_DECLARATION; result->declaration = $1;}
-		| statement  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_STATEMENT; result->statement = $1;}
+		| statement_list  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_STATEMENT; result->statement = $1;}
 		| expression 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_EXPRESSION; result->expression = $1;}
 		| program 	  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_PROGRAM; result->program = $1; } 
 		;
@@ -173,7 +183,7 @@ expression: single_expr_lev1 binary_op expression { $$ = mCc_ast_new_expression_
 literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1); loc($$, @1); }
        | FLOAT_LITERAL 		{ $$ = mCc_ast_new_literal_float($1); loc($$, @1); }
 	   | BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1); loc($$, @1); }
-	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string(strdup($1)); loc($$, @1); }
+	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); loc($$, @1); }
        ;
 
 type:	INT_TYPE 	{ $$ = MCC_AST_DATA_TYPE_INT; }
@@ -182,7 +192,7 @@ type:	INT_TYPE 	{ $$ = MCC_AST_DATA_TYPE_INT; }
 	|	STRING_TYPE	{ $$ = MCC_AST_DATA_TYPE_STRING; }
 	;
 
-statement_list:	statement_list statement	{
+statement_list:	statement_list statement	{	
 													struct mCc_ast_statement* t = $1;
 													if(t == NULL){
 														$$ = $2;

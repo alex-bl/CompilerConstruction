@@ -3,7 +3,6 @@
 %option batch
 %option bison-bridge
 %option bison-locations
-%option noinput
 %option nounput
 %option noyywrap
 %option reentrant
@@ -61,6 +60,8 @@ return_keyword return
 
 identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 
+scomment       \/\/.*\n
+
 %%
 
 {int_type}		  { return TK_INT_TYPE; }
@@ -77,14 +78,40 @@ identifier     [a-zA-Z_]+[0-9a-zA-Z_]*
 {int_literal}     { yylval->TK_INT_LITERAL = atol(yytext); return TK_INT_LITERAL; }
 {float_literal}   { yylval->TK_FLOAT_LITERAL = atof(yytext); return TK_FLOAT_LITERAL; }
 {bool_literal}    { yylval->TK_BOOL_LITERAL = strcmp(yytext, "true") == 0 ? true : false; return TK_BOOL_LITERAL; }
-{string_literal}  {   
-                    yylval->TK_STRING_LITERAL = strdup(yytext);
+{string_literal}  { 
+                    char* tmp = calloc(strlen(yytext)-1, sizeof(char));
+                    strncpy(tmp, &yytext[1], strlen(yytext)-2);
+                   // tmp[strlen(yytext)-1] = '\0';  
+                    yylval->TK_STRING_LITERAL = tmp;
                     return TK_STRING_LITERAL;
                   }
 {identifier}      { 
                     yylval->TK_IDENTIFIER = mCc_ast_new_identifier(strdup(yytext));
                     return TK_IDENTIFIER;
                   }
+
+"/*"             {                
+                    char c;
+                    int done = 0;
+                    do{
+                        while((c=input(yyscanner)) != '*' && c != EOF){
+                             if(c == '\n'){
+                                yylloc->last_line++;   
+                            }
+                        }
+                        if(c == '*'){
+                            while((c=input(yyscanner)) == '*');
+                            if(c == '/'){
+                                done = 1;
+                            }
+                        }
+                        if(c == EOF){
+                            fprintf(stderr, "EOF in comment\n");
+                        }
+                    }while( done == 0 );
+                  }
+
+{scomment}        {}               
 
 "+"               { return TK_PLUS; }
 "-"               { return TK_MINUS; }
