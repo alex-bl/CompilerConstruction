@@ -17,13 +17,12 @@ enum mCc_sym_tab_identifier_type {
 	MCC_SYM_TAB_IDENTIFIER_FUNCTION,
 };
 
-// TODO: necessary or just use string?
-typedef map_t(struct mCc_ast_identifier *) mCc_symbol_table_map_t;
-
 // TODO: maybe extend with other information?
 struct mCc_symbol_table_node {
 	enum mCc_ast_data_type data_type;
 };
+
+typedef map_t(struct mCc_symbol_table_node *) mCc_symbol_table_map_t;
 
 struct mCc_symbol_table {
 	mCc_symbol_table_map_t *entries;
