@@ -1,0 +1,4 @@
+Problem: Given the array [1, 2, ..., 20] and a natural number n
+is there a subset of the array which sum is equals to n?
+Input: n = 
+Subset found with given sum!

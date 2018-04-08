@@ -1,0 +1,41 @@
+void main() {
+    int test;
+    while_function (3.3, true);
+    test = dangling_else_function();
+    print(test);
+    array_functions();
+}
+
+int dangling_else_function() {
+    if (true && true) (42 + 2) * 4;
+        if (false || false) 42 * 1 + 14;
+        else 4 + 4 - 5;
+    return 1;
+}
+
+void while_function(float f, bool b) {
+    int i;
+    i = 0;
+    while (i < 2) {
+        print(i);
+        i = i + 1;
+    }
+    string str;
+    str = "test";
+    bool boolean;
+    if (2 <= 2) {
+        boolean = f > 6.8;
+    } else 6.7 >= f;
+    if (boolean) print(str);
+    else print("else");
+    return;
+}
+
+void array_functions() {
+    int[10] arr;
+    if (7 == 7) arr[1+1] = 8;
+    print(arr[2]);
+    if (6 != 6) arr[3] = 6;
+    print(arr[3]);
+    return;
+}
