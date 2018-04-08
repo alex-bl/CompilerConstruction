@@ -26,9 +26,15 @@ void mCc_ast_visit_function_def(struct mCc_ast_function_def *function_def,
 	// visit(function_def, visitor->function_def_type, visitor);
 	mCc_ast_visit_identifier(function_def->identifier, visitor);
 
+	//new scope
+	*(visitor->scope_level)=*(visitor->scope_level)+1;
+
 	// can be empty
 	mCc_ast_visit_optional_statement(function_def->first_statement, visitor);
 	mCc_ast_visit_optional_declaration(function_def->first_parameter, visitor);
+
+	//return to previous scope
+	*(visitor->scope_level)=*(visitor->scope_level)-1;
 
 	mCc_ast_visit_optional_function_def(function_def->next_function_def,
 	                                    visitor);

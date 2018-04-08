@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-enum mCc_sym_tab_identifier_type {
+enum mCc_symtab_identifier_type {
 	MCC_SYM_TAB_IDENTIFIER_VARIABLE,
 	MCC_SYM_TAB_IDENTIFIER_FUNCTION,
 };
@@ -20,13 +20,17 @@ enum mCc_sym_tab_identifier_type {
 // TODO: maybe extend with other information?
 struct mCc_symbol_table_node {
 	enum mCc_ast_data_type data_type;
+	int scope_level;
 };
 
 typedef map_t(struct mCc_symbol_table_node *) mCc_symbol_table_map_t;
 
 struct mCc_symbol_table {
-	mCc_symbol_table_map_t *entries;
+	mCc_symbol_table_map_t *table;
 	mCc_symbol_table_map_t *parent;
+	int scope_level_table;
+	//reference to the scope-level which is set by the visitor
+	int *scope_level_visitor;
 };
 
 /**
@@ -38,7 +42,7 @@ struct mCc_symbol_table {
  * 		A new symbol-table-node element
  */
 struct mCc_symbol_table_node *
-mCc_sym_tab_new_declaration_node(struct mCc_ast_declaration *declaration);
+mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration);
 
 /**
  * Creates a new symbol-table node out of a function def
@@ -49,7 +53,7 @@ mCc_sym_tab_new_declaration_node(struct mCc_ast_declaration *declaration);
  * 		A new symbol-table-node element
  */
 struct mCc_symbol_table_node *
-mCc_sym_tab_new_function_def_node(struct mCc_ast_function_def *function_def);
+mCc_symtab_new_function_def_node(struct mCc_ast_function_def *function_def);
 
 /**
  * Creates a new symbol-table
@@ -60,7 +64,7 @@ mCc_sym_tab_new_function_def_node(struct mCc_ast_function_def *function_def);
  * 		A new symbol-table
  */
 struct mCc_symbol_table *
-mCc_sym_tab_new_symbol_table(struct mCc_symbol_table *parent);
+mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent);
 
 /**
  * Inserts a node into the symbol-table
@@ -72,7 +76,7 @@ mCc_sym_tab_new_symbol_table(struct mCc_symbol_table *parent);
  * @param value
  * 		The value (information such as type, etc...)
  */
-void mCc_sym_tab_insert_node(struct mCc_symbol_table *symbol_table,
+void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
                              struct mCc_ast_identifier *key,
                              struct mCc_symbol_table_node *value);
 
@@ -85,7 +89,7 @@ void mCc_sym_tab_insert_node(struct mCc_symbol_table *symbol_table,
  * @param declaration
  * 		The declaration (ast-element)
  */
-void mCc_sym_tab_insert_var_node(struct mCc_symbol_table *symbol_table,
+void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
                                  struct mCc_ast_declaration *declaration);
 
 /**
@@ -97,7 +101,7 @@ void mCc_sym_tab_insert_var_node(struct mCc_symbol_table *symbol_table,
  * @param function_def
  * 		The function-definition (ast-element)
  */
-void mCc_sym_tab_insert_function_def_node(
+void mCc_symtab_insert_function_def_node(
     struct mCc_symbol_table *symbol_table,
     struct mCc_ast_function_def *function_def);
 
@@ -114,7 +118,7 @@ void mCc_sym_tab_insert_function_def_node(
  * symbol-table (and its parents)
  */
 struct mCc_symbol_table_node *
-mCc_sym_tab_lookup(struct mCc_symbol_table *symbol_table,
+mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
                    struct mCc_ast_identifier *identifier);
 
 /**
@@ -123,7 +127,7 @@ mCc_sym_tab_lookup(struct mCc_symbol_table *symbol_table,
  * @param symbol_table
  * 		The symbol-table
  */
-void mCc_sym_tab_delete_symbol_table(struct mCc_symbol_table *symbol_table);
+void mCc_symtab_delete_symbol_table(struct mCc_symbol_table *symbol_table);
 
 #ifdef __cplusplus
 }

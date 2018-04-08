@@ -6,7 +6,8 @@
 #include "mCc/ast_visit.h"
 
 //"global" visitor needed
-static struct mCc_ast_visitor print_dot_visitor(FILE *out)
+static struct mCc_ast_visitor print_dot_visitor(FILE *out,
+                                                int *scope_level_param)
 {
 	assert(out);
 
@@ -15,6 +16,7 @@ static struct mCc_ast_visitor print_dot_visitor(FILE *out)
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
 		.order = MCC_AST_VISIT_PRE_ORDER,
 		.userdata = out,
+		.scope_level = scope_level_param,
 
 		//.expression
 		.expression_literal = mCc_print_dot_expression_literal,
@@ -69,7 +71,8 @@ void mCc_ast_print_dot_assignment(FILE *out,
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_assignment(assignment, &visitor);
 
 	print_dot_end(out);
@@ -83,7 +86,8 @@ void mCc_ast_print_dot_declaration(FILE *out,
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_declaration(declaration, &visitor);
 
 	print_dot_end(out);
@@ -96,12 +100,17 @@ void mCc_ast_print_dot_statement(FILE *out, struct mCc_ast_statement *statement)
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_statement(statement, &visitor);
 
 	print_dot_end(out);
 }
 
+/*
+ * should be the "top"
+ * is "global"
+ */
 void mCc_ast_print_dot_program(FILE *out, struct mCc_ast_program *program)
 {
 	assert(out);
@@ -109,7 +118,8 @@ void mCc_ast_print_dot_program(FILE *out, struct mCc_ast_program *program)
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_program(program, &visitor);
 
 	print_dot_end(out);
@@ -122,7 +132,8 @@ void mCc_ast_print_dot_literal(FILE *out, struct mCc_ast_literal *literal)
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_literal(literal, &visitor);
 
 	print_dot_end(out);
@@ -136,7 +147,8 @@ void mCc_ast_print_dot_identifier(FILE *out,
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_identifier(identifier, &visitor);
 
 	print_dot_end(out);
@@ -150,7 +162,8 @@ void mCc_ast_print_dot_function_def(FILE *out,
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_function_def(function_def, &visitor);
 
 	print_dot_end(out);
@@ -164,7 +177,8 @@ void mCc_ast_print_dot_function_call(
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_function_call(function_call, &visitor);
 
 	print_dot_end(out);
@@ -178,7 +192,8 @@ void mCc_ast_print_dot_expression(FILE *out,
 
 	print_dot_begin(out);
 
-	struct mCc_ast_visitor visitor = print_dot_visitor(out);
+	int scope_level = 0;
+	struct mCc_ast_visitor visitor = print_dot_visitor(out, &scope_level);
 	mCc_ast_visit_expression(expression, &visitor);
 
 	print_dot_end(out);

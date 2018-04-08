@@ -68,6 +68,7 @@ struct mCc_ast_visitor {
 	enum mCc_ast_visit_order order;
 
 	void *userdata;
+	int *scope_level;
 
 	// expression
 	mCc_ast_visit_expression_cb expression;

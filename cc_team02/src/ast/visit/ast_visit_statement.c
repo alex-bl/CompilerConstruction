@@ -27,10 +27,18 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		visit_if_pre_order(statement, visitor->statement_if, visitor);
 
 		mCc_ast_visit_expression(statement->condition_expression, visitor);
+
+		//new scope
+		*(visitor->scope_level)=*(visitor->scope_level)+1;
 		// if + else stmts may be empty
 		mCc_ast_visit_optional_statement(statement->if_statement, visitor);
+
+		//new scope
+		*(visitor->scope_level)=*(visitor->scope_level)+1;
 		mCc_ast_visit_optional_statement(statement->else_statement, visitor);
 
+		//returning to old scope
+		*(visitor->scope_level)=*(visitor->scope_level)-2;
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_if, visitor);
@@ -39,8 +47,13 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		visit_if_pre_order(statement, visitor->statement_while, visitor);
 
 		mCc_ast_visit_expression(statement->loop_condition_expression, visitor);
+
+		//new scope
+		*(visitor->scope_level)=*(visitor->scope_level)+1;
 		// while-stmt may be empty
 		mCc_ast_visit_optional_statement(statement->while_statement, visitor);
+		//returning to old scope
+		*(visitor->scope_level)=*(visitor->scope_level)-1;
 
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
