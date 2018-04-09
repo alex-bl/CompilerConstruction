@@ -183,7 +183,7 @@ expression: single_expr_lev1 binary_op expression { $$ = mCc_ast_new_expression_
 literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1); loc($$, @1); }
        | FLOAT_LITERAL 		{ $$ = mCc_ast_new_literal_float($1); loc($$, @1); }
 	   | BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1); loc($$, @1); }
-	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); loc($$, @1); }
+	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string(strdup($1)); loc($$, @1); }
        ;
 
 type:	INT_TYPE 	{ $$ = MCC_AST_DATA_TYPE_INT; }
@@ -196,6 +196,7 @@ statement_list:	statement_list statement	{
 													struct mCc_ast_statement* t = $1;
 													if(t == NULL){
 														$$ = $2;
+														loc($$, @1);
 													}else{
 														while(t->next_statement != NULL){
 															t = t->next_statement;
@@ -232,8 +233,9 @@ ret_stmt:  RETURN_KEYWORD SEMICOLON												{ $$ = mCc_ast_new_return_stateme
 
 compound_stmt: LBRACE statement_list RBRACE					{ 
 																$$ = $2;
+																loc($$, @1);
 															}
-			|  LBRACE  RBRACE								{ $$ = NULL;}
+			|  LBRACE  RBRACE								{ $$ = NULL; loc($$, @1);}
             ;
 
 
@@ -249,6 +251,7 @@ function_list:	function_list function_def	{
 													struct mCc_ast_function_def* t = $1;
 													if(t == NULL){
 														$$ = $2;
+														loc($$, @1);
 													}else{
 														while(t->next_function_def != NULL){
 															t = t->next_function_def;
@@ -268,6 +271,7 @@ parameters:   declaration					{ $$ = $1; loc($$, @1); }
 												struct mCc_ast_declaration* t = $1;
 												if(t == NULL){
 													$$ = $3;
+													loc($$, @1);
 												}else{
 													while(t->next_declaration != NULL){
 														t = t->next_declaration;
@@ -283,11 +287,12 @@ call_expr:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_new_non_parameteriz
 		|	IDENTIFIER LPARENTH arguments RPARENTH	{ $$ = mCc_ast_new_parameterized_function_call($1, $3); loc($$, @1); }
 		;
 
-arguments:	expression					{ $$ = $1; }
+arguments:	expression					{ $$ = $1; loc($$, @1);}
 		| 	arguments COMMA expression 	{
 												struct mCc_ast_expression* t = $1;
 												if(t == NULL){
 													$$ = $3;
+													loc($$, @1);
 												}else{
 													while(t->next_expr != NULL){
 														t = t->next_expr;
