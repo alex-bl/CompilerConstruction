@@ -1,10 +1,10 @@
 #ifndef MCC_SYMBOL_TABLE_H
 #define MCC_SYMBOL_TABLE_H
 
-#include "ast/basis/ast_data_type.h"
-#include "ast/basis/ast_declaration.h"
-#include "ast/basis/ast_function.h"
-#include "ast/basis/ast_identifier.h"
+#include "mCc/ast/basis/ast_data_type.h"
+#include "mCc/ast/basis/ast_declaration.h"
+#include "mCc/ast/basis/ast_function.h"
+#include "mCc/ast/basis/ast_identifier.h"
 
 #include "map.h"
 

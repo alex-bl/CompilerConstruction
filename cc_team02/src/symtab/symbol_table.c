@@ -112,7 +112,7 @@ void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
 
 	struct mCc_symbol_table_node *to_insert =
 	    mCc_symtab_new_declaration_node(declaration);
-	struct mCc_ast_identifier identifier;
+	struct mCc_ast_identifier *identifier;
 
 	if (declaration->declaration_type == MCC_AST_DECLARATION_PRIMITIVE) {
 		identifier = declaration->identifier;
@@ -151,19 +151,9 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
 	// hit at current scope
 	if (result_from_current_node) {
 		return result_from_current_node;
-	}
-
-	struct mCc_symbol_table *actual_parent = symbol_table->parent;
-
-	// lookup
-	while (actual_parent) {
-		struct mCc_symbol_table_node *result_from_parent_scope =
-		    map_get(actual_parent->table, identifier->identifier_name);
-
-		if (result_from_parent_scope) {
-			return result_from_parent_scope;
-		}
-		actual_parent = actual_parent->parent;
+		// not found at current scope => search at parent-scope
+	} else if (symbol_table->parent) {
+		return mCc_symtab_lookup(symbol_table->parent, identifier);
 	}
 
 	// no hit
@@ -172,6 +162,7 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
 
 void mCc_symtab_delete_symbol_table(struct mCc_symbol_table *symbol_table)
 {
+	assert(symbol_table);
 	/*
 	 * TODO: free all nodes
 	 * Is it already done by map_deinit? => check this also
@@ -183,5 +174,4 @@ void mCc_symtab_delete_symbol_table(struct mCc_symbol_table *symbol_table)
 	 * do not touch parent!
 	 */
 	map_deinit_(symbol_table->table);
-	assert(symbol_table);
 }
