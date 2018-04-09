@@ -145,7 +145,29 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
 	assert(symbol_table);
 	assert(identifier);
 
-	return map_get(symbol_table->table, identifier->identifier_name);
+	struct mCc_symbol_table_node *result_from_current_node =
+	    map_get(symbol_table->table, identifier->identifier_name);
+
+	// hit at current scope
+	if (result_from_current_node) {
+		return result_from_current_node;
+	}
+
+	struct mCc_symbol_table *actual_parent = symbol_table->parent;
+
+	// lookup
+	while (actual_parent) {
+		struct mCc_symbol_table_node *result_from_parent_scope =
+		    map_get(actual_parent->table, identifier->identifier_name);
+
+		if (result_from_parent_scope) {
+			return result_from_parent_scope;
+		}
+		actual_parent = actual_parent->parent;
+	}
+
+	// no hit
+	return NULL;
 }
 
 void mCc_symtab_delete_symbol_table(struct mCc_symbol_table *symbol_table)

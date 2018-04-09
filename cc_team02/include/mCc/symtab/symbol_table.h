@@ -42,7 +42,7 @@ typedef map_t(struct mCc_symbol_table_node *) mCc_symbol_table_map_t;
 
 struct mCc_symbol_table {
 	mCc_symbol_table_map_t *table;
-	mCc_symbol_table_map_t *parent;
+	struct mCc_symbol_table *parent;
 	int scope_level_table;
 	// reference to the scope-level which is set by the visitor
 	int *scope_level_visitor;
