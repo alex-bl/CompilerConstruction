@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
 	/* parsing phase */
 	{
-		struct mCc_parser_result result = mCc_parser_parse_file(in);
+		struct mCc_parser_result result = mCc_parser_parse_string("int get_num(int a, int b){}");
 		fclose(in);
 
 		if (result.status != MCC_PARSER_STATUS_OK) {

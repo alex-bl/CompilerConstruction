@@ -316,12 +316,10 @@ TEST(Parser, Assignment_2)
 
 	ASSERT_EQ(MCC_AST_ASSIGNMENT_PRIMITIVE, assignment->assignment_type);
 	ASSERT_STREQ("a", assignment->identifier->identifier_name);
-	ASSERT_STREQ("london",
-	             assignment->assigned_expression->literal->s_value);
+	ASSERT_STREQ("london", assignment->assigned_expression->literal->s_value);
 
 	mCc_ast_delete_assignment(assignment);
 }
-
 
 TEST(Parser, Assignment_3)
 {
@@ -379,16 +377,17 @@ TEST(Parser, IfStatement_3)
 
 TEST(Parser, IfStatement_4)
 {
-	const char input[] = "if (isLeapYear(n)){print(\" is a leap year.\");}else{print(\" is not a leap year.\");}";
+	const char input[] = "if (isLeapYear(n)){print(\" is a leap "
+	                     "year.\");}else{print(\" is not a leap year.\");}";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	auto statement = result.statement;
 
 	ASSERT_STREQ(" is a leap year.",
-	          statement->if_statement->expression->function_call->first_argument->literal->s_value);
+	             statement->if_statement->expression->function_call
+	                 ->first_argument->literal->s_value);
 	mCc_ast_delete_statement(statement);
 }
-
 
 TEST(Parser, WhileStatement_1)
 {
@@ -511,8 +510,7 @@ TEST(Parser, Literal_2)
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING,
 	          assignment->assigned_expression->literal->type);
-	ASSERT_STREQ("hallo",
-	             assignment->assigned_expression->literal->s_value);
+	ASSERT_STREQ("hallo", assignment->assigned_expression->literal->s_value);
 
 	mCc_ast_delete_assignment(assignment);
 }
@@ -623,7 +621,6 @@ TEST(Parser, CallExpression_3)
 	mCc_ast_delete_expression(call_expr);
 }
 
-
 TEST(Parser, CallExpression_4)
 {
 	const char input[] = "foo(\"string_argument\")";
@@ -634,8 +631,8 @@ TEST(Parser, CallExpression_4)
 	// test first argument
 	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL,
 	          call_expr->function_call->first_argument->type);
-	ASSERT_STREQ("string_argument", call_expr->function_call->first_argument->literal
-	                        ->s_value);
+	ASSERT_STREQ("string_argument",
+	             call_expr->function_call->first_argument->literal->s_value);
 
 	mCc_ast_delete_expression(call_expr);
 }
@@ -692,7 +689,6 @@ TEST(Parser, SourceLocation_Row)
 	ASSERT_EQ(1, expr->node.sloc.start_line);
 	ASSERT_EQ(3, expr->node.sloc.end_line);
 
-
 	EXPECT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->expression->type);
 	ASSERT_EQ(1, expr->expression->node.sloc.start_line);
 
@@ -707,7 +703,6 @@ TEST(Parser, SourceLocation_Row)
 	mCc_parser_destroy_parser(result);
 }
 
-
 TEST(Parser, ParserSyntaxError)
 {
 	const char input[] = "(42\n + \n192";
@@ -720,8 +715,6 @@ TEST(Parser, ParserSyntaxError)
 	ASSERT_EQ(3, result.error_location.sloc.end_col);
 	ASSERT_EQ(3, result.error_location.sloc.start_line);
 }
-
-
 
 TEST(Parser, ParserSyntaxError_2)
 {
@@ -762,8 +755,8 @@ TEST(Parser, ParserSyntaxError_4)
 	ASSERT_EQ(1, result.error_location.sloc.start_line);
 }
 
-
-TEST(Parser, Comments_1){
+TEST(Parser, Comments_1)
+{
 	const char input[] = "//THIS is a comment!\nint foo;";
 	auto result = mCc_parser_parse_string(input);
 
@@ -777,10 +770,12 @@ TEST(Parser, Comments_1){
 	mCc_parser_destroy_parser(result);
 }
 
-TEST(Parser, CommentsMultiline){
-	const char input[] = "int a;/*This is another comment\n Hello\n World!*/\n bool foo;";
+TEST(Parser, CommentsMultiline)
+{
+	const char input[] =
+	    "int a;/*This is another comment\n Hello\n World!*/\n bool foo;";
 	auto result = mCc_parser_parse_string(input);
-	
+
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_STATEMENT, result.top_level_type);
 
@@ -789,4 +784,42 @@ TEST(Parser, CommentsMultiline){
 	ASSERT_EQ(4, statement->next_statement->node.sloc.start_line);
 
 	mCc_parser_destroy_parser(result);
+}
+
+TEST(Parser, SrcLocationIdentifier)
+{
+	const char input[] = "int get_num(){} \n string get_string(){}";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto program = result.program;
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING,
+	          program->first_function_def->next_function_def->return_type);
+
+	ASSERT_EQ(5, program->first_function_def->identifier->node.sloc.start_col);
+	ASSERT_EQ(2, program->first_function_def->next_function_def->identifier
+	                 ->node.sloc.start_line);
+	ASSERT_EQ(8, program->first_function_def->next_function_def->identifier
+	                 ->node.sloc.start_col);
+
+	mCc_ast_delete_program(program);
+}
+
+TEST(Parser, SrcLocationParams)
+{
+	const char input[] = "int get_num(int a, int b){}";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto function_def = result.function_def;
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_FUNCTION_DEF, result.top_level_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, function_def->return_type);
+
+	ASSERT_EQ(13, function_def->first_parameter->node.sloc.start_col);
+	ASSERT_EQ(
+	    20,
+	    function_def->first_parameter->next_declaration->node.sloc.start_col);
+
+	mCc_ast_delete_function_def(function_def);
 }
