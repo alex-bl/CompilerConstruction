@@ -126,12 +126,12 @@ toplevel: assignment 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_ASSIGNMENT; 
 		| program 	  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_PROGRAM; result->program = $1; } 
 		;
 
-declaration: type IDENTIFIER									{ $$ = mCc_ast_new_primitive_declaration($1, $2); loc($$, @1);}
-		   | type LBRACKET INT_LITERAL RBRACKET IDENTIFIER		{ $$ = mCc_ast_new_array_declaration($1, $5, $3); loc($$, @1);}
+declaration: type IDENTIFIER									{ $$ = mCc_ast_new_primitive_declaration($1, $2); loc($$, @1); loc($2, @2);}
+		   | type LBRACKET INT_LITERAL RBRACKET IDENTIFIER		{ $$ = mCc_ast_new_array_declaration($1, $5, $3); loc($$, @1); loc($5, @5);}
 		   ;
 
-assignment: IDENTIFIER ASSIGNMENT expression								{ $$ = mCc_ast_new_primitive_assignment($1, $3); loc($$, @1);}
-		  | IDENTIFIER LBRACKET expression RBRACKET ASSIGNMENT expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $6); loc($$, @1);}
+assignment: IDENTIFIER ASSIGNMENT expression								{ $$ = mCc_ast_new_primitive_assignment($1, $3); loc($$, @1); loc($1, @1);}
+		  | IDENTIFIER LBRACKET expression RBRACKET ASSIGNMENT expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $6); loc($$, @1); loc($1, @1);}
 		  ;
 
 unary_op: 	MINUS		{ $$ = MCC_AST_UNARY_OP_MINUS; }
@@ -160,8 +160,8 @@ binary_op_mul:	ASTER		{ $$ = MCC_AST_BINARY_OP_MUL; }
 single_expr:  literal                      			    { $$ = mCc_ast_new_expression_literal($1); loc($$, @1);}
 		   | unary_op INT_LITERAL						{ $$ = mCc_ast_new_expression_unary_op($1, mCc_ast_new_expression_literal(mCc_ast_new_literal_int($2))); loc($$, @1);}
 		   | unary_op FLOAT_LITERAL						{ $$ = mCc_ast_new_expression_unary_op($1, mCc_ast_new_expression_literal(mCc_ast_new_literal_float($2))); loc($$, @1);}
-		   | IDENTIFIER									{ $$ = mCc_ast_new_expression_identifier($1); loc($$, @1);}
-		   | IDENTIFIER LBRACKET expression RBRACKET	{ $$ = mCc_ast_new_expression_array_identifier($1, $3); loc($$, @1);}
+		   | IDENTIFIER									{ $$ = mCc_ast_new_expression_identifier($1); loc($$, @1); loc($1, @1);}
+		   | IDENTIFIER LBRACKET expression RBRACKET	{ $$ = mCc_ast_new_expression_array_identifier($1, $3); loc($$, @1); loc($1, @1);}
 	       | call_expr									{ $$ = mCc_ast_new_expression_function_call($1); loc($$, @1);}
 		   | unary_op expression						{ $$ = mCc_ast_new_expression_unary_op($1, $2); loc($$, @1);}
            | LPARENTH expression RPARENTH    			{ $$ = mCc_ast_new_expression_parenth($2); loc($$, @1);}
@@ -241,10 +241,10 @@ compound_stmt: LBRACE statement_list RBRACE					{
 
 
 
-function_def:   type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); loc($$, @1); }
-        	|   type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); loc($$, @1); }
-			|	VOID_TYPE IDENTIFIER LPARENTH RPARENTH compound_stmt		{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); loc($$, @1); }
-			|	VOID_TYPE IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); loc($$, @1); }
+function_def:   type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); loc($$, @1); loc($2, @2);}
+        	|   type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); loc($$, @1); loc($2, @2);}
+			|	VOID_TYPE IDENTIFIER LPARENTH RPARENTH compound_stmt		{ $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); loc($$, @1); loc($2, @2);}
+			|	VOID_TYPE IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); loc($$, @1); loc($2, @2);}
 			;
 
 function_list:	function_list function_def	{ 
@@ -283,8 +283,8 @@ parameters:   declaration					{ $$ = $1; loc($$, @1); }
 											}
           ;
 
-call_expr:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_new_non_parameterized_function_call($1); loc($$, @1); }
-		|	IDENTIFIER LPARENTH arguments RPARENTH	{ $$ = mCc_ast_new_parameterized_function_call($1, $3); loc($$, @1); }
+call_expr:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_new_non_parameterized_function_call($1); loc($$, @1); loc($1, @1);}
+		|	IDENTIFIER LPARENTH arguments RPARENTH	{ $$ = mCc_ast_new_parameterized_function_call($1, $3); loc($$, @1); loc($1, @1);}
 		;
 
 arguments:	expression					{ $$ = $1; loc($$, @1);}
