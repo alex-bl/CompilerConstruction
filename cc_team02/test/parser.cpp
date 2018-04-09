@@ -377,6 +377,19 @@ TEST(Parser, IfStatement_3)
 	mCc_ast_delete_statement(statement);
 }
 
+TEST(Parser, IfStatement_4)
+{
+	const char input[] = "if (isLeapYear(n)){print(\" is a leap year.\");}else{print(\" is not a leap year.\");}";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto statement = result.statement;
+
+	ASSERT_STREQ(" is a leap year.",
+	          statement->if_statement->expression->function_call->first_argument->literal->s_value);
+	mCc_ast_delete_statement(statement);
+}
+
+
 TEST(Parser, WhileStatement_1)
 {
 	const char input[] = "while(5){}";
@@ -606,6 +619,23 @@ TEST(Parser, CallExpression_3)
 	          call_expr->function_call->first_argument->type);
 	ASSERT_STREQ("bla", call_expr->function_call->first_argument->function_call
 	                        ->identifier->identifier_name);
+
+	mCc_ast_delete_expression(call_expr);
+}
+
+
+TEST(Parser, CallExpression_4)
+{
+	const char input[] = "foo(\"string_argument\")";
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+	auto call_expr = result.expression;
+
+	// test first argument
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL,
+	          call_expr->function_call->first_argument->type);
+	ASSERT_STREQ("string_argument", call_expr->function_call->first_argument->literal
+	                        ->s_value);
 
 	mCc_ast_delete_expression(call_expr);
 }
