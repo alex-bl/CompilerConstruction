@@ -15,12 +15,27 @@ extern "C" {
 enum mCc_symtab_identifier_type {
 	MCC_SYM_TAB_IDENTIFIER_VARIABLE,
 	MCC_SYM_TAB_IDENTIFIER_FUNCTION,
+	MCC_SYM_TAB_IDENTIFIER_FUNCTION_PARAMETER,
 };
 
 // TODO: maybe extend with other information?
 struct mCc_symbol_table_node {
-	enum mCc_ast_data_type data_type;
-	int scope_level;
+	enum mCc_symtab_identifier_type entry_type;
+	// int scope_level;
+	union {
+		/*var*/
+		enum mCc_ast_data_type data_type;
+		/*function*/
+		struct {
+			enum mCc_ast_data_type return_type;
+			struct mCc_symbol_table_node *first_parameter;
+		};
+		/*parameter*/
+		struct {
+			enum mCc_ast_data_type parameter_type;
+			struct mCc_symbol_table_node *next_parameter;
+		};
+	};
 };
 
 typedef map_t(struct mCc_symbol_table_node *) mCc_symbol_table_map_t;
@@ -29,7 +44,7 @@ struct mCc_symbol_table {
 	mCc_symbol_table_map_t *table;
 	mCc_symbol_table_map_t *parent;
 	int scope_level_table;
-	//reference to the scope-level which is set by the visitor
+	// reference to the scope-level which is set by the visitor
 	int *scope_level_visitor;
 };
 
@@ -43,6 +58,17 @@ struct mCc_symbol_table {
  */
 struct mCc_symbol_table_node *
 mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration);
+
+/**
+ * Creates a new symbol-table node out of a declaration (for parameter)
+ *
+ * @param declaration
+ * 		The ast-element of declaration
+ * @return
+ * 		A new symbol-table-node element
+ */
+struct mCc_symbol_table_node *
+mCc_symtab_new_parameter_declaration_node(struct mCc_ast_declaration *declaration);
 
 /**
  * Creates a new symbol-table node out of a function def
@@ -77,8 +103,8 @@ mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent);
  * 		The value (information such as type, etc...)
  */
 void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
-                             struct mCc_ast_identifier *key,
-                             struct mCc_symbol_table_node *value);
+                            struct mCc_ast_identifier *key,
+                            struct mCc_symbol_table_node *value);
 
 /**
  * Inserts a node into the symbol-table. More convenient if adding an
@@ -90,7 +116,7 @@ void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
  * 		The declaration (ast-element)
  */
 void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
-                                 struct mCc_ast_declaration *declaration);
+                                struct mCc_ast_declaration *declaration);
 
 /**
  * Inserts a node into the symbol-table. More convenient if adding an
@@ -119,7 +145,7 @@ void mCc_symtab_insert_function_def_node(
  */
 struct mCc_symbol_table_node *
 mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
-                   struct mCc_ast_identifier *identifier);
+                  struct mCc_ast_identifier *identifier);
 
 /**
  * Frees any allocated memory by the symbol-table (and its parents)
