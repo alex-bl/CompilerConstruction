@@ -233,9 +233,8 @@ ret_stmt:  RETURN_KEYWORD SEMICOLON												{ $$ = mCc_ast_new_return_stateme
 
 compound_stmt: LBRACE statement_list RBRACE					{ 
 																$$ = $2;
-																loc($$, @1);
 															}
-			|  LBRACE  RBRACE								{ $$ = NULL; loc($$, @1);}
+			|  LBRACE  RBRACE								{ $$ = NULL; }
             ;
 
 
@@ -250,15 +249,14 @@ function_def:   type IDENTIFIER LPARENTH RPARENTH compound_stmt				{ $$ = mCc_as
 function_list:	function_list function_def	{ 
 													struct mCc_ast_function_def* t = $1;
 													if(t == NULL){
-														$$ = $2;
-														loc($$, @1);
+														$$ = $2;														
 													}else{
 														while(t->next_function_def != NULL){
 															t = t->next_function_def;
 														}
 														t->next_function_def = $2;
 														$$ = $1;
-														loc($$, @1);
+														loc($2, @2);
 													}
 													
 											}
@@ -271,14 +269,13 @@ parameters:   declaration					{ $$ = $1; loc($$, @1); }
 												struct mCc_ast_declaration* t = $1;
 												if(t == NULL){
 													$$ = $3;
-													loc($$, @1);
 												}else{
 													while(t->next_declaration != NULL){
 														t = t->next_declaration;
 													}
 													t->next_declaration = $3;
 													$$ = $1;
-													loc($$, @1);
+													loc($3, @3);
 												}
 											}
           ;
@@ -292,14 +289,13 @@ arguments:	expression					{ $$ = $1; loc($$, @1);}
 												struct mCc_ast_expression* t = $1;
 												if(t == NULL){
 													$$ = $3;
-													loc($$, @1);
 												}else{
 													while(t->next_expr != NULL){
 														t = t->next_expr;
 													}
 													t->next_expr = $3;
 													$$ = $1;
-													loc($$, @1);
+													loc($3, @3);
 												}
 
 											}
