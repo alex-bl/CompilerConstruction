@@ -1,7 +1,9 @@
 #include "mCc/symtab_build.h"
 
 #include <assert.h>
+#include <stddef.h>
 
+#include "mCc/ast/ast_scope_info.h"
 #include "mCc/ast_print_visitors.h"
 #include "mCc/ast_visit.h"
 #include "mCc/symtab/symbol_table.h"
@@ -9,17 +11,18 @@
 
 //"global" visitor needed
 static struct mCc_ast_visitor
-symtab_visitor(struct mCc_symbol_table *symbol_table, int *start_scope_level)
+symtab_visitor(struct mCc_symbol_table **symbol_table,
+               struct mCc_ast_scope_holder *scope_level)
 {
 	assert(symbol_table);
-	assert(start_scope_level);
+	assert(scope_level);
 
 	return (struct mCc_ast_visitor){
 
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
 		.order = MCC_AST_VISIT_PRE_ORDER,
 		.userdata = symbol_table,
-		.scope_level = start_scope_level,
+		.scope_level = scope_level,
 
 		//.expression
 		.expression_literal = mCc_symtab_handle_expression_literal,
@@ -65,164 +68,66 @@ symtab_visitor(struct mCc_symbol_table *symbol_table, int *start_scope_level)
 	};
 }
 
-void mCc_symtab_build_program(struct mCc_symbol_table *symbol_table,
-                              int *start_scope_level,
-                              struct mCc_ast_program *program)
+void mCc_symtab_build_program(struct mCc_ast_program *program)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
 	assert(program);
 
+	struct mCc_ast_scope_holder *start_scope_level_visitor =
+	    mCc_symtab_create_and_init_scope_holder();
+
+	struct mCc_symbol_table *symbol_table=mCc_symtab_new_symbol_table(NULL);
+	// TODO: add build-ins
+
 	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
+	    symtab_visitor(&symbol_table, start_scope_level_visitor);
 
 	// make sure that the callbacks can access to the visitor's
 	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
+	symbol_table->scope_level_visitor = start_scope_level_visitor;
 
 	mCc_ast_visit_program(program, &visitor);
 }
 
-void mCc_symtab_build_assignment(struct mCc_symbol_table *symbol_table,
-                                 int *start_scope_level,
-                                 struct mCc_ast_assignment *assignment)
+void mCc_symtab_build_assignment(struct mCc_ast_assignment *assignment)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
 	assert(assignment);
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
-
-	mCc_ast_visit_assignment(assignment, &visitor);
 }
 
-void mCc_symtab_build_declaration(struct mCc_symbol_table *symbol_table,
-                                  int *start_scope_level,
-                                  struct mCc_ast_declaration *declaration)
+void mCc_symtab_build_declaration(struct mCc_ast_declaration *declaration)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
 	assert(declaration);
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
-
-	mCc_ast_visit_declaration(declaration, &visitor);
 }
 
-void mCc_symtab_build_expression(struct mCc_symbol_table *symbol_table,
-                                 int *start_scope_level,
-                                 struct mCc_ast_expression *expression)
+void mCc_symtab_build_expression(struct mCc_ast_expression *expression)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
 	assert(expression);
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
-
-	mCc_ast_visit_expression(expression, &visitor);
 }
 
-void mCc_symtab_build_function_def(struct mCc_symbol_table *symbol_table,
-                               int *start_scope_level,
-                               struct mCc_ast_function_def *function_def)
+void mCc_symtab_build_function_def(struct mCc_ast_function_def *function_def)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
+
 	assert(function_def);
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
-
-	mCc_ast_visit_function_def(function_def, &visitor);
 }
 
-void mCc_symtab_build_function_call(struct mCc_symbol_table *symbol_table,
-                               int *start_scope_level,
-                               struct mCc_ast_function_call *function_call)
+void mCc_symtab_build_function_call(struct mCc_ast_function_call *function_call)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
 	assert(function_call);
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
-
-	mCc_ast_visit_function_call(function_call, &visitor);
 }
 
-void mCc_symtab_build_identifier(struct mCc_symbol_table *symbol_table,
-                                 int *start_scope_level,
-                                 struct mCc_ast_identifier *identifier)
+void mCc_symtab_build_identifier(struct mCc_ast_identifier *identifier)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
+
 	assert(identifier);
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
-
-	mCc_ast_visit_identifier(identifier, &visitor);
 }
 
-void mCc_symtab_build_literal(struct mCc_symbol_table *symbol_table,
-                              int *start_scope_level,
-                              struct mCc_ast_literal *literal)
+void mCc_symtab_build_literal(struct mCc_ast_literal *literal)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
+
 	assert(literal);
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
-
-	mCc_ast_visit_literal(literal, &visitor);
 }
 
-void mCc_symtab_build_statement(struct mCc_symbol_table *symbol_table,
-                                int *start_scope_level,
-                                struct mCc_ast_statement *statement)
+void mCc_symtab_build_statement(struct mCc_ast_statement *statement)
 {
-	assert(symbol_table);
-	assert(start_scope_level);
+
 	assert(statement);
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(symbol_table, start_scope_level);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level;
-
-	mCc_ast_visit_statement(statement, &visitor);
 }

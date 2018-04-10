@@ -2,6 +2,7 @@
 #define MCC_AST_VISIT_H
 
 #include "mCc/ast.h"
+#include "mCc/ast/ast_scope_info.h"
 
 #define visit(node, callback, visitor) \
 	do { \
@@ -68,7 +69,7 @@ struct mCc_ast_visitor {
 	enum mCc_ast_visit_order order;
 
 	void *userdata;
-	int *scope_level;
+	struct mCc_ast_scope_holder *scope_level;
 
 	// expression
 	mCc_ast_visit_expression_cb expression;

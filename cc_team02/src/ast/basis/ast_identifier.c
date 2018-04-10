@@ -14,6 +14,7 @@ struct mCc_ast_identifier *mCc_ast_new_identifier(char *name)
 	}
 
 	ident->identifier_name = name;
+	ident->symtab_info = NULL;
 	return ident;
 }
 

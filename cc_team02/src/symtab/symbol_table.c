@@ -6,6 +6,18 @@
 
 #include "log.h"
 
+struct mCc_ast_scope_holder *mCc_symtab_create_and_init_scope_holder()
+{
+	struct mCc_ast_scope_holder *scope_level = malloc(sizeof(*scope_level));
+	if (!scope_level) {
+		return NULL;
+	}
+	scope_level->major_level = 0;
+	scope_level->minor_level = 0;
+
+	return scope_level;
+}
+
 struct mCc_symbol_table_node *
 mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration)
 {
@@ -87,6 +99,7 @@ mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent)
 	}
 
 	symbol_table->parent = parent;
+	symbol_table->scope_level_table = mCc_symtab_create_and_init_scope_holder();
 	// init hash-map
 	map_init(symbol_table->table);
 
@@ -120,8 +133,7 @@ void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
 		identifier = declaration->array_identifier;
 	}
 
-	mCc_symtab_insert_node(symbol_table->table, identifier->identifier_name,
-	                       to_insert);
+	mCc_symtab_insert_node(symbol_table, identifier, to_insert);
 }
 
 void mCc_symtab_insert_function_def_node(
@@ -133,9 +145,7 @@ void mCc_symtab_insert_function_def_node(
 
 	struct mCc_symbol_table_node *to_insert =
 	    mCc_symtab_new_function_def_node(function_def);
-	mCc_symtab_insert_node(symbol_table->table,
-	                       function_def->identifier->identifier_name,
-	                       to_insert);
+	mCc_symtab_insert_node(symbol_table, function_def->identifier, to_insert);
 }
 
 struct mCc_symbol_table_node *

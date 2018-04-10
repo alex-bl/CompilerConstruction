@@ -2,7 +2,7 @@
 #define MCC_AST_IDENTIFIER_H
 
 #include "mCc/ast/basis/ast_node.h"
-#include "mCc/symtab/symbol_table.h"
+#include "mCc/symtab/symtab_node.h"
 
 #ifdef __cplusplus
 extern "C" {

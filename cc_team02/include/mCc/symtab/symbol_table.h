@@ -1,10 +1,11 @@
 #ifndef MCC_SYMBOL_TABLE_H
 #define MCC_SYMBOL_TABLE_H
 
-#include "mCc/ast/basis/ast_data_type.h"
+#include "mCc/ast/ast_scope_info.h"
 #include "mCc/ast/basis/ast_declaration.h"
 #include "mCc/ast/basis/ast_function.h"
 #include "mCc/ast/basis/ast_identifier.h"
+#include "mCc/symtab/symtab_node.h"
 
 #include "map.h"
 
@@ -12,41 +13,23 @@
 extern "C" {
 #endif
 
-enum mCc_symtab_identifier_type {
-	MCC_SYM_TAB_IDENTIFIER_VARIABLE,
-	MCC_SYM_TAB_IDENTIFIER_FUNCTION,
-	MCC_SYM_TAB_IDENTIFIER_FUNCTION_PARAMETER,
-};
-
-// TODO: maybe extend with other information?
-struct mCc_symbol_table_node {
-	enum mCc_symtab_identifier_type entry_type;
-	// int scope_level;
-	union {
-		/*var*/
-		enum mCc_ast_data_type data_type;
-		/*function*/
-		struct {
-			enum mCc_ast_data_type return_type;
-			struct mCc_symbol_table_node *first_parameter;
-		};
-		/*parameter*/
-		struct {
-			enum mCc_ast_data_type parameter_type;
-			struct mCc_symbol_table_node *next_parameter;
-		};
-	};
-};
-
 typedef map_t(struct mCc_symbol_table_node *) mCc_symbol_table_map_t;
 
 struct mCc_symbol_table {
 	mCc_symbol_table_map_t *table;
 	struct mCc_symbol_table *parent;
-	int scope_level_table;
+	struct mCc_ast_scope_holder *scope_level_table;
 	// reference to the scope-level which is set by the visitor
-	int *scope_level_visitor;
+	struct mCc_ast_scope_holder *scope_level_visitor;
 };
+
+/**
+ * Creates and initializes a scope-holder struct
+ *
+ * @return
+ * 		The scope-holder-struct or NULL in error-case
+ */
+struct mCc_ast_scope_holder *mCc_symtab_create_and_init_scope_holder();
 
 /**
  * Creates a new symbol-table node out of a declaration
@@ -67,8 +50,8 @@ mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration);
  * @return
  * 		A new symbol-table-node element
  */
-struct mCc_symbol_table_node *
-mCc_symtab_new_parameter_declaration_node(struct mCc_ast_declaration *declaration);
+struct mCc_symbol_table_node *mCc_symtab_new_parameter_declaration_node(
+    struct mCc_ast_declaration *declaration);
 
 /**
  * Creates a new symbol-table node out of a function def

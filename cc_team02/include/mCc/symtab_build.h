@@ -16,41 +16,24 @@
 extern "C" {
 #endif
 
-void mCc_symtab_build_assignment(struct mCc_symbol_table *symbol_table,
-                                 int *start_scope_level,
-                                 struct mCc_ast_assignment *assignment);
+void mCc_symtab_build_assignment(struct mCc_ast_assignment *assignment);
 
-void mCc_symtab_build_statement(struct mCc_symbol_table *symbol_table,
-                                int *start_scope_level,
-                                struct mCc_ast_statement *statement);
+void mCc_symtab_build_statement(struct mCc_ast_statement *statement);
 
-void mCc_symtab_build_program(struct mCc_symbol_table *symbol_table,
-                              int *start_scope_level,
-                              struct mCc_ast_program *program);
+void mCc_symtab_build_program(struct mCc_ast_program *program);
 
-void mCc_symtab_build_literal(struct mCc_symbol_table *symbol_table,
-                              int *start_scope_level,
-                              struct mCc_ast_literal *literal);
+void mCc_symtab_build_literal(struct mCc_ast_literal *literal);
 
-void mCc_symtab_build_identifier(struct mCc_symbol_table *symbol_table,
-                                 int *start_scope_level,
-                                 struct mCc_ast_identifier *identifier);
+void mCc_symtab_build_identifier(struct mCc_ast_identifier *identifier);
 
-void mCc_symtab_build_function_def(struct mCc_symbol_table *symbol_table,
-                                   int *start_scope_level,
-                                   struct mCc_ast_function_def *function_def);
+void mCc_symtab_build_function_def(struct mCc_ast_function_def *function_def);
 
 void mCc_symtab_build_function_call(
-    struct mCc_symbol_table *symbol_table, int *start_scope_level,
     struct mCc_ast_function_call *function_call);
 
-void mCc_symtab_build_expression(struct mCc_symbol_table *symbol_table,
-                                 int *start_scope_level,
-                                 struct mCc_ast_expression *expression);
+void mCc_symtab_build_expression(struct mCc_ast_expression *expression);
 
-void mCc_symtab_build_declaration(struct mCc_symbol_table *symbol_table,
-                                  int *start_scope_level,
-                                  struct mCc_ast_declaration *declaration);
+void mCc_symtab_build_declaration(struct mCc_ast_declaration *declaration);
 
 #ifdef __cplusplus
 }
