@@ -1,8 +1,0 @@
-#!/bin/bash
-# navigate the meson build dir and rebuild the mCc target manually
-
-cd $1;
-ninja mCc;
-
-# after that, run the integration-test script
-./../test/integration
