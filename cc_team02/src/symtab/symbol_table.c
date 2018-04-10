@@ -101,7 +101,7 @@ mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent)
 	symbol_table->parent = parent;
 	symbol_table->scope_level_table = mCc_symtab_create_and_init_scope_holder();
 	// init hash-map
-	map_init(symbol_table->table);
+	map_init(&(symbol_table->table));
 
 	return symbol_table;
 }
@@ -114,7 +114,7 @@ void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
 	assert(key);
 	assert(value);
 
-	map_set(symbol_table->table, key->identifier_name, value);
+	map_set(&(symbol_table->table), key->identifier_name, value);
 }
 
 void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
@@ -155,8 +155,9 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
 	assert(symbol_table);
 	assert(identifier);
 
+	//map_get gives a pointer to the result => dereference it once to get the pointer to the symbol-table
 	struct mCc_symbol_table_node *result_from_current_node =
-	    map_get(symbol_table->table, identifier->identifier_name);
+	    *(map_get(&(symbol_table->table), identifier->identifier_name));
 
 	// hit at current scope
 	if (result_from_current_node) {
@@ -183,5 +184,5 @@ void mCc_symtab_delete_symbol_table(struct mCc_symbol_table *symbol_table)
 	 * just free "current" symbol-table
 	 * do not touch parent!
 	 */
-	map_deinit_(symbol_table->table);
+	map_deinit(&(symbol_table->table));
 }

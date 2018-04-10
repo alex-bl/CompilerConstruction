@@ -92,7 +92,7 @@ add_subdirectory(src)
 
 # link libs with executables
 add_executable(mCc src/bin/mCc.c)
-target_link_libraries(mCc mCc_lib)
+target_link_libraries(mCc mCc_lib ext_map)
 
 add_executable(mC_to_dot src/bin/mC_to_dot.c)
 target_link_libraries(mC_to_dot mCc_lib)

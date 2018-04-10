@@ -1,11 +1,11 @@
 #ifndef MCC_SYMBOL_TABLE_H
 #define MCC_SYMBOL_TABLE_H
 
-#include "mCc/ast/ast_scope_info.h"
 #include "mCc/ast/basis/ast_declaration.h"
 #include "mCc/ast/basis/ast_function.h"
 #include "mCc/ast/basis/ast_identifier.h"
 #include "mCc/symtab/symtab_node.h"
+#include "mCc/ast/ast_scope_info.h"
 
 #include "map.h"
 
@@ -16,7 +16,8 @@ extern "C" {
 typedef map_t(struct mCc_symbol_table_node *) mCc_symbol_table_map_t;
 
 struct mCc_symbol_table {
-	mCc_symbol_table_map_t *table;
+	// TODO: local or on heap?
+	mCc_symbol_table_map_t table;
 	struct mCc_symbol_table *parent;
 	struct mCc_ast_scope_holder *scope_level_table;
 	// reference to the scope-level which is set by the visitor
