@@ -3,7 +3,6 @@
 #include <assert.h>
 #include <stddef.h>
 
-#include "mCc/ast/ast_scope_info.h"
 #include "mCc/ast_print_visitors.h"
 #include "mCc/ast_visit.h"
 #include "mCc/symtab/symbol_table.h"
@@ -11,18 +10,15 @@
 
 //"global" visitor needed
 static struct mCc_ast_visitor
-symtab_visitor(struct mCc_symbol_table **symbol_table,
-               struct mCc_ast_scope_holder *scope_level)
+symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 {
-	assert(symbol_table);
-	assert(scope_level);
+	assert(symtab_info_holder);
 
 	return (struct mCc_ast_visitor){
 
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
 		.order = MCC_AST_VISIT_PRE_ORDER,
-		.userdata = symbol_table,
-		.scope_level = scope_level,
+		.userdata = symtab_info_holder,
 
 		//.expression
 		.expression_literal = mCc_symtab_handle_expression_literal,
@@ -72,18 +68,14 @@ void mCc_symtab_build_program(struct mCc_ast_program *program)
 {
 	assert(program);
 
-	struct mCc_ast_scope_holder *start_scope_level_visitor =
-	    mCc_symtab_create_and_init_scope_holder();
+	struct mCc_symbol_table *symbol_table = mCc_symtab_new_symbol_table(NULL);
+	struct mCc_symtab_and_validation_holder info_holder;
 
-	struct mCc_symbol_table *symbol_table=mCc_symtab_new_symbol_table(NULL);
+	info_holder.symbol_table=symbol_table;
+	info_holder.first_semantic_error=NULL;
+
 	// TODO: add build-ins
-
-	struct mCc_ast_visitor visitor =
-	    symtab_visitor(&symbol_table, start_scope_level_visitor);
-
-	// make sure that the callbacks can access to the visitor's
-	// "scope-level-counter"
-	symbol_table->scope_level_visitor = start_scope_level_visitor;
+	struct mCc_ast_visitor visitor = symtab_visitor(&info_holder);
 
 	mCc_ast_visit_program(program, &visitor);
 }

@@ -17,6 +17,7 @@ enum mCc_validation_status_type {
 struct mCc_validation_status_result {
 	enum mCc_validation_status_type validation_status;
 	const char *error_msg;
+	struct mCc_validation_status_result *next;
 };
 
 struct mCc_validation_status_result *mCc_validator_new_validation_result(

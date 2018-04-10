@@ -28,20 +28,10 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_expression(statement->condition_expression, visitor);
 
-		// new major scope
-		(visitor->scope_level->major_level)++;
-
 		// if + else stmts may be empty
 		mCc_ast_visit_optional_statement(statement->if_statement, visitor);
 
-		// new minor scope: same hierarchy-level, but different scope
-		(visitor->scope_level->minor_level)++;
-
 		mCc_ast_visit_optional_statement(statement->else_statement, visitor);
-
-		// returning to old scope: both major + minor
-		(visitor->scope_level->major_level)--;
-		(visitor->scope_level->minor_level)--;
 
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 

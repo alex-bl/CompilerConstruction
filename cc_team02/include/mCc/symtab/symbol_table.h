@@ -5,7 +5,7 @@
 #include "mCc/ast/basis/ast_function.h"
 #include "mCc/ast/basis/ast_identifier.h"
 #include "mCc/symtab/symtab_node.h"
-#include "mCc/ast/ast_scope_info.h"
+#include "mCc/symtab/validator/validator.h"
 
 #include "map.h"
 
@@ -19,9 +19,13 @@ struct mCc_symbol_table {
 	// TODO: local or on heap?
 	mCc_symbol_table_map_t table;
 	struct mCc_symbol_table *parent;
-	struct mCc_ast_scope_holder *scope_level_table;
-	// reference to the scope-level which is set by the visitor
-	struct mCc_ast_scope_holder *scope_level_visitor;
+	int scope_level;
+};
+
+//is passed via userdata (visitors)
+struct mCc_symtab_and_validation_holder {
+	struct mCc_symbol_table *symbol_table;
+	struct mCc_validation_status_result *first_semantic_error;
 };
 
 /**

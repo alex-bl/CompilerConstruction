@@ -6,18 +6,6 @@
 
 #include "log.h"
 
-struct mCc_ast_scope_holder *mCc_symtab_create_and_init_scope_holder()
-{
-	struct mCc_ast_scope_holder *scope_level = malloc(sizeof(*scope_level));
-	if (!scope_level) {
-		return NULL;
-	}
-	scope_level->major_level = 0;
-	scope_level->minor_level = 0;
-
-	return scope_level;
-}
-
 struct mCc_symbol_table_node *
 mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration)
 {
@@ -99,7 +87,13 @@ mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent)
 	}
 
 	symbol_table->parent = parent;
-	symbol_table->scope_level_table = mCc_symtab_create_and_init_scope_holder();
+	// new table means new scope => increment level
+	if (parent) {
+		symbol_table->scope_level = parent->scope_level + 1;
+	} else {
+		//"global" symtab
+		symbol_table->scope_level = 0;
+	}
 	// init hash-map
 	map_init(&(symbol_table->table));
 
@@ -155,7 +149,8 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
 	assert(symbol_table);
 	assert(identifier);
 
-	//map_get gives a pointer to the result => dereference it once to get the pointer to the symbol-table
+	// map_get gives a pointer to the result => dereference it once to get the
+	// pointer to the symbol-table
 	struct mCc_symbol_table_node *result_from_current_node =
 	    *(map_get(&(symbol_table->table), identifier->identifier_name));
 

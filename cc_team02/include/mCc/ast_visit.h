@@ -2,7 +2,6 @@
 #define MCC_AST_VISIT_H
 
 #include "mCc/ast.h"
-#include "mCc/ast/ast_scope_info.h"
 
 #define visit(node, callback, visitor) \
 	do { \
