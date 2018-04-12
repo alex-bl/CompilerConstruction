@@ -2,7 +2,7 @@
 #include "mCc/ast.h"
 #include "mCc_test/mCc_test_utils.h"
 #include "gtest/gtest.h"
-#include <iostream>
+
 
 TEST(Parser, BinaryOp_1)
 {
