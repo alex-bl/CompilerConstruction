@@ -118,10 +118,7 @@ void mCc_parser_error();
 
 %%
 
-toplevel: assignment 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_ASSIGNMENT; result->assignment = $1;}
-		| function_def	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_FUNCTION_DEF; result->function_def = $1;}
-		| declaration 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_DECLARATION; result->declaration = $1;}
-		| statement_list  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_STATEMENT; result->statement = $1;}
+toplevel: statement_list  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_STATEMENT; result->statement = $1;}
 		| expression 	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_EXPRESSION; result->expression = $1;}
 		| program 	  	{ result->top_level_type=MCC_PARSER_TOP_LEVEL_PROGRAM; result->program = $1; } 
 		;
