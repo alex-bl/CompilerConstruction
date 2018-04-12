@@ -26,6 +26,7 @@ void main()
 	while (i < (num-1)) {
 		j = 0;
 		while (j < (num-1-i)) {
+			/*For decreasing order, use < */
 			if (arr[j] > arr[j+1])
 	    	{
 	       		swap = arr[j];
