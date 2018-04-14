@@ -3,6 +3,7 @@
 #include "mCc_test/mCc_test_utils.h"
 #include "gtest/gtest.h"
 
+
 TEST(Parser, BinaryOp_1)
 {
 	const char input[] = "192 + 3.14";
@@ -295,45 +296,50 @@ TEST(Parser, MissingClosingParenthesis_1)
 
 TEST(Parser, Assignment_1)
 {
-	const char input[] = "a = 4";
+	const char input[] = "a = 4;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
 
-	auto assignment = result.assignment;
+	auto statement = result.statement;
 
-	ASSERT_EQ(4, assignment->assigned_expression->literal->i_value);
-	ASSERT_STREQ("a", assignment->identifier->identifier_name);
-	ASSERT_EQ(MCC_AST_ASSIGNMENT_PRIMITIVE, assignment->assignment_type);
-	mCc_ast_delete_assignment(assignment);
+	ASSERT_EQ(4, statement->assignment->assigned_expression->literal->i_value);
+	ASSERT_STREQ("a", statement->assignment->identifier->identifier_name);
+	ASSERT_EQ(MCC_AST_ASSIGNMENT_PRIMITIVE,
+	          statement->assignment->assignment_type);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Assignment_2)
 {
-	const char input[] = "a = \"london\"";
+	const char input[] = "a = \"london\";";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto assignment = result.assignment;
+	auto statement = result.statement;
 
-	ASSERT_EQ(MCC_AST_ASSIGNMENT_PRIMITIVE, assignment->assignment_type);
-	ASSERT_STREQ("a", assignment->identifier->identifier_name);
-	ASSERT_STREQ("london", assignment->assigned_expression->literal->s_value);
+	ASSERT_EQ(MCC_AST_ASSIGNMENT_PRIMITIVE,
+	          statement->assignment->assignment_type);
+	ASSERT_STREQ("a", statement->assignment->identifier->identifier_name);
+	ASSERT_STREQ("london",
+	             statement->assignment->assigned_expression->literal->s_value);
 
-	mCc_ast_delete_assignment(assignment);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Assignment_3)
 {
-	const char input[] = "a[3] = 4";
+	const char input[] = "a[3] = 4;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto assignment = result.assignment;
+	auto statement = result.statement;
 
-	ASSERT_EQ(MCC_AST_ASSIGNMENT_ARRAY, assignment->assignment_type);
-	ASSERT_EQ(3, assignment->array_index_expression->literal->i_value);
-	ASSERT_EQ(4, assignment->array_assigned_expression->literal->i_value);
-	ASSERT_STREQ("a", assignment->identifier->identifier_name);
+	ASSERT_EQ(MCC_AST_ASSIGNMENT_ARRAY, statement->assignment->assignment_type);
+	ASSERT_EQ(3,
+	          statement->assignment->array_index_expression->literal->i_value);
+	ASSERT_EQ(
+	    4, statement->assignment->array_assigned_expression->literal->i_value);
+	ASSERT_STREQ("a", statement->assignment->identifier->identifier_name);
 
-	mCc_ast_delete_assignment(assignment);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, IfStatement_1)
@@ -439,104 +445,109 @@ TEST(Parser, NestedStatement_1)
 
 TEST(Parser, Declaration_1)
 {
-	const char input[] = "int a";
+	const char input[] = "int a;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto declaration = result.declaration;
+	auto statement = result.statement;
 
-	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE, declaration->declaration_type);
-	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, declaration->data_type);
-	ASSERT_STREQ("a", declaration->identifier->identifier_name);
-	mCc_ast_delete_declaration(declaration);
+	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE,
+	          statement->declaration->declaration_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, statement->declaration->data_type);
+	ASSERT_STREQ("a", statement->declaration->identifier->identifier_name);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Declaration_2)
 {
-	const char input[] = "bool a";
+	const char input[] = "bool a;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto declaration = result.declaration;
+	auto statement = result.statement;
 
-	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE, declaration->declaration_type);
-	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, declaration->data_type);
-	ASSERT_STREQ("a", declaration->identifier->identifier_name);
-	mCc_ast_delete_declaration(declaration);
+	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE,
+	          statement->declaration->declaration_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, statement->declaration->data_type);
+	ASSERT_STREQ("a", statement->declaration->identifier->identifier_name);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Declaration_3)
 {
-	const char input[] = "string a";
+	const char input[] = "string a;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto declaration = result.declaration;
+	auto statement = result.statement;
 
-	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE, declaration->declaration_type);
-	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING, declaration->data_type);
-	ASSERT_STREQ("a", declaration->identifier->identifier_name);
-	mCc_ast_delete_declaration(declaration);
+	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE,
+	          statement->declaration->declaration_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING, statement->declaration->data_type);
+	ASSERT_STREQ("a", statement->declaration->identifier->identifier_name);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Declaration_4)
 {
-	const char input[] = "float a";
+	const char input[] = "float a;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto declaration = result.declaration;
+	auto statement = result.statement;
 
-	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE, declaration->declaration_type);
-	ASSERT_EQ(MCC_AST_DATA_TYPE_FLOAT, declaration->data_type);
-	ASSERT_STREQ("a", declaration->identifier->identifier_name);
-	mCc_ast_delete_declaration(declaration);
+	ASSERT_EQ(MCC_AST_DECLARATION_PRIMITIVE,
+	          statement->declaration->declaration_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_FLOAT, statement->declaration->data_type);
+	ASSERT_STREQ("a", statement->declaration->identifier->identifier_name);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Literal_1)
 {
-	const char input[] = "a = 3.4";
+	const char input[] = "a = 3.4;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto assignment = result.assignment;
+	auto statement = result.statement;
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_FLOAT,
-	          assignment->assigned_expression->literal->type);
-	mCc_ast_delete_assignment(assignment);
+	          statement->assignment->assigned_expression->literal->type);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Literal_2)
 {
-	const char input[] = "a = \"hallo\"";
+	const char input[] = "a = \"hallo\";";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto assignment = result.assignment;
+	auto statement = result.statement;
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING,
-	          assignment->assigned_expression->literal->type);
-	ASSERT_STREQ("hallo", assignment->assigned_expression->literal->s_value);
+	          statement->assignment->assigned_expression->literal->type);
+	ASSERT_STREQ("hallo",
+	             statement->assignment->assigned_expression->literal->s_value);
 
-	mCc_ast_delete_assignment(assignment);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Literal_3)
 {
-	const char input[] = "a = true";
+	const char input[] = "a = true;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto assignment = result.assignment;
+	auto statement = result.statement;
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL,
-	          assignment->assigned_expression->literal->type);
-	mCc_ast_delete_assignment(assignment);
+	          statement->assignment->assigned_expression->literal->type);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Literal_4)
 {
-	const char input[] = "a = 3";
+	const char input[] = "a = 3;";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto assignment = result.assignment;
+	auto statement = result.statement;
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INT,
-	          assignment->assigned_expression->literal->type);
-	mCc_ast_delete_assignment(assignment);
+	          statement->assignment->assigned_expression->literal->type);
+	mCc_ast_delete_statement(statement);
 }
 
 TEST(Parser, Function_1)
@@ -544,20 +555,23 @@ TEST(Parser, Function_1)
 	const char input[] = "int foo(bool a, int b){int bla;}";
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto function = result.function_def;
+	auto program = result.program;
 
 	// test first parameter
-	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, function->return_type);
-	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, function->first_parameter->data_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, program->first_function_def->return_type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL,
+	          program->first_function_def->first_parameter->data_type);
 
 	// test second parameter
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INT,
-	          function->first_parameter->next_declaration->data_type);
+	          program->first_function_def->first_parameter->next_declaration
+	              ->data_type);
 
 	// test statement
-	ASSERT_EQ(MCC_AST_DATA_TYPE_INT,
-	          function->first_statement->declaration->data_type);
-	mCc_ast_delete_function_def(function);
+	ASSERT_EQ(
+	    MCC_AST_DATA_TYPE_INT,
+	    program->first_function_def->first_statement->declaration->data_type);
+	mCc_ast_delete_program(program);
 }
 
 TEST(Parser, CallExpression_1)
@@ -784,42 +798,4 @@ TEST(Parser, CommentsMultiline)
 	ASSERT_EQ(4, statement->next_statement->node.sloc.start_line);
 
 	mCc_parser_destroy_parser(result);
-}
-
-TEST(Parser, SrcLocationIdentifier)
-{
-	const char input[] = "int get_num(){} \n string get_string(){}";
-	auto result = mCc_parser_parse_string(input);
-	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto program = result.program;
-
-	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
-	ASSERT_EQ(MCC_AST_DATA_TYPE_STRING,
-	          program->first_function_def->next_function_def->return_type);
-
-	ASSERT_EQ(5, program->first_function_def->identifier->node.sloc.start_col);
-	ASSERT_EQ(2, program->first_function_def->next_function_def->identifier
-	                 ->node.sloc.start_line);
-	ASSERT_EQ(8, program->first_function_def->next_function_def->identifier
-	                 ->node.sloc.start_col);
-
-	mCc_ast_delete_program(program);
-}
-
-TEST(Parser, SrcLocationParams)
-{
-	const char input[] = "int get_num(int a, int b){}";
-	auto result = mCc_parser_parse_string(input);
-	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
-	auto function_def = result.function_def;
-
-	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_FUNCTION_DEF, result.top_level_type);
-	ASSERT_EQ(MCC_AST_DATA_TYPE_INT, function_def->return_type);
-
-	ASSERT_EQ(13, function_def->first_parameter->node.sloc.start_col);
-	ASSERT_EQ(
-	    20,
-	    function_def->first_parameter->next_declaration->node.sloc.start_col);
-
-	mCc_ast_delete_function_def(function_def);
 }
