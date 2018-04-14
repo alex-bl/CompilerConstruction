@@ -19,21 +19,23 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
 		.order = MCC_AST_VISIT_PRE_ORDER,
 		.userdata = symtab_info_holder,
-
+		// TODO: declaration-handler -> in function AND in statement
+		// (declaration-handler not needed anymore)
 		//===============================
 		// needed for symtab-construction:
-		.function_def_enter_scope = mCc_symtab_function_def_enter_scope,
-		.function_def_leave_scope = mCc_symtab_function_def_leave_scope,
-		.statement_if_enter_scope = mCc_symtab_statement_if_enter_scope,
-		.statement_if_leave_scope = mCc_symtab_statement_if_leave_scope,
-		.statement_while_enter_scope = mCc_symtab_statement_while_leave_scope,
-		.statement_while_leave_scope = mCc_symtab_statement_while_leave_scope,
-		//.declaration => add declarations to current symtab
-		.declaration_primitive = mCc_symtab_handle_declaration_primitive,
-		.declaration_array = mCc_symtab_handle_declaration_array,
-		// identifier => get from symtab an link information
+		.function_def_enter_scope = mCc_symtab_enter_scope,
+		.function_def_leave_scope = mCc_symtab_leave_scope,
+		.statement_if_enter_scope = mCc_symtab_enter_scope,
+		.statement_if_leave_scope = mCc_symtab_leave_scope,
+		.statement_while_enter_scope = mCc_symtab_enter_scope,
+		.statement_while_leave_scope = mCc_symtab_leave_scope,
+		// needed
 		.identifier = mCc_symtab_handle_identifier,
+		// identifier => get from symtab an link information
+		.function_def = mCc_symtab_handle_function_def,
+		.statement_declaration = mCc_symtab_handle_statement_declaration,
 		//=================================
+
 
 		// maybe not needed inside symtab-construction
 		//.expression
@@ -49,19 +51,20 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.literal_float = NULL,
 		.literal_bool = NULL,
 		.literal_string = NULL,
+		//.declaration => add declarations to current symtab
+		.declaration_primitive = NULL,
+		.declaration_array = NULL,
 		//.assignment
 		.assignment_primitive = NULL,
 		.assignment_array = NULL,
 		//.function
 		.function_call = NULL,
-		.function_def = NULL,
 		// program
 		.program = NULL,
 		// statement
 		.statement_if = NULL,
 		.statement_while = NULL,
 		.statement_return = NULL,
-		.statement_declaration = NULL,
 		.statement_assignment = NULL,
 		.statement_expression = NULL,
 	};

@@ -1,34 +1,33 @@
 #include "mCc/symtab/handler/symtab_handle_function.h"
-#include "mCc/symtab/symbol_table.h"
 
 #include <assert.h>
 #include <stddef.h>
 
-void mCc_symtab_function_def_enter_scope(struct mCc_ast_function_def *def,
-                                         void *data)
+#include "log.h"
+#include "mCc/symtab/symbol_table.h"
+
+/*
+ * TODO: Do checks if already defined within this scope!
+ */
+void mCc_symtab_handle_function_def(struct mCc_ast_function_def *def,
+                                    void *data)
 {
-	// TODO: check
+	assert(def);
+	assert(data);
+
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
+	int scope_level = info_holder->symbol_table->scope_level;
 
-	struct mCc_symbol_table *parent_scope_symtab = info_holder->symbol_table;
+	//TODO: base_validator-h-checks
 
-	struct mCc_symbol_table *current_scope_symtab =
-	    mCc_symtab_new_symbol_table(parent_scope_symtab);
+	log_debug("Inserting function-definition and parameters to symbol-table "
+	          "scope %d...",
+	          scope_level);
 
-	// set new actual symtab
-	((struct mCc_symtab_and_validation_holder *)data)->symbol_table =
-	    current_scope_symtab;
+	mCc_symtab_insert_function_def_node(info_holder->symbol_table, def);
 
-	/*
-	 * TODO: Wie kehrt man zum "alten" scope zurück?
-	 * => Machbar so wie jetzt oder "scope-counter"?
-	 * => Eigene "scope-manager"? => callbacks, die symbol-table verschieben
-	 */
-}
-
-void mCc_symtab_function_def_leave_scope(struct mCc_ast_function_def *def,
-                                         void *data)
-{
-	/*TODO*/
+	log_debug("Function-definition and parameters inserted to symbol-table "
+	          "scope %d...",
+	          scope_level);
 }

@@ -43,7 +43,7 @@ add_library(mCc_print SHARED ast/print/ast_basic_printing.c
 							ast/print/ast_print_statement.c)
 
 # symbol-table-handler (for building the symbol-table and validation)
-add_library(mCc_symtab SHARED symtab/handler/symtab_handle_declaration.c
+add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 							symtab/handler/symtab_handle_function.c
 							symtab/handler/symtab_handle_identifier.c
 							symtab/handler/symtab_handle_statement.c

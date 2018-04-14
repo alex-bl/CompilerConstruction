@@ -10,10 +10,24 @@
 		} \
 	} while (0)
 
+#define visit_scope(callback, visitor) \
+	do { \
+		if (callback) { \
+			(callback)((visitor)->userdata); \
+		} \
+	} while (0)
+
 #define visit_if(cond, node, callback, visitor) \
 	do { \
 		if (cond) { \
 			visit(node, callback, visitor); \
+		} \
+	} while (0)
+
+#define visit_if_scope(cond, callback, visitor) \
+	do { \
+		if (cond) { \
+			visit_scope(callback, visitor); \
 		} \
 	} while (0)
 
@@ -63,6 +77,9 @@ typedef void (*mCc_ast_visit_program_cb)(struct mCc_ast_program *, void *);
 
 typedef void (*mCc_ast_visit_statement_cb)(struct mCc_ast_statement *, void *);
 
+//scope-handler
+typedef void (*mCc_ast_scope_cb)(void *);
+
 struct mCc_ast_visitor {
 	enum mCc_ast_visit_traversal traversal;
 	enum mCc_ast_visit_order order;
@@ -106,8 +123,8 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_function_def_cb function_def_type;
 
 	/* at enter scope => manage symtab, add declarations*/
-	mCc_ast_visit_function_def_cb function_def_enter_scope;
-	mCc_ast_visit_function_def_cb function_def_leave_scope;
+	mCc_ast_scope_cb function_def_enter_scope;
+	mCc_ast_scope_cb function_def_leave_scope;
 	/*=====================================================*/
 
 	// identifier
@@ -126,10 +143,10 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_statement_cb statement_expression;
 
 	/* at enter scope => manage symtab, add declarations*/
-	mCc_ast_visit_statement_cb statement_if_enter_scope;
-	mCc_ast_visit_statement_cb statement_if_leave_scope;
-	mCc_ast_visit_statement_cb statement_while_enter_scope;
-	mCc_ast_visit_statement_cb statement_while_leave_scope;
+	mCc_ast_scope_cb statement_if_enter_scope;
+	mCc_ast_scope_cb statement_if_leave_scope;
+	mCc_ast_scope_cb statement_while_enter_scope;
+	mCc_ast_scope_cb statement_while_leave_scope;
 	/*=====================================================*/
 };
 

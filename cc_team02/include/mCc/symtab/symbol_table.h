@@ -22,7 +22,7 @@ struct mCc_symbol_table {
 	int scope_level;
 };
 
-//is passed via userdata (visitors)
+// is passed via userdata (visitors)
 struct mCc_symtab_and_validation_holder {
 	struct mCc_symbol_table *symbol_table;
 	struct mCc_validation_status_result *first_semantic_error;
@@ -142,6 +142,24 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
  * 		The symbol-table
  */
 void mCc_symtab_delete_symbol_table(struct mCc_symbol_table *symbol_table);
+
+/**
+ * Creates a new symbol-table and sets the actual symbol table to the newly
+ * created (used by symtab-hanlders).
+ *
+ * @param data
+ * 		The userdata passed within the visitor-callbacks
+ */
+void mCc_symtab_enter_scope(void *data);
+
+/**
+ * Deletes the actual symbol table and sets its parent as actual (used by
+ * symtab-hanlders).
+ *
+ * @param data
+ * 		The userdata passed within the visitor-callbacks
+ */
+void mCc_symtab_leave_scope(void *data);
 
 #ifdef __cplusplus
 }

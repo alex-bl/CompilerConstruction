@@ -6,6 +6,7 @@
 
 #include "log.h"
 
+// TODO: review
 struct mCc_symbol_table_node *
 mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration)
 {

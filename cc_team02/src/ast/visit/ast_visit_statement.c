@@ -36,19 +36,19 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		mCc_ast_visit_optional_statement(statement->if_statement, visitor);
 
 		//=========================needed for building the symbol-table
-		visit(statement, visitor->statement_if_leave_scope, visitor);
+		visit_scope(visitor->statement_if_leave_scope, visitor);
 		//=============================================================
 
 		//=========================needed for building the symbol-table
-		visit_if(statement->else_statement, statement,
-		         visitor->statement_if_enter_scope, visitor);
+		visit_if_scope(statement->else_statement,
+		               visitor->statement_if_enter_scope, visitor);
 		//=============================================================
 
 		mCc_ast_visit_optional_statement(statement->else_statement, visitor);
 
 		//=========================needed for building the symbol-table
-		visit_if(statement->else_statement, statement,
-		         visitor->statement_if_leave_scope, visitor);
+		visit_if_scope(statement->else_statement,
+		               visitor->statement_if_leave_scope, visitor);
 		//=============================================================
 
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);

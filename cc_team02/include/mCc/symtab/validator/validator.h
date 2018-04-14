@@ -39,7 +39,7 @@ struct mCc_validation_status_result *mCc_validator_new_validation_result(
  * @param to_append
  */
 void *mCc_validator_append_semantic_error(
-    struct mCc_validation_status_result *parent,
+    struct mCc_validation_status_result *target,
     struct mCc_validation_status_result *to_append);
 
 #ifdef __cplusplus
