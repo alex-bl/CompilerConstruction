@@ -94,6 +94,7 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_assignment_cb assignment_array;
 
 	// declaration
+	// use this for preorder
 	mCc_ast_visit_declaration_cb declaration;
 	mCc_ast_visit_declaration_cb declaration_type;
 	mCc_ast_visit_declaration_cb declaration_primitive;
@@ -103,6 +104,11 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_function_call_cb function_call;
 	mCc_ast_visit_function_def_cb function_def;
 	mCc_ast_visit_function_def_cb function_def_type;
+
+	/* at enter scope => manage symtab, add declarations*/
+	mCc_ast_visit_function_def_cb function_def_enter_scope;
+	mCc_ast_visit_function_def_cb function_def_leave_scope;
+	/*=====================================================*/
 
 	// identifier
 	mCc_ast_visit_identifier_cb identifier;
@@ -118,6 +124,13 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_statement_cb statement_declaration;
 	mCc_ast_visit_statement_cb statement_assignment;
 	mCc_ast_visit_statement_cb statement_expression;
+
+	/* at enter scope => manage symtab, add declarations*/
+	mCc_ast_visit_statement_cb statement_if_enter_scope;
+	mCc_ast_visit_statement_cb statement_if_leave_scope;
+	mCc_ast_visit_statement_cb statement_while_enter_scope;
+	mCc_ast_visit_statement_cb statement_while_leave_scope;
+	/*=====================================================*/
 };
 
 #ifdef __cplusplus
