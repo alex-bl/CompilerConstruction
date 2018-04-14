@@ -5,6 +5,7 @@
 
 #include "log.h"
 #include "mCc/symtab/symbol_table.h"
+#include "mCc/symtab/validator/base_validator.h"
 /*
  * TODO: Do checks if already defined within this scope!
  */
@@ -18,7 +19,11 @@ void mCc_symtab_handle_statement_declaration(
 	    (struct mCc_symtab_and_validation_holder *)data;
 	int scope_level = info_holder->symbol_table->scope_level;
 
-	//TODO: base_validator-h-checks
+	/*
+	 * TODO:
+	 * - base_validator-h-checks
+	 * - var declaration and array declaration
+	 */
 
 	log_debug("Inserting variable declaration to symbol-table scope %d...",
 	          scope_level);

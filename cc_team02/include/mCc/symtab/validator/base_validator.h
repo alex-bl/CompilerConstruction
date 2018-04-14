@@ -9,8 +9,6 @@
 extern "C" {
 #endif
 
-//TODO: provide implementation
-
 /**
  *
  * @param symbol_table

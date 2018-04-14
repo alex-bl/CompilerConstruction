@@ -48,7 +48,9 @@ add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 							symtab/handler/symtab_handle_identifier.c
 							symtab/handler/symtab_handle_statement.c
 							symtab/symbol_table.c
-							symtab/symtab_build.c)
+							symtab/symtab_build.c
+							symtab/validator/validator.c
+							symtab/validator/base_validator.c)
 
 # intermediate
 target_link_libraries(mCc_symtab ext_map)
