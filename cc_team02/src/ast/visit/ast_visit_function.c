@@ -21,7 +21,12 @@ void mCc_ast_visit_function_def(struct mCc_ast_function_def *function_def,
 	assert(function_def);
 	assert(visitor);
 
+	// preorder
 	visit_if_pre_order(function_def, visitor->function_def, visitor);
+
+	//=========================needed for building the symbol-table
+	visit(function_def, visitor->function_def_enter_scope, visitor);
+	//=============================================================
 
 	mCc_ast_visit_identifier(function_def->identifier, visitor);
 
@@ -29,8 +34,14 @@ void mCc_ast_visit_function_def(struct mCc_ast_function_def *function_def,
 	// can be empty
 	mCc_ast_visit_optional_statement(function_def->first_statement, visitor);
 
+	//=========================needed for building the symbol-table
+	visit(function_def, visitor->function_def_leave_scope, visitor);
+	//=============================================================
+
 	mCc_ast_visit_optional_function_def(function_def->next_function_def,
 	                                    visitor);
+
+	// postorder: here or also before visiting next function?
 	visit_if_post_order(function_def, visitor->function_def, visitor);
 }
 

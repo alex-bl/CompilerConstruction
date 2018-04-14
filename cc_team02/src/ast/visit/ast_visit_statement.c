@@ -28,13 +28,30 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_expression(statement->condition_expression, visitor);
 
+		//=========================needed for building the symbol-table
+		visit(statement, visitor->statement_if_enter_scope, visitor);
+		//=============================================================
+
 		// if + else stmts may be empty
 		mCc_ast_visit_optional_statement(statement->if_statement, visitor);
 
+		//=========================needed for building the symbol-table
+		visit(statement, visitor->statement_if_leave_scope, visitor);
+		//=============================================================
+
+		//=========================needed for building the symbol-table
+		visit_if(statement->else_statement, statement,
+		         visitor->statement_if_enter_scope, visitor);
+		//=============================================================
+
 		mCc_ast_visit_optional_statement(statement->else_statement, visitor);
 
-		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
+		//=========================needed for building the symbol-table
+		visit_if(statement->else_statement, statement,
+		         visitor->statement_if_leave_scope, visitor);
+		//=============================================================
 
+		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 		visit_if_post_order(statement, visitor->statement_if, visitor);
 		break;
 	case MCC_AST_STATEMENT_WHILE:
@@ -42,12 +59,16 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 
 		mCc_ast_visit_expression(statement->loop_condition_expression, visitor);
 
-		// new scope
-		//		*(visitor->scope_level) = *(visitor->scope_level) + 1;
-		// while-stmt may be empty
+		//=========================needed for building the symbol-table
+		visit_if(statement->while_statement, statement,
+		         visitor->statement_while_enter_scope, visitor);
+		//=============================================================
 		mCc_ast_visit_optional_statement(statement->while_statement, visitor);
-		// returning to old scope
-		//		*(visitor->scope_level) = *(visitor->scope_level) - 1;
+
+		//=========================needed for building the symbol-table
+		visit_if(statement->while_statement, statement,
+		         visitor->statement_while_leave_scope, visitor);
+		//=============================================================
 
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
@@ -64,14 +85,12 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_return, visitor);
-
 		break;
 
 	case MCC_AST_STATEMENT_DECLARATION:
 		visit_if_pre_order(statement, visitor->statement_declaration, visitor);
 
 		mCc_ast_visit_declaration(statement->declaration, visitor);
-
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_declaration, visitor);
@@ -81,20 +100,17 @@ void mCc_ast_visit_statement(struct mCc_ast_statement *statement,
 		visit_if_pre_order(statement, visitor->statement_assignment, visitor);
 
 		mCc_ast_visit_assignment(statement->assignment, visitor);
-
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
-		visit_if_post_order(statement, visitor->statement_assignment, visitor);
 
+		visit_if_post_order(statement, visitor->statement_assignment, visitor);
 		break;
 	case MCC_AST_STATEMENT_EXPRESSION:
 		visit_if_pre_order(statement, visitor->statement_expression, visitor);
 
 		mCc_ast_visit_expression(statement->expression, visitor);
-
 		mCc_ast_visit_optional_statement(statement->next_statement, visitor);
 
 		visit_if_post_order(statement, visitor->statement_expression, visitor);
-
 		break;
 	}
 

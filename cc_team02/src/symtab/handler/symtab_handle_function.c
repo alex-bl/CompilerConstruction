@@ -4,9 +4,10 @@
 #include <assert.h>
 #include <stddef.h>
 
-void mCc_symtab_handle_function_def(struct mCc_ast_function_def *def,
-                                    void *data)
+void mCc_symtab_function_def_enter_scope(struct mCc_ast_function_def *def,
+                                         void *data)
 {
+	// TODO: check
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
@@ -26,8 +27,8 @@ void mCc_symtab_handle_function_def(struct mCc_ast_function_def *def,
 	 */
 }
 
-void mCc_symtab_handle_function_call(struct mCc_ast_function_call *call,
-                                     void *data)
+void mCc_symtab_function_def_leave_scope(struct mCc_ast_function_def *def,
+                                         void *data)
 {
 	/*TODO*/
 }

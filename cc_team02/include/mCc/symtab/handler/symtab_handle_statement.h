@@ -7,22 +7,16 @@
 extern "C" {
 #endif
 
-void mCc_symtab_handle_statement_if(struct mCc_ast_statement *statement,
-                                    void *data);
+void mCc_symtab_statement_if_enter_scope(struct mCc_ast_statement *statement,
+                                         void *data);
 
-void mCc_symtab_handle_statement_while(struct mCc_ast_statement *statement,
-                                       void *data);
+void mCc_symtab_statement_if_leave_scope(struct mCc_ast_statement *statement,
+                                         void *data);
 
-void mCc_symtab_handle_statement_return(struct mCc_ast_statement *statement,
-                                        void *data);
-
-void mCc_symtab_handle_statement_declaration(
-    struct mCc_ast_statement *statement, void *data);
-
-void mCc_symtab_handle_statement_assignment(struct mCc_ast_statement *statement,
+void mCc_symtab_statement_while_enter_scope(struct mCc_ast_statement *statement,
                                             void *data);
 
-void mCc_symtab_handle_statement_expression(struct mCc_ast_statement *statement,
+void mCc_symtab_statement_while_leave_scope(struct mCc_ast_statement *statement,
                                             void *data);
 
 #ifdef __cplusplus
