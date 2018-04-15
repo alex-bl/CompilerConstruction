@@ -153,8 +153,11 @@ void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
 	struct mCc_symbol_table_node *to_insert =
 	    mCc_symtab_new_declaration_node(declaration);
 
-	mCc_symtab_insert_node(symbol_table,
-	                       get_declaration_identifier(declaration), to_insert);
+	struct mCc_ast_identifier *identifier =
+	    get_declaration_identifier(declaration);
+	log_debug("Variable: %s", identifier->identifier_name);
+
+	mCc_symtab_insert_node(symbol_table, identifier, to_insert);
 }
 
 void mCc_symtab_insert_param_node(struct mCc_symbol_table *symbol_table,
@@ -195,7 +198,7 @@ void mCc_symtab_insert_function_def_node(
 		next_param = next_param->next_declaration;
 		i++;
 	}
-	log_debug("Inserted %d parameters for function '%s'",i,
+	log_debug("Inserted %d parameters for function '%s'", i,
 	          function_def->identifier->identifier_name);
 }
 
