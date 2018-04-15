@@ -63,7 +63,6 @@ struct mCc_symbol_table_node *mCc_symtab_new_parameter_declaration_node(
 }
 
 /**
- * TODO: identifier vs array-identifier!
  *
  * @param function_def
  * @return
@@ -185,10 +184,19 @@ void mCc_symtab_insert_function_def_node(
 
 	// insert parameters also
 	struct mCc_ast_declaration *next_param = function_def->first_parameter;
+	int i = 0;
 	while (next_param) {
+
+		log_debug("Function '%s': Inserting next parameter '%s'",
+		          function_def->identifier->identifier_name,
+		          get_declaration_identifier(next_param)->identifier_name);
+
 		mCc_symtab_insert_param_node(symbol_table, next_param);
 		next_param = next_param->next_declaration;
+		i++;
 	}
+	log_debug("Inserted %d parameters for function '%s'",i,
+	          function_def->identifier->identifier_name);
 }
 
 struct mCc_symbol_table_node *

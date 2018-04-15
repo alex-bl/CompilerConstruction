@@ -7,6 +7,7 @@
 #include "mCc/ast_visit.h"
 #include "mCc/symtab/symbol_table.h"
 #include "mCc/symtab_handler.h"
+#include "log.h"
 
 //"global" visitor needed
 static struct mCc_ast_visitor
@@ -70,11 +71,18 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 	};
 }
 
+//TODO: return status
 void mCc_symtab_build_program(struct mCc_ast_program *program)
 {
 	assert(program);
 
 	struct mCc_symbol_table *symbol_table = mCc_symtab_new_symbol_table(NULL);
+	if(!symbol_table){
+		log_error("Malloc failed: Could not init top-level symbol-table");
+		return;
+	}
+	log_debug("Top-level symbol-table with scope %d created", symbol_table->scope_level);
+
 	struct mCc_symtab_and_validation_holder info_holder;
 
 	info_holder.symbol_table = symbol_table;
@@ -84,6 +92,9 @@ void mCc_symtab_build_program(struct mCc_ast_program *program)
 	struct mCc_ast_visitor visitor = symtab_visitor(&info_holder);
 
 	mCc_ast_visit_program(program, &visitor);
+
+	log_debug("Leaving symbol-table with scope %d", symbol_table->scope_level);
+	mCc_symtab_delete_symbol_table(symbol_table);
 }
 
 void mCc_symtab_build_assignment(struct mCc_ast_assignment *assignment)
