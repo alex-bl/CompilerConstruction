@@ -29,6 +29,17 @@ struct mCc_symtab_and_validation_holder {
 };
 
 /**
+ * Creates a new parameter-reference
+ *
+ * @param identifier_name
+ *
+ * @return
+ * 	A reference to a new parameter_ref or NULL in error-case
+ */
+struct mCc_symtab_parameter_ref *
+mCc_symtab_new_parameter_ref(struct mCc_ast_identifier *identifier);
+
+/**
  * Creates and initializes a scope-holder struct
  *
  * @return
@@ -105,6 +116,17 @@ void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
  */
 void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
                                 struct mCc_ast_declaration *declaration);
+
+/**
+ * Inserts a parameter node into the symbol-table. More convenient
+ *
+ * @param symbol_table
+ * 		The symbol-table
+ * @param declaration
+ * 		The declaration (ast-element)
+ */
+void mCc_symtab_insert_param_node(struct mCc_symbol_table *symbol_table,
+                                  struct mCc_ast_declaration *declaration);
 
 /**
  * Inserts a node into the symbol-table. More convenient if adding an

@@ -2,10 +2,11 @@
 #include "mCc/symtab/symbol_table.h"
 #include "mCc/symtab/validator/validator.h"
 
-#include "log.h"
-
 #include <assert.h>
 #include <stddef.h>
+#include <stdlib.h>
+
+#include "log.h"
 
 void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
                                   void *data)
@@ -35,7 +36,22 @@ void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
 		log_debug("Identifier '%s' found in symboltable. Proceed with linking",
 		          identifier->identifier_name);
 
-		// link
-		identifier->symtab_info = symtab_info;
+		/*
+		 * link: use memcpy so that the hash-table can be freed without freeing
+		 * the needed references to the values
+		 */
+		identifier->symtab_info = malloc(sizeof(*(identifier->symtab_info)));
+
+		if (!identifier->symtab_info) {
+			log_error(
+			    "Malloc failed for associating symtab-info to identifier");
+		} else {
+			if (!memcpy(identifier->symtab_info, symtab_info,
+			            sizeof(*symtab_info))) {
+				log_error("Memcpy failed: Could not link symtab-info to "
+				          "identifier '%'",
+				          identifier->identifier_name);
+			}
+		}
 	}
 }

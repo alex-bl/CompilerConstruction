@@ -15,10 +15,13 @@ add_library(mCc_ast SHARED  ast/basis/ast_assignment.c
 							ast/basis/ast_declaration.c
 							ast/basis/ast_expression.c
 							ast/basis/ast_function.c							
-							ast/basis/ast_identifier.c							
+							ast/basis/ast_identifier.c					
 							ast/basis/ast_literal.c							
 							ast/basis/ast_program.c							
-							ast/basis/ast_statement.c)
+							ast/basis/ast_statement.c
+							# to free the associated symtab-info at identifiers
+							# maybe a better solution?
+							symtab/symtab_node.c)
 
 # visitors
 add_library(mCc_visit SHARED ast/visit/ast_visit_assignment.c
@@ -53,7 +56,7 @@ add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 							symtab/validator/base_validator.c)
 
 # intermediate
-target_link_libraries(mCc_symtab ext_map)
+target_link_libraries(mCc_symtab ext_log_c ext_map)
 
 # setup mCc_lib
 add_library(mCc_lib SHARED ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})

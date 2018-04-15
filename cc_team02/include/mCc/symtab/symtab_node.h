@@ -2,6 +2,7 @@
 #define MCC_SYMTAB_NODE_H
 
 #include "mCc/ast/basis/ast_data_type.h"
+#include "mCc/ast/basis/ast_identifier.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,25 +14,29 @@ enum mCc_symtab_identifier_type {
 	MCC_SYM_TAB_IDENTIFIER_FUNCTION_PARAMETER,
 };
 
+/**
+ * Used for function defs:
+ * - The symbol_table_node contains (if a function def) a link to the next
+ * parameter
+ * - Iterating over the parameters the signature can be constructed by a lookup
+ * in the current scope-symbol-table
+ */
+struct mCc_symtab_parameter_ref {
+	struct mCc_ast_identifier *identifier;
+	struct mCc_symtab_parameter_ref *next_parameter;
+};
+
 // TODO: maybe extend with other information?
 struct mCc_symbol_table_node {
 	enum mCc_symtab_identifier_type entry_type;
-	// int scope_level;
-	union {
-		/*var*/
-		enum mCc_ast_data_type data_type;
-		/*function*/
-		struct {
-			enum mCc_ast_data_type return_type;
-			struct mCc_symbol_table_node *first_parameter;
-		};
-		/*parameter*/
-		struct {
-			enum mCc_ast_data_type parameter_type;
-			struct mCc_symbol_table_node *next_parameter;
-		};
-	};
+	enum mCc_ast_data_type data_type;
+	struct mCc_symtab_parameter_ref *next_parameter;
 };
+
+void mCc_symtab_delete_symtab_parameter_ref(
+    struct mCc_symtab_parameter_ref *ref);
+
+void mCc_symtab_delete_symtab_node(struct mCc_symbol_table_node *node);
 
 #ifdef __cplusplus
 }

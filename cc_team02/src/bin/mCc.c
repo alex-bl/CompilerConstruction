@@ -4,6 +4,7 @@
 
 #include "mCc/ast.h"
 #include "mCc/parser.h"
+#include "mCc/symtab_build.h"
 
 void print_usage(const char *prg)
 {
@@ -43,6 +44,11 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 		prog = result.program;
+	}
+
+	/* build symbol-table */
+	{
+		mCc_symtab_build_program(prog);
 	}
 
 	/*    TODO
