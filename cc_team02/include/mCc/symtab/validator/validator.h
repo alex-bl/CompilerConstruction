@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#define ERROR_MSG_BUF_SIZE 64
+
 #ifdef __cplusplus
 extern "C" {
 #endif

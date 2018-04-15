@@ -19,6 +19,11 @@ void mCc_symtab_handle_function_def(struct mCc_ast_function_def *def,
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
+// search at parent-scope because function-names are stored there
+//	struct mCc_validation_status_result *validation_result =
+//	    mCc_validator_check_definition(info_holder->symbol_table->parent,
+//	                                   def->identifier);
+
 	/*
 	 * TODO:
 	 * - base_validator-h-checks

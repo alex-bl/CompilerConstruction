@@ -38,6 +38,7 @@ void mCc_validator_append_semantic_error(
 	next_validation_result->next = to_append;
 }
 
+
 // maybe some advanced logic here if validator-result is expanded
 static void
 free_validator_result_simple(struct mCc_validation_status_result *result)

@@ -5,6 +5,7 @@
 #include "mCc/ast.h"
 #include "mCc/parser.h"
 #include "mCc/symtab_build.h"
+#include "log.h"
 
 void print_usage(const char *prg)
 {
