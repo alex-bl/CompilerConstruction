@@ -143,6 +143,8 @@ void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
 	assert(value);
 
 	map_set(&(symbol_table->table), key->identifier_name, value);
+	log_debug("Inserted identifier '%s' at symbol table with scope %d",
+	          key->identifier_name, symbol_table->scope_level);
 }
 
 void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
@@ -184,7 +186,9 @@ void mCc_symtab_insert_function_def_node(
 
 	struct mCc_symbol_table_node *to_insert =
 	    mCc_symtab_new_function_def_node(function_def);
-	mCc_symtab_insert_node(symbol_table, function_def->identifier, to_insert);
+	// function-defs are always inserted at scope-level 0
+	mCc_symtab_insert_node(symbol_table->parent, function_def->identifier,
+	                       to_insert);
 
 	// insert parameters also
 	struct mCc_ast_declaration *next_param = function_def->first_parameter;
@@ -218,9 +222,13 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
 
 	// hit at current scope
 	if (result_from_current_node) {
+		log_debug("Identifier '%s' found at scope %d",
+		          identifier->identifier_name, symbol_table->scope_level);
 		return *result_from_current_node;
 		// not found at current scope => search at parent-scope
 	} else if (symbol_table->parent && !current_scope_only) {
+		log_debug("Identifier '%s' not found at scope %d. Go to parent",
+		          identifier->identifier_name, symbol_table->scope_level);
 		return mCc_symtab_lookup(symbol_table->parent, identifier,
 		                         current_scope_only);
 	}

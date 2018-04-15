@@ -48,7 +48,12 @@ int main(int argc, char *argv[])
 
 	/* build symbol-table */
 	{
-		mCc_symtab_build_program(prog);
+		struct mCc_validation_status_result *validation_result =
+		    mCc_symtab_build_program(prog);
+		/* print */
+		mCc_validator_print_validation_result(validation_result, stdout);
+		/* delete validation-result */
+		mCc_validator_delete_validation_result(validation_result);
 	}
 
 	/*    TODO

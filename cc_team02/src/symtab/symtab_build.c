@@ -3,11 +3,12 @@
 #include <assert.h>
 #include <stddef.h>
 
+#include "log.h"
 #include "mCc/ast_print_visitors.h"
 #include "mCc/ast_visit.h"
 #include "mCc/symtab/symbol_table.h"
+#include "mCc/symtab/validator/validator.h"
 #include "mCc/symtab_handler.h"
-#include "log.h"
 
 //"global" visitor needed
 static struct mCc_ast_visitor
@@ -36,7 +37,6 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.function_def = mCc_symtab_handle_function_def,
 		.statement_declaration = mCc_symtab_handle_statement_declaration,
 		//=================================
-
 
 		// maybe not needed inside symtab-construction
 		//.expression
@@ -71,17 +71,19 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 	};
 }
 
-//TODO: return status
-void mCc_symtab_build_program(struct mCc_ast_program *program)
+// TODO: return status
+struct mCc_validation_status_result *
+mCc_symtab_build_program(struct mCc_ast_program *program)
 {
 	assert(program);
 
 	struct mCc_symbol_table *symbol_table = mCc_symtab_new_symbol_table(NULL);
-	if(!symbol_table){
+	if (!symbol_table) {
 		log_error("Malloc failed: Could not init top-level symbol-table");
-		return;
+		return NULL;
 	}
-	log_debug("Top-level symbol-table with scope %d created", symbol_table->scope_level);
+	log_debug("Top-level symbol-table with scope %d created",
+	          symbol_table->scope_level);
 
 	struct mCc_symtab_and_validation_holder info_holder;
 
@@ -94,9 +96,19 @@ void mCc_symtab_build_program(struct mCc_ast_program *program)
 	mCc_ast_visit_program(program, &visitor);
 
 	log_debug("Leaving symbol-table with scope %d", symbol_table->scope_level);
+	// free symtab
 	mCc_symtab_delete_symbol_table(symbol_table);
+
+	// there wasn't any error
+	if (!info_holder.first_semantic_error) {
+		info_holder.first_semantic_error = mCc_validator_new_validation_result(
+		    MCC_VALIDATION_STATUS_VALID, "");
+	}
+
+	return info_holder.first_semantic_error;
 }
 
+// TODO: are they required?
 void mCc_symtab_build_assignment(struct mCc_ast_assignment *assignment)
 {
 	assert(assignment);
