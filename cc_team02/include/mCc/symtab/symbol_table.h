@@ -7,6 +7,8 @@
 #include "mCc/symtab/symtab_node.h"
 #include "mCc/symtab/validator/validator.h"
 
+#include <stdbool.h>
+
 #include "map.h"
 
 #ifdef __cplusplus
@@ -149,13 +151,16 @@ void mCc_symtab_insert_function_def_node(
  * 		The symbol-table where to search
  * @param identifier
  * 		The identifier (key)
+ * 	@param current_scope_only
+ * 		Only look at the current scope
  * @return
  * 		The corresponding node or NULL if identifier is not contained within the
  * symbol-table (and its parents)
  */
 struct mCc_symbol_table_node *
 mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
-                  struct mCc_ast_identifier *identifier);
+                  struct mCc_ast_identifier *identifier,
+                  bool current_scope_only);
 
 /**
  * Frees any allocated memory by the symbol-table (and its parents)

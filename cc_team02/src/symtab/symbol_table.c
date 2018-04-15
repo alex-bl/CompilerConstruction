@@ -1,6 +1,7 @@
 #include "mCc/symtab/symbol_table.h"
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -204,7 +205,8 @@ void mCc_symtab_insert_function_def_node(
 
 struct mCc_symbol_table_node *
 mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
-                  struct mCc_ast_identifier *identifier)
+                  struct mCc_ast_identifier *identifier,
+                  bool current_scope_only)
 {
 	assert(symbol_table);
 	assert(identifier);
@@ -218,8 +220,9 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
 	if (result_from_current_node) {
 		return *result_from_current_node;
 		// not found at current scope => search at parent-scope
-	} else if (symbol_table->parent) {
-		return mCc_symtab_lookup(symbol_table->parent, identifier);
+	} else if (symbol_table->parent && !current_scope_only) {
+		return mCc_symtab_lookup(symbol_table->parent, identifier,
+		                         current_scope_only);
 	}
 
 	// no hit

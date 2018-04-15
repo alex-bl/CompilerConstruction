@@ -3,6 +3,7 @@
 #include "mCc/symtab/validator/validator.h"
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -19,7 +20,7 @@ void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
 
 	// search for info
 	struct mCc_symbol_table_node *symtab_info =
-	    mCc_symtab_lookup(info_holder->symbol_table, identifier);
+	    mCc_symtab_lookup(info_holder->symbol_table, identifier, false);
 
 	if (!symtab_info) {
 		log_debug("Identifier '%s' not found in symboltable",
