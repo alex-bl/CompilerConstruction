@@ -15,7 +15,7 @@ extern "C" {
  * @param identifier
  * @return
  */
-struct mCc_validation_status_result *
+enum mCc_validation_status_type
 mCc_validator_check_definition(struct mCc_symbol_table *symbol_table,
                                struct mCc_ast_identifier *identifier);
 
@@ -25,7 +25,7 @@ mCc_validator_check_definition(struct mCc_symbol_table *symbol_table,
  * @param identifier
  * @return
  */
-struct mCc_validation_status_result *
+enum mCc_validation_status_type
 mCc_validator_check_duplicates(struct mCc_symbol_table *symbol_table,
                                struct mCc_ast_identifier *identifier);
 

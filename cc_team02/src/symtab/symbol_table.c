@@ -177,6 +177,10 @@ void mCc_symtab_insert_param_node(struct mCc_symbol_table *symbol_table,
 	                       get_declaration_identifier(declaration), to_insert);
 }
 
+/*
+ * TODO:
+ * - var declaration and array declaration
+ */
 void mCc_symtab_insert_function_def_node(
     struct mCc_symbol_table *symbol_table,
     struct mCc_ast_function_def *function_def)
@@ -186,8 +190,7 @@ void mCc_symtab_insert_function_def_node(
 
 	struct mCc_symbol_table_node *to_insert =
 	    mCc_symtab_new_function_def_node(function_def);
-	// function-defs are always inserted at scope-level 0
-	mCc_symtab_insert_node(symbol_table->parent, function_def->identifier,
+	mCc_symtab_insert_node(symbol_table, function_def->identifier,
 	                       to_insert);
 
 	// insert parameters also

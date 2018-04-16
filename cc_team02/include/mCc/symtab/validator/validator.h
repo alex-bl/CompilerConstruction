@@ -3,6 +3,9 @@
 
 #include <stdio.h>
 
+#include "mCc/ast/basis/ast_identifier.h"
+#include "mCc/symtab/symbol_table.h"
+
 #define ERROR_MSG_BUF_SIZE 64
 
 #ifdef __cplusplus
@@ -65,6 +68,35 @@ void mCc_validator_delete_validation_result(
  */
 void mCc_validator_print_validation_result(
     struct mCc_validation_status_result *first_result, FILE *out);
+
+/**
+ *
+ * @param status_code
+ * @param identifier
+ * @param size
+ * @return
+ */
+char* mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
+                                    struct mCc_ast_identifier *identifier,
+                                    size_t size);
+/**
+ *
+ * @param status_code
+ * @param identifier
+ * @return
+ */
+struct mCc_validation_status_result *
+mCc_validator_create_error_status(enum mCc_validation_status_type status_code,
+                                  struct mCc_ast_identifier *identifier);
+
+/**
+ *
+ * @param info_holder
+ * @param status_result
+ */
+void mCc_validor_store_result_to_handler(
+    struct mCc_symtab_and_validation_holder *info_holder,
+    struct mCc_validation_status_result *status_result);
 
 #ifdef __cplusplus
 }

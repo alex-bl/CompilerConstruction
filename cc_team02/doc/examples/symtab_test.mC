@@ -2,6 +2,10 @@ int buu(string bo){
 
 }
 
+int buu(string bo){
+
+}
+
 void main(int argc, float boo){	
 	int a;
 	string b;
