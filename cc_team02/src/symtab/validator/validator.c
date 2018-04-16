@@ -118,10 +118,13 @@ mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
 	case MCC_VALIDATION_STATUS_NO_MAIN:
 		snprintf(error_msg, size, "Function 'main' expected but not found");
 		break;
+	case MCC_VALIDATION_STATUS_INVALID_SIGNATURE:
+		snprintf(error_msg, size, "Function '%s': Wrong usage",
+		         identifier->identifier_name);
+		break;
 		/*TODO*/
 	case MCC_VALIDATION_STATUS_VALID:
 	case MCC_VALIDATION_STATUS_INVALID_TYPE:
-	case MCC_VALIDATION_STATUS_INVALID_SIGNATURE:
 		snprintf(error_msg, size, " ");
 		break;
 	}

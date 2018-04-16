@@ -17,7 +17,7 @@ void mCc_symtab_delete_symtab_parameter_ref(
 	free(ref);
 }
 
-void mCc_symtab_free_symtab_node(struct mCc_symbol_table_node *node)
+void mCc_symtab_delete_symtab_node(struct mCc_symbol_table_node *node)
 {
 
 	assert(node);

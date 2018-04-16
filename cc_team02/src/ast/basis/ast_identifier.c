@@ -25,7 +25,7 @@ void mCc_ast_delete_identifier(struct mCc_ast_identifier *ident)
 	free(ident->identifier_name);
 	// if there is symbol-table-information associated
 	if (ident->symtab_info) {
-		mCc_symtab_free_symtab_node(ident->symtab_info);
+		mCc_symtab_delete_symtab_node(ident->symtab_info);
 	}
 	free(ident);
 }

@@ -10,6 +10,9 @@ extern "C" {
 void mCc_symtab_handle_function_def(struct mCc_ast_function_def *def,
                                     void *data);
 
+void mCc_symtab_handle_function_call(struct mCc_ast_function_call *call,
+                                     void *data);
+
 #ifdef __cplusplus
 }
 #endif

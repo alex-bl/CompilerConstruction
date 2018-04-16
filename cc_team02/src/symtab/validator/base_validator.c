@@ -13,7 +13,7 @@ find_return_statement(struct mCc_ast_function_def *function_def)
 	assert(function_def);
 	struct mCc_ast_statement *next_statement = function_def->first_statement;
 	if (!next_statement) {
-		log_debug("Function '%' has no statements",
+		log_debug("Function '%s' has no statements",
 		          function_def->identifier->identifier_name);
 	}
 	while (next_statement) {
@@ -110,4 +110,41 @@ mCc_validator_check_return_type(struct mCc_symbol_table *symbol_table,
 
 	// no return-statement
 	return MCC_VALIDATION_STATUS_NO_RETURN;
+}
+
+enum mCc_validation_status_type
+mCc_validator_check_signature(struct mCc_symbol_table *symbol_table,
+                              void *validator_input)
+{
+
+	assert(symbol_table);
+	assert(validator_input);
+
+	struct mCc_ast_function_call *function_call =
+	    (struct mCc_ast_function_call *)validator_input;
+
+	struct mCc_symbol_table_node *symtab_info =
+	    mCc_symtab_lookup(symbol_table, function_call->identifier, false);
+
+	// TODO: use a custom "unknown error"?
+	if (!symtab_info) {
+		log_error("Not found in symbol-table. This should not happen.");
+		return MCC_VALIDATION_STATUS_INVALID_SIGNATURE;
+	}
+
+	struct mCc_symtab_parameter_ref *first_param_info =
+	    symtab_info->next_parameter;
+	struct mCc_ast_expression *first_param = function_call->first_argument;
+
+	// iterate through the end
+	while (first_param_info) {
+		first_param_info = first_param_info->next_parameter;
+		if (!first_param_info) {
+			return MCC_VALIDATION_STATUS_INVALID_SIGNATURE;
+		}
+		first_param = first_param->next_expr;
+	}
+
+	return first_param ? MCC_VALIDATION_STATUS_INVALID_SIGNATURE
+	                   : MCC_VALIDATION_STATUS_VALID;
 }

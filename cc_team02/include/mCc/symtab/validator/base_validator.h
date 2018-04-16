@@ -49,6 +49,17 @@ enum mCc_validation_status_type
 mCc_validator_check_return_type(struct mCc_symbol_table *symbol_table,
                                 void *validator_input);
 
+/**
+ * Just tests the number of arguments. Typechecking is done elsewhere.
+ *
+ * @param symbol_table
+ * @param validator_input
+ * @return
+ */
+enum mCc_validation_status_type
+mCc_validator_check_signature(struct mCc_symbol_table *symbol_table,
+                              void *validator_input);
+
 #ifdef __cplusplus
 }
 #endif
