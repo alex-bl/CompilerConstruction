@@ -105,11 +105,25 @@ mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
 		snprintf(error_msg, size, "'%s' already defined",
 		         identifier->identifier_name);
 		break;
+	case MCC_VALIDATION_STATUS_NO_RETURN:
+		snprintf(error_msg, size,
+		         "No return for function '%s' (non-void-function)",
+		         identifier->identifier_name);
+		break;
+	case MCC_VALIDATION_STATUS_RETURN_ON_VOID:
+		snprintf(error_msg, size,
+		         "Function '%s': not expected return on void-function",
+		         identifier->identifier_name);
+		break;
+	case MCC_VALIDATION_STATUS_NO_MAIN:
+		snprintf(error_msg, size, "Function 'main' expected but not found");
+		break;
 		/*TODO*/
 	case MCC_VALIDATION_STATUS_VALID:
 	case MCC_VALIDATION_STATUS_INVALID_TYPE:
 	case MCC_VALIDATION_STATUS_INVALID_SIGNATURE:
-	case MCC_VALIDATION_STATUS_NO_MAIN: snprintf(error_msg, size, " "); break;
+		snprintf(error_msg, size, " ");
+		break;
 	}
 	return error_msg;
 }
@@ -147,26 +161,26 @@ void mCc_validor_store_result_to_handler(
 
 void mCc_process_validation(
     enum mCc_validation_status_type(validator_function)(
-        struct mCc_symbol_table *, struct mCc_ast_identifier *),
+        struct mCc_symbol_table *, void *),
     void(success_handler(struct mCc_symbol_table *, void *)),
     struct mCc_symbol_table *symbol_table,
-    struct mCc_ast_identifier *identifier,
+    struct mCc_ast_identifier *identifier, void *validator_input,
     struct mCc_symtab_and_validation_holder *info_holder,
     void *success_handler_data)
 {
 	// function-defs are stored at symboltable with scope lvl 0
-	enum mCc_validation_status_type duplicate_check =
-	    validator_function(symbol_table, identifier);
-
-	if (duplicate_check == MCC_VALIDATION_STATUS_VALID) {
+	enum mCc_validation_status_type check_result =
+	    validator_function(symbol_table, validator_input);
+	// if valid and success-handler defined
+	if (check_result == MCC_VALIDATION_STATUS_VALID && success_handler) {
 		log_debug("Identifier '%s' is valid. Store it int symbol-table.",
 		          identifier->identifier_name);
 		// function-defs are always inserted at scope-level 0 => so parent
 		success_handler(symbol_table, success_handler_data);
 		log_debug("Done");
-	} else {
+	} else if (check_result != MCC_VALIDATION_STATUS_VALID) {
 		struct mCc_validation_status_result *status_result =
-		    mCc_validator_create_error_status(duplicate_check, identifier);
+		    mCc_validator_create_error_status(check_result, identifier);
 		mCc_validor_store_result_to_handler(info_holder, status_result);
 
 		log_debug("Error with identifier '%s': Semantic error reported",

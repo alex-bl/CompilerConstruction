@@ -21,7 +21,9 @@ enum mCc_validation_status_type {
 	MCC_VALIDATION_STATUS_NO_DEF,
 	MCC_VALIDATION_STATUS_NOT_UNIQUE,
 	MCC_VALIDATION_STATUS_INVALID_SIGNATURE,
-	MCC_VALIDATION_STATUS_NO_MAIN
+	MCC_VALIDATION_STATUS_NO_MAIN,
+	MCC_VALIDATION_STATUS_NO_RETURN,
+	MCC_VALIDATION_STATUS_RETURN_ON_VOID
 };
 
 struct mCc_validation_status_result {
@@ -105,15 +107,16 @@ void mCc_validor_store_result_to_handler(
  * @param validator_function
  * @param symbol_table
  * @param identifier
+ * @param validator_input
  * @param info_holder
  * @param success_handler_data
  */
 void mCc_process_validation(
     enum mCc_validation_status_type(validator_function)(
-        struct mCc_symbol_table *, struct mCc_ast_identifier *),
+        struct mCc_symbol_table *, void *),
     void(success_handler(struct mCc_symbol_table *, void *)),
     struct mCc_symbol_table *symbol_table,
-    struct mCc_ast_identifier *identifier,
+    struct mCc_ast_identifier *identifier, void *validator_input,
     struct mCc_symtab_and_validation_holder *info_holder,
     void *success_handler_data);
 

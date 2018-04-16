@@ -1,12 +1,14 @@
-int buu(string bo){
+void buu(string bo){
 
+return 1;
 }
 
 int buu(string bo){
 
+
 }
 
-void main(int argc, float boo){	
+void main(){	
 	int a;
 	string b;
 	

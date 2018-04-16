@@ -17,7 +17,7 @@ extern "C" {
  */
 enum mCc_validation_status_type
 mCc_validator_check_definition(struct mCc_symbol_table *symbol_table,
-                               struct mCc_ast_identifier *identifier);
+                               void *validator_input);
 
 /**
  *
@@ -27,7 +27,27 @@ mCc_validator_check_definition(struct mCc_symbol_table *symbol_table,
  */
 enum mCc_validation_status_type
 mCc_validator_check_duplicates(struct mCc_symbol_table *symbol_table,
-                               struct mCc_ast_identifier *identifier);
+                               void *validator_input);
+
+/**
+ *
+ * @param symbol_table
+ * @param validator_input
+ * @return
+ */
+enum mCc_validation_status_type
+mCc_validator_check_main_presence(struct mCc_symbol_table *symbol_table,
+                                  void *validator_input);
+
+/**
+ *
+ * @param symbol_table
+ * @param validator_input
+ * @return
+ */
+enum mCc_validation_status_type
+mCc_validator_check_return_type(struct mCc_symbol_table *symbol_table,
+                                void *validator_input);
 
 #ifdef __cplusplus
 }
