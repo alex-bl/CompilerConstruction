@@ -35,7 +35,10 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.identifier = mCc_symtab_handle_identifier,
 		// identifier => get from symtab an link information
 		.function_def = mCc_symtab_handle_function_def,
-		.statement_declaration = mCc_symtab_handle_statement_declaration,
+		//.declaration => add declarations to current symtab
+		.declaration_primitive = mCc_symtab_handle_declaration_primitive,
+		.declaration_array = mCc_symtab_handle_declaration_array,
+
 		//=================================
 
 		// maybe not needed inside symtab-construction
@@ -52,9 +55,6 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.literal_float = NULL,
 		.literal_bool = NULL,
 		.literal_string = NULL,
-		//.declaration => add declarations to current symtab
-		.declaration_primitive = NULL,
-		.declaration_array = NULL,
 		//.assignment
 		.assignment_primitive = NULL,
 		.assignment_array = NULL,
@@ -68,6 +68,7 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.statement_return = NULL,
 		.statement_assignment = NULL,
 		.statement_expression = NULL,
+		.statement_declaration = NULL,
 	};
 }
 

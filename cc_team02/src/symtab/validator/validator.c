@@ -8,7 +8,7 @@
 #include "mCc/symtab/symbol_table.h"
 
 struct mCc_validation_status_result *mCc_validator_new_validation_result(
-    enum mCc_validation_status_type validation_status, const char *error_msg)
+    enum mCc_validation_status_type validation_status, char *error_msg)
 {
 	struct mCc_validation_status_result *validation_result =
 	    malloc(sizeof(*validation_result));
@@ -35,7 +35,7 @@ void mCc_validator_append_semantic_error(
 
 	struct mCc_validation_status_result *next_validation_result = target;
 	// iterate to the end
-	while (next_validation_result) {
+	while (next_validation_result->next) {
 		next_validation_result = next_validation_result->next;
 	}
 	// then append
@@ -142,5 +142,34 @@ void mCc_validor_store_result_to_handler(
 		mCc_validator_append_semantic_error(info_holder->first_semantic_error,
 		                                    status_result);
 		log_debug("Error appended to handler");
+	}
+}
+
+void mCc_process_validation(
+    enum mCc_validation_status_type(validator_function)(
+        struct mCc_symbol_table *, struct mCc_ast_identifier *),
+    void(success_handler(struct mCc_symbol_table *, void *)),
+    struct mCc_symbol_table *symbol_table,
+    struct mCc_ast_identifier *identifier,
+    struct mCc_symtab_and_validation_holder *info_holder,
+    void *success_handler_data)
+{
+	// function-defs are stored at symboltable with scope lvl 0
+	enum mCc_validation_status_type duplicate_check =
+	    validator_function(symbol_table, identifier);
+
+	if (duplicate_check == MCC_VALIDATION_STATUS_VALID) {
+		log_debug("Identifier '%s' is valid. Store it int symbol-table.",
+		          identifier->identifier_name);
+		// function-defs are always inserted at scope-level 0 => so parent
+		success_handler(symbol_table, success_handler_data);
+		log_debug("Done");
+	} else {
+		struct mCc_validation_status_result *status_result =
+		    mCc_validator_create_error_status(duplicate_check, identifier);
+		mCc_validor_store_result_to_handler(info_holder, status_result);
+
+		log_debug("Error with identifier '%s': Semantic error reported",
+		          identifier->identifier_name);
 	}
 }

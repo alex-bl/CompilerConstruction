@@ -43,13 +43,22 @@ mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration)
 		return NULL;
 	}
 
-	node->entry_type = MCC_SYM_TAB_IDENTIFIER_VARIABLE;
+	// distinguish between primitive declaration and array
+	if (declaration->declaration_type == MCC_AST_DECLARATION_PRIMITIVE) {
+		node->entry_type = MCC_SYM_TAB_IDENTIFIER_VARIABLE_PRIMITIVE;
+		node->size = declaration->size;
+	} else {
+		node->entry_type = MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY;
+		node->size = 0;
+	}
+
 	node->data_type = declaration->data_type;
 	node->next_parameter = NULL;
 
 	return node;
 }
 
+// TODO: really needed?
 struct mCc_symbol_table_node *mCc_symtab_new_parameter_declaration_node(
     struct mCc_ast_declaration *declaration)
 {
@@ -148,10 +157,13 @@ void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
 }
 
 void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
-                                struct mCc_ast_declaration *declaration)
+                                void *data)
 {
 	assert(symbol_table);
-	assert(declaration);
+	assert(data);
+
+	struct mCc_ast_declaration *declaration =
+	    (struct mCc_ast_declaration *)data;
 
 	struct mCc_symbol_table_node *to_insert =
 	    mCc_symtab_new_declaration_node(declaration);
@@ -181,33 +193,18 @@ void mCc_symtab_insert_param_node(struct mCc_symbol_table *symbol_table,
  * TODO:
  * - var declaration and array declaration
  */
-void mCc_symtab_insert_function_def_node(
-    struct mCc_symbol_table *symbol_table,
-    struct mCc_ast_function_def *function_def)
+void mCc_symtab_insert_function_def_node(struct mCc_symbol_table *symbol_table,
+                                         void *data)
 {
 	assert(symbol_table);
-	assert(function_def);
+	assert(data);
+
+	struct mCc_ast_function_def *function_def =
+	    (struct mCc_ast_function_def *)data;
 
 	struct mCc_symbol_table_node *to_insert =
 	    mCc_symtab_new_function_def_node(function_def);
-	mCc_symtab_insert_node(symbol_table, function_def->identifier,
-	                       to_insert);
-
-	// insert parameters also
-	struct mCc_ast_declaration *next_param = function_def->first_parameter;
-	int i = 0;
-	while (next_param) {
-
-		log_debug("Function '%s': Inserting next parameter '%s'",
-		          function_def->identifier->identifier_name,
-		          get_declaration_identifier(next_param)->identifier_name);
-
-		mCc_symtab_insert_param_node(symbol_table, next_param);
-		next_param = next_param->next_declaration;
-		i++;
-	}
-	log_debug("Inserted %d parameters for function '%s'", i,
-	          function_def->identifier->identifier_name);
+	mCc_symtab_insert_node(symbol_table, function_def->identifier, to_insert);
 }
 
 struct mCc_symbol_table_node *

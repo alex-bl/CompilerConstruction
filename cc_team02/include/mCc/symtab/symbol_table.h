@@ -5,7 +5,7 @@
 #include "mCc/ast/basis/ast_function.h"
 #include "mCc/ast/basis/ast_identifier.h"
 #include "mCc/symtab/symtab_node.h"
-#include "mCc/symtab/validator/validator.h"
+#include "mCc/symtab/symtab_types.h"
 
 #include <stdbool.h>
 
@@ -14,21 +14,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef map_t(struct mCc_symbol_table_node *) mCc_symbol_table_map_t;
-
-struct mCc_symbol_table {
-	// TODO: local or on heap?
-	mCc_symbol_table_map_t table;
-	struct mCc_symbol_table *parent;
-	int scope_level;
-};
-
-// is passed via userdata (visitors)
-struct mCc_symtab_and_validation_holder {
-	struct mCc_symbol_table *symbol_table;
-	struct mCc_validation_status_result *first_semantic_error;
-};
 
 /**
  * Creates a new parameter-reference
@@ -117,7 +102,7 @@ void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
  * 		The declaration (ast-element)
  */
 void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
-                                struct mCc_ast_declaration *declaration);
+                                void *declaration);
 
 /**
  * Inserts a parameter node into the symbol-table. More convenient
@@ -139,9 +124,8 @@ void mCc_symtab_insert_param_node(struct mCc_symbol_table *symbol_table,
  * @param function_def
  * 		The function-definition (ast-element)
  */
-void mCc_symtab_insert_function_def_node(
-    struct mCc_symbol_table *symbol_table,
-    struct mCc_ast_function_def *function_def);
+void mCc_symtab_insert_function_def_node(struct mCc_symbol_table *symbol_table,
+                                         void *function_def);
 
 /**
  * Searches the node with the corresponding identifier within a symbol-table

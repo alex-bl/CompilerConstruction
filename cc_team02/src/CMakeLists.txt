@@ -49,7 +49,7 @@ add_library(mCc_print SHARED ast/print/ast_basic_printing.c
 add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 							symtab/handler/symtab_handle_function.c
 							symtab/handler/symtab_handle_identifier.c
-							symtab/handler/symtab_handle_statement.c
+							symtab/handler/symtab_handle_declaration.c
 							symtab/symbol_table.c
 							symtab/symtab_build.c
 							symtab/validator/validator.c

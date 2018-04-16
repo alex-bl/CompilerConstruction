@@ -10,7 +10,9 @@ void main(int argc, float boo){
 	int a;
 	string b;
 	
-	a=buu("test");
+	c=2;
+	
+	a=buuddd("test");
 	
 	if(a==12){
 		int c;

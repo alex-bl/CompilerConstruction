@@ -4,7 +4,7 @@
 #include "mCc/symtab/handler/symtab_handle_function.h"
 #include "mCc/symtab/handler/symtab_handle_identifier.h"
 #include "mCc/symtab/handler/symtab_handle_scope.h"
-#include "mCc/symtab/handler/symtab_handle_statement.h"
+#include "mCc/symtab/handler/symtab_handle_declaration.h"
 
 #ifdef __cplusplus
 extern "C" {

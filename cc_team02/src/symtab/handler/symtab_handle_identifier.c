@@ -25,14 +25,12 @@ void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
 	if (!symtab_info) {
 		log_debug("Identifier '%s' not found in symboltable",
 		          identifier->identifier_name);
-
-		// TODO: more senseful error-msg
-		struct mCc_validation_status_result *semantic_error =
-		    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_NO_DEF,
-		                                        identifier->identifier_name);
 		// append
-		mCc_validator_append_semantic_error(info_holder->first_semantic_error,
-		                                    semantic_error);
+		struct mCc_validation_status_result *status_result =
+		    mCc_validator_create_error_status(MCC_VALIDATION_STATUS_NO_DEF,
+		                                      identifier);
+		mCc_validor_store_result_to_handler(info_holder, status_result);
+
 	} else {
 		log_debug("Identifier '%s' found in symboltable. Proceed with linking",
 		          identifier->identifier_name);

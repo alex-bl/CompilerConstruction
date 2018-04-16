@@ -1,15 +1,7 @@
 #ifndef MCC_SYMTAB_HANDLE_H
 #define MCC_SYMTAB_HANDLE_H
 
-#include "mCc/ast/print/ast_basic_printing.h"
-#include "mCc/ast/print/ast_print_assignment.h"
-#include "mCc/ast/print/ast_print_declaration.h"
-#include "mCc/ast/print/ast_print_expression.h"
-#include "mCc/ast/print/ast_print_function.h"
-#include "mCc/ast/print/ast_print_identifier.h"
-#include "mCc/ast/print/ast_print_literal.h"
-#include "mCc/ast/print/ast_print_program.h"
-#include "mCc/ast/print/ast_print_statement.h"
+#include "mCc/ast.h"
 #include "mCc/symtab/symbol_table.h"
 #include "mCc/symtab/validator/validator.h"
 
