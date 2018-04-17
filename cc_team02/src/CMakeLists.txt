@@ -53,16 +53,17 @@ add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 							symtab/symbol_table.c
 							symtab/symtab_build.c
 							symtab/validator/validator.c
-							symtab/validator/base_validator.c)
+							symtab/validator/base_validator.c)							
+# to use strdup => global compile-flag?
+set_property(TARGET mCc_symtab PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
 # intermediate
 target_link_libraries(mCc_symtab ext_log_c ext_map)
 
 # setup mCc_lib
 add_library(mCc_lib SHARED ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})
+set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
 # link remaining
 target_link_libraries(mCc_lib mCc_print mCc_visit mCc_ast)
-
-set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
