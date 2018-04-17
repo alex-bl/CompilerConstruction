@@ -4,6 +4,8 @@
 
 #include "mCc/ast.h"
 #include "mCc/parser.h"
+#include "mCc/symtab_build.h"
+#include "log.h"
 
 void print_usage(const char *prg)
 {
@@ -43,6 +45,16 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 		prog = result.program;
+	}
+
+	/* build symbol-table */
+	{
+		struct mCc_validation_status_result *validation_result =
+		    mCc_symtab_build_program(prog);
+		/* print */
+		mCc_validator_print_validation_result(validation_result, stdout);
+		/* delete validation-result */
+		mCc_validator_delete_validation_result(validation_result);
 	}
 
 	/*    TODO
