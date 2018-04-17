@@ -3,7 +3,6 @@
 #include "mCc_test/mCc_test_utils.h"
 #include "gtest/gtest.h"
 
-
 TEST(Parser, BinaryOp_1)
 {
 	const char input[] = "192 + 3.14";
@@ -798,4 +797,19 @@ TEST(Parser, CommentsMultiline)
 	ASSERT_EQ(4, statement->next_statement->node.sloc.start_line);
 
 	mCc_parser_destroy_parser(result);
+}
+
+TEST(Parser, Program_2)
+{
+	const char input[] = "void main(){	int a;string b;int d;	"
+	                     "c=2;a=notDefined(\"test\");d=call();d=call(1,2,3,4);"
+	                     "if(a==12){int c;} else{int d;}}";
+	
+
+	auto result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	ASSERT_EQ(MCC_AST_DATA_TYPE_VOID,
+	          result.program->first_function_def->return_type);
+	mCc_ast_delete_program(result.program);
 }
