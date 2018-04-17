@@ -1,22 +1,9 @@
 #!/bin/bash
-BUILD_TYPE=$1;
-BUILD_ARGUMENTS=$2;
+# cmake setup wrapper
 
-if [ -z $BUILD_TYPE ]; then
-	BUILD_TYPE="meson";
-fi
+BUILD_ARGUMENTS=$1;
 
-if [ "$BUILD_TYPE" != "meson" ] && [ "$BUILD_TYPE" != "cmake" ]; then
-	echo "Only cmake or meson allowed!";
-	exit;
-fi
-
-if [ "$BUILD_TYPE" = "meson" ]; then
-	rm -rf builddir;
-	meson builddir $BUILD_ARGUMENTS;
-else
-	rm -rf build;
-	mkdir build;
-	cd build;
-	cmake $BUILD_ARGUMENTS ../
-fi
+rm -rf build;
+mkdir build;
+cd build;
+cmake $BUILD_ARGUMENTS ../

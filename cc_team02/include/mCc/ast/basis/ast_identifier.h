@@ -2,6 +2,7 @@
 #define MCC_AST_IDENTIFIER_H
 
 #include "mCc/ast/basis/ast_node.h"
+#include "mCc/symtab/symtab_node.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,6 +12,8 @@ struct mCc_ast_identifier {
 	struct mCc_ast_node node;
 	/* It is not const intentionally! */
 	char *identifier_name;
+	/* link the corresponding node from the symbol-table*/
+	struct mCc_symbol_table_node *symtab_info;
 };
 
 struct mCc_ast_identifier *mCc_ast_new_identifier(char *name);
