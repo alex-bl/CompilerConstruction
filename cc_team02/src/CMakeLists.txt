@@ -15,10 +15,13 @@ add_library(mCc_ast SHARED  ast/basis/ast_assignment.c
 							ast/basis/ast_declaration.c
 							ast/basis/ast_expression.c
 							ast/basis/ast_function.c							
-							ast/basis/ast_identifier.c							
+							ast/basis/ast_identifier.c					
 							ast/basis/ast_literal.c							
 							ast/basis/ast_program.c							
-							ast/basis/ast_statement.c)
+							ast/basis/ast_statement.c
+							# to free the associated symtab-info at identifiers
+							# maybe a better solution?
+							symtab/symtab_node.c)
 
 # visitors
 add_library(mCc_visit SHARED ast/visit/ast_visit_assignment.c
@@ -42,11 +45,25 @@ add_library(mCc_print SHARED ast/print/ast_basic_printing.c
 							ast/print/ast_print_program.c														
 							ast/print/ast_print_statement.c)
 
+# symbol-table-handler (for building the symbol-table and validation)
+add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
+							symtab/handler/symtab_handle_function.c
+							symtab/handler/symtab_handle_identifier.c
+							symtab/handler/symtab_handle_declaration.c
+							symtab/symbol_table.c
+							symtab/symtab_build.c
+							symtab/validator/validator.c
+							symtab/validator/base_validator.c)							
+# to use strdup => global compile-flag?
+set_property(TARGET mCc_symtab PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
+
+# intermediate
+target_link_libraries(mCc_symtab ext_log_c ext_map)
+
 # setup mCc_lib
 add_library(mCc_lib SHARED ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})
+set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
 # link remaining
 target_link_libraries(mCc_lib mCc_print mCc_visit mCc_ast)
-
-set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 

@@ -123,12 +123,14 @@ toplevel: statement_list { result->top_level_type=MCC_PARSER_TOP_LEVEL_STATEMENT
 	| program { result->top_level_type=MCC_PARSER_TOP_LEVEL_PROGRAM; result->program = $1; } 
 	;
 
+
 declaration: type IDENTIFIER                          { $$ = mCc_ast_new_primitive_declaration($1, $2); loc($$, @1);}
 	| type LBRACKET INT_LITERAL RBRACKET IDENTIFIER   { $$ = mCc_ast_new_array_declaration($1, $5, $3); loc($$, @1);}
 	;
 
-assignment: IDENTIFIER ASSIGNMENT expression								{ $$ = mCc_ast_new_primitive_assignment($1, $3); loc($$, @1);}
-		  | IDENTIFIER LBRACKET expression RBRACKET ASSIGNMENT expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $6); loc($$, @1);}
+
+assignment: IDENTIFIER ASSIGNMENT expression								{ $$ = mCc_ast_new_primitive_assignment($1, $3); loc($$, @1); loc($1, @1);}
+		  | IDENTIFIER LBRACKET expression RBRACKET ASSIGNMENT expression	{ $$ = mCc_ast_new_array_assignment($1, $3, $6); loc($$, @1); loc($1, @1);}
 		  ;
 
 unary_op: 	MINUS		{ $$ = MCC_AST_UNARY_OP_MINUS; }
@@ -157,8 +159,8 @@ binary_op_mul:	ASTER		{ $$ = MCC_AST_BINARY_OP_MUL; }
 single_expr:  literal                      			    { $$ = mCc_ast_new_expression_literal($1); loc($$, @1);}
 		   | unary_op INT_LITERAL						{ $$ = mCc_ast_new_expression_unary_op($1, mCc_ast_new_expression_literal(mCc_ast_new_literal_int($2))); loc($$, @1);}
 		   | unary_op FLOAT_LITERAL						{ $$ = mCc_ast_new_expression_unary_op($1, mCc_ast_new_expression_literal(mCc_ast_new_literal_float($2))); loc($$, @1);}
-		   | IDENTIFIER									{ $$ = mCc_ast_new_expression_identifier($1); loc($$, @1);}
-		   | IDENTIFIER LBRACKET expression RBRACKET	{ $$ = mCc_ast_new_expression_array_identifier($1, $3); loc($$, @1);}
+		   | IDENTIFIER									{ $$ = mCc_ast_new_expression_identifier($1); loc($$, @1); loc($1, @1);}
+		   | IDENTIFIER LBRACKET expression RBRACKET	{ $$ = mCc_ast_new_expression_array_identifier($1, $3); loc($$, @1); loc($1, @1);}
 	       | call_expr									{ $$ = mCc_ast_new_expression_function_call($1); loc($$, @1);}
 		   | unary_op expression						{ $$ = mCc_ast_new_expression_unary_op($1, $2); loc($$, @1);}
            | LPARENTH expression RPARENTH    			{ $$ = mCc_ast_new_expression_parenth($2); loc($$, @1);}
@@ -180,7 +182,7 @@ expression: single_expr_lev1 binary_op expression { $$ = mCc_ast_new_expression_
 literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1); loc($$, @1); }
        | FLOAT_LITERAL 		{ $$ = mCc_ast_new_literal_float($1); loc($$, @1); }
 	   | BOOL_LITERAL		{ $$ = mCc_ast_new_literal_bool($1); loc($$, @1); }
-	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string($1); loc($$, @1); }
+	   | STRING_LITERAL 	{ $$ = mCc_ast_new_literal_string(strdup($1)); loc($$, @1); }
        ;
 
 type:	INT_TYPE 	{ $$ = MCC_AST_DATA_TYPE_INT; }
@@ -193,6 +195,7 @@ statement_list:	statement_list statement	{
 													struct mCc_ast_statement* t = $1;
 													if(t == NULL){
 														$$ = $2;
+														loc($$, @1);
 													}else{
 														while(t->next_statement != NULL){
 															t = t->next_statement;
@@ -227,9 +230,11 @@ ret_stmt:  RETURN_KEYWORD SEMICOLON             { $$ = mCc_ast_new_return_statem
     	|  RETURN_KEYWORD expression SEMICOLON  { $$ = mCc_ast_new_return_statement($2); loc($$, @1); }
         ;
 
+
 compound_stmt: LBRACE statement_list RBRACE { $$ = $2;}
 			|  LBRACE  RBRACE               { $$ = NULL;}
-            ;
+
+
 
 
 
@@ -240,17 +245,18 @@ function_def: type IDENTIFIER LPARENTH RPARENTH compound_stmt          { $$ = mC
 	| VOID_TYPE IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, MCC_AST_DATA_TYPE_VOID, $4, $6); loc($$, @1); }
 	;
 
+
 function_list:	function_list function_def	{ 
 													struct mCc_ast_function_def* t = $1;
 													if(t == NULL){
-														$$ = $2;
+														$$ = $2;														
 													}else{
 														while(t->next_function_def != NULL){
 															t = t->next_function_def;
 														}
 														t->next_function_def = $2;
 														$$ = $1;
-														loc($$, @1);
+														loc($2, @2);
 													}
 													
 											}
@@ -269,16 +275,16 @@ parameters:   declaration					{ $$ = $1; loc($$, @1); }
 													}
 													t->next_declaration = $3;
 													$$ = $1;
-													loc($$, @1);
+													loc($3, @3);
 												}
 											}
           ;
 
-call_expr:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_new_non_parameterized_function_call($1); loc($$, @1); }
-		|	IDENTIFIER LPARENTH arguments RPARENTH	{ $$ = mCc_ast_new_parameterized_function_call($1, $3); loc($$, @1); }
+call_expr:	IDENTIFIER LPARENTH RPARENTH		    { $$ = 	mCc_ast_new_non_parameterized_function_call($1); loc($$, @1); loc($1, @1);}
+		|	IDENTIFIER LPARENTH arguments RPARENTH	{ $$ = mCc_ast_new_parameterized_function_call($1, $3); loc($$, @1); loc($1, @1);}
 		;
 
-arguments:	expression					{ $$ = $1; }
+arguments:	expression					{ $$ = $1; loc($$, @1);}
 		| 	arguments COMMA expression 	{
 												struct mCc_ast_expression* t = $1;
 												if(t == NULL){
@@ -289,7 +295,7 @@ arguments:	expression					{ $$ = $1; }
 													}
 													t->next_expr = $3;
 													$$ = $1;
-													loc($$, @1);
+													loc($3, @3);
 												}
 
 											}

@@ -10,10 +10,24 @@
 		} \
 	} while (0)
 
+#define visit_scope(callback, visitor) \
+	do { \
+		if (callback) { \
+			(callback)((visitor)->userdata); \
+		} \
+	} while (0)
+
 #define visit_if(cond, node, callback, visitor) \
 	do { \
 		if (cond) { \
 			visit(node, callback, visitor); \
+		} \
+	} while (0)
+
+#define visit_if_scope(cond, callback, visitor) \
+	do { \
+		if (cond) { \
+			visit_scope(callback, visitor); \
 		} \
 	} while (0)
 
@@ -63,11 +77,15 @@ typedef void (*mCc_ast_visit_program_cb)(struct mCc_ast_program *, void *);
 
 typedef void (*mCc_ast_visit_statement_cb)(struct mCc_ast_statement *, void *);
 
+//scope-handler
+typedef void (*mCc_ast_scope_cb)(void *);
+
 struct mCc_ast_visitor {
 	enum mCc_ast_visit_traversal traversal;
 	enum mCc_ast_visit_order order;
 
 	void *userdata;
+	struct mCc_ast_scope_holder *scope_level;
 
 	// expression
 	mCc_ast_visit_expression_cb expression;
@@ -93,6 +111,7 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_assignment_cb assignment_array;
 
 	// declaration
+	// use this for preorder
 	mCc_ast_visit_declaration_cb declaration;
 	mCc_ast_visit_declaration_cb declaration_type;
 	mCc_ast_visit_declaration_cb declaration_primitive;
@@ -102,6 +121,11 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_function_call_cb function_call;
 	mCc_ast_visit_function_def_cb function_def;
 	mCc_ast_visit_function_def_cb function_def_type;
+
+	/* at enter scope => manage symtab, add declarations*/
+	mCc_ast_scope_cb function_def_enter_scope;
+	mCc_ast_scope_cb function_def_leave_scope;
+	/*=====================================================*/
 
 	// identifier
 	mCc_ast_visit_identifier_cb identifier;
@@ -117,6 +141,13 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_statement_cb statement_declaration;
 	mCc_ast_visit_statement_cb statement_assignment;
 	mCc_ast_visit_statement_cb statement_expression;
+
+	/* at enter scope => manage symtab, add declarations*/
+	mCc_ast_scope_cb statement_if_enter_scope;
+	mCc_ast_scope_cb statement_if_leave_scope;
+	mCc_ast_scope_cb statement_while_enter_scope;
+	mCc_ast_scope_cb statement_while_leave_scope;
+	/*=====================================================*/
 };
 
 #ifdef __cplusplus

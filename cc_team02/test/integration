@@ -39,6 +39,13 @@ option_csv=false
 
 # ------------------------------------------------------------------- FUNCTIONS
 
+run_compiler()
+{
+	local input=$1
+	\time -f "%e %M %x" "$MCC" "$input" 2>&1 | tail -n1
+	return ${PIPESTATUS[0]}
+}
+
 print_header_md()
 {
 	echo "Input                                             Time        Memory  Status"
@@ -164,7 +171,9 @@ print_header
 	while read -r -d $'\0' example; do
 
 		# Run compiler with example input and obtain statistics.
-		stats=$(\time -f "%e %M %x" "$MCC" "$EXAMPLES_DIR/$example" 2>&1 | tail -n1)
+		if ! stats=$(run_compiler "$EXAMPLES_DIR/$example"); then
+			stats="- - 1"
+		fi
 
 		if [[ $(echo $stats | cut -d ' ' -f3) -ne 0 ]]; then
 			flawless=false
