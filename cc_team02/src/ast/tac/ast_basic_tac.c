@@ -5,6 +5,11 @@
 
 #include "mCc/ast/basis/ast_data_type.h"
 
+/*void tac_print() {
+
+	printf();
+}*/
+
 void tac_begin(FILE *out)
 {
 	assert(out);
@@ -38,11 +43,16 @@ void tac_edge(FILE *out, const void *src_node, const void *dst_node,
 void tac_edge_if_dest_exists(FILE *out, const void *src_node,
                                    const void *dst_node, const char *label)
 {
+	assert(out);
+	assert(src_node);
+	assert(dst_node);
+	assert(label);
 
 }
 
 const char *tac_data_type(enum mCc_ast_data_type type)
 {
+	assert(type);
 
 	return "unknown type";
 }
