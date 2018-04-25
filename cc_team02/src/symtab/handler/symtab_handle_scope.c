@@ -11,12 +11,14 @@ void mCc_symtab_enter_scope(void *data)
 
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
-	log_debug("Entering new scope %d",
-	          info_holder->symbol_table->scope_level + 1);
+	info_holder->scope_level = info_holder->scope_level + 1;
+
+	log_debug("Entering new scope %d", info_holder->scope_level);
 
 	// create a new symbol-table
 	struct mCc_symbol_table *symbol_table_new_scope =
-	    mCc_symtab_new_symbol_table(info_holder->symbol_table);
+	    mCc_symtab_new_symbol_table(info_holder->symbol_table,
+	                                info_holder->scope_level);
 	// set as new actual symbol-table
 	info_holder->symbol_table = symbol_table_new_scope;
 }

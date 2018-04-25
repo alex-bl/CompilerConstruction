@@ -120,7 +120,7 @@ mCc_symtab_new_function_def_node(struct mCc_ast_function_def *function_def)
 }
 
 struct mCc_symbol_table *
-mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent)
+mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent, int scope_level)
 {
 	struct mCc_symbol_table *symbol_table = malloc(sizeof(*symbol_table));
 	if (!symbol_table) {
@@ -130,13 +130,8 @@ mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent)
 	}
 
 	symbol_table->parent = parent;
-	// new table means new scope => increment level
-	if (parent) {
-		symbol_table->scope_level = parent->scope_level + 1;
-	} else {
-		//"global" symtab
-		symbol_table->scope_level = 0;
-	}
+	symbol_table->scope_level = scope_level;
+
 	// init hash-map
 	map_init(&(symbol_table->table));
 

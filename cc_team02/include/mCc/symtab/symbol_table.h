@@ -72,11 +72,13 @@ mCc_symtab_new_function_def_node(struct mCc_ast_function_def *function_def);
  *
  * @param parent
  * 		The parent-symbol-table or NULL if it is already the top-table
+ * @param scope_level
+ * 		The scope level
  * @return
  * 		A new symbol-table
  */
 struct mCc_symbol_table *
-mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent);
+mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent, int scope_level);
 
 /**
  * Inserts a node into the symbol-table
