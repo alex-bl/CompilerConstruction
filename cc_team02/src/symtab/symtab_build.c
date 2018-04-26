@@ -73,72 +73,6 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 	};
 }
 
-static struct mCc_ast_function_def *
-create_buildin(const char *identifier, struct mCc_ast_declaration *parameter,
-               enum mCc_ast_data_type return_type)
-{
-	struct mCc_ast_function_def *def =
-	    mCc_ast_new_non_parameterized_function_def(
-	        mCc_ast_new_identifier(strdup(identifier)), return_type, NULL);
-	def->first_parameter = parameter;
-	return def;
-}
-
-static struct mCc_ast_declaration *
-create_declaration(const char *identifier, enum mCc_ast_data_type type)
-{
-	return mCc_ast_new_primitive_declaration(
-	    type, mCc_ast_new_identifier(strdup(identifier)));
-}
-
-/*Parameter is a new scope*/
-static void
-insert_declaration_to_symtab(struct mCc_symbol_table *parent,
-                             struct mCc_ast_declaration *declaration,
-                             int *scope_level)
-{
-	*scope_level = *scope_level + 1;
-	struct mCc_symbol_table *symbol_table =
-	    mCc_symtab_new_symbol_table(NULL, *scope_level);
-	mCc_symtab_insert_var_node(symbol_table, declaration);
-	symbol_table->parent = parent;
-}
-
-static void add_buildins(struct mCc_symbol_table *symbol_table,
-                         int *scope_level)
-{
-	struct mCc_ast_declaration *print_msg =
-	    create_declaration("msg", MCC_AST_DATA_TYPE_STRING);
-	mCc_symtab_insert_function_def_node(
-	    symbol_table,
-	    create_buildin("print", print_msg, MCC_AST_DATA_TYPE_VOID));
-	insert_declaration_to_symtab(symbol_table, print_msg, scope_level);
-
-	mCc_symtab_insert_function_def_node(
-	    symbol_table, create_buildin("print_nl", NULL, MCC_AST_DATA_TYPE_VOID));
-
-	struct mCc_ast_declaration *print_x_int =
-	    create_declaration("x", MCC_AST_DATA_TYPE_INT);
-	mCc_symtab_insert_function_def_node(
-	    symbol_table,
-	    create_buildin("print_int", print_x_int, MCC_AST_DATA_TYPE_VOID));
-	insert_declaration_to_symtab(symbol_table, print_x_int, scope_level);
-
-	struct mCc_ast_declaration *print_x_float =
-	    create_declaration("x", MCC_AST_DATA_TYPE_FLOAT);
-	mCc_symtab_insert_function_def_node(
-	    symbol_table,
-	    create_buildin("print_float", print_x_float, MCC_AST_DATA_TYPE_VOID));
-	insert_declaration_to_symtab(symbol_table, print_x_float, scope_level);
-
-	mCc_symtab_insert_function_def_node(
-	    symbol_table, create_buildin("read_int", NULL, MCC_AST_DATA_TYPE_INT));
-
-	mCc_symtab_insert_function_def_node(
-	    symbol_table,
-	    create_buildin("read_float", NULL, MCC_AST_DATA_TYPE_FLOAT));
-}
-
 // TODO: return status
 struct mCc_validation_status_result *
 mCc_symtab_build_program(struct mCc_ast_program *program)
@@ -159,9 +93,6 @@ mCc_symtab_build_program(struct mCc_ast_program *program)
 	info_holder.symbol_table = symbol_table;
 	info_holder.first_semantic_error = NULL;
 	info_holder.scope_level = 0;
-
-	// add build-in-functions
-	add_buildins(symbol_table, &info_holder.scope_level);
 
 	// TODO: add build-ins
 	struct mCc_ast_visitor visitor = symtab_visitor(&info_holder);

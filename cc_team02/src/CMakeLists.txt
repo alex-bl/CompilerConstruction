@@ -10,6 +10,10 @@ bison_target(parser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c COMPILE_FL
 
 add_flex_bison_dependency(scanner parser)
 
+# helper-functions
+add_library(mCc_parser_helper SHARED general/parser_helper.c)
+add_library(mCc_print_helper SHARED general/print_helper.c)
+
 # basic ast
 add_library(mCc_ast SHARED  ast/basis/ast_assignment.c
 							ast/basis/ast_declaration.c
@@ -78,5 +82,5 @@ add_library(mCc_lib SHARED ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})
 set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
 # link remaining
-target_link_libraries(mCc_lib mCc_tac mCc_print mCc_visit mCc_ast)
+target_link_libraries(mCc_lib mCc_tac mCc_print mCc_visit mCc_ast mCc_parser_helper mCc_print_helper)
 

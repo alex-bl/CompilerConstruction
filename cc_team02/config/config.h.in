@@ -1,1 +1,18 @@
-//configs here if needed
+#ifndef MCC_CONFIG_H
+#define MCC_CONFIG_H
+
+#define DOT_OUTPUT_DIR "test/output/"
+#define DOT_PREFIX "DOT_"
+#define DOT_FILE_SUFFIX ".dot"
+#define PATH_BUILDINS "${CMAKE_BINARY_DIR}/data/buildins.mC"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

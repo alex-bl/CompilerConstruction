@@ -64,19 +64,31 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.21.supp.in"
   "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
   )
+
+# configure build-ins
+configure_file(
+	"${PROJECT_SOURCE_DIR}/data/buildins.mC.in"
+	"${CMAKE_BINARY_DIR}/data/buildins.mC"
+)
+
+configure_file(
+	"${PROJECT_SOURCE_DIR}/config/README.md.in"
+	"${CMAKE_BINARY_DIR}/test/output/README.md"
+)
    
 #=================================================================== headers
-  
+include_directories(${CMAKE_CURRENT_BINARY_DIR}) 
+# config
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/config)  
 # add the binary tree to the search path for include files
 # so that we will find the headers
-include_directories("${PROJECT_SOURCE_DIR}/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/include")
 # include test-utils-header also => separated from source
-include_directories("${PROJECT_SOURCE_DIR}/test/include" ${CMAKE_CURRENT_BINARY_DIR})
-
+include_directories("${PROJECT_SOURCE_DIR}/test/include")
 # external logging-lib
-include_directories("${PROJECT_SOURCE_DIR}/external/log/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/external/log/include")
 # external hash-map
-include_directories("${PROJECT_SOURCE_DIR}/external/map/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/external/map/include")
 
 #=================================================================== external-src
 

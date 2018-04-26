@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "mCc/ast/print/ast_basic_printing.h"
+#include "mCc/general/print_helper.h"
 
 void mCc_print_dot_declaration_primitive(
     struct mCc_ast_declaration *declaration, void *data)
