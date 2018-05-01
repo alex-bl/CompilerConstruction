@@ -9,6 +9,7 @@ const char *print_data_type(enum mCc_ast_data_type type)
 	case MCC_AST_DATA_TYPE_BOOL: return "bool";
 	case MCC_AST_DATA_TYPE_STRING: return "string";
 	case MCC_AST_DATA_TYPE_INCONSISTENT: return "inconsistent";
+	case MCC_AST_DATA_TYPE_UNKNOWN: return "unknown";
 	}
 	return "unknown type";
 }

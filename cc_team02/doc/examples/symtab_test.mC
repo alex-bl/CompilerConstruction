@@ -19,6 +19,8 @@ void main(){
 	int d;
 	
 	c=2;
+	a= a + 2 + d + 4 * 3 + d - b;
+	a=6;
 	
 	a=buuddd("test");
 	d=call();

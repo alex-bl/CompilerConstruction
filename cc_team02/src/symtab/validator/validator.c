@@ -117,9 +117,11 @@ mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
 	case MCC_VALIDATION_STATUS_INVALID_SIGNATURE:
 		error_printers.invalid_signature_printer(error_msg, size, data);
 		break;
+	case MCC_VALIDATION_STATUS_INVALID_TYPE:
+		error_printers.inconsistent_type_printer(error_msg, size, data);
+		break;
 		/*TODO*/
 	case MCC_VALIDATION_STATUS_VALID:
-	case MCC_VALIDATION_STATUS_INVALID_TYPE:
 		snprintf(error_msg, size, " ");
 		break;
 	}
@@ -137,8 +139,8 @@ mCc_validator_create_error_status(enum mCc_validation_status_type status_code,
 		return NULL;
 	}
 
-	char *error_msg = mCc_validator_create_error_msg(status_code, data,
-	                                                 ERROR_MSG_BUF_SIZE);
+	char *error_msg =
+	    mCc_validator_create_error_msg(status_code, data, ERROR_MSG_BUF_SIZE);
 	return mCc_validator_new_validation_result(status_code, error_msg);
 }
 
@@ -157,13 +159,14 @@ void mCc_validor_store_result_to_handler(
 	}
 }
 
-enum mCc_validation_status_type mCc_process_validation(
-    enum mCc_validation_status_type(validator_function)(
-        struct mCc_symbol_table *, void *),
-    void(success_handler(struct mCc_symbol_table *, void *)),
-    struct mCc_symbol_table *symbol_table,void *validator_input,
-    struct mCc_symtab_and_validation_holder *info_holder,
-    void *success_handler_data)
+enum mCc_validation_status_type
+mCc_process_validation(enum mCc_validation_status_type(validator_function)(
+                           struct mCc_symbol_table *, void *),
+                       void(success_handler(struct mCc_symbol_table *, void *)),
+                       struct mCc_symbol_table *symbol_table,
+                       void *validator_input,
+                       struct mCc_symtab_and_validation_holder *info_holder,
+                       void *success_handler_data)
 {
 	// function-defs are stored at symboltable with scope lvl 0
 	enum mCc_validation_status_type check_result =
@@ -172,7 +175,8 @@ enum mCc_validation_status_type mCc_process_validation(
 	if (check_result == MCC_VALIDATION_STATUS_VALID && success_handler) {
 		// function-defs are always inserted at scope-level 0 => so parent
 		success_handler(symbol_table, success_handler_data);
-	} else if (check_result != MCC_VALIDATION_STATUS_VALID) {
+	} else if (check_result != MCC_VALIDATION_STATUS_VALID &&
+	           check_result != MCC_VALIDATION_STATUS_ERROR_REPORTED_LATER) {
 		struct mCc_validation_status_result *status_result =
 		    mCc_validator_create_error_status(check_result, validator_input);
 		mCc_validor_store_result_to_handler(info_holder, status_result);

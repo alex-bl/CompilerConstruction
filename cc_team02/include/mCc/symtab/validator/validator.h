@@ -6,6 +6,7 @@
 #include "mCc/ast/basis/ast_identifier.h"
 #include "mCc/symtab/symbol_table.h"
 #include "mCc/symtab/symtab_types.h"
+#include "mCc/symtab/validator/validation_status.h"
 
 #define ERROR_MSG_BUF_SIZE 64
 
@@ -14,17 +15,6 @@ extern "C" {
 #endif
 
 // TODO: add implementation!
-
-enum mCc_validation_status_type {
-	MCC_VALIDATION_STATUS_VALID,
-	MCC_VALIDATION_STATUS_INVALID_TYPE,
-	MCC_VALIDATION_STATUS_NO_DEF,
-	MCC_VALIDATION_STATUS_NOT_UNIQUE,
-	MCC_VALIDATION_STATUS_INVALID_SIGNATURE,
-	MCC_VALIDATION_STATUS_NO_MAIN,
-	MCC_VALIDATION_STATUS_NO_RETURN,
-	MCC_VALIDATION_STATUS_RETURN_ON_VOID
-};
 
 struct mCc_validation_status_result {
 	enum mCc_validation_status_type validation_status;

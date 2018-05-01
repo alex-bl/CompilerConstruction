@@ -1,4 +1,5 @@
 #include "mCc/symtab/validator/error_printer.h"
+#include "mCc/general/print_helper.h"
 #include <assert.h>
 #include <stdio.h>
 
@@ -91,7 +92,12 @@ void mCc_validator_print_error_invalid_signature(char *error_buffer,
 void mCc_validator_print_error_inconsistent_type(char *error_buffer,
                                                  size_t size, void *data)
 {
-	struct mCc_ast_identifier *identifier = (struct mCc_ast_identifier *)data;
+	struct mCc_ast_assignment *assignment = (struct mCc_ast_assignment *)data;
+	// info is available at this stage
+	snprintf(error_buffer, size,
+	         "Invalid type for assignment '%s': Expected '%s'",
+	         assignment->identifier->identifier_name,
+	         print_data_type(assignment->identifier->symtab_info->data_type));
 }
 
 struct mCc_error_print_holder mCc_validator_setup_error_printer_holder()

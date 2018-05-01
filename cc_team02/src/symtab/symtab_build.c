@@ -41,7 +41,9 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		//.declaration => add declarations to current symtab
 		.declaration_primitive = mCc_symtab_handle_declaration_primitive,
 		.declaration_array = mCc_symtab_handle_declaration_array,
-
+		//.assignment
+		.assignment_primitive = mCc_symtab_handle_primitive_assignment,
+		.assignment_array = mCc_symtab_handle_array_assignment,
 		//=================================
 
 		// maybe not needed inside symtab-construction
@@ -58,9 +60,6 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.literal_float = NULL,
 		.literal_bool = NULL,
 		.literal_string = NULL,
-		//.assignment
-		.assignment_primitive = NULL,
-		.assignment_array = NULL,
 		// program
 		.program = NULL,
 		// statement

@@ -66,9 +66,11 @@ add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 							symtab/handler/symtab_handle_function.c
 							symtab/handler/symtab_handle_identifier.c
 							symtab/handler/symtab_handle_declaration.c
+							symtab/handler/symtab_handle_assignment.c							
 							symtab/symbol_table.c
 							symtab/symtab_build.c
 							symtab/validator/validator.c
+							symtab/validator/typecheck.c
 							symtab/validator/base_validator.c
 							symtab/validator/error_printer.c)
 												
