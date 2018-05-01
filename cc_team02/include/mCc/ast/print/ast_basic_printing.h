@@ -2,7 +2,6 @@
 #define MCC_AST_BASIC_PRINTING_H
 
 #include <stdio.h>
-#include "../basis/ast_data_type.h"
 
 #define LABEL_SIZE 64
 
@@ -21,8 +20,6 @@ void print_dot_edge(FILE *out, const void *src_node, const void *dst_node,
 
 void print_dot_edge_if_dest_exists(FILE *out, const void *src_node,
                                    const void *dst_node, const char *label);
-
-const char *print_data_type(enum mCc_ast_data_type type);
 
 #ifdef __cplusplus
 }

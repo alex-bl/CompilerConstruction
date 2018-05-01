@@ -33,7 +33,7 @@ void mCc_symtab_handle_declaration_primitive(
 	mCc_process_validation(mCc_validator_check_duplicates,
 	                       mCc_symtab_insert_var_node,
 	                       info_holder->symbol_table, declaration->identifier,
-	                       declaration->identifier, info_holder, declaration);
+	                       info_holder, declaration);
 
 	log_debug("New variable declaration inserted to symbol-table scope %d",
 	          scope_level);
@@ -60,8 +60,8 @@ void mCc_symtab_handle_declaration_array(
 	// are always var-nodes
 	mCc_process_validation(
 	    mCc_validator_check_duplicates, mCc_symtab_insert_var_node,
-	    info_holder->symbol_table, declaration->array_identifier,
-	    declaration->array_identifier, info_holder, declaration);
+	    info_holder->symbol_table, declaration->array_identifier, info_holder,
+	    declaration);
 
 	log_debug("New array declaration inserted to symbol-table scope %d",
 	          scope_level);

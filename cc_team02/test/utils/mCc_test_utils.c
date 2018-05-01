@@ -5,9 +5,8 @@
 #include <string.h>
 
 #include "mCc/ast_print.h"
+#include "config.h"
 
-#define DOT_OUTPUT_DIR "DOT_"
-#define DOT_FILE_SUFFIX ".dot"
 #define NAME_SIZE 64
 
 /**
@@ -22,7 +21,7 @@
  */
 void build_file_name(char buffer[], size_t size, const char *file_name)
 {
-	snprintf(buffer, size, "%s%s%s", DOT_OUTPUT_DIR, file_name,
+	snprintf(buffer, size, "%s%s%s%s", DOT_OUTPUT_DIR, DOT_PREFIX, file_name,
 	         DOT_FILE_SUFFIX);
 }
 

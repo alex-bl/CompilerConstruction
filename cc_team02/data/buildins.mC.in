@@ -1,0 +1,29 @@
+void print(string msg)
+{
+	
+}
+
+void print_nl()
+{
+
+}
+
+void print_int(int x)
+{
+
+}
+
+void print_float(float x)
+{
+
+}
+
+int read_int()
+{
+	return 0;
+}
+
+float read_float()
+{
+	return 0.0;
+}

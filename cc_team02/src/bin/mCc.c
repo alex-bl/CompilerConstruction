@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "mCc/ast.h"
 #include "mCc/parser.h"
 #include "mCc/symtab_build.h"
 #include "log.h"
+#include "config.h"
+#include "mCc/general/parser_helper.h"
 
 void print_usage(const char *prg)
 {
@@ -33,6 +36,17 @@ int main(int argc, char *argv[])
 	}
 
 	struct mCc_ast_program *prog = NULL;
+	struct mCc_ast_program *buildins = NULL;
+
+	FILE *buildin_file = fopen(PATH_BUILDINS,"r");
+	/* deal with build-ins */
+	{
+		struct mCc_parser_result buildins_parsed = mCc_parser_parse_file(buildin_file);
+		fclose(buildin_file);
+
+		buildins = buildins_parsed.program;
+		buildins->is_library=true;
+	}
 
 	/* parsing phase */
 	{
@@ -45,6 +59,9 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 		prog = result.program;
+
+		//include buildins
+		mCc_parser_include_functions(buildins, prog);
 	}
 
 	/* build symbol-table */
@@ -67,6 +84,7 @@ int main(int argc, char *argv[])
 
 	/* cleanup */
 	mCc_ast_delete_program(prog);
+	mCc_ast_delete_program(buildins);
 
 	return EXIT_SUCCESS;
 }

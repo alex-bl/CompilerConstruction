@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "mCc/ast/print/ast_basic_printing.h"
+#include "mCc/general/print_helper.h"
 
 const char *mCc_ast_print_binary_op(enum mCc_ast_binary_op op)
 {

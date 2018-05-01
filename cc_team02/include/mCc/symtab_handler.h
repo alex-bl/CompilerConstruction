@@ -5,6 +5,7 @@
 #include "mCc/symtab/handler/symtab_handle_identifier.h"
 #include "mCc/symtab/handler/symtab_handle_scope.h"
 #include "mCc/symtab/handler/symtab_handle_declaration.h"
+#include "mCc/symtab/handler/symtab_handle_assignment.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -64,19 +64,31 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.21.supp.in"
   "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
   )
+
+# configure build-ins
+configure_file(
+	"${PROJECT_SOURCE_DIR}/data/buildins.mC.in"
+	"${CMAKE_BINARY_DIR}/data/buildins.mC"
+)
+
+configure_file(
+	"${PROJECT_SOURCE_DIR}/config/README.md.in"
+	"${CMAKE_BINARY_DIR}/test/output/README.md"
+)
    
 #=================================================================== headers
-  
+include_directories(${CMAKE_CURRENT_BINARY_DIR}) 
+# config
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/config)  
 # add the binary tree to the search path for include files
 # so that we will find the headers
-include_directories("${PROJECT_SOURCE_DIR}/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/include")
 # include test-utils-header also => separated from source
-include_directories("${PROJECT_SOURCE_DIR}/test/include" ${CMAKE_CURRENT_BINARY_DIR})
-
+include_directories("${PROJECT_SOURCE_DIR}/test/include")
 # external logging-lib
-include_directories("${PROJECT_SOURCE_DIR}/external/log/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/external/log/include")
 # external hash-map
-include_directories("${PROJECT_SOURCE_DIR}/external/map/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/external/map/include")
 
 #=================================================================== external-src
 
@@ -183,27 +195,29 @@ foreach(entry_name ${unit_test_list})
 endforeach(entry_name)
 
 #================================================================= benchmark
+# currently not used!
 
 # custom benchmark-target => run all benchmark-binaries within shell-script
-add_custom_target(run_benchmarks
-    COMMAND ${CMAKE_BINARY_DIR}/utils/run_benchmarks)
+#add_custom_target(run_benchmarks
+#    COMMAND ${CMAKE_BINARY_DIR}/utils/run_benchmarks)
 
-add_subdirectory("benchmark" "${GBENCHMARK_DOWNLOAD_DESTINATION}")
+# exclude from build, because currently not used
+# add_subdirectory("benchmark" "${GBENCHMARK_DOWNLOAD_DESTINATION}")
 # do the same as for testing, but with benchmark
-set(my_benchmark_list "just_try")
+# set(my_benchmark_list "just_try")
 
-foreach(entry_name ${my_benchmark_list})
+#foreach(entry_name ${my_benchmark_list})
 	# build and link
-	add_executable(${entry_name}_benchmark_exec benchmark/${entry_name}.cpp)	
+#	add_executable(${entry_name}_benchmark_exec benchmark/${entry_name}.cpp)	
 	# TODO: used the correct binary?
 	# This is actually just a test-file: If using non-test-files also link the mCc_binaries
-	target_link_libraries(${entry_name}_benchmark_exec benchmark)
+#	target_link_libraries(${entry_name}_benchmark_exec benchmark)
 	# copy executables to bench-directory
-	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/benchmark
-		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/benchmark)
-	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
-endforeach(entry_name)
+#	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
+#		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/benchmark
+#		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/benchmark)
+#	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
+#endforeach(entry_name)
 
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-

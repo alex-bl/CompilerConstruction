@@ -44,6 +44,9 @@ mCc_ast_new_array_assignment(struct mCc_ast_identifier *identifier,
 
 void mCc_ast_delete_assignment(struct mCc_ast_assignment *name);
 
+struct mCc_ast_expression *
+mCc_ast_get_expression(struct mCc_ast_assignment *assignment);
+
 #ifdef __cplusplus
 }
 #endif

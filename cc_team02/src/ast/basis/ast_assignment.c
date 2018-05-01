@@ -49,3 +49,12 @@ void mCc_ast_delete_assignment(struct mCc_ast_assignment *assignment)
 	}
 	free(assignment);
 }
+
+struct mCc_ast_expression *
+mCc_ast_get_expression(struct mCc_ast_assignment *assignment){
+	assert(assignment);
+	if(assignment->assignment_type==MCC_AST_ASSIGNMENT_PRIMITIVE){
+		return assignment->assigned_expression;
+	}
+	return assignment->array_assigned_expression;
+}

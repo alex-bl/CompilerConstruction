@@ -41,7 +41,9 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		//.declaration => add declarations to current symtab
 		.declaration_primitive = mCc_symtab_handle_declaration_primitive,
 		.declaration_array = mCc_symtab_handle_declaration_array,
-
+		//.assignment
+		.assignment_primitive = mCc_symtab_handle_primitive_assignment,
+		.assignment_array = mCc_symtab_handle_array_assignment,
 		//=================================
 
 		// maybe not needed inside symtab-construction
@@ -58,9 +60,6 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.literal_float = NULL,
 		.literal_bool = NULL,
 		.literal_string = NULL,
-		//.assignment
-		.assignment_primitive = NULL,
-		.assignment_array = NULL,
 		// program
 		.program = NULL,
 		// statement
@@ -73,57 +72,14 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 	};
 }
 
-static struct mCc_ast_function_def *
-create_buildin(const char *identifier, struct mCc_ast_declaration *parameter,
-               enum mCc_ast_data_type return_type)
-{
-	struct mCc_ast_function_def *def =
-	    mCc_ast_new_non_parameterized_function_def(
-	        mCc_ast_new_identifier(strdup(identifier)), return_type, NULL);
-	def->first_parameter = parameter;
-	return def;
-}
-
-static struct mCc_ast_declaration *
-create_declaration(const char *identifier, enum mCc_ast_data_type type)
-{
-	return mCc_ast_new_primitive_declaration(
-	    type, mCc_ast_new_identifier(strdup(identifier)));
-}
-
-static void add_buildins(struct mCc_symbol_table *symbol_table)
-{
-	mCc_symtab_insert_function_def_node(
-	    symbol_table,
-	    create_buildin("print",
-	                   create_declaration("msg", MCC_AST_DATA_TYPE_STRING),
-	                   MCC_AST_DATA_TYPE_VOID));
-	mCc_symtab_insert_function_def_node(
-	    symbol_table, create_buildin("print_nl", NULL, MCC_AST_DATA_TYPE_VOID));
-	mCc_symtab_insert_function_def_node(
-	    symbol_table,
-	    create_buildin("print_int",
-	                   create_declaration("x", MCC_AST_DATA_TYPE_INT),
-	                   MCC_AST_DATA_TYPE_VOID));
-	mCc_symtab_insert_function_def_node(
-	    symbol_table,
-	    create_buildin("print_float",
-	                   create_declaration("x", MCC_AST_DATA_TYPE_FLOAT),
-	                   MCC_AST_DATA_TYPE_VOID));
-	mCc_symtab_insert_function_def_node(
-	    symbol_table, create_buildin("read_int", NULL, MCC_AST_DATA_TYPE_INT));
-	mCc_symtab_insert_function_def_node(
-	    symbol_table,
-	    create_buildin("read_float", NULL, MCC_AST_DATA_TYPE_FLOAT));
-}
-
 // TODO: return status
 struct mCc_validation_status_result *
 mCc_symtab_build_program(struct mCc_ast_program *program)
 {
 	assert(program);
 
-	struct mCc_symbol_table *symbol_table = mCc_symtab_new_symbol_table(NULL);
+	struct mCc_symbol_table *symbol_table =
+	    mCc_symtab_new_symbol_table(NULL, 0);
 	if (!symbol_table) {
 		log_error("Malloc failed: Could not init top-level symbol-table");
 		return NULL;
@@ -131,13 +87,11 @@ mCc_symtab_build_program(struct mCc_ast_program *program)
 	log_debug("Top-level symbol-table with scope %d created",
 	          symbol_table->scope_level);
 
-	// add build-in-functions
-	add_buildins(symbol_table);
-
 	struct mCc_symtab_and_validation_holder info_holder;
 
 	info_holder.symbol_table = symbol_table;
 	info_holder.first_semantic_error = NULL;
+	info_holder.scope_level = 0;
 
 	// TODO: add build-ins
 	struct mCc_ast_visitor visitor = symtab_visitor(&info_holder);
