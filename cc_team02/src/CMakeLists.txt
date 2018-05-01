@@ -69,7 +69,8 @@ add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 							symtab/symbol_table.c
 							symtab/symtab_build.c
 							symtab/validator/validator.c
-							symtab/validator/base_validator.c)
+							symtab/validator/base_validator.c
+							symtab/validator/error_printer.c)
 												
 # to use strdup => global compile-flag?
 set_property(TARGET mCc_symtab PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")

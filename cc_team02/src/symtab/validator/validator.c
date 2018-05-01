@@ -6,6 +6,7 @@
 
 #include "log.h"
 #include "mCc/symtab/symbol_table.h"
+#include "mCc/symtab/validator/error_printer.h"
 
 struct mCc_validation_status_result *mCc_validator_new_validation_result(
     enum mCc_validation_status_type validation_status, char *error_msg)
@@ -88,9 +89,10 @@ void mCc_validator_print_validation_result(
 
 char *
 mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
-                               struct mCc_ast_identifier *identifier,
-                               size_t size)
+                               void *data, size_t size)
 {
+	struct mCc_error_print_holder error_printers =
+	    mCc_validator_setup_error_printer_holder();
 	char *error_msg = malloc(size);
 	if (!error_msg) {
 		log_error("Malloc failed: Could not build error-msg.");
@@ -98,29 +100,22 @@ mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
 	}
 	switch (status_code) {
 	case MCC_VALIDATION_STATUS_NO_DEF:
-		snprintf(error_msg, size, "Implicit declaration of '%s'",
-		         identifier->identifier_name);
+		error_printers.no_def_printer(error_msg, size, data);
 		break;
 	case MCC_VALIDATION_STATUS_NOT_UNIQUE:
-		snprintf(error_msg, size, "'%s' already defined",
-		         identifier->identifier_name);
+		error_printers.not_unique_printer(error_msg, size, data);
 		break;
 	case MCC_VALIDATION_STATUS_NO_RETURN:
-		snprintf(error_msg, size,
-		         "No return for function '%s' (non-void-function)",
-		         identifier->identifier_name);
+		error_printers.no_return_printer(error_msg, size, data);
 		break;
 	case MCC_VALIDATION_STATUS_RETURN_ON_VOID:
-		snprintf(error_msg, size,
-		         "Function '%s': not expected return on void-function",
-		         identifier->identifier_name);
+		error_printers.return_on_void_printer(error_msg, size, data);
 		break;
 	case MCC_VALIDATION_STATUS_NO_MAIN:
-		snprintf(error_msg, size, "Function 'main' expected but not found");
+		error_printers.no_main_printer(error_msg, size, data);
 		break;
 	case MCC_VALIDATION_STATUS_INVALID_SIGNATURE:
-		snprintf(error_msg, size, "Function '%s': Wrong usage",
-		         identifier->identifier_name);
+		error_printers.invalid_signature_printer(error_msg, size, data);
 		break;
 		/*TODO*/
 	case MCC_VALIDATION_STATUS_VALID:
@@ -133,7 +128,7 @@ mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
 
 struct mCc_validation_status_result *
 mCc_validator_create_error_status(enum mCc_validation_status_type status_code,
-                                  struct mCc_ast_identifier *identifier)
+                                  void *data)
 {
 
 	if (status_code == MCC_VALIDATION_STATUS_VALID) {
@@ -142,7 +137,7 @@ mCc_validator_create_error_status(enum mCc_validation_status_type status_code,
 		return NULL;
 	}
 
-	char *error_msg = mCc_validator_create_error_msg(status_code, identifier,
+	char *error_msg = mCc_validator_create_error_msg(status_code, data,
 	                                                 ERROR_MSG_BUF_SIZE);
 	return mCc_validator_new_validation_result(status_code, error_msg);
 }
@@ -162,12 +157,11 @@ void mCc_validor_store_result_to_handler(
 	}
 }
 
-void mCc_process_validation(
+enum mCc_validation_status_type mCc_process_validation(
     enum mCc_validation_status_type(validator_function)(
         struct mCc_symbol_table *, void *),
     void(success_handler(struct mCc_symbol_table *, void *)),
-    struct mCc_symbol_table *symbol_table,
-    struct mCc_ast_identifier *identifier, void *validator_input,
+    struct mCc_symbol_table *symbol_table,void *validator_input,
     struct mCc_symtab_and_validation_holder *info_holder,
     void *success_handler_data)
 {
@@ -176,17 +170,12 @@ void mCc_process_validation(
 	    validator_function(symbol_table, validator_input);
 	// if valid and success-handler defined
 	if (check_result == MCC_VALIDATION_STATUS_VALID && success_handler) {
-		log_debug("Identifier '%s' is valid. Store it int symbol-table.",
-		          identifier->identifier_name);
 		// function-defs are always inserted at scope-level 0 => so parent
 		success_handler(symbol_table, success_handler_data);
-		log_debug("Done");
 	} else if (check_result != MCC_VALIDATION_STATUS_VALID) {
 		struct mCc_validation_status_result *status_result =
-		    mCc_validator_create_error_status(check_result, identifier);
+		    mCc_validator_create_error_status(check_result, validator_input);
 		mCc_validor_store_result_to_handler(info_holder, status_result);
-
-		log_debug("Error with identifier '%s': Semantic error reported",
-		          identifier->identifier_name);
 	}
+	return check_result;
 }

@@ -75,23 +75,23 @@ void mCc_validator_print_validation_result(
 /**
  *
  * @param status_code
- * @param identifier
+ * @param data
  * @param size
  * @return
  */
 char *
 mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
-                               struct mCc_ast_identifier *identifier,
-                               size_t size);
+                               void *data, size_t size);
+
 /**
  *
  * @param status_code
- * @param identifier
+ * @param data
  * @return
  */
 struct mCc_validation_status_result *
 mCc_validator_create_error_status(enum mCc_validation_status_type status_code,
-                                  struct mCc_ast_identifier *identifier);
+                                  void *data);
 
 /**
  *
@@ -106,19 +106,19 @@ void mCc_validor_store_result_to_handler(
  *
  * @param validator_function
  * @param symbol_table
- * @param identifier
  * @param validator_input
  * @param info_holder
  * @param success_handler_data
+ * @return
  */
-void mCc_process_validation(
-    enum mCc_validation_status_type(validator_function)(
-        struct mCc_symbol_table *, void *),
-    void(success_handler(struct mCc_symbol_table *, void *)),
-    struct mCc_symbol_table *symbol_table,
-    struct mCc_ast_identifier *identifier, void *validator_input,
-    struct mCc_symtab_and_validation_holder *info_holder,
-    void *success_handler_data);
+enum mCc_validation_status_type
+mCc_process_validation(enum mCc_validation_status_type(validator_function)(
+                           struct mCc_symbol_table *, void *),
+                       void(success_handler(struct mCc_symbol_table *, void *)),
+                       struct mCc_symbol_table *symbol_table,
+                       void *validator_input,
+                       struct mCc_symtab_and_validation_holder *info_holder,
+                       void *success_handler_data);
 
 #ifdef __cplusplus
 }

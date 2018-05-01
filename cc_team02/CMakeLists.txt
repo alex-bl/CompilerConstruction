@@ -195,27 +195,29 @@ foreach(entry_name ${unit_test_list})
 endforeach(entry_name)
 
 #================================================================= benchmark
+# currently not used!
 
 # custom benchmark-target => run all benchmark-binaries within shell-script
-add_custom_target(run_benchmarks
-    COMMAND ${CMAKE_BINARY_DIR}/utils/run_benchmarks)
+#add_custom_target(run_benchmarks
+#    COMMAND ${CMAKE_BINARY_DIR}/utils/run_benchmarks)
 
-add_subdirectory("benchmark" "${GBENCHMARK_DOWNLOAD_DESTINATION}")
+# exclude from build, because currently not used
+# add_subdirectory("benchmark" "${GBENCHMARK_DOWNLOAD_DESTINATION}")
 # do the same as for testing, but with benchmark
-set(my_benchmark_list "just_try")
+# set(my_benchmark_list "just_try")
 
-foreach(entry_name ${my_benchmark_list})
+#foreach(entry_name ${my_benchmark_list})
 	# build and link
-	add_executable(${entry_name}_benchmark_exec benchmark/${entry_name}.cpp)	
+#	add_executable(${entry_name}_benchmark_exec benchmark/${entry_name}.cpp)	
 	# TODO: used the correct binary?
 	# This is actually just a test-file: If using non-test-files also link the mCc_binaries
-	target_link_libraries(${entry_name}_benchmark_exec benchmark)
+#	target_link_libraries(${entry_name}_benchmark_exec benchmark)
 	# copy executables to bench-directory
-	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/benchmark
-		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/benchmark)
-	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
-endforeach(entry_name)
+#	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
+#		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/benchmark
+#		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/benchmark)
+#	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
+#endforeach(entry_name)
 
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-
