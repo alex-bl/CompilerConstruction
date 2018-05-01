@@ -39,9 +39,7 @@ mCc_typecheck_get_type(struct mCc_symbol_table *symbol_table,
 
 	// TODO: what happens if identifier inside expression is not known?
 	switch (expr->type) {
-	case MCC_AST_EXPRESSION_TYPE_LITERAL:
-		return expr->literal->type;
-		break;
+	case MCC_AST_EXPRESSION_TYPE_LITERAL: return expr->literal->type; break;
 	case MCC_AST_EXPRESSION_TYPE_BINARY_OP: {
 		enum mCc_ast_data_type lhs_type =
 		    mCc_typecheck_get_type(symbol_table, expr->lhs);
@@ -75,7 +73,24 @@ mCc_typecheck_get_type(struct mCc_symbol_table *symbol_table,
 
 enum mCc_validation_status_type
 mCc_typecheck_validate_type(struct mCc_symbol_table *symbol_table,
-                            void *validator_input)
+                            enum mCc_ast_data_type expected_type,
+                            struct mCc_ast_expression *to_check)
+{
+	enum mCc_ast_data_type expr_type =
+	    mCc_typecheck_get_type(symbol_table, to_check);
+	// is valid
+	if (expr_type == expected_type) {
+		return MCC_VALIDATION_STATUS_VALID;
+	} else if (expr_type == MCC_AST_DATA_TYPE_UNKNOWN) {
+		return MCC_VALIDATION_STATUS_ERROR_REPORTED_LATER;
+	}
+	// invalid type
+	return MCC_VALIDATION_STATUS_INVALID_TYPE;
+}
+
+enum mCc_validation_status_type
+mCc_typecheck_validate_type_assignment(struct mCc_symbol_table *symbol_table,
+                                       void *validator_input)
 {
 	struct mCc_ast_assignment *assignment =
 	    (struct mCc_ast_assignment *)validator_input;
@@ -92,17 +107,17 @@ mCc_typecheck_validate_type(struct mCc_symbol_table *symbol_table,
 		 */
 		return MCC_VALIDATION_STATUS_ERROR_REPORTED_LATER;
 	}
-
 	struct mCc_ast_expression *to_check = mCc_ast_get_expression(assignment);
-	enum mCc_ast_data_type actual_type_expression =
-	    mCc_typecheck_get_type(symbol_table, to_check);
+	return mCc_typecheck_validate_type(symbol_table, symtab_info->data_type, to_check);
+}
 
-	// is valid
-	if (actual_type_expression == symtab_info->data_type) {
-		return MCC_VALIDATION_STATUS_VALID;
-	} else if (actual_type_expression == MCC_AST_DATA_TYPE_UNKNOWN) {
-		return MCC_VALIDATION_STATUS_ERROR_REPORTED_LATER;
-	}
-	// invalid type
-	return MCC_VALIDATION_STATUS_INVALID_TYPE;
+enum mCc_validation_status_type
+mCc_typecheck_validate_type_assignment_arr_expr(struct mCc_symbol_table *symbol_table,
+                                       void *validator_input)
+{
+	struct mCc_ast_assignment *assignment =
+	    (struct mCc_ast_assignment *)validator_input;
+
+	struct mCc_ast_expression *to_check = assignment->array_index_expression;
+	return mCc_typecheck_validate_type(symbol_table, MCC_AST_DATA_TYPE_INT, to_check);
 }

@@ -121,6 +121,7 @@ mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
 		error_printers.inconsistent_type_printer(error_msg, size, data);
 		break;
 		/*TODO*/
+	case MCC_VALIDATION_STATUS_ERROR_REPORTED_LATER:
 	case MCC_VALIDATION_STATUS_VALID:
 		snprintf(error_msg, size, " ");
 		break;

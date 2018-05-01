@@ -15,7 +15,15 @@ mCc_typecheck_get_type(struct mCc_symbol_table *symbol_table,
 
 enum mCc_validation_status_type
 mCc_typecheck_validate_type(struct mCc_symbol_table *symbol_table,
-                            void *validator_input);
+                            enum mCc_ast_data_type expected_type,
+                            struct mCc_ast_expression *to_check);
+
+enum mCc_validation_status_type
+mCc_typecheck_validate_type_assignment(struct mCc_symbol_table *symbol_table,
+                                       void *validator_input);
+
+enum mCc_validation_status_type mCc_typecheck_validate_type_assignment_arr_expr(
+    struct mCc_symbol_table *symbol_table, void *validator_input);
 
 #ifdef __cplusplus
 }

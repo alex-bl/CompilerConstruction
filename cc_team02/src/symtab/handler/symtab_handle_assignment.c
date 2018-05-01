@@ -20,7 +20,7 @@ void mCc_symtab_handle_primitive_assignment(
 	assignment->identifier->symtab_info = mCc_symtab_lookup(
 	    info_holder->symbol_table, assignment->identifier, false);
 
-	mCc_process_validation(mCc_typecheck_validate_type, NULL,
+	mCc_process_validation(mCc_typecheck_validate_type_assignment, NULL,
 	                       info_holder->symbol_table, assignment, info_holder,
 	                       NULL);
 }
@@ -38,8 +38,11 @@ void mCc_symtab_handle_array_assignment(struct mCc_ast_assignment *assignment,
 	assignment->identifier->symtab_info = mCc_symtab_lookup(
 	    info_holder->symbol_table, assignment->identifier, false);
 
-	mCc_process_validation(mCc_typecheck_validate_type, NULL,
+	mCc_process_validation(mCc_typecheck_validate_type_assignment, NULL,
 	                       info_holder->symbol_table, assignment, info_holder,
 	                       NULL);
-	// TODO: also check array-expression
+
+	mCc_process_validation(mCc_typecheck_validate_type_assignment_arr_expr,
+	                       NULL, info_holder->symbol_table, assignment,
+	                       info_holder, NULL);
 }
