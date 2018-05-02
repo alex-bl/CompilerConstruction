@@ -6,24 +6,7 @@
 
 #include "log.h"
 #include "mCc/symtab/symbol_table.h"
-
-static struct mCc_ast_statement *
-find_return_statement(struct mCc_ast_function_def *function_def)
-{
-	assert(function_def);
-	struct mCc_ast_statement *next_statement = function_def->first_statement;
-	if (!next_statement) {
-		log_debug("Function '%s' has no statements",
-		          function_def->identifier->identifier_name);
-	}
-	while (next_statement) {
-		if (next_statement->statement_type == MCC_AST_STATEMENT_RETURN) {
-			return next_statement;
-		}
-		next_statement = next_statement->next_statement;
-	}
-	return NULL;
-}
+#include "mCc/symtab/validator/validator_helper.h"
 
 enum mCc_validation_status_type
 mCc_validator_check_definition(struct mCc_symbol_table *symbol_table,
@@ -96,7 +79,7 @@ mCc_validator_check_return_type(struct mCc_symbol_table *symbol_table,
 
 	enum mCc_ast_data_type return_type = function_def->return_type;
 	struct mCc_ast_statement *return_statement =
-	    find_return_statement(function_def);
+	    mCc_validator_find_return_statement(function_def);
 
 	if (return_type == MCC_AST_DATA_TYPE_VOID) {
 		// if no statement or an empty return statement => valid

@@ -25,6 +25,22 @@ mCc_typecheck_validate_type_assignment(struct mCc_symbol_table *symbol_table,
 enum mCc_validation_status_type mCc_typecheck_validate_type_assignment_arr_expr(
     struct mCc_symbol_table *symbol_table, void *validator_input);
 
+enum mCc_validation_status_type
+mCc_typecheck_validate_type_return(struct mCc_symbol_table *symbol_table,
+                                   void *validator_input);
+
+enum mCc_validation_status_type
+mCc_typecheck_validate_if(struct mCc_symbol_table *symbol_table,
+                          void *validator_input);
+
+enum mCc_validation_status_type
+mCc_typecheck_validate_while(struct mCc_symbol_table *symbol_table,
+                             void *validator_input);
+
+enum mCc_validation_status_type
+mCc_typecheck_validate_function_call(struct mCc_symbol_table *symbol_table,
+                                     void *validator_input);
+
 #ifdef __cplusplus
 }
 #endif
