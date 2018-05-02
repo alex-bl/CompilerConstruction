@@ -5,6 +5,34 @@
 
 #include "mCc/ast/basis/ast_data_type.h"
 
+
+
+struct tac_elmenet *tac_elmenet(enum mCc_tac_operation *operation, struct mCc_ast_identifier *argument1,
+		struct mCc_ast_identifier *argument2, struct mCc_ast_identifier *result)
+{
+	struct tac_elmenet *tac_elmenet = malloc(sizeof(*tac_elmenet));
+	if (!tac_elmenet) {
+		return NULL;
+	}
+	enum mCc_tac_operation tac_operation=operation;
+	struct mCc_ast_identifier tac_argument1=argument1;
+	struct mCc_ast_identifier tac_argument2=argument2;
+	struct mCc_ast_identifier tac_result=result;
+	return tac_elmenet;
+}
+
+
+void mCc_tac_element_delete(struct tac_elmenet *tac_elmenet)
+{
+	assert(tac_elmenet);
+
+	mCc_tac_delete_operation(tac_elmenet->tac_operation);
+	mCc_ast_delete_identifier(tac_elmenet->tac_argument1);
+	mCc_ast_delete_identifier(tac_elmenet->tac_argument2);
+	mCc_ast_delete_identifier(tac_elmenet->tac_result);
+	free(tac_elmenet);
+}
+
 /*void tac_print() {
 
 	printf();
