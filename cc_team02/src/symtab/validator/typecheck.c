@@ -229,6 +229,12 @@ mCc_typecheck_validate_function_call(struct mCc_symbol_table *symbol_table,
 	while (next_param) {
 		enum mCc_ast_data_type param_type =
 		    next_param->identifier->symtab_info->data_type;
+
+		//seems that function has a wrong signature
+		if(!next_argument){
+			return MCC_VALIDATION_STATUS_ERROR_REPORTED_LATER;
+		}
+
 		enum mCc_validation_status_type param_validation_status =
 		    mCc_typecheck_validate_type(symbol_table, param_type,
 		                                next_argument);

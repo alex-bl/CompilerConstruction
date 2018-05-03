@@ -7,7 +7,8 @@
 #include "mCc/symtab/validator/typecheck.h"
 #include "mCc/symtab/validator/validator.h"
 
-void mCc_symtab_handle_primitive_assignment(
+// called post orderly
+void mCc_symtab_handle_primitive_assignment_post_order(
     struct mCc_ast_assignment *assignment, void *data)
 {
 	assert(assignment);
@@ -16,17 +17,13 @@ void mCc_symtab_handle_primitive_assignment(
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
-	//"prefetch" symtab info for error-printing
-	assignment->identifier->symtab_info = mCc_symtab_lookup(
-	    info_holder->symbol_table, assignment->identifier, false);
-
-	mCc_process_validation(mCc_typecheck_validate_type_assignment, NULL,
-	                       info_holder->symbol_table, assignment, info_holder,
-	                       NULL);
+	mCc_process_validation_without_call_back(
+	    mCc_typecheck_validate_type_assignment, info_holder->symbol_table,
+	    assignment, info_holder);
 }
 
-void mCc_symtab_handle_array_assignment(struct mCc_ast_assignment *assignment,
-                                        void *data)
+void mCc_symtab_handle_array_assignment_post_order(
+    struct mCc_ast_assignment *assignment, void *data)
 {
 	assert(assignment);
 	assert(data);
@@ -34,15 +31,11 @@ void mCc_symtab_handle_array_assignment(struct mCc_ast_assignment *assignment,
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
-	//"prefetch" symtab info for error-printing
-	assignment->identifier->symtab_info = mCc_symtab_lookup(
-	    info_holder->symbol_table, assignment->identifier, false);
+	mCc_process_validation_without_call_back(
+	    mCc_typecheck_validate_type_assignment, info_holder->symbol_table,
+	    assignment, info_holder);
 
-	mCc_process_validation(mCc_typecheck_validate_type_assignment, NULL,
-	                       info_holder->symbol_table, assignment, info_holder,
-	                       NULL);
-
-	mCc_process_validation(mCc_typecheck_validate_type_assignment_arr_expr,
-	                       NULL, info_holder->symbol_table, assignment,
-	                       info_holder, NULL);
+	mCc_process_validation_without_call_back(
+	    mCc_typecheck_validate_type_assignment_arr_expr,
+	    info_holder->symbol_table, assignment, info_holder);
 }

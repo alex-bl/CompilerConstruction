@@ -173,6 +173,17 @@ void mCc_validor_store_result_to_handler(
 	}
 }
 
+// for convenience
+enum mCc_validation_status_type mCc_process_validation_without_call_back(
+    enum mCc_validation_status_type(validator_function)(
+        struct mCc_symbol_table *, void *),
+    struct mCc_symbol_table *symbol_table, void *validator_input,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	return mCc_process_validation(validator_function, NULL, symbol_table,
+	                              validator_input, info_holder, NULL);
+}
+
 enum mCc_validation_status_type
 mCc_process_validation(enum mCc_validation_status_type(validator_function)(
                            struct mCc_symbol_table *, void *),

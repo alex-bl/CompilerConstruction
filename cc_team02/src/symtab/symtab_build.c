@@ -20,7 +20,7 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 	return (struct mCc_ast_visitor){
 
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
-		.order = MCC_AST_VISIT_PRE_ORDER,
+		.order = MCC_AST_VISIT_BOTH_ORDER,
 		.userdata = symtab_info_holder,
 		// TODO: declaration-handler -> in function AND in statement
 		// (declaration-handler not needed anymore)
@@ -38,13 +38,25 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		//.function
 		.function_def = mCc_symtab_handle_function_def,
 		.function_call = mCc_symtab_handle_function_call,
+		.function_def_post_order = mCc_symtab_handle_function_def_post_order,
+		.function_call_post_order = mCc_symtab_handle_function_call_post_order,
 		//.declaration => add declarations to current symtab
 		.declaration_primitive = mCc_symtab_handle_declaration_primitive,
 		.declaration_array = mCc_symtab_handle_declaration_array,
 		//.assignment
-		.assignment_primitive = mCc_symtab_handle_primitive_assignment,
-		.assignment_array = mCc_symtab_handle_array_assignment,
+		.assignment_primitive_post_order =
+		    mCc_symtab_handle_primitive_assignment_post_order,
+		.assignment_array_post_order =
+		    mCc_symtab_handle_array_assignment_post_order,
 		//=================================
+
+		// assignment preorder
+		.assignment_primitive = NULL,
+		.assignment_array = NULL,
+
+		// declaration postorder
+		.declaration_primitive_post_order = NULL,
+		.declaration_array_post_order = NULL,
 
 		// maybe not needed inside symtab-construction
 		//.expression
@@ -55,13 +67,28 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.expression_identifier = NULL,
 		.expression_array_identifier = NULL,
 		.expression_unary_op = NULL,
+
+		.expression_literal_post_order = NULL,
+		.expression_binary_op_post_order = NULL,
+		.expression_parenth_post_order = NULL,
+		.expression_function_call_post_order = NULL,
+		.expression_identifier_post_order = NULL,
+		.expression_array_identifier_post_order = NULL,
+		.expression_unary_op_post_order = NULL,
 		//.literal
 		.literal_int = NULL,
 		.literal_float = NULL,
 		.literal_bool = NULL,
 		.literal_string = NULL,
+
+		.literal_int_post_order = NULL,
+		.literal_float_post_order = NULL,
+		.literal_bool_post_order = NULL,
+		.literal_string_post_order = NULL,
 		// program
 		.program = NULL,
+
+		.program_post_order = NULL,
 		// statement
 		.statement_if = NULL,
 		.statement_while = NULL,
@@ -69,6 +96,13 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.statement_assignment = NULL,
 		.statement_expression = NULL,
 		.statement_declaration = NULL,
+
+		.statement_if_post_order = NULL,
+		.statement_while_post_order = NULL,
+		.statement_return_post_order = NULL,
+		.statement_assignment_post_order = NULL,
+		.statement_expression_post_order = NULL,
+		.statement_declaration_post_order = NULL,
 	};
 }
 

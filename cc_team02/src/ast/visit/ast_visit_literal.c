@@ -9,6 +9,7 @@ void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
 	assert(visitor);
 
 	visit_if_pre_order(literal, visitor->literal, visitor);
+	visit_if_both_order(literal, visitor->literal, visitor);
 
 	switch (literal->type) {
 	case MCC_AST_DATA_TYPE_INT:
@@ -30,7 +31,15 @@ void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
 		// a literal having a void-type should never happen
 		assert(false);
 		break;
+	case MCC_AST_DATA_TYPE_INCONSISTENT:
+		assert(false);
+		break;
+	case MCC_AST_DATA_TYPE_UNKNOWN:
+		assert(false);
+		break;
 	}
 
 	visit_if_post_order(literal, visitor->literal, visitor);
+	visit_if_pre_order(literal, visitor->literal_post_order, visitor);
+
 }

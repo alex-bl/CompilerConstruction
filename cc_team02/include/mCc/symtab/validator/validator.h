@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 
+#include "config.h"
 #include "mCc/ast/basis/ast_identifier.h"
 #include "mCc/symtab/symbol_table.h"
 #include "mCc/symtab/symtab_types.h"
 #include "mCc/symtab/validator/validation_status.h"
-#include "config.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,6 +108,20 @@ mCc_process_validation(enum mCc_validation_status_type(validator_function)(
                        void *validator_input,
                        struct mCc_symtab_and_validation_holder *info_holder,
                        void *success_handler_data);
+
+/**
+ *
+ * @param validator_function
+ * @param symbol_table
+ * @param validator_input
+ * @param info_holder
+ * @return
+ */
+enum mCc_validation_status_type mCc_process_validation_without_call_back(
+    enum mCc_validation_status_type(validator_function)(
+        struct mCc_symbol_table *, void *),
+    struct mCc_symbol_table *symbol_table, void *validator_input,
+    struct mCc_symtab_and_validation_holder *info_holder);
 
 #ifdef __cplusplus
 }

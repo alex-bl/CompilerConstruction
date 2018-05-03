@@ -13,6 +13,13 @@ int call(float a){
 return 2;
 }
 
+int test_func(){
+
+string a;
+
+return a;
+}
+
 void main(){	
 	int a;
 	string b;
