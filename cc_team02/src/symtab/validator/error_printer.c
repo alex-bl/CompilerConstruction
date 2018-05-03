@@ -138,6 +138,7 @@ void mCc_validator_print_error_invalid_type_param(char *error_buffer,
 	    (struct mCc_ast_function_call *)data;
 	struct mCc_ast_identifier *identifier = function_call->identifier;
 	char sig_buff[ERROR_MSG_BUF_SIZE / 2];
+	//TODO: make sure that call-identifier has symtab-info attached
 	print_signature(identifier, sig_buff);
 	// info is available at this stage
 	snprintf(error_buffer, size,
