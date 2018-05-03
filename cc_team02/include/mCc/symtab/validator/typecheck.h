@@ -5,6 +5,14 @@
 #include "mCc/ast/basis/ast_data_type.h"
 #include "mCc/symtab/symtab_types.h"
 
+enum mCc_typecheck_context{
+	MCC_TYPECHECK_CONTEXT_ARRAY,
+	MCC_TYPECHECK_CONTEXT_IF,
+	MCC_TYPECHECK_CONTEXT_LOOP,
+	MCC_TYPECHECK_CONTEXT_PARAMETER,
+	MCC_TYPECHECK_CONTEXT_RETURN
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -1,7 +1,10 @@
 #include "mCc/symtab/validator/error_printer.h"
-#include "mCc/general/print_helper.h"
+
 #include <assert.h>
 #include <stdio.h>
+
+#include "mCc/general/print_helper.h"
+#include "config.h"
 
 static int get_expected_arg_count(struct mCc_ast_identifier *identifier)
 {
@@ -100,6 +103,60 @@ void mCc_validator_print_error_inconsistent_type(char *error_buffer,
 	         print_data_type(assignment->identifier->symtab_info->data_type));
 }
 
+void mCc_validator_print_error_invalid_type_array(char *error_buffer,
+                                                  size_t size, void *data)
+{
+	struct mCc_ast_assignment *assignment = (struct mCc_ast_assignment *)data;
+	// info is available at this stage
+	snprintf(error_buffer, size,
+	         "Invalid type for array index on assignment '%s': Expected int",
+	         assignment->identifier->identifier_name);
+}
+
+void mCc_validator_print_error_invalid_type_if(char *error_buffer, size_t size,
+                                               void *data)
+{
+	struct mCc_ast_statement *statement = (struct mCc_ast_statement *)data;
+	// info is available at this stage
+	snprintf(error_buffer, size,
+	         "Invalid type for if condition: Expected bool");
+}
+
+void mCc_validator_print_error_invalid_type_loop(char *error_buffer,
+                                                 size_t size, void *data)
+{
+	struct mCc_ast_statement *statement = (struct mCc_ast_statement *)data;
+	// info is available at this stage
+	snprintf(error_buffer, size,
+	         "Invalid type for loop condition: Expected bool");
+}
+
+void mCc_validator_print_error_invalid_type_param(char *error_buffer,
+                                                  size_t size, void *data)
+{
+	struct mCc_ast_function_call *function_call =
+	    (struct mCc_ast_function_call *)data;
+	struct mCc_ast_identifier *identifier = function_call->identifier;
+	char sig_buff[ERROR_MSG_BUF_SIZE / 2];
+	print_signature(identifier, sig_buff);
+	// info is available at this stage
+	snprintf(error_buffer, size,
+	         "Invalid signature on function call '%s': Expected %s",
+	         identifier->identifier_name, sig_buff);
+}
+
+void mCc_validator_print_error_invalid_type_return(char *error_buffer,
+                                                   size_t size, void *data)
+{
+	struct mCc_ast_function_def *function_def =
+	    (struct mCc_ast_function_def *)data;
+	// info is available at this stage
+	snprintf(error_buffer, size,
+	         "Invalid return type on function '%s': Expected %s",
+	         function_def->identifier->identifier_name,
+	         print_data_type(function_def->return_type));
+}
+
 struct mCc_error_print_holder mCc_validator_setup_error_printer_holder()
 {
 	return (struct mCc_error_print_holder){
@@ -110,6 +167,17 @@ struct mCc_error_print_holder mCc_validator_setup_error_printer_holder()
 		.no_main_printer = mCc_validator_print_error_no_main,
 		.invalid_signature_printer =
 		    mCc_validator_print_error_invalid_signature,
-		.inconsistent_type_printer = mCc_validator_print_error_inconsistent_type
+		.inconsistent_type_printer =
+		    mCc_validator_print_error_inconsistent_type,
+		.invalid_type_array_printer =
+		    mCc_validator_print_error_invalid_type_array,
+		.invalid_type_if_cond_printer =
+		    mCc_validator_print_error_invalid_type_if,
+		.invalid_type_loop_cond_printer =
+		    mCc_validator_print_error_invalid_type_loop,
+		.invalid_type_param_printer =
+		    mCc_validator_print_error_invalid_type_param,
+		.invalid_type_return_printer =
+		    mCc_validator_print_error_invalid_type_return
 	};
 }

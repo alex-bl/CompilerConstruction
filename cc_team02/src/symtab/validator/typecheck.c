@@ -8,6 +8,28 @@
 #include "mCc/symtab/validator/validation_status.h"
 #include "mCc/symtab/validator/validator_helper.h"
 
+static enum mCc_validation_status_type
+map_validation_type(enum mCc_validation_status_type returned,
+                    enum mCc_typecheck_context context)
+{
+	// change type only if typechecking was performed
+	if (returned == MCC_VALIDATION_STATUS_INVALID_TYPE) {
+		switch (context) {
+		case MCC_TYPECHECK_CONTEXT_IF:
+			return MCC_VALIDATION_STATUS_INVALID_IF_CONDITION;
+		case MCC_TYPECHECK_CONTEXT_LOOP:
+			return MCC_VALIDATION_STATUS_INVALID_LOOP_CONDITION;
+		case MCC_TYPECHECK_CONTEXT_PARAMETER:
+			return MCC_VALIDATION_STATUS_INVALID_PARAMETER;
+		case MCC_TYPECHECK_CONTEXT_RETURN:
+			return MCC_VALIDATION_STATUS_INVALID_RETURN;
+		case MCC_TYPECHECK_CONTEXT_ARRAY:
+			return MCC_VALIDATION_STATUS_INVALID_TYPE_ARRAY;
+		}
+	}
+	return returned;
+}
+
 static enum mCc_ast_data_type get_type(struct mCc_symbol_table *symbol_table,
                                        struct mCc_ast_identifier *identifier)
 {
@@ -119,8 +141,11 @@ enum mCc_validation_status_type mCc_typecheck_validate_type_assignment_arr_expr(
 	    (struct mCc_ast_assignment *)validator_input;
 
 	struct mCc_ast_expression *to_check = assignment->array_index_expression;
-	return mCc_typecheck_validate_type(symbol_table, MCC_AST_DATA_TYPE_INT,
-	                                   to_check);
+	enum mCc_validation_status_type typecheck_result =
+	    mCc_typecheck_validate_type(symbol_table, MCC_AST_DATA_TYPE_INT,
+	                                to_check);
+
+	return map_validation_type(typecheck_result, MCC_TYPECHECK_CONTEXT_ARRAY);
 }
 
 // is only called if there isn't any other error with the function
@@ -146,8 +171,10 @@ mCc_typecheck_validate_type_return(struct mCc_symbol_table *symbol_table,
 		return MCC_VALIDATION_STATUS_VALID;
 	}
 
-	return mCc_typecheck_validate_type(symbol_table, symtab_info->data_type,
-	                                   to_check->return_expression);
+	enum mCc_validation_status_type typecheck_result =
+	    mCc_typecheck_validate_type(symbol_table, symtab_info->data_type,
+	                                to_check->return_expression);
+	return map_validation_type(typecheck_result, MCC_TYPECHECK_CONTEXT_RETURN);
 }
 
 static enum mCc_validation_status_type
@@ -164,7 +191,9 @@ mCc_typecheck_validate_if(struct mCc_symbol_table *symbol_table,
 {
 	struct mCc_ast_statement *to_check =
 	    (struct mCc_ast_statement *)validator_input;
-	return check_statement(to_check->condition_expression, symbol_table);
+	enum mCc_validation_status_type typecheck_result =
+	    check_statement(to_check->condition_expression, symbol_table);
+	return map_validation_type(typecheck_result, MCC_TYPECHECK_CONTEXT_IF);
 }
 
 enum mCc_validation_status_type
@@ -173,7 +202,9 @@ mCc_typecheck_validate_while(struct mCc_symbol_table *symbol_table,
 {
 	struct mCc_ast_statement *to_check =
 	    (struct mCc_ast_statement *)validator_input;
-	return check_statement(to_check->loop_condition_expression, symbol_table);
+	enum mCc_validation_status_type typecheck_result =
+	    check_statement(to_check->loop_condition_expression, symbol_table);
+	return map_validation_type(typecheck_result, MCC_TYPECHECK_CONTEXT_LOOP);
 }
 
 /*
@@ -203,7 +234,8 @@ mCc_typecheck_validate_function_call(struct mCc_symbol_table *symbol_table,
 		                                next_argument);
 
 		if (param_validation_status == MCC_VALIDATION_STATUS_INVALID_TYPE) {
-			return MCC_VALIDATION_STATUS_INVALID_TYPE;
+			return map_validation_type(MCC_VALIDATION_STATUS_INVALID_TYPE,
+			                           MCC_TYPECHECK_CONTEXT_RETURN);
 		}
 		// ignore undefined identifiers (are catched later)
 

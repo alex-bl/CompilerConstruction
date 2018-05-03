@@ -5,6 +5,7 @@
 #define DOT_PREFIX "DOT_"
 #define DOT_FILE_SUFFIX ".dot"
 #define PATH_BUILDINS "${CMAKE_BINARY_DIR}/data/buildins.mC"
+#define ERROR_MSG_BUF_SIZE 128
 
 #ifdef __cplusplus
 extern "C" {

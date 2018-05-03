@@ -7,8 +7,7 @@
 #include "mCc/symtab/symbol_table.h"
 #include "mCc/symtab/symtab_types.h"
 #include "mCc/symtab/validator/validation_status.h"
-
-#define ERROR_MSG_BUF_SIZE 64
+#include "config.h"
 
 #ifdef __cplusplus
 extern "C" {

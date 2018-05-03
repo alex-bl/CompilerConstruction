@@ -120,11 +120,24 @@ mCc_validator_create_error_msg(enum mCc_validation_status_type status_code,
 	case MCC_VALIDATION_STATUS_INVALID_TYPE:
 		error_printers.inconsistent_type_printer(error_msg, size, data);
 		break;
+	case MCC_VALIDATION_STATUS_INVALID_TYPE_ARRAY:
+		error_printers.invalid_type_array_printer(error_msg, size, data);
+		break;
+	case MCC_VALIDATION_STATUS_INVALID_IF_CONDITION:
+		error_printers.invalid_type_if_cond_printer(error_msg, size, data);
+		break;
+	case MCC_VALIDATION_STATUS_INVALID_LOOP_CONDITION:
+		error_printers.invalid_type_loop_cond_printer(error_msg, size, data);
+		break;
+	case MCC_VALIDATION_STATUS_INVALID_PARAMETER:
+		error_printers.invalid_type_param_printer(error_msg, size, data);
+		break;
+	case MCC_VALIDATION_STATUS_INVALID_RETURN:
+		error_printers.invalid_type_return_printer(error_msg, size, data);
+		break;
 		/*TODO*/
 	case MCC_VALIDATION_STATUS_ERROR_REPORTED_LATER:
-	case MCC_VALIDATION_STATUS_VALID:
-		snprintf(error_msg, size, " ");
-		break;
+	case MCC_VALIDATION_STATUS_VALID: snprintf(error_msg, size, " "); break;
 	}
 	return error_msg;
 }
