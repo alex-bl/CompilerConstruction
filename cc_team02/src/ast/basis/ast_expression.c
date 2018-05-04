@@ -18,6 +18,8 @@ mCc_ast_new_expression_literal(struct mCc_ast_literal *literal)
 	expr->literal = literal;
 	// set explicitly to null
 	expr->next_expr = NULL;
+	expr->semantic_error = NULL;
+
 	return expr;
 }
 
@@ -40,6 +42,8 @@ mCc_ast_new_expression_binary_op(enum mCc_ast_binary_op op,
 	expr->rhs = rhs;
 	// set explicitly to null
 	expr->next_expr = NULL;
+	expr->semantic_error = NULL;
+
 	return expr;
 }
 
@@ -57,6 +61,8 @@ mCc_ast_new_expression_parenth(struct mCc_ast_expression *expression)
 	expr->expression = expression;
 	// set explicitly to null
 	expr->next_expr = NULL;
+	expr->semantic_error = NULL;
+
 	return expr;
 }
 
@@ -77,6 +83,7 @@ mCc_ast_new_expression_unary_op(enum mCc_ast_unary_op op,
 	expr->unary_rhs = expression;
 	// set explicitly to null
 	expr->next_expr = NULL;
+	expr->semantic_error = NULL;
 
 	return expr;
 }
@@ -95,6 +102,7 @@ mCc_ast_new_expression_identifier(struct mCc_ast_identifier *identifier)
 	expr->identifier = identifier;
 	// set explicitly to null
 	expr->next_expr = NULL;
+	expr->semantic_error = NULL;
 
 	return expr;
 }
@@ -116,6 +124,7 @@ struct mCc_ast_expression *mCc_ast_new_expression_array_identifier(
 	expr->array_index_expression = array_index_expression;
 	// set explicitly to null
 	expr->next_expr = NULL;
+	expr->semantic_error = NULL;
 
 	return expr;
 }
@@ -134,6 +143,7 @@ struct mCc_ast_expression *mCc_ast_new_expression_function_call(
 	expr->function_call = function_call;
 	// set explicitly to null
 	expr->next_expr = NULL;
+	expr->semantic_error = NULL;
 
 	return expr;
 }
@@ -141,6 +151,7 @@ struct mCc_ast_expression *mCc_ast_new_expression_function_call(
 void mCc_ast_delete_expression(struct mCc_ast_expression *expression)
 {
 	assert(expression);
+	mCc_validator_delete_validation_result(expression->semantic_error);
 
 	switch (expression->type) {
 	case MCC_AST_EXPRESSION_TYPE_LITERAL:

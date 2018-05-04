@@ -16,6 +16,8 @@ struct mCc_ast_assignment *mCc_ast_new_primitive_assignment(
 	assignment->identifier = identifier;
 	assignment->assignment_type = MCC_AST_ASSIGNMENT_PRIMITIVE;
 	assignment->assigned_expression = assigned_expresion_value;
+	assignment->semantic_error = NULL;
+
 	return assignment;
 }
 
@@ -33,12 +35,15 @@ mCc_ast_new_array_assignment(struct mCc_ast_identifier *identifier,
 	assignment->assignment_type = MCC_AST_ASSIGNMENT_ARRAY;
 	assignment->array_index_expression = index;
 	assignment->array_assigned_expression = value;
+	assignment->semantic_error = NULL;
+
 	return assignment;
 }
 
 void mCc_ast_delete_assignment(struct mCc_ast_assignment *assignment)
 {
 	assert(assignment);
+	mCc_validator_delete_validation_result(assignment->semantic_error);
 
 	mCc_ast_delete_identifier(assignment->identifier);
 	if (assignment->assignment_type == MCC_AST_ASSIGNMENT_PRIMITIVE) {
@@ -51,9 +56,10 @@ void mCc_ast_delete_assignment(struct mCc_ast_assignment *assignment)
 }
 
 struct mCc_ast_expression *
-mCc_ast_get_expression(struct mCc_ast_assignment *assignment){
+mCc_ast_get_expression(struct mCc_ast_assignment *assignment)
+{
 	assert(assignment);
-	if(assignment->assignment_type==MCC_AST_ASSIGNMENT_PRIMITIVE){
+	if (assignment->assignment_type == MCC_AST_ASSIGNMENT_PRIMITIVE) {
 		return assignment->assigned_expression;
 	}
 	return assignment->array_assigned_expression;

@@ -3,6 +3,7 @@
 
 #include "mCc/ast/basis/ast_data_type.h"
 #include "mCc/ast/basis/ast_identifier.h"
+#include "mCc/ast/basis/ast_operator.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,7 +11,11 @@ extern "C" {
 
 const char *print_data_type(enum mCc_ast_data_type type);
 
-void print_signature(struct mCc_ast_identifier *identifier, char* buffer);
+void print_signature(struct mCc_ast_identifier *identifier, char *buffer);
+
+const char *mCc_ast_print_binary_op(enum mCc_ast_binary_op op);
+
+const char *mCc_ast_print_unary_op(enum mCc_ast_unary_op op);
 
 #ifdef __cplusplus
 }

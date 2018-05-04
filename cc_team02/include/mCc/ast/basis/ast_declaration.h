@@ -22,6 +22,8 @@ struct mCc_ast_declaration {
 	enum mCc_ast_data_type data_type;
 
 	struct mCc_ast_declaration *next_declaration;
+	// for semantic checks
+	struct mCc_validation_status_result *semantic_error;
 
 	union {
 		/* MCC_AST_IDENTIFIER */

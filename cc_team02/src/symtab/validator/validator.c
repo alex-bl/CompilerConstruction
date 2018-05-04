@@ -52,16 +52,19 @@ free_validator_result_simple(struct mCc_validation_status_result *result)
 	free(result);
 }
 
+//frees if present
 void mCc_validator_delete_validation_result(
     struct mCc_validation_status_result *first_result)
 {
-	assert(first_result);
-	struct mCc_validation_status_result *next_validation_result = first_result;
+	if (first_result) {
+		struct mCc_validation_status_result *next_validation_result =
+		    first_result;
 
-	while (next_validation_result) {
-		struct mCc_validation_status_result *tmp = next_validation_result;
-		next_validation_result = next_validation_result->next;
-		free_validator_result_simple(tmp);
+		while (next_validation_result) {
+			struct mCc_validation_status_result *tmp = next_validation_result;
+			next_validation_result = next_validation_result->next;
+			free_validator_result_simple(tmp);
+		}
 	}
 }
 

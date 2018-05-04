@@ -20,6 +20,9 @@ struct mCc_ast_assignment {
 	struct mCc_ast_identifier *identifier;
 	enum mCc_ast_assignment_type assignment_type;
 
+	// for semantic checks
+	struct mCc_validation_status_result *semantic_error;
+
 	union {
 		/* MCC_AST_EXPRESSION */
 		struct mCc_ast_expression *assigned_expression;

@@ -16,6 +16,9 @@ struct mCc_ast_program {
 
 	struct mCc_ast_function_def *first_function_def;
 
+	// for semantic checks
+	struct mCc_validation_status_result *semantic_error;
+
 	bool is_library;
 };
 
