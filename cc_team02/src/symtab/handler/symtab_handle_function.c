@@ -105,22 +105,22 @@ void mCc_symtab_handle_function_call_post_order(
 	assert(call);
 	assert(data);
 
-//	struct mCc_symtab_and_validation_holder *info_holder =
-//	    (struct mCc_symtab_and_validation_holder *)data;
-//
-//	struct mCc_ast_identifier *identifier = call->identifier;
-//
-//	if (!call->identifier->symtab_info) {
-//		log_debug("No symtab info associated with '%s'. It does not exist. No "
-//		          "check required",
-//		          identifier->identifier_name);
-//	} else {
-//		log_debug("Type checking on function-call-signature '%s'...",
-//		          identifier->identifier_name);
-//
-//		mCc_process_validation_without_call_back(
-//		    mCc_typecheck_validate_function_call, info_holder->symbol_table,
-//		    call, info_holder);
-//		log_debug("Type checking completed");
-//	}
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
+	struct mCc_ast_identifier *identifier = call->identifier;
+
+	if (!call->identifier->symtab_info) {
+		log_debug("No symtab info associated with '%s'. It does not exist. No "
+		          "check required",
+		          identifier->identifier_name);
+	} else {
+		log_debug("Type checking on function-call-signature '%s'...",
+		          identifier->identifier_name);
+
+		mCc_process_validation_without_call_back(
+		    mCc_typecheck_validate_function_call, info_holder->symbol_table,
+		    call, info_holder);
+		log_debug("Type checking completed");
+	}
 }

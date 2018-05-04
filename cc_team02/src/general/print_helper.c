@@ -25,6 +25,7 @@ void print_signature(struct mCc_ast_identifier *identifier, char* buffer)
 	assert(identifier->symtab_info);
 	struct mCc_symtab_parameter_ref *next_parameter =
 	    identifier->symtab_info->next_parameter;
+	char intermediate_buffer[ERROR_MSG_BUF_SIZE / 2];
 
 	// TODO: does param-ref has symtab-info at this stage?
 	while (next_parameter) {
@@ -37,8 +38,9 @@ void print_signature(struct mCc_ast_identifier *identifier, char* buffer)
 			format = "%s";
 		}
 
-		snprintf(buffer, strlen(param_type) + 1, format, param_type);
+		snprintf(intermediate_buffer, strlen(param_type) + 1, format, param_type);
 		next_parameter = next_parameter->next_parameter;
 	}
-	snprintf(buffer, ERROR_MSG_BUF_SIZE / 2, "(%s)", buffer);
+
+	snprintf(buffer, ERROR_MSG_BUF_SIZE / 2, "(%s)", intermediate_buffer);
 }

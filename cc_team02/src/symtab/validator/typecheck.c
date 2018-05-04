@@ -30,6 +30,12 @@ map_validation_type(enum mCc_validation_status_type returned,
 	return returned;
 }
 
+/*
+ * theoretically not needed any more => type checks are done post-order and at
+ * this stage all identifiers are annotated
+ *
+ * TODO: maybe switch to non-symboltable-solution?
+ */
 static enum mCc_ast_data_type get_type(struct mCc_symbol_table *symbol_table,
                                        struct mCc_ast_identifier *identifier)
 {
@@ -230,18 +236,19 @@ mCc_typecheck_validate_function_call(struct mCc_symbol_table *symbol_table,
 		enum mCc_ast_data_type param_type =
 		    next_param->identifier->symtab_info->data_type;
 
-		//seems that function has a wrong signature
-		if(!next_argument){
+		// seems that function has a wrong signature
+		if (!next_argument) {
 			return MCC_VALIDATION_STATUS_ERROR_REPORTED_LATER;
 		}
 
+		//problem if call has wrong signature...
 		enum mCc_validation_status_type param_validation_status =
 		    mCc_typecheck_validate_type(symbol_table, param_type,
 		                                next_argument);
 
 		if (param_validation_status == MCC_VALIDATION_STATUS_INVALID_TYPE) {
 			return map_validation_type(MCC_VALIDATION_STATUS_INVALID_TYPE,
-			                           MCC_TYPECHECK_CONTEXT_RETURN);
+			                           MCC_TYPECHECK_CONTEXT_PARAMETER);
 		}
 		// ignore undefined identifiers (are catched later)
 
