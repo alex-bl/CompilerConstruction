@@ -14,6 +14,34 @@
  * - check for main
  * - check if has a return
  */
+// is done preorder => needs symtab_info
+static int get_expected_arg_count(struct mCc_symbol_table_node *symtab_info)
+{
+	assert(symtab_info->next_parameter);
+
+	// is a function-identifier
+	struct mCc_symtab_parameter_ref *next_param = symtab_info->next_parameter;
+	int counter = 0;
+
+	while (next_param) {
+		counter++;
+		next_param = next_param->next_parameter;
+	}
+	return counter;
+}
+
+static int get_actual_arg_count(struct mCc_ast_function_call *function_call)
+{
+	assert(function_call);
+	struct mCc_ast_expression *next_expr = function_call->first_argument;
+	int counter = 0;
+
+	while (next_expr) {
+		counter++;
+		next_expr = next_expr->next_expr;
+	}
+	return counter;
+}
 
 static void
 append_error_to_function_def(struct mCc_ast_function_def *function_def,
@@ -25,6 +53,33 @@ append_error_to_function_def(struct mCc_ast_function_def *function_def,
 		mCc_validator_append_semantic_error(function_def->semantic_error,
 		                                    error);
 	}
+}
+
+static void
+append_error_to_function_call(struct mCc_ast_function_call *function_call,
+                              struct mCc_validation_status_result *error)
+{
+	if (!function_call->semantic_error) {
+		function_call->semantic_error = error;
+	} else {
+		mCc_validator_append_semantic_error(function_call->semantic_error,
+		                                    error);
+	}
+}
+
+static void handle_invalid_param_count(struct mCc_ast_function_call *call,
+                                       int expected, int actual)
+{
+
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Function '%s': Expected %d argument(s), but have %d",
+	         call->identifier->identifier_name, expected, actual);
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_SIGNATURE, error_msg);
+
+	append_error_to_function_call(call, error);
 }
 
 static void
@@ -91,6 +146,34 @@ static void handle_expected_type(struct mCc_ast_function_def *def,
 	append_error_to_function_def(def, error);
 }
 
+static void
+handle_expected_type_function_call(struct mCc_ast_function_call *call,
+                                   enum mCc_ast_data_type expected,
+                                   enum mCc_ast_data_type actual, int arg_nr)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg,
+	         "Incompatible types at argument %d: Expected '%s' but have %s",
+	         ERROR_MSG_BUF_SIZE, arg_nr, print_data_type(expected),
+	         print_data_type(actual));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_PARAMETER, error_msg);
+	append_error_to_function_call(call, error);
+}
+
+static void handle_unknown_inconsistent_type(struct mCc_ast_function_call *call,
+                                             int arg_nr)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, "Inconsistent type at argument %d", ERROR_MSG_BUF_SIZE,
+	         arg_nr);
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_PARAMETER, error_msg);
+	append_error_to_function_call(call, error);
+}
+
 // check for return-type
 void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
                                                void *data)
@@ -133,10 +216,8 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 	log_debug("Function-def return-type-checking completed");
 }
 
-
-
-void mCc_symtab_handle_function_call(struct mCc_ast_function_call *call,
-                                     void *data)
+void mCc_symtab_handle_function_call_pre_order(
+    struct mCc_ast_function_call *call, void *data)
 {
 	assert(call);
 	assert(data);
@@ -149,25 +230,24 @@ void mCc_symtab_handle_function_call(struct mCc_ast_function_call *call,
 
 	struct mCc_symbol_table_node *identifier_info =
 	    mCc_symtab_lookup(info_holder->symbol_table, call->identifier, false);
-	// identifier-checker are usually called after function_calls
-	if (!identifier_info) {
-		log_debug("Function '%s' not found. Error will be reported later",
-		          call->identifier->identifier_name);
-	} else {
-		/*
-		 * this info is needed here to build the error-message
-		 * it is just temporary because the subsequent identifier-handler will
-		 * overwrite it (memcpy)
-		 */
-		call->identifier->symtab_info = identifier_info;
 
-		mCc_process_validation_without_call_back(mCc_validator_check_signature,
-		                                         info_holder->symbol_table,
-		                                         call, info_holder);
+	// Reported later
+	if (identifier_info && !identifier_info->already_defined) {
+		int expected_nr_args = get_expected_arg_count(identifier_info);
+		int actual_nr_args = get_actual_arg_count(call);
+
+		if (expected_nr_args != actual_nr_args) {
+			handle_invalid_param_count(expected_nr_args, actual_nr_args);
+		}
 	}
+
 	log_debug("Signature checking completed");
 }
 
+/*
+ * TODO:
+ * - check argument-types => post-order
+ */
 void mCc_symtab_handle_function_call_post_order(
     struct mCc_ast_function_call *call, void *data)
 {
@@ -178,18 +258,41 @@ void mCc_symtab_handle_function_call_post_order(
 	    (struct mCc_symtab_and_validation_holder *)data;
 
 	struct mCc_ast_identifier *identifier = call->identifier;
+	struct mCc_symbol_table_node *symtab_info = identifier->symtab_info;
 
-	if (!call->identifier->symtab_info) {
+	if (!identifier) {
 		log_debug("No symtab info associated with '%s'. It does not exist. No "
 		          "check required",
 		          identifier->identifier_name);
+	} else if (call->semantic_error) {
+		log_debug("Function '%s' has already errors. Skipping parameter check");
 	} else {
+		// have the same size dueto previous checks
+		struct mCc_symtab_parameter_ref *next_param =
+		    symtab_info->next_parameter;
+		struct mCc_ast_expression *next_argument = call->first_argument;
+		int arg_counter = 0;
+
 		log_debug("Type checking on function-call-signature '%s'...",
 		          identifier->identifier_name);
 
-		mCc_process_validation_without_call_back(
-		    mCc_typecheck_validate_function_call, info_holder->symbol_table,
-		    call, info_holder);
+		while (next_param) {
+
+			enum mCc_ast_data_type arg_type = next_argument->data_type;
+			enum mCc_ast_data_type def_type =
+			    next_param->identifier->symtab_info->data_type;
+
+			// unknown or inconsistent
+			if (arg_type == MCC_AST_DATA_TYPE_UNKNOWN ||
+			    arg_type == MCC_AST_DATA_TYPE_INCONSISTENT) {
+				handle_unknown_inconsistent_type(call, arg_counter);
+			} // different than expected
+			else if (arg_type != def_type) {
+				handle_expected_type_function_call(call, def_type, arg_type,
+				                                   arg_counter);
+			}
+			arg_counter++;
+		}
 		log_debug("Type checking completed");
 	}
 }
