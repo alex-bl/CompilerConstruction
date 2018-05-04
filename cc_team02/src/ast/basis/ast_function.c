@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "mCc/symtab/validator/validator.h"
+
 /*----------------- function definition-----------------*/
 struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
     struct mCc_ast_identifier *identifier, enum mCc_ast_data_type return_type,

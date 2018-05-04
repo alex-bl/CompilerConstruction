@@ -66,12 +66,10 @@ int main(int argc, char *argv[])
 
 	/* build symbol-table */
 	{
-		struct mCc_validation_status_result *validation_result =
+		bool semantic_check_successfull =
 		    mCc_symtab_build_program(prog);
-		/* print */
-		mCc_validator_print_validation_result(validation_result, stdout);
-		/* delete validation-result */
-		mCc_validator_delete_validation_result(validation_result);
+		/* TODO: print */
+
 	}
 
 	/*    TODO

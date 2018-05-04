@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "mCc/symtab/validator/validator.h"
+
 struct mCc_ast_assignment *mCc_ast_new_primitive_assignment(
     struct mCc_ast_identifier *identifier,
     struct mCc_ast_expression *assigned_expresion_value)

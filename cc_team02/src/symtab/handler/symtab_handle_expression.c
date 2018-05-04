@@ -1,5 +1,7 @@
+#include "mCc/symtab/handler/symtab_handle_expression.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "config.h"
 #include "mCc/ast/basis/ast_expression.h"
@@ -29,7 +31,7 @@ static void handle_inconsistent_type(struct mCc_ast_expression *expression,
 	}
 
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, "Operation '%s': %s type at %s", ERROR_MSG_BUF_SIZE,
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,"Operation '%s': %s type at %s",
 	         mCc_ast_print_binary_op(expression->op), type_msg, side);
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(type, error_msg);
@@ -56,9 +58,9 @@ static void handle_expected_type(struct mCc_ast_expression *expression,
                                  enum mCc_ast_data_type actual)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, "Incompatible types: Expected '%s' but have %s",
-	         ERROR_MSG_BUF_SIZE, print_data_type(expected),
-	         print_data_type(actual));
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Incompatible types: Expected '%s' but have %s",
+	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	                                        error_msg);
@@ -71,9 +73,9 @@ handle_expected_numerical_type(struct mCc_ast_expression *expression,
                                enum mCc_ast_data_type actual)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg,
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types: Expected '%s' or '%s' but have '%s'",
-	         ERROR_MSG_BUF_SIZE, print_data_type(MCC_AST_DATA_TYPE_INT),
+	         print_data_type(MCC_AST_DATA_TYPE_INT),
 	         print_data_type(MCC_AST_DATA_TYPE_FLOAT), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
@@ -87,11 +89,11 @@ static void handle_inconsistent_sides(struct mCc_ast_expression *expression,
                                       enum mCc_ast_data_type rhs_type)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg,
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Operation '%s' has incompatible types: %s type at left "
 	         "hand side, but %s at right hand side",
-	         ERROR_MSG_BUF_SIZE, mCc_ast_print_binary_op(expression->op),
-	         print_data_type(lhs_type), print_data_type(rhs_type));
+	         mCc_ast_print_binary_op(expression->op), print_data_type(lhs_type),
+	         print_data_type(rhs_type));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	                                        error_msg);
@@ -176,14 +178,14 @@ void mCc_handle_expression_identifier_post_order(
 void mCc_handle_expression_identifier_array_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
-	struct mCc_ast_identifier identifier = expression->array_identifier;
+	struct mCc_ast_identifier *identifier = expression->array_identifier;
 	// identifier check => gives the type to the expression
 	handle_identifier(expression, identifier);
 
 	// if no invalid identifier was detected
 	if (expression->data_type != MCC_AST_DATA_TYPE_UNKNOWN &&
 	    expression->data_type != MCC_AST_DATA_TYPE_INCONSISTENT) {
-		enum mCc_ast_data_type *arr_expr_type =
+		enum mCc_ast_data_type arr_expr_type =
 		    expression->array_index_expression->data_type;
 
 		if (arr_expr_type == MCC_AST_DATA_TYPE_INCONSISTENT ||

@@ -1,6 +1,8 @@
 #ifndef MCC_SYMTAB_HANDLE_H
 #define MCC_SYMTAB_HANDLE_H
 
+#include <stdbool.h>
+
 #include "mCc/ast.h"
 #include "mCc/symtab/symbol_table.h"
 #include "mCc/symtab/validator/validator.h"
@@ -14,8 +16,7 @@ void mCc_symtab_build_assignment(struct mCc_ast_assignment *assignment);
 void mCc_symtab_build_statement(struct mCc_ast_statement *statement);
 
 // TODO: only this one needed?
-struct mCc_validation_status_result *
-mCc_symtab_build_program(struct mCc_ast_program *program);
+bool mCc_symtab_build_program(struct mCc_ast_program *program);
 
 void mCc_symtab_build_literal(struct mCc_ast_literal *literal);
 

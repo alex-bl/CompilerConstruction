@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "mCc/symtab/validator/validator.h"
+
 struct mCc_ast_statement *
 mCc_ast_new_if_statement(struct mCc_ast_expression *condition_expr,
                          struct mCc_ast_statement *if_stmt,

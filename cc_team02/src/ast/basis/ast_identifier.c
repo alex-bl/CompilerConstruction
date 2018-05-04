@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "mCc/symtab/validator/validator.h"
+
 struct mCc_ast_identifier *mCc_ast_new_identifier(char *name)
 {
 	assert(name);

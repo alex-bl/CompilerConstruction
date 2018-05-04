@@ -1,3 +1,8 @@
+#include "mCc/symtab/handler/symtab_handle_program.h"
+
+#include <assert.h>
+
+#include "config.h"
 #include "mCc/ast/basis/ast_program.h"
 #include "mCc/symtab/validator/validator.h"
 
@@ -26,13 +31,13 @@ static void handle_main_presence(struct mCc_ast_program *program)
 	}
 
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, "Expected 'main' function but not found");
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Expected 'main' function but not found");
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_NO_MAIN,
 	                                        error_msg);
 	append_error_to_pgrogram(program, error);
 }
-
 
 void mCc_symtab_handle_program_post_order(struct mCc_ast_program *program,
                                           void *data)

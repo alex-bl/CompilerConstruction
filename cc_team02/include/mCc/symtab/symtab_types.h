@@ -20,8 +20,8 @@ struct mCc_symbol_table {
 // is passed via userdata (visitors)
 struct mCc_symtab_and_validation_holder {
 	struct mCc_symbol_table *symbol_table;
-	struct mCc_validation_status_result *first_semantic_error;
 	int scope_level;
+	bool error_occurred;
 };
 
 

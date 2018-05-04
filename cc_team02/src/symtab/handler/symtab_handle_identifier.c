@@ -1,11 +1,12 @@
 #include "mCc/symtab/handler/symtab_handle_identifier.h"
-#include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/validator.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+
+#include "mCc/symtab/symbol_table.h"
+#include "mCc/symtab/validator/validator.h"
 
 #include "log.h"
 
@@ -31,7 +32,8 @@ static void handle_identifier(struct mCc_ast_identifier *identifier,
 	}
 
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, format_string, identifier->identifier_name);
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE, format_string,
+	         identifier->identifier_name);
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(status, error_msg);
 	append_error_to_identifier(identifier, error);
@@ -55,7 +57,7 @@ static void link_symtab_info(struct mCc_ast_identifier *identifier,
 }
 
 // do this preorder
-void mCc_symtab_handle_identifier_pre_order(
+void mCc_symtab_handle_identifier(
     struct mCc_ast_identifier *identifier, void *data)
 {
 	assert(identifier);

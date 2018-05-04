@@ -6,7 +6,6 @@
 
 #include "log.h"
 #include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/base_validator.h"
 /*
  * TODO: Do checks if already defined within this scope!
  * - primitives and arrays are currently treated equally
@@ -60,7 +59,6 @@ void mCc_symtab_handle_declaration_array_pre_order(
 
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
-	int scope_level = info_holder->symbol_table->scope_level;
 
 	struct mCc_ast_identifier *identifier = declaration->array_identifier;
 

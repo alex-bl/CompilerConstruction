@@ -3,8 +3,12 @@
 #include <assert.h>
 #include <stddef.h>
 
+#include "mCc/ast/basis/ast_assignment.h"
+#include "mCc/ast/basis/ast_data_type.h"
+#include "mCc/ast/basis/ast_expression.h"
+#include "mCc/ast/basis/ast_identifier.h"
+#include "mCc/general/print_helper.h"
 #include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/typecheck.h"
 #include "mCc/symtab/validator/validator.h"
 
 static void
@@ -23,9 +27,9 @@ static void handle_expected_type(struct mCc_ast_assignment *assignment,
                                  enum mCc_ast_data_type actual)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, "Invalid assignment: Expected '%s' but have %s",
-	         ERROR_MSG_BUF_SIZE, print_data_type(expected),
-	         print_data_type(actual));
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Invalid assignment: Expected '%s' but have %s",
+	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	                                        error_msg);
@@ -35,7 +39,7 @@ static void handle_expected_type(struct mCc_ast_assignment *assignment,
 static void handle_assignment(struct mCc_ast_assignment *assignment,
                               struct mCc_ast_expression *expression)
 {
-	struct mCc_ast_identifier identifier = assignment->identifier;
+	struct mCc_ast_identifier *identifier = assignment->identifier;
 	// identifier not defined/duplicate => handled at identifier
 	if (!identifier->symtab_info || identifier->symtab_info->already_defined) {
 		// TODO: do nothing? log?

@@ -4,10 +4,13 @@
 #include <stddef.h>
 
 #include "log.h"
+#include "mCc/general/print_helper.h"
 #include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/base_validator.h"
-#include "mCc/symtab/validator/typecheck.h"
 #include "mCc/symtab/validator/validation_status.h"
+#include "mCc/symtab/validator/validator.h"
+#include "mCc/symtab/validator/validator_helper.h"
+
+#include "config.h"
 
 /*
  * TODO:
@@ -90,7 +93,6 @@ handle_function_def(struct mCc_symtab_and_validation_holder *info_holder,
 	int scope_level = info_holder->symbol_table->scope_level;
 	struct mCc_symbol_table_node *symtab_info =
 	    mCc_symtab_lookup(info_holder->symbol_table->parent, identifier, true);
-	bool error_occurred = false;
 
 	// already existing
 	if (symtab_info) {
@@ -112,8 +114,6 @@ void mCc_symtab_handle_function_def_pre_order(struct mCc_ast_function_def *def,
 	assert(def);
 	assert(data);
 
-	struct mCc_ast_identifier *identifier = def->identifier;
-
 	log_debug("Processing function-def '%s'...",
 	          def->identifier->identifier_name);
 
@@ -121,25 +121,19 @@ void mCc_symtab_handle_function_def_pre_order(struct mCc_ast_function_def *def,
 	    (struct mCc_symtab_and_validation_holder *)data;
 
 	handle_function_def(info_holder, def);
-	// TODO: integrate these
-	//	// check for return-types
-	//	mCc_process_validation_without_call_back(mCc_validator_check_return_type,
-	//	                                         info_holder->symbol_table->parent,
-	//	                                         def, info_holder);
 
 	log_debug("Function-def checking completed");
 }
 
 // TODO: refactor => duplicate to symtab_handle_statement except return
 static void handle_expected_type(struct mCc_ast_function_def *def,
-                                 struct mCc_ast_statement *statement,
                                  enum mCc_ast_data_type expected,
                                  enum mCc_ast_data_type actual)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, "Incompatible types: Expected '%s' but have %s",
-	         ERROR_MSG_BUF_SIZE, print_data_type(expected),
-	         print_data_type(actual));
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Incompatible types: Expected '%s' but have %s",
+	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_RETURN, error_msg);
@@ -152,10 +146,9 @@ handle_expected_type_function_call(struct mCc_ast_function_call *call,
                                    enum mCc_ast_data_type actual, int arg_nr)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg,
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types at argument %d: Expected '%s' but have %s",
-	         ERROR_MSG_BUF_SIZE, arg_nr, print_data_type(expected),
-	         print_data_type(actual));
+	         arg_nr, print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER, error_msg);
@@ -166,7 +159,7 @@ static void handle_unknown_inconsistent_type(struct mCc_ast_function_call *call,
                                              int arg_nr)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, "Inconsistent type at argument %d", ERROR_MSG_BUF_SIZE,
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE, "Inconsistent type at argument %d",
 	         arg_nr);
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
@@ -185,9 +178,6 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 
 	log_debug("Processing type-checking on function return '%s'...",
 	          def->identifier->identifier_name);
-
-	struct mCc_symtab_and_validation_holder *info_holder =
-	    (struct mCc_symtab_and_validation_holder *)data;
 
 	// error detected previously
 	if (def->semantic_error) {
@@ -209,8 +199,7 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 		if (return_type != MCC_AST_DATA_TYPE_INCONSISTENT &&
 		    return_type != MCC_AST_DATA_TYPE_UNKNOWN &&
 		    return_type != function_type) {
-			handle_expected_type(def, return_statement, function_type,
-			                     return_type);
+			handle_expected_type(def, function_type, return_type);
 		}
 	}
 	log_debug("Function-def return-type-checking completed");
@@ -237,7 +226,7 @@ void mCc_symtab_handle_function_call_pre_order(
 		int actual_nr_args = get_actual_arg_count(call);
 
 		if (expected_nr_args != actual_nr_args) {
-			handle_invalid_param_count(expected_nr_args, actual_nr_args);
+			handle_invalid_param_count(call, expected_nr_args, actual_nr_args);
 		}
 	}
 
@@ -253,9 +242,6 @@ void mCc_symtab_handle_function_call_post_order(
 {
 	assert(call);
 	assert(data);
-
-	struct mCc_symtab_and_validation_holder *info_holder =
-	    (struct mCc_symtab_and_validation_holder *)data;
 
 	struct mCc_ast_identifier *identifier = call->identifier;
 	struct mCc_symbol_table_node *symtab_info = identifier->symtab_info;

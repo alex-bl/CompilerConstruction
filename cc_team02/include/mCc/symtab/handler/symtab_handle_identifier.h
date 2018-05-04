@@ -7,8 +7,8 @@
 extern "C" {
 #endif
 
-void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
-                                  void *data);
+void mCc_symtab_handle_identifier(
+    struct mCc_ast_identifier *identifier, void *data);
 
 #ifdef __cplusplus
 }

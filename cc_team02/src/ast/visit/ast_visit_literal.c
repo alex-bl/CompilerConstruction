@@ -29,12 +29,9 @@ void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
 		break;
 	case MCC_AST_DATA_TYPE_VOID:
 		// a literal having a void-type should never happen
-		assert(false);
-		break;
 	case MCC_AST_DATA_TYPE_INCONSISTENT:
-		assert(false);
-		break;
 	case MCC_AST_DATA_TYPE_UNKNOWN:
+	case MCC_AST_DATA_TYPE_INCOMPATIBLE:
 		assert(false);
 		break;
 	}

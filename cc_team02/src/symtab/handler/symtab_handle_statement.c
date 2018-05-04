@@ -1,9 +1,13 @@
+#include "mCc/symtab/handler/symtab_handle_statement.h"
+
+#include <assert.h>
 
 #include "config.h"
 #include "log.h"
 #include "mCc/ast/basis/ast_data_type.h"
 #include "mCc/ast/basis/ast_statement.h"
-#include <assert.h>
+#include "mCc/general/print_helper.h"
+#include "mCc/symtab/validator/validator.h"
 
 static void
 append_error_to_statement(struct mCc_ast_statement *statement,
@@ -21,9 +25,9 @@ static void handle_expected_type(struct mCc_ast_statement *statement,
                                  enum mCc_ast_data_type actual)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, "Incompatible types: Expected '%s' but have %s",
-	         ERROR_MSG_BUF_SIZE, print_data_type(expected),
-	         print_data_type(actual));
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Incompatible types: Expected '%s' but have %s",
+	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	                                        error_msg);
