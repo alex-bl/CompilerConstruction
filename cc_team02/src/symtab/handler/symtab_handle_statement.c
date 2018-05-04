@@ -21,9 +21,11 @@ append_error_to_statement(struct mCc_ast_statement *statement,
 	}
 }
 
-static void handle_expected_type(struct mCc_ast_statement *statement,
-                                 enum mCc_ast_data_type expected,
-                                 enum mCc_ast_data_type actual)
+static void
+handle_expected_type(struct mCc_ast_statement *statement,
+                     enum mCc_ast_data_type expected,
+                     enum mCc_ast_data_type actual,
+                     struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
@@ -34,10 +36,13 @@ static void handle_expected_type(struct mCc_ast_statement *statement,
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_statement(statement, error);
+	info_holder->error_occurred = true;
 }
 
-static void handle_statement(struct mCc_ast_statement *statement,
-                             struct mCc_ast_expression *condition_expr)
+static void
+handle_statement(struct mCc_ast_statement *statement,
+                 struct mCc_ast_expression *condition_expr,
+                 struct mCc_symtab_and_validation_holder *info_holder)
 {
 	enum mCc_ast_data_type condition_expr_type = condition_expr->data_type;
 	if (condition_expr_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
@@ -46,7 +51,7 @@ static void handle_statement(struct mCc_ast_statement *statement,
 		log_debug("Inconsistent or unknown condition-expression detected.");
 	} else if (condition_expr_type != MCC_AST_DATA_TYPE_BOOL) {
 		handle_expected_type(statement, MCC_AST_DATA_TYPE_BOOL,
-		                     condition_expr_type);
+		                     condition_expr_type, info_holder);
 	}
 }
 
@@ -56,8 +61,11 @@ void mCc_symtab_handle_if_statement_post_order(
 	assert(statement);
 	assert(data);
 
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	struct mCc_ast_expression *condition_expr = statement->condition_expression;
-	handle_statement(statement, condition_expr);
+	handle_statement(statement, condition_expr, info_holder);
 }
 
 void mCc_symtab_handle_while_statement_post_order(
@@ -66,7 +74,10 @@ void mCc_symtab_handle_while_statement_post_order(
 	assert(statement);
 	assert(data);
 
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	struct mCc_ast_expression *loop_condition =
 	    statement->loop_condition_expression;
-	handle_statement(statement, loop_condition);
+	handle_statement(statement, loop_condition, info_holder);
 }

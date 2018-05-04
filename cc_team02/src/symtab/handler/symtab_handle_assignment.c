@@ -38,8 +38,10 @@ static void handle_expected_type(struct mCc_ast_assignment *assignment,
 	append_error_to_assignment(assignment, error);
 }
 
-static void handle_assignment(struct mCc_ast_assignment *assignment,
-                              struct mCc_ast_expression *expression)
+static void
+handle_assignment(struct mCc_ast_assignment *assignment,
+                  struct mCc_ast_expression *expression,
+                  struct mCc_symtab_and_validation_holder *info_holder)
 {
 	struct mCc_ast_identifier *identifier = assignment->identifier;
 	// identifier not defined/duplicate => handled at identifier
@@ -57,6 +59,7 @@ static void handle_assignment(struct mCc_ast_assignment *assignment,
 	    expression_type != MCC_AST_DATA_TYPE_UNKNOWN &&
 	    expression_type != MCC_AST_DATA_TYPE_INCONSISTENT) {
 		handle_expected_type(assignment, identifier_type, expression_type);
+		info_holder->error_occurred = true;
 	}
 }
 
@@ -64,9 +67,12 @@ static void handle_assignment(struct mCc_ast_assignment *assignment,
 void mCc_symtab_handle_primitive_assignment_post_order(
     struct mCc_ast_assignment *assignment, void *data)
 {
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	assert(assignment);
 	assert(data);
-	handle_assignment(assignment, assignment->assigned_expression);
+	handle_assignment(assignment, assignment->assigned_expression, info_holder);
 }
 
 void mCc_symtab_handle_array_assignment_post_order(
@@ -74,7 +80,12 @@ void mCc_symtab_handle_array_assignment_post_order(
 {
 	assert(assignment);
 	assert(data);
+
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	// checks for array-expression
-	handle_assignment(assignment, assignment->array_assigned_expression);
+	handle_assignment(assignment, assignment->array_assigned_expression,
+	                  info_holder);
 	// TODO: array-index-expr handled at expression-level?
 }

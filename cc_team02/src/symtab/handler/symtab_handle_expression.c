@@ -19,9 +19,10 @@ static void append_error_to_expr(struct mCc_ast_expression *expression,
 	}
 }
 
-static void handle_inconsistent_type(struct mCc_ast_expression *expression,
-                                     enum mCc_ast_data_type type,
-                                     const char *side)
+static void
+handle_inconsistent_type(struct mCc_ast_expression *expression,
+                         enum mCc_ast_data_type type, const char *side,
+                         struct mCc_symtab_and_validation_holder *info_holder)
 {
 	const char *type_msg;
 
@@ -40,6 +41,7 @@ static void handle_inconsistent_type(struct mCc_ast_expression *expression,
 
 	append_error_to_expr(expression, error);
 	expression->data_type = type;
+	info_holder->error_occurred = true;
 }
 
 static void handle_identifier(struct mCc_ast_expression *expression,
@@ -55,9 +57,11 @@ static void handle_identifier(struct mCc_ast_expression *expression,
 	}
 }
 
-static void handle_expected_type(struct mCc_ast_expression *expression,
-                                 enum mCc_ast_data_type expected,
-                                 enum mCc_ast_data_type actual)
+static void
+handle_expected_type(struct mCc_ast_expression *expression,
+                     enum mCc_ast_data_type expected,
+                     enum mCc_ast_data_type actual,
+                     struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
@@ -69,11 +73,12 @@ static void handle_expected_type(struct mCc_ast_expression *expression,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
+	info_holder->error_occurred = true;
 }
 
-static void
-handle_expected_numerical_type(struct mCc_ast_expression *expression,
-                               enum mCc_ast_data_type actual)
+static void handle_expected_numerical_type(
+    struct mCc_ast_expression *expression, enum mCc_ast_data_type actual,
+    struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
@@ -86,11 +91,14 @@ handle_expected_numerical_type(struct mCc_ast_expression *expression,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
+	info_holder->error_occurred = true;
 }
 
-static void handle_inconsistent_sides(struct mCc_ast_expression *expression,
-                                      enum mCc_ast_data_type lhs_type,
-                                      enum mCc_ast_data_type rhs_type)
+static void
+handle_inconsistent_sides(struct mCc_ast_expression *expression,
+                          enum mCc_ast_data_type lhs_type,
+                          enum mCc_ast_data_type rhs_type,
+                          struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
@@ -104,6 +112,7 @@ static void handle_inconsistent_sides(struct mCc_ast_expression *expression,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCONSISTENT;
+	info_holder->error_occurred = true;
 }
 
 static bool binary_op_is_numerical(enum mCc_ast_binary_op op)
@@ -122,6 +131,9 @@ void mCc_handle_expression_literal_post_order(
 void mCc_handle_expression_binary_op_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	enum mCc_ast_data_type lhs_type = expression->lhs->data_type;
 	enum mCc_ast_data_type rhs_type = expression->rhs->data_type;
 	enum mCc_ast_binary_op binary_op = expression->op;
@@ -131,31 +143,35 @@ void mCc_handle_expression_binary_op_post_order(
 
 	if (lhs_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
 	    lhs_type == MCC_AST_DATA_TYPE_UNKNOWN) {
-		handle_inconsistent_type(expression, lhs_type, "left hand side");
+		handle_inconsistent_type(expression, lhs_type, "left hand side",
+		                         info_holder);
 		erroneous_lhs = true;
 	}
 	if (rhs_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
 	    rhs_type == MCC_AST_DATA_TYPE_UNKNOWN) {
-		handle_inconsistent_type(expression, rhs_type, "right hand side");
+		handle_inconsistent_type(expression, rhs_type, "right hand side",
+		                         info_holder);
 		erroneous_rhs = true;
 	}
 	// if both sides have known types
 	if (!erroneous_lhs && !erroneous_rhs) {
 		// not the same types
 		if (lhs_type != rhs_type) {
-			handle_inconsistent_sides(expression, lhs_type, rhs_type);
+			handle_inconsistent_sides(expression, lhs_type, rhs_type,
+			                          info_holder);
 		} else {
 			// numerical op with non numerical types
 			if (binary_op_is_numerical(binary_op) &&
 			    (lhs_type != MCC_AST_DATA_TYPE_INT ||
 			     lhs_type != MCC_AST_DATA_TYPE_FLOAT)) {
-				handle_expected_numerical_type(expression, lhs_type);
+				handle_expected_numerical_type(expression, lhs_type,
+				                               info_holder);
 			}
 			// boolean op with non boolean types
 			else if (!binary_op_is_numerical(binary_op) &&
 			         lhs_type != MCC_AST_DATA_TYPE_BOOL) {
 				handle_expected_type(expression, MCC_AST_DATA_TYPE_BOOL,
-				                     lhs_type);
+				                     lhs_type, info_holder);
 			} else {
 				// just set the type
 				expression->data_type = expression->lhs->data_type;
@@ -183,6 +199,9 @@ void mCc_handle_expression_identifier_post_order(
 void mCc_handle_expression_identifier_array_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	struct mCc_ast_identifier *identifier = expression->array_identifier;
 	// identifier check => gives the type to the expression
 	handle_identifier(expression, identifier);
@@ -198,7 +217,7 @@ void mCc_handle_expression_identifier_array_post_order(
 			expression->data_type = arr_expr_type;
 		} else if (arr_expr_type != MCC_AST_DATA_TYPE_INT) {
 			handle_expected_type(expression, MCC_AST_DATA_TYPE_INT,
-			                     arr_expr_type);
+			                     arr_expr_type, info_holder);
 		} else {
 			// type is int as expected
 			expression->data_type = arr_expr_type;
@@ -218,6 +237,9 @@ void mCc_handle_expression_function_call_post_order(
 void mCc_handle_expression_unary_op_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	enum mCc_ast_data_type unary_op_data_type =
 	    expression->unary_rhs->data_type;
 	enum mCc_ast_unary_op unary_op = expression->unary_op;
@@ -231,14 +253,15 @@ void mCc_handle_expression_unary_op_post_order(
 	         (unary_op_data_type != MCC_AST_DATA_TYPE_INT ||
 	          unary_op_data_type != MCC_AST_DATA_TYPE_FLOAT)) {
 
-		handle_expected_numerical_type(expression, unary_op_data_type);
+		handle_expected_numerical_type(expression, unary_op_data_type,
+		                               info_holder);
 
 	}
 	// negation on non-boolean-type
 	else if (unary_op == MCC_AST_UNARY_OP_NEGATION &&
 	         unary_op_data_type != MCC_AST_DATA_TYPE_BOOL) {
 		handle_expected_type(expression, MCC_AST_DATA_TYPE_BOOL,
-		                     unary_op_data_type);
+		                     unary_op_data_type, info_holder);
 	} // everything is fine
 	else {
 		expression->data_type = unary_op_data_type;

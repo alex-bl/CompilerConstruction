@@ -22,8 +22,10 @@ append_error_to_identifier(struct mCc_ast_identifier *identifier,
 	}
 }
 
-static void handle_identifier(struct mCc_ast_identifier *identifier,
-                              enum mCc_validation_status_type status)
+static void
+handle_identifier(struct mCc_ast_identifier *identifier,
+                  enum mCc_validation_status_type status,
+                  struct mCc_symtab_and_validation_holder *info_holder)
 {
 	const char *format_string;
 	if (status == MCC_VALIDATION_STATUS_NO_DEF) {
@@ -39,6 +41,7 @@ static void handle_identifier(struct mCc_ast_identifier *identifier,
 	    mCc_validator_new_validation_result(
 	        status, strndup(error_msg, strlen(error_msg)));
 	append_error_to_identifier(identifier, error);
+	info_holder->error_occurred = true;
 }
 
 static void link_symtab_info(struct mCc_ast_identifier *identifier,
@@ -77,12 +80,14 @@ void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
 
 		log_debug("Identifier '%s' not found in symboltable",
 		          identifier->identifier_name);
-		handle_identifier(identifier, MCC_VALIDATION_STATUS_NO_DEF);
+		handle_identifier(identifier, MCC_VALIDATION_STATUS_NO_DEF,
+		                  info_holder);
 	} // was already classified as duplicate
 	else if (symtab_info->already_defined) {
 		log_debug("Identifier '%s' already defined",
 		          identifier->identifier_name);
-		handle_identifier(identifier, MCC_VALIDATION_STATUS_NOT_UNIQUE);
+		handle_identifier(identifier, MCC_VALIDATION_STATUS_NOT_UNIQUE,
+		                  info_holder);
 	} else {
 		log_debug("Identifier '%s' found in symboltable. Proceed with linking",
 		          identifier->identifier_name);

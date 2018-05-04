@@ -16,7 +16,7 @@ void mCc_symtab_build_assignment(struct mCc_ast_assignment *assignment);
 void mCc_symtab_build_statement(struct mCc_ast_statement *statement);
 
 // TODO: only this one needed?
-bool mCc_symtab_build_program(struct mCc_ast_program *program);
+bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program);
 
 void mCc_symtab_build_literal(struct mCc_ast_literal *literal);
 

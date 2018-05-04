@@ -1,14 +1,14 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
+#include "config.h"
+#include "log.h"
 #include "mCc/ast.h"
+#include "mCc/general/parser_helper.h"
 #include "mCc/parser.h"
 #include "mCc/symtab_build.h"
-#include "log.h"
-#include "config.h"
-#include "mCc/general/parser_helper.h"
 
 void print_usage(const char *prg)
 {
@@ -38,14 +38,15 @@ int main(int argc, char *argv[])
 	struct mCc_ast_program *prog = NULL;
 	struct mCc_ast_program *buildins = NULL;
 
-	FILE *buildin_file = fopen(PATH_BUILDINS,"r");
+	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
 	/* deal with build-ins */
 	{
-		struct mCc_parser_result buildins_parsed = mCc_parser_parse_file(buildin_file);
+		struct mCc_parser_result buildins_parsed =
+		    mCc_parser_parse_file(buildin_file);
 		fclose(buildin_file);
 
 		buildins = buildins_parsed.program;
-		buildins->is_library=true;
+		buildins->is_library = true;
 	}
 
 	/* parsing phase */
@@ -60,16 +61,21 @@ int main(int argc, char *argv[])
 		}
 		prog = result.program;
 
-		//include buildins
+		// include buildins
 		mCc_parser_include_functions(buildins, prog);
 	}
 
 	/* build symbol-table */
 	{
 		bool semantic_check_successfull =
-		    mCc_symtab_build_program(prog);
-		/* TODO: print */
+		    mCc_symtab_perform_semantic_checks(prog);
 
+		if (!semantic_check_successfull) {
+			/* TODO:
+			 * - create print infrastructure and print
+			 */
+			printf("Semantic errors detected");
+		}
 	}
 
 	/*    TODO

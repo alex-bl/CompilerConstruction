@@ -71,8 +71,10 @@ append_error_to_function_call(struct mCc_ast_function_call *function_call,
 	}
 }
 
-static void handle_invalid_param_count(struct mCc_ast_function_call *call,
-                                       int expected, int actual)
+static void
+handle_invalid_param_count(struct mCc_ast_function_call *call, int expected,
+                           int actual,
+                           struct mCc_symtab_and_validation_holder *info_holder)
 {
 
 	char error_msg[ERROR_MSG_BUF_SIZE];
@@ -85,11 +87,12 @@ static void handle_invalid_param_count(struct mCc_ast_function_call *call,
 	        strndup(error_msg, strlen(error_msg)));
 
 	append_error_to_function_call(call, error);
+	info_holder->error_occurred = true;
 }
 
 static void
-handle_function_def(struct mCc_symtab_and_validation_holder *info_holder,
-                    struct mCc_ast_function_def *function_def)
+handle_function_def(struct mCc_ast_function_def *function_def,
+                    struct mCc_symtab_and_validation_holder *info_holder)
 {
 	struct mCc_ast_identifier *identifier = function_def->identifier;
 	int scope_level = info_holder->symbol_table->scope_level;
@@ -122,15 +125,17 @@ void mCc_symtab_handle_function_def_pre_order(struct mCc_ast_function_def *def,
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
-	handle_function_def(info_holder, def);
+	handle_function_def(def, info_holder);
 
 	log_debug("Function-def checking completed");
 }
 
 // TODO: refactor => duplicate to symtab_handle_statement except return
-static void handle_expected_type(struct mCc_ast_function_def *def,
-                                 enum mCc_ast_data_type expected,
-                                 enum mCc_ast_data_type actual)
+static void
+handle_expected_type(struct mCc_ast_function_def *def,
+                     enum mCc_ast_data_type expected,
+                     enum mCc_ast_data_type actual,
+                     struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
@@ -141,12 +146,13 @@ static void handle_expected_type(struct mCc_ast_function_def *def,
 	        MCC_VALIDATION_STATUS_INVALID_RETURN,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_def(def, error);
+	info_holder->error_occurred = true;
 }
 
-static void
-handle_expected_type_function_call(struct mCc_ast_function_call *call,
-                                   enum mCc_ast_data_type expected,
-                                   enum mCc_ast_data_type actual, int arg_nr)
+static void handle_expected_type_function_call(
+    struct mCc_ast_function_call *call, enum mCc_ast_data_type expected,
+    enum mCc_ast_data_type actual, int arg_nr,
+    struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
@@ -157,10 +163,12 @@ handle_expected_type_function_call(struct mCc_ast_function_call *call,
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_call(call, error);
+	info_holder->error_occurred = true;
 }
 
-static void handle_unknown_inconsistent_type(struct mCc_ast_function_call *call,
-                                             int arg_nr)
+static void handle_unknown_inconsistent_type(
+    struct mCc_ast_function_call *call, int arg_nr,
+    struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE, "Inconsistent type at argument %d",
@@ -170,6 +178,7 @@ static void handle_unknown_inconsistent_type(struct mCc_ast_function_call *call,
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_call(call, error);
+	info_holder->error_occurred = true;
 }
 
 // check for return-type
@@ -178,6 +187,9 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 {
 	assert(def);
 	assert(data);
+
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
 
 	struct mCc_ast_identifier *identifier = def->identifier;
 
@@ -204,7 +216,7 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 		if (return_type != MCC_AST_DATA_TYPE_INCONSISTENT &&
 		    return_type != MCC_AST_DATA_TYPE_UNKNOWN &&
 		    return_type != function_type) {
-			handle_expected_type(def, function_type, return_type);
+			handle_expected_type(def, function_type, return_type, info_holder);
 		}
 	}
 	log_debug("Function-def return-type-checking completed");
@@ -231,7 +243,8 @@ void mCc_symtab_handle_function_call_pre_order(
 		int actual_nr_args = get_actual_arg_count(call);
 
 		if (expected_nr_args != actual_nr_args) {
-			handle_invalid_param_count(call, expected_nr_args, actual_nr_args);
+			handle_invalid_param_count(call, expected_nr_args, actual_nr_args,
+			                           info_holder);
 		}
 	}
 
@@ -247,6 +260,9 @@ void mCc_symtab_handle_function_call_post_order(
 {
 	assert(call);
 	assert(data);
+
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
 
 	struct mCc_ast_identifier *identifier = call->identifier;
 	struct mCc_symbol_table_node *symtab_info = identifier->symtab_info;
@@ -276,11 +292,12 @@ void mCc_symtab_handle_function_call_post_order(
 			// unknown or inconsistent
 			if (arg_type == MCC_AST_DATA_TYPE_UNKNOWN ||
 			    arg_type == MCC_AST_DATA_TYPE_INCONSISTENT) {
-				handle_unknown_inconsistent_type(call, arg_counter);
+				handle_unknown_inconsistent_type(call, arg_counter,
+				                                 info_holder);
 			} // different than expected
 			else if (arg_type != def_type) {
 				handle_expected_type_function_call(call, def_type, arg_type,
-				                                   arg_counter);
+				                                   arg_counter, info_holder);
 			}
 			arg_counter++;
 			next_param = next_param->next_parameter;

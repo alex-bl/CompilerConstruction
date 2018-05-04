@@ -123,7 +123,7 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 }
 
 // TODO: return status
-bool mCc_symtab_build_program(struct mCc_ast_program *program)
+bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 {
 	assert(program);
 

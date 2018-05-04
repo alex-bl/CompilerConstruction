@@ -1,6 +1,7 @@
 #include "mCc/symtab/handler/symtab_handle_program.h"
 
 #include <assert.h>
+#include <stdbool.h>
 #include <string.h>
 
 #include "config.h"
@@ -17,7 +18,9 @@ static void append_error_to_pgrogram(struct mCc_ast_program *program,
 	}
 }
 
-static void handle_main_presence(struct mCc_ast_program *program)
+static void
+handle_main_presence(struct mCc_ast_program *program,
+                     struct mCc_symtab_and_validation_holder *info_holder)
 {
 	assert(program);
 
@@ -40,11 +43,15 @@ static void handle_main_presence(struct mCc_ast_program *program)
 	        MCC_VALIDATION_STATUS_NO_MAIN,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_pgrogram(program, error);
+	info_holder->error_occurred = true;
 }
 
 void mCc_symtab_handle_program_post_order(struct mCc_ast_program *program,
                                           void *data)
 {
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	// do the main-check
-	handle_main_presence(program);
+	handle_main_presence(program, info_holder);
 }
