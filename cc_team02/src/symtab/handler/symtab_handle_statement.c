@@ -1,6 +1,7 @@
 #include "mCc/symtab/handler/symtab_handle_statement.h"
 
 #include <assert.h>
+#include <string.h>
 
 #include "config.h"
 #include "log.h"
@@ -29,8 +30,9 @@ static void handle_expected_type(struct mCc_ast_statement *statement,
 	         "Incompatible types: Expected '%s' but have %s",
 	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
-	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
-	                                        error_msg);
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_statement(statement, error);
 }
 

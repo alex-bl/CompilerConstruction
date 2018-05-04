@@ -2,6 +2,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "config.h"
 #include "mCc/ast/basis/ast_expression.h"
@@ -31,10 +32,11 @@ static void handle_inconsistent_type(struct mCc_ast_expression *expression,
 	}
 
 	char error_msg[ERROR_MSG_BUF_SIZE];
-	snprintf(error_msg, ERROR_MSG_BUF_SIZE,"Operation '%s': %s type at %s",
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE, "Operation '%s': %s type at %s",
 	         mCc_ast_print_binary_op(expression->op), type_msg, side);
 	struct mCc_validation_status_result *error =
-	    mCc_validator_new_validation_result(type, error_msg);
+	    mCc_validator_new_validation_result(
+	        type, strndup(error_msg, strlen(error_msg)));
 
 	append_error_to_expr(expression, error);
 	expression->data_type = type;
@@ -62,8 +64,9 @@ static void handle_expected_type(struct mCc_ast_expression *expression,
 	         "Incompatible types: Expected '%s' but have %s",
 	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
-	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
-	                                        error_msg);
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 }
@@ -78,8 +81,9 @@ handle_expected_numerical_type(struct mCc_ast_expression *expression,
 	         print_data_type(MCC_AST_DATA_TYPE_INT),
 	         print_data_type(MCC_AST_DATA_TYPE_FLOAT), print_data_type(actual));
 	struct mCc_validation_status_result *error =
-	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
-	                                        error_msg);
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 }
@@ -95,8 +99,9 @@ static void handle_inconsistent_sides(struct mCc_ast_expression *expression,
 	         mCc_ast_print_binary_op(expression->op), print_data_type(lhs_type),
 	         print_data_type(rhs_type));
 	struct mCc_validation_status_result *error =
-	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
-	                                        error_msg);
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCONSISTENT;
 }

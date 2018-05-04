@@ -57,11 +57,11 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.expression_parenth_post_order =
 		    mCc_handle_expression_parenth_post_order,
 		.expression_function_call_post_order =
-		    mCc_handle_expression_identifier_post_order,
-		.expression_identifier_post_order =
-		    mCc_handle_expression_identifier_array_post_order,
-		.expression_array_identifier_post_order =
 		    mCc_handle_expression_function_call_post_order,
+		.expression_identifier_post_order =
+		    mCc_handle_expression_identifier_post_order,
+		.expression_array_identifier_post_order =
+		    mCc_handle_expression_identifier_array_post_order,
 		.expression_unary_op_post_order =
 		    mCc_handle_expression_unary_op_post_order,
 

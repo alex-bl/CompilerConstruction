@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "mCc/ast/basis/ast_assignment.h"
 #include "mCc/ast/basis/ast_data_type.h"
@@ -31,8 +32,9 @@ static void handle_expected_type(struct mCc_ast_assignment *assignment,
 	         "Invalid assignment: Expected '%s' but have %s",
 	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
-	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
-	                                        error_msg);
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_assignment(assignment, error);
 }
 

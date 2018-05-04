@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "log.h"
 #include "mCc/general/print_helper.h"
@@ -80,7 +81,8 @@ static void handle_invalid_param_count(struct mCc_ast_function_call *call,
 	         call->identifier->identifier_name, expected, actual);
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
-	        MCC_VALIDATION_STATUS_INVALID_SIGNATURE, error_msg);
+	        MCC_VALIDATION_STATUS_INVALID_SIGNATURE,
+	        strndup(error_msg, strlen(error_msg)));
 
 	append_error_to_function_call(call, error);
 }
@@ -136,7 +138,8 @@ static void handle_expected_type(struct mCc_ast_function_def *def,
 	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
-	        MCC_VALIDATION_STATUS_INVALID_RETURN, error_msg);
+	        MCC_VALIDATION_STATUS_INVALID_RETURN,
+	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_def(def, error);
 }
 
@@ -151,7 +154,8 @@ handle_expected_type_function_call(struct mCc_ast_function_call *call,
 	         arg_nr, print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
-	        MCC_VALIDATION_STATUS_INVALID_PARAMETER, error_msg);
+	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
+	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_call(call, error);
 }
 
@@ -163,7 +167,8 @@ static void handle_unknown_inconsistent_type(struct mCc_ast_function_call *call,
 	         arg_nr);
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
-	        MCC_VALIDATION_STATUS_INVALID_PARAMETER, error_msg);
+	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
+	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_call(call, error);
 }
 
@@ -180,7 +185,7 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 	          def->identifier->identifier_name);
 
 	// error detected previously
-	if (def->semantic_error) {
+	if (def->semantic_error || def->identifier->semantic_error) {
 		log_debug("Error already detected. Do not check return type");
 	} else {
 		struct mCc_ast_statement *return_statement =
@@ -246,7 +251,7 @@ void mCc_symtab_handle_function_call_post_order(
 	struct mCc_ast_identifier *identifier = call->identifier;
 	struct mCc_symbol_table_node *symtab_info = identifier->symtab_info;
 
-	if (!identifier) {
+	if (!symtab_info) {
 		log_debug("No symtab info associated with '%s'. It does not exist. No "
 		          "check required",
 		          identifier->identifier_name);
@@ -278,6 +283,8 @@ void mCc_symtab_handle_function_call_post_order(
 				                                   arg_counter);
 			}
 			arg_counter++;
+			next_param = next_param->next_parameter;
+			next_argument = next_argument->next_expr;
 		}
 		log_debug("Type checking completed");
 	}

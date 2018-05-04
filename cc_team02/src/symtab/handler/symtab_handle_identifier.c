@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "mCc/symtab/symbol_table.h"
 #include "mCc/symtab/validator/validator.h"
@@ -35,7 +36,8 @@ static void handle_identifier(struct mCc_ast_identifier *identifier,
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE, format_string,
 	         identifier->identifier_name);
 	struct mCc_validation_status_result *error =
-	    mCc_validator_new_validation_result(status, error_msg);
+	    mCc_validator_new_validation_result(
+	        status, strndup(error_msg, strlen(error_msg)));
 	append_error_to_identifier(identifier, error);
 }
 
@@ -57,8 +59,8 @@ static void link_symtab_info(struct mCc_ast_identifier *identifier,
 }
 
 // do this preorder
-void mCc_symtab_handle_identifier(
-    struct mCc_ast_identifier *identifier, void *data)
+void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
+                                  void *data)
 {
 	assert(identifier);
 	assert(data);
