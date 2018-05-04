@@ -54,6 +54,7 @@ mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration)
 
 	node->data_type = declaration->data_type;
 	node->next_parameter = NULL;
+	node->already_defined=false;
 
 	return node;
 }
@@ -91,6 +92,8 @@ mCc_symtab_new_function_def_node(struct mCc_ast_function_def *function_def)
 
 	node->entry_type = MCC_SYM_TAB_IDENTIFIER_FUNCTION;
 	node->data_type = function_def->return_type;
+	node->already_defined=false;
+
 	// has params?
 	struct mCc_ast_declaration *parameter = function_def->first_parameter;
 
@@ -170,6 +173,7 @@ void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
 	mCc_symtab_insert_node(symbol_table, identifier, to_insert);
 }
 
+//TODO: used?
 void mCc_symtab_insert_param_node(struct mCc_symbol_table *symbol_table,
                                   struct mCc_ast_declaration *declaration)
 {

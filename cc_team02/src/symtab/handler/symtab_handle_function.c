@@ -14,11 +14,38 @@
  * - check for main
  * - check if has a return
  */
-void mCc_symtab_handle_function_def(struct mCc_ast_function_def *def,
+
+static void
+handle_function_def(struct mCc_symtab_and_validation_holder *info_holder,
+                    struct mCc_ast_function_def *function_def)
+{
+	struct mCc_ast_identifier *identifier = function_def->identifier;
+	int scope_level = info_holder->symbol_table->scope_level;
+	struct mCc_symbol_table_node *symtab_info =
+	    mCc_symtab_lookup(info_holder->symbol_table->parent, identifier, true);
+	bool error_occurred = false;
+
+	// already existing
+	if (symtab_info) {
+		symtab_info->already_defined = true;
+		log_debug("Identifier '%s' already defined",
+		          identifier->identifier_name);
+		// other error handling done at identifier-level
+	} else {
+		mCc_symtab_insert_function_def_node(info_holder->symbol_table->parent,
+		                                    function_def);
+		log_debug("New function declaration inserted to symbol-table scope %d",
+		          scope_level);
+	}
+}
+//do this preorder
+void mCc_symtab_handle_function_def_pre_order(struct mCc_ast_function_def *def,
                                     void *data)
 {
 	assert(def);
 	assert(data);
+
+	struct mCc_ast_identifier *identifier = def->identifier;
 
 	log_debug("Processing function-def '%s'...",
 	          def->identifier->identifier_name);
@@ -26,23 +53,17 @@ void mCc_symtab_handle_function_def(struct mCc_ast_function_def *def,
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
-	// check for duplicates
-	mCc_process_validation(
-	    mCc_validator_check_duplicates, mCc_symtab_insert_function_def_node,
-	    info_holder->symbol_table->parent, def->identifier, info_holder, def);
+	handle_function_def(info_holder, def);
+//TODO: integrate these
+//	mCc_process_validation(
+//	    mCc_validator_check_duplicates, mCc_symtab_insert_function_def_node,
+//	    info_holder->symbol_table->parent, def->identifier, info_holder, def);
+//
+//	// check for return-types
+//	mCc_process_validation_without_call_back(mCc_validator_check_return_type,
+//	                                         info_holder->symbol_table->parent,
+//	                                         def, info_holder);
 
-	// check for return-types
-	mCc_process_validation_without_call_back(mCc_validator_check_return_type,
-	                                         info_holder->symbol_table->parent,
-	                                         def, info_holder);
-
-	// only on last function
-	if (!def->next_function_def) {
-		// check for main
-		mCc_process_validation_without_call_back(
-		    mCc_validator_check_main_presence,
-		    info_holder->symbol_table->parent, def, info_holder);
-	}
 	log_debug("Function-def checking completed");
 }
 
@@ -58,10 +79,10 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
-	//not parent needed
+	// not parent needed
 	mCc_process_validation_without_call_back(mCc_typecheck_validate_type_return,
-	                                         info_holder->symbol_table,
-	                                         def, info_holder);
+	                                         info_holder->symbol_table, def,
+	                                         info_holder);
 
 	log_debug("Function-def return-type-checking completed");
 }

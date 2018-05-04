@@ -35,16 +35,19 @@ static void handle_inconsistent_type(struct mCc_ast_expression *expression,
 	    mCc_validator_new_validation_result(type, error_msg);
 
 	append_error_to_expr(expression, error);
-	expression->type = type;
+	expression->data_type = type;
 }
 
-static void handle_unknown_identifier(struct mCc_ast_expression *expression,
-                                      struct mCc_ast_identifier *identifier)
+static void handle_identifier(struct mCc_ast_expression *expression,
+                              struct mCc_ast_identifier *identifier)
 {
 	if (!identifier->symtab_info) {
-		expression->type = MCC_AST_DATA_TYPE_UNKNOWN;
+		expression->data_type = MCC_AST_DATA_TYPE_UNKNOWN;
+	} else if (identifier->symtab_info->already_defined) {
+		// which identifier is correct?
+		expression->data_type = MCC_AST_DATA_TYPE_INCONSISTENT;
 	} else {
-		expression->type = identifier->symtab_info->data_type;
+		expression->data_type = identifier->symtab_info->data_type;
 	}
 }
 
@@ -60,7 +63,7 @@ static void handle_expected_type(struct mCc_ast_expression *expression,
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	                                        error_msg);
 	append_error_to_expr(expression, error);
-	expression->type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
+	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 }
 
 static void
@@ -76,7 +79,7 @@ handle_expected_numerical_type(struct mCc_ast_expression *expression,
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	                                        error_msg);
 	append_error_to_expr(expression, error);
-	expression->type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
+	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 }
 
 static void handle_inconsistent_sides(struct mCc_ast_expression *expression,
@@ -93,7 +96,7 @@ static void handle_inconsistent_sides(struct mCc_ast_expression *expression,
 	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	                                        error_msg);
 	append_error_to_expr(expression, error);
-	expression->type = MCC_AST_DATA_TYPE_INCONSISTENT;
+	expression->data_type = MCC_AST_DATA_TYPE_INCONSISTENT;
 }
 
 static bool binary_op_is_numerical(enum mCc_ast_binary_op op)
@@ -112,8 +115,8 @@ void mCc_handle_expression_literal_post_order(
 void mCc_handle_expression_binary_op_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
-	enum mCc_ast_data_type lhs_type = expression->lhs->type;
-	enum mCc_ast_data_type rhs_type = expression->rhs->type;
+	enum mCc_ast_data_type lhs_type = expression->lhs->data_type;
+	enum mCc_ast_data_type rhs_type = expression->rhs->data_type;
 	enum mCc_ast_binary_op binary_op = expression->op;
 
 	bool erroneous_lhs = false;
@@ -148,7 +151,7 @@ void mCc_handle_expression_binary_op_post_order(
 				                     lhs_type);
 			} else {
 				// just set the type
-				expression->type = expression->lhs->type;
+				expression->data_type = expression->lhs->data_type;
 			}
 		}
 	}
@@ -160,34 +163,39 @@ void mCc_handle_expression_parenth_post_order(
 	/*
 	 * just set the type, if it was inconsistent, it is already reported
 	 */
-	expression->type = expression->expression->type;
+	expression->data_type = expression->expression->data_type;
 }
 
 void mCc_handle_expression_identifier_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
 	struct mCc_ast_identifier *identifier = expression->identifier;
-	handle_unknown_identifier(expression, identifier);
+	handle_identifier(expression, identifier);
 }
 
 void mCc_handle_expression_identifier_array_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
 	struct mCc_ast_identifier identifier = expression->array_identifier;
-	// identifier check
-	handle_unknown_identifier(expression, identifier);
+	// identifier check => gives the type to the expression
+	handle_identifier(expression, identifier);
 
-	enum mCc_ast_data_type *arr_expr_type =
-	    expression->array_index_expression->type;
+	// if no invalid identifier was detected
+	if (expression->data_type != MCC_AST_DATA_TYPE_UNKNOWN &&
+	    expression->data_type != MCC_AST_DATA_TYPE_INCONSISTENT) {
+		enum mCc_ast_data_type *arr_expr_type =
+		    expression->array_index_expression->data_type;
 
-	if (arr_expr_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
-	    arr_expr_type == MCC_AST_DATA_TYPE_UNKNOWN) {
-		expression->type = arr_expr_type;
-	} else if (arr_expr_type != MCC_AST_DATA_TYPE_INT) {
-		handle_expected_type(expression, MCC_AST_DATA_TYPE_INT, arr_expr_type);
-	} else {
-		// type is int as expected
-		expression->type = arr_expr_type;
+		if (arr_expr_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
+		    arr_expr_type == MCC_AST_DATA_TYPE_UNKNOWN) {
+			expression->data_type = arr_expr_type;
+		} else if (arr_expr_type != MCC_AST_DATA_TYPE_INT) {
+			handle_expected_type(expression, MCC_AST_DATA_TYPE_INT,
+			                     arr_expr_type);
+		} else {
+			// type is int as expected
+			expression->data_type = arr_expr_type;
+		}
 	}
 }
 
@@ -197,18 +205,19 @@ void mCc_handle_expression_function_call_post_order(
 	// validation is done at function-call-handler, just set type
 	struct mCc_ast_identifier *identifier =
 	    expression->function_call->identifier;
-	handle_unknown_identifier(expression, identifier);
+	handle_identifier(expression, identifier);
 }
 
 void mCc_handle_expression_unary_op_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
-	enum mCc_ast_data_type unary_op_data_type = expression->unary_rhs->type;
+	enum mCc_ast_data_type unary_op_data_type =
+	    expression->unary_rhs->data_type;
 	enum mCc_ast_unary_op unary_op = expression->unary_op;
 	// unknown or inconsistent
 	if (unary_op_data_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
 	    unary_op_data_type == MCC_AST_DATA_TYPE_UNKNOWN) {
-		expression->type = unary_op_data_type;
+		expression->data_type = unary_op_data_type;
 	}
 	// minus on non-numerical-type
 	else if (unary_op == MCC_AST_UNARY_OP_MINUS &&
@@ -225,6 +234,6 @@ void mCc_handle_expression_unary_op_post_order(
 		                     unary_op_data_type);
 	} // everything is fine
 	else {
-		expression->type = unary_op_data_type;
+		expression->data_type = unary_op_data_type;
 	}
 }

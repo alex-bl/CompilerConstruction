@@ -9,8 +9,54 @@
 
 #include "log.h"
 
-void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
-                                  void *data)
+static void
+append_error_to_identifier(struct mCc_ast_identifier *identifier,
+                           struct mCc_validation_status_result *error)
+{
+	if (!identifier->semantic_error) {
+		identifier->semantic_error = error;
+	} else {
+		mCc_validator_append_semantic_error(identifier->semantic_error, error);
+	}
+}
+
+static void handle_identifier(struct mCc_ast_identifier *identifier,
+                              enum mCc_validation_status_type status)
+{
+	const char *format_string;
+	if (status == MCC_VALIDATION_STATUS_NO_DEF) {
+		format_string = "Implicit declaration of '%s'";
+	} else {
+		format_string = "Duplicate identifier '%s'";
+	}
+
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, format_string, identifier->identifier_name);
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(status, error_msg);
+	append_error_to_identifier(identifier, error);
+}
+
+static void link_symtab_info(struct mCc_ast_identifier *identifier,
+                             struct mCc_symbol_table_node *symtab_info)
+{
+	identifier->symtab_info = malloc(sizeof(*(identifier->symtab_info)));
+
+	if (!identifier->symtab_info) {
+		log_error("Malloc failed for associating symtab-info to identifier");
+	} else {
+		if (!memcpy(identifier->symtab_info, symtab_info,
+		            sizeof(*symtab_info))) {
+			log_error("Memcpy failed: Could not link symtab-info to "
+			          "identifier '%'",
+			          identifier->identifier_name);
+		}
+	}
+}
+
+// do this preorder
+void mCc_symtab_handle_identifier_pre_order(
+    struct mCc_ast_identifier *identifier, void *data)
 {
 	assert(identifier);
 	assert(data);
@@ -22,35 +68,24 @@ void mCc_symtab_handle_identifier(struct mCc_ast_identifier *identifier,
 	struct mCc_symbol_table_node *symtab_info =
 	    mCc_symtab_lookup(info_holder->symbol_table, identifier, false);
 
+	// identifier does not exists
 	if (!symtab_info) {
+
 		log_debug("Identifier '%s' not found in symboltable",
 		          identifier->identifier_name);
-		// append
-		struct mCc_validation_status_result *status_result =
-		    mCc_validator_create_error_status(MCC_VALIDATION_STATUS_NO_DEF,
-		                                      identifier);
-		mCc_validor_store_result_to_handler(info_holder, status_result);
-
+		handle_identifier(identifier, MCC_VALIDATION_STATUS_NO_DEF);
+	} // was already classified as duplicate
+	else if (symtab_info->already_defined) {
+		log_debug("Identifier '%s' already defined",
+		          identifier->identifier_name);
+		handle_identifier(identifier, MCC_VALIDATION_STATUS_NOT_UNIQUE);
 	} else {
 		log_debug("Identifier '%s' found in symboltable. Proceed with linking",
 		          identifier->identifier_name);
-
 		/*
 		 * link: use memcpy so that the hash-table can be freed without freeing
 		 * the needed references to the values
 		 */
-		identifier->symtab_info = malloc(sizeof(*(identifier->symtab_info)));
-
-		if (!identifier->symtab_info) {
-			log_error(
-			    "Malloc failed for associating symtab-info to identifier");
-		} else {
-			if (!memcpy(identifier->symtab_info, symtab_info,
-			            sizeof(*symtab_info))) {
-				log_error("Memcpy failed: Could not link symtab-info to "
-				          "identifier '%'",
-				          identifier->identifier_name);
-			}
-		}
+		link_symtab_info(identifier, symtab_info);
 	}
 }

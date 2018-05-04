@@ -7,19 +7,60 @@
 #include "mCc/symtab/validator/typecheck.h"
 #include "mCc/symtab/validator/validator.h"
 
+static void
+append_error_to_assignment(struct mCc_ast_assignment *assignment,
+                           struct mCc_validation_status_result *error)
+{
+	if (!assignment->semantic_error) {
+		assignment->semantic_error = error;
+	} else {
+		mCc_validator_append_semantic_error(assignment->semantic_error, error);
+	}
+}
+
+static void handle_expected_type(struct mCc_ast_assignment *assignment,
+                                 enum mCc_ast_data_type expected,
+                                 enum mCc_ast_data_type actual)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, "Invalid assignment: Expected '%s' but have %s",
+	         ERROR_MSG_BUF_SIZE, print_data_type(expected),
+	         print_data_type(actual));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(MCC_VALIDATION_STATUS_INVALID_TYPE,
+	                                        error_msg);
+	append_error_to_assignment(assignment, error);
+}
+
+static void handle_assignment(struct mCc_ast_assignment *assignment,
+                              struct mCc_ast_expression *expression)
+{
+	struct mCc_ast_identifier identifier = assignment->identifier;
+	// identifier not defined/duplicate => handled at identifier
+	if (!identifier->symtab_info || identifier->symtab_info->already_defined) {
+		// TODO: do nothing? log?
+		return;
+	}
+	enum mCc_ast_data_type identifier_type = identifier->symtab_info->data_type;
+	enum mCc_ast_data_type expression_type = expression->data_type;
+	/*
+	 * incompatible types, but not unknown nor inconsistent (if the latter is
+	 * the case, they are catched elsewhere)
+	 */
+	if (identifier_type != expression_type &&
+	    expression_type != MCC_AST_DATA_TYPE_UNKNOWN &&
+	    expression_type != MCC_AST_DATA_TYPE_INCONSISTENT) {
+		handle_expected_type(assignment, identifier_type, expression_type);
+	}
+}
+
 // called post orderly
 void mCc_symtab_handle_primitive_assignment_post_order(
     struct mCc_ast_assignment *assignment, void *data)
 {
 	assert(assignment);
 	assert(data);
-
-	struct mCc_symtab_and_validation_holder *info_holder =
-	    (struct mCc_symtab_and_validation_holder *)data;
-
-	mCc_process_validation_without_call_back(
-	    mCc_typecheck_validate_type_assignment, info_holder->symbol_table,
-	    assignment, info_holder);
+	handle_assignment(assignment, assignment->assigned_expression);
 }
 
 void mCc_symtab_handle_array_assignment_post_order(
@@ -27,15 +68,7 @@ void mCc_symtab_handle_array_assignment_post_order(
 {
 	assert(assignment);
 	assert(data);
-
-	struct mCc_symtab_and_validation_holder *info_holder =
-	    (struct mCc_symtab_and_validation_holder *)data;
-
-	mCc_process_validation_without_call_back(
-	    mCc_typecheck_validate_type_assignment, info_holder->symbol_table,
-	    assignment, info_holder);
-
-	mCc_process_validation_without_call_back(
-	    mCc_typecheck_validate_type_assignment_arr_expr,
-	    info_holder->symbol_table, assignment, info_holder);
+	// checks for array-expression
+	handle_assignment(assignment, assignment->array_assigned_expression);
+	// TODO: array-index-expr handled at expression-level?
 }
