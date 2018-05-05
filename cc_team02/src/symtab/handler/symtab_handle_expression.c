@@ -113,6 +113,45 @@ static void handle_expected_numerical_and_bool_type(
 	info_holder->error_occurred = true;
 }
 
+static void handle_invalid_operation(
+    struct mCc_ast_expression *expression, enum mCc_ast_binary_op op,
+    enum mCc_ast_data_type actual, enum mCc_ast_data_type expected,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Invalid operation '%s' on '%s'-types: Expected '%s'",
+	         mCc_ast_print_binary_op(op), print_data_type(actual),
+	         print_data_type(expected));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_expr(expression, error);
+	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
+	info_holder->error_occurred = true;
+}
+
+static void handle_invalid_operation_numerical(
+    struct mCc_ast_expression *expression, enum mCc_ast_binary_op op,
+    enum mCc_ast_data_type actual,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Invalid operation '%s' on '%s'-types: Expected '%s' or '%s'",
+	         mCc_ast_print_binary_op(op), print_data_type(actual),
+	         print_data_type(MCC_AST_DATA_TYPE_INT),
+	         print_data_type(MCC_AST_DATA_TYPE_FLOAT));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_expr(expression, error);
+	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
+	info_holder->error_occurred = true;
+}
+
 static void
 handle_inconsistent_sides(struct mCc_ast_expression *expression,
                           enum mCc_ast_data_type lhs_type,
@@ -149,24 +188,9 @@ static bool binary_op_is_numerical_only(enum mCc_ast_binary_op op)
 	       op == MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN;
 }
 
-static bool binary_op_is_bool_only(enum mCc_ast_binary_op op)
-{
-	return op == MCC_AST_BINARY_OP_AND || op == MCC_AST_BINARY_OP_OR;
-}
-
-static bool binary_op_is_bool_and_numerical(enum mCc_ast_binary_op op)
-{
-	return op == MCC_AST_BINARY_OP_EQUALS || op == MCC_AST_BINARY_OP_NOT_EQUALS;
-}
-
 static bool type_is_numerical(enum mCc_ast_data_type type)
 {
 	return type == MCC_AST_DATA_TYPE_INT || type == MCC_AST_DATA_TYPE_FLOAT;
-}
-
-static bool type_is_numerical_or_bool(enum mCc_ast_data_type type)
-{
-	return type_is_numerical(type) || type == MCC_AST_DATA_TYPE_BOOL;
 }
 
 static void assign_type(struct mCc_ast_expression *expression,
@@ -226,15 +250,16 @@ void mCc_handle_expression_binary_op_post_order(
 			// TODO: maybe refactor this one?
 			if (type_is_numerical(lhs_type)) {
 				if (!binary_op_is_numerical(binary_op)) {
-					handle_expected_type(expression, MCC_AST_DATA_TYPE_BOOL,
-					                     lhs_type, info_holder);
+					handle_invalid_operation(expression, binary_op, lhs_type,
+					                         MCC_AST_DATA_TYPE_BOOL,
+					                         info_holder);
 				} else {
 					assign_type(expression, binary_op, lhs_type);
 				}
 			} else if (lhs_type == MCC_AST_DATA_TYPE_BOOL) {
 				if (binary_op_is_numerical_only(binary_op)) {
-					handle_expected_numerical_type(expression, lhs_type,
-					                               info_holder);
+					handle_invalid_operation_numerical(expression, binary_op,
+					                                   lhs_type, info_holder);
 				} else {
 					assign_type(expression, binary_op, lhs_type);
 				}

@@ -139,7 +139,7 @@ handle_expected_type(struct mCc_ast_function_def *def,
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
-	         "Incompatible types: Expected '%s' but have '%s'",
+	         "Incompatible return type: Expected '%s' but have '%s'",
 	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
