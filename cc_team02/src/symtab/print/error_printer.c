@@ -10,7 +10,7 @@ static void print_error_if_exists(FILE *out, struct mCc_ast_node location,
                                   struct mCc_validation_status_result *error)
 {
 	if (error) {
-		fprintf(out, "Line %d col %d: %s\n", location.sloc.start_line,
+		fprintf(out, "Line %d col %d:\t%s\n", location.sloc.start_line,
 		        location.sloc.start_col, error->error_msg);
 	}
 }

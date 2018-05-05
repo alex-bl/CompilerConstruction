@@ -25,11 +25,12 @@ void main(){
 	string b;
 	int d;
 	int[10] bo;
+	bool c;
 	
-	c=2;
+	c=true;
 	a= a + 2 + d + 4 * 3 + d - b;
 	a=6;
-	bo[3+3]=3;
+	bo["2"]=3;
 	
 	a=buuddd("test");
 	d=call();
@@ -41,5 +42,12 @@ void main(){
 	} else{
 		int d;
 	}
-	
+
+	while(!c >= c){}
+	while(!c == c){}
+	while(1 != 2) {}
+	while(1 || 2) {}	
+	while(c && !c) {}
+	while(c || !c) {}
+		
 }

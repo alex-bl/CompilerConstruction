@@ -142,7 +142,11 @@ static bool binary_op_is_numerical(enum mCc_ast_binary_op op)
 static bool binary_op_is_numerical_only(enum mCc_ast_binary_op op)
 {
 	return op == MCC_AST_BINARY_OP_ADD || op == MCC_AST_BINARY_OP_SUB ||
-	       op == MCC_AST_BINARY_OP_MUL || op == MCC_AST_BINARY_OP_DIV;
+	       op == MCC_AST_BINARY_OP_MUL || op == MCC_AST_BINARY_OP_DIV ||
+	       op == MCC_AST_BINARY_OP_LESS_THAN ||
+	       op == MCC_AST_BINARY_OP_GREATER_THAN ||
+	       op == MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN ||
+	       op == MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN;
 }
 
 static bool binary_op_is_bool_only(enum mCc_ast_binary_op op)
@@ -219,23 +223,25 @@ void mCc_handle_expression_binary_op_post_order(
 			handle_inconsistent_sides(expression, lhs_type, rhs_type,
 			                          info_holder);
 		} else {
-			// numerical op with non numerical types
-			if (binary_op_is_numerical(binary_op) &&
-			    !type_is_numerical(lhs_type)) {
-				handle_expected_numerical_type(expression, lhs_type,
-				                               info_holder);
-			}
-			// boolean op with non boolean types => doesn't matter, right?
-			else if (binary_op_is_bool_only(binary_op) &&
-			         lhs_type != MCC_AST_DATA_TYPE_BOOL) {
-				handle_expected_type(expression, MCC_AST_DATA_TYPE_BOOL,
-				                     lhs_type, info_holder);
-			} else if (binary_op_is_bool_and_numerical(binary_op) &&
-			           !type_is_numerical_or_bool(lhs_type)) {
+			// TODO: maybe refactor this one?
+			if (type_is_numerical(lhs_type)) {
+				if (!binary_op_is_numerical(binary_op)) {
+					handle_expected_type(expression, MCC_AST_DATA_TYPE_BOOL,
+					                     lhs_type, info_holder);
+				} else {
+					assign_type(expression, binary_op, lhs_type);
+				}
+			} else if (lhs_type == MCC_AST_DATA_TYPE_BOOL) {
+				if (binary_op_is_numerical_only(binary_op)) {
+					handle_expected_numerical_type(expression, lhs_type,
+					                               info_holder);
+				} else {
+					assign_type(expression, binary_op, lhs_type);
+				}
+			} else {
+				// string permits on binary operation
 				handle_expected_numerical_and_bool_type(expression, lhs_type,
 				                                        info_holder);
-			} else {
-				assign_type(expression, binary_op, lhs_type);
 			}
 		}
 	}

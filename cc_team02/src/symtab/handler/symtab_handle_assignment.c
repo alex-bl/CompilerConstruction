@@ -39,6 +39,23 @@ static void handle_expected_type(struct mCc_ast_assignment *assignment,
 }
 
 static void
+handle_expected_type_array_expr(struct mCc_ast_assignment *assignment,
+                                enum mCc_ast_data_type expected,
+                                enum mCc_ast_data_type actual)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(
+	    error_msg, ERROR_MSG_BUF_SIZE,
+	    "Invalid index exppression on assignment: Expected '%s' but have '%s'",
+	    print_data_type(expected), print_data_type(actual));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_assignment(assignment, error);
+}
+
+static void
 handle_assignment(struct mCc_ast_assignment *assignment,
                   struct mCc_ast_expression *expression,
                   struct mCc_symtab_and_validation_holder *info_holder)
@@ -59,6 +76,23 @@ handle_assignment(struct mCc_ast_assignment *assignment,
 	    expression_type != MCC_AST_DATA_TYPE_UNKNOWN &&
 	    expression_type != MCC_AST_DATA_TYPE_INCONSISTENT) {
 		handle_expected_type(assignment, identifier_type, expression_type);
+		info_holder->error_occurred = true;
+	}
+}
+
+static void
+handle_assignment_array(struct mCc_ast_assignment *assignment,
+                        struct mCc_symtab_and_validation_holder *info_holder)
+{
+
+	enum mCc_ast_data_type arr_index_expr_type =
+	    assignment->array_index_expression->data_type;
+
+	if (arr_index_expr_type != MCC_AST_DATA_TYPE_UNKNOWN &&
+	    arr_index_expr_type != MCC_AST_DATA_TYPE_INCONSISTENT &&
+	    arr_index_expr_type != MCC_AST_DATA_TYPE_INT) {
+		handle_expected_type_array_expr(assignment, MCC_AST_DATA_TYPE_INT,
+		                                arr_index_expr_type);
 		info_holder->error_occurred = true;
 	}
 }
@@ -87,5 +121,6 @@ void mCc_symtab_handle_array_assignment_post_order(
 	// checks for array-expression
 	handle_assignment(assignment, assignment->array_assigned_expression,
 	                  info_holder);
-	// TODO: array-index-expr handled at expression-level?
+	// and its index
+	handle_assignment_array(assignment, info_holder);
 }

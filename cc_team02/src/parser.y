@@ -124,8 +124,8 @@ toplevel: statement_list { result->top_level_type=MCC_PARSER_TOP_LEVEL_STATEMENT
 	;
 
 
-declaration: type IDENTIFIER                          { $$ = mCc_ast_new_primitive_declaration($1, $2); loc($$, @1);}
-	| type LBRACKET INT_LITERAL RBRACKET IDENTIFIER   { $$ = mCc_ast_new_array_declaration($1, $5, $3); loc($$, @1);}
+declaration: type IDENTIFIER                          { $$ = mCc_ast_new_primitive_declaration($1, $2); loc($$, @1); loc($2,@2);}
+	| type LBRACKET INT_LITERAL RBRACKET IDENTIFIER   { $$ = mCc_ast_new_array_declaration($1, $5, $3); loc($$, @1); loc($5,@5);}
 	;
 
 
@@ -239,10 +239,10 @@ compound_stmt: LBRACE statement_list RBRACE { $$ = $2;}
 
 
 
-function_def: type IDENTIFIER LPARENTH RPARENTH compound_stmt          { $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); loc($$, @1); }
-    | type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt       { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); loc($$, @1); }
-	| VOID_TYPE IDENTIFIER LPARENTH RPARENTH compound_stmt             { $$ = mCc_ast_new_non_parameterized_function_def($2, MCC_AST_DATA_TYPE_VOID, $5); loc($$, @1); }
-	| VOID_TYPE IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, MCC_AST_DATA_TYPE_VOID, $4, $6); loc($$, @1); }
+function_def: type IDENTIFIER LPARENTH RPARENTH compound_stmt          { $$ = mCc_ast_new_non_parameterized_function_def($2, $1, $5); loc($$, @1); loc($2,@2);}
+    | type IDENTIFIER LPARENTH parameters RPARENTH compound_stmt       { $$ = mCc_ast_new_parameterized_function_def($2, $1, $4, $6); loc($$, @1); loc($2,@2);}
+	| VOID_TYPE IDENTIFIER LPARENTH RPARENTH compound_stmt             { $$ = mCc_ast_new_non_parameterized_function_def($2, MCC_AST_DATA_TYPE_VOID, $5); loc($$, @1); loc($2,@2);}
+	| VOID_TYPE IDENTIFIER LPARENTH parameters RPARENTH compound_stmt  { $$ = mCc_ast_new_parameterized_function_def($2, MCC_AST_DATA_TYPE_VOID, $4, $6); loc($$, @1); loc($2,@2);}
 	;
 
 
