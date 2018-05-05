@@ -46,7 +46,8 @@ handle_statement(struct mCc_ast_statement *statement,
 {
 	enum mCc_ast_data_type condition_expr_type = condition_expr->data_type;
 	if (condition_expr_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
-	    condition_expr_type == MCC_AST_DATA_TYPE_UNKNOWN) {
+	    condition_expr_type == MCC_AST_DATA_TYPE_UNKNOWN ||
+	    condition_expr_type == MCC_AST_DATA_TYPE_INCOMPATIBLE) {
 		// no futher things to do => handled elsewhere
 		log_debug("Inconsistent or unknown condition-expression detected.");
 	} else if (condition_expr_type != MCC_AST_DATA_TYPE_BOOL) {
