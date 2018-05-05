@@ -35,6 +35,7 @@ void main(){
 	d=call();
 	d=call(1,2,3,4);
 	d=call(b);
+	
 	if(a==12){
 		int c;
 	} else{

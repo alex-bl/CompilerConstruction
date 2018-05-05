@@ -1,4 +1,4 @@
-#include "mCc/symtab_build.h"
+#include "mCc/symtab_check.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -64,6 +64,8 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		    mCc_handle_expression_identifier_array_post_order,
 		.expression_unary_op_post_order =
 		    mCc_handle_expression_unary_op_post_order,
+		.expression_literal_post_order =
+		    mCc_handle_expression_literal_post_order,
 
 		//.assignment
 		.assignment_primitive_post_order =
@@ -91,8 +93,6 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.expression_identifier = NULL,
 		.expression_array_identifier = NULL,
 		.expression_unary_op = NULL,
-
-		.expression_literal_post_order = NULL,
 
 		//.literal
 		.literal_int = NULL,
@@ -152,49 +152,4 @@ bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 	mCc_symtab_delete_symbol_table(symbol_table);
 
 	return !info_holder.error_occurred;
-}
-
-// TODO: are they required?
-void mCc_symtab_build_assignment(struct mCc_ast_assignment *assignment)
-{
-	assert(assignment);
-}
-
-void mCc_symtab_build_declaration(struct mCc_ast_declaration *declaration)
-{
-	assert(declaration);
-}
-
-void mCc_symtab_build_expression(struct mCc_ast_expression *expression)
-{
-	assert(expression);
-}
-
-void mCc_symtab_build_function_def(struct mCc_ast_function_def *function_def)
-{
-
-	assert(function_def);
-}
-
-void mCc_symtab_build_function_call(struct mCc_ast_function_call *function_call)
-{
-	assert(function_call);
-}
-
-void mCc_symtab_build_identifier(struct mCc_ast_identifier *identifier)
-{
-
-	assert(identifier);
-}
-
-void mCc_symtab_build_literal(struct mCc_ast_literal *literal)
-{
-
-	assert(literal);
-}
-
-void mCc_symtab_build_statement(struct mCc_ast_statement *statement)
-{
-
-	assert(statement);
 }

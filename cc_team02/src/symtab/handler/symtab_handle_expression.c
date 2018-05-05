@@ -65,7 +65,7 @@ handle_expected_type(struct mCc_ast_expression *expression,
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
-	         "Incompatible types: Expected '%s' but have %s",
+	         "Incompatible types: Expected '%s' but have '%s'",
 	         print_data_type(expected), print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
@@ -94,6 +94,25 @@ static void handle_expected_numerical_type(
 	info_holder->error_occurred = true;
 }
 
+static void handle_expected_numerical_and_bool_type(
+    struct mCc_ast_expression *expression, enum mCc_ast_data_type actual,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Incompatible types: Expected '%s' or '%s' or '%s' but have '%s'",
+	         print_data_type(MCC_AST_DATA_TYPE_INT),
+	         print_data_type(MCC_AST_DATA_TYPE_FLOAT),
+	         print_data_type(MCC_AST_DATA_TYPE_BOOL), print_data_type(actual));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_expr(expression, error);
+	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
+	info_holder->error_occurred = true;
+}
+
 static void
 handle_inconsistent_sides(struct mCc_ast_expression *expression,
                           enum mCc_ast_data_type lhs_type,
@@ -102,8 +121,8 @@ handle_inconsistent_sides(struct mCc_ast_expression *expression,
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
-	         "Operation '%s' has incompatible types: %s type at left "
-	         "hand side, but %s at right hand side",
+	         "Operation '%s' has incompatible types: '%s' at left "
+	         "hand side, but '%s' at right hand side",
 	         mCc_ast_print_binary_op(expression->op), print_data_type(lhs_type),
 	         print_data_type(rhs_type));
 	struct mCc_validation_status_result *error =
@@ -117,8 +136,48 @@ handle_inconsistent_sides(struct mCc_ast_expression *expression,
 
 static bool binary_op_is_numerical(enum mCc_ast_binary_op op)
 {
+	return op != MCC_AST_BINARY_OP_AND && op != MCC_AST_BINARY_OP_OR;
+}
+
+static bool binary_op_is_numerical_only(enum mCc_ast_binary_op op)
+{
 	return op == MCC_AST_BINARY_OP_ADD || op == MCC_AST_BINARY_OP_SUB ||
 	       op == MCC_AST_BINARY_OP_MUL || op == MCC_AST_BINARY_OP_DIV;
+}
+
+static bool binary_op_is_bool_only(enum mCc_ast_binary_op op)
+{
+	return op == MCC_AST_BINARY_OP_AND || op == MCC_AST_BINARY_OP_OR;
+}
+
+static bool binary_op_is_bool_and_numerical(enum mCc_ast_binary_op op)
+{
+	return op == MCC_AST_BINARY_OP_EQUALS || op == MCC_AST_BINARY_OP_NOT_EQUALS;
+}
+
+static bool type_is_numerical(enum mCc_ast_data_type type)
+{
+	return type == MCC_AST_DATA_TYPE_INT || type == MCC_AST_DATA_TYPE_FLOAT;
+}
+
+static bool type_is_numerical_or_bool(enum mCc_ast_data_type type)
+{
+	return type_is_numerical(type) || type == MCC_AST_DATA_TYPE_BOOL;
+}
+
+static void assign_type(struct mCc_ast_expression *expression,
+                        enum mCc_ast_binary_op binary_op,
+                        enum mCc_ast_data_type type)
+{
+	/*
+	 * just set the type: numerical ops keeps it, boolean ops change
+	 * it to bool
+	 */
+	if (binary_op_is_numerical_only(binary_op)) {
+		expression->data_type = type;
+	} else {
+		expression->data_type = MCC_AST_DATA_TYPE_BOOL;
+	}
 }
 
 void mCc_handle_expression_literal_post_order(
@@ -162,19 +221,21 @@ void mCc_handle_expression_binary_op_post_order(
 		} else {
 			// numerical op with non numerical types
 			if (binary_op_is_numerical(binary_op) &&
-			    (lhs_type != MCC_AST_DATA_TYPE_INT ||
-			     lhs_type != MCC_AST_DATA_TYPE_FLOAT)) {
+			    !type_is_numerical(lhs_type)) {
 				handle_expected_numerical_type(expression, lhs_type,
 				                               info_holder);
 			}
-			// boolean op with non boolean types
-			else if (!binary_op_is_numerical(binary_op) &&
+			// boolean op with non boolean types => doesn't matter, right?
+			else if (binary_op_is_bool_only(binary_op) &&
 			         lhs_type != MCC_AST_DATA_TYPE_BOOL) {
 				handle_expected_type(expression, MCC_AST_DATA_TYPE_BOOL,
 				                     lhs_type, info_holder);
+			} else if (binary_op_is_bool_and_numerical(binary_op) &&
+			           !type_is_numerical_or_bool(lhs_type)) {
+				handle_expected_numerical_and_bool_type(expression, lhs_type,
+				                                        info_holder);
 			} else {
-				// just set the type
-				expression->data_type = expression->lhs->data_type;
+				assign_type(expression, binary_op, lhs_type);
 			}
 		}
 	}

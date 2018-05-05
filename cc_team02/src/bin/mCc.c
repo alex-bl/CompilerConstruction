@@ -8,7 +8,8 @@
 #include "mCc/ast.h"
 #include "mCc/general/parser_helper.h"
 #include "mCc/parser.h"
-#include "mCc/symtab_build.h"
+#include "mCc/symtab/symtab_error_print.h"
+#include "mCc/symtab_check.h"
 
 void print_usage(const char *prg)
 {
@@ -39,6 +40,8 @@ int main(int argc, char *argv[])
 	struct mCc_ast_program *buildins = NULL;
 
 	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
+	FILE *out_put = stdout;
+
 	/* deal with build-ins */
 	{
 		struct mCc_parser_result buildins_parsed =
@@ -71,10 +74,10 @@ int main(int argc, char *argv[])
 		    mCc_symtab_perform_semantic_checks(prog);
 
 		if (!semantic_check_successfull) {
-			/* TODO:
-			 * - create print infrastructure and print
-			 */
-			printf("Semantic errors detected");
+			fprintf(out_put, "Semantic errors detected:\n");
+			fprintf(out_put, "==============================\n");
+			mCc_symtab_print_semantic_errors(prog, out_put);
+			fprintf(out_put, "==============================\n");
 		}
 	}
 

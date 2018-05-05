@@ -25,6 +25,9 @@ void mCc_handle_expression_function_call_post_order(
 void mCc_handle_expression_unary_op_post_order(
     struct mCc_ast_expression *expression, void *data);
 
+void mCc_handle_expression_literal_post_order(
+    struct mCc_ast_expression *expression, void *data);
+
 #ifdef __cplusplus
 }
 #endif
