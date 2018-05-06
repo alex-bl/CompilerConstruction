@@ -131,8 +131,8 @@ include(GoogleTest)
 # is it that much simple? googleTest is already a module => https://cmake.org/cmake/help/v3.9/module/GoogleTest.html
 
 #create list: add all tests manually here (file-names without *.cpp)
-#set(unit_test_list "parser" "builder" "printer" "symtab" "validator")
-set(unit_test_list "symtab" "validator")
+set(unit_test_list "parser" "builder" "printer" "symtab" "validator" "checks")
+#set(unit_test_list "checks")
 
 #================================================================ valgrind
 
