@@ -4,8 +4,8 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "mCc/ast_print.h"
 #include "config.h"
+#include "mCc/ast_print.h"
 
 #define NAME_SIZE 64
 
@@ -184,6 +184,14 @@ mCc_test_build_test_declaration(const char *identifier,
 {
 	return mCc_ast_new_primitive_declaration(
 	    type, mCc_test_build_const_test_identifier(identifier));
+}
+
+struct mCc_ast_declaration *
+mCc_test_build_test_array_declaration(const char *identifier,
+                                      enum mCc_ast_data_type type, size_t size)
+{
+	return mCc_ast_new_array_declaration(
+	    type, mCc_test_build_const_test_identifier(identifier), size);
 }
 
 struct mCc_ast_assignment *

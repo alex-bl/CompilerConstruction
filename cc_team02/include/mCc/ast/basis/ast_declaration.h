@@ -46,6 +46,9 @@ mCc_ast_new_array_declaration(enum mCc_ast_data_type data_type,
                               struct mCc_ast_identifier *identifier,
                               size_t size);
 
+struct mCc_ast_identifier *
+mCc_ast_get_declaration_identifier(struct mCc_ast_declaration *decl);
+
 void mCc_ast_delete_declaration(struct mCc_ast_declaration *name);
 
 #ifdef __cplusplus

@@ -7,121 +7,6 @@
 
 #include "log.h"
 
-static struct mCc_ast_identifier *
-get_declaration_identifier(struct mCc_ast_declaration *decl)
-{
-	return decl->declaration_type == MCC_AST_DECLARATION_PRIMITIVE
-	           ? decl->identifier
-	           : decl->array_identifier;
-}
-
-struct mCc_symtab_parameter_ref *
-mCc_symtab_new_parameter_ref(struct mCc_ast_identifier *identifier)
-{
-	assert(identifier);
-	struct mCc_symtab_parameter_ref *param_ref = malloc(sizeof(*param_ref));
-	if (!param_ref) {
-		log_error("Malloc failed: Could not aquire heap-space for "
-		          "'mCc_symbol_table_node'.");
-		return NULL;
-	}
-	param_ref->identifier = identifier;
-	param_ref->next_parameter = NULL;
-	return param_ref;
-}
-
-// TODO: review
-struct mCc_symbol_table_node *
-mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration)
-{
-	assert(declaration);
-
-	struct mCc_symbol_table_node *node = malloc(sizeof(*node));
-	if (!node) {
-		log_error("Malloc failed: Could not aquire heap-space for "
-		          "'mCc_symbol_table_node'.");
-		return NULL;
-	}
-
-	// distinguish between primitive declaration and array
-	if (declaration->declaration_type == MCC_AST_DECLARATION_PRIMITIVE) {
-		node->entry_type = MCC_SYM_TAB_IDENTIFIER_VARIABLE_PRIMITIVE;
-		node->size = declaration->size;
-	} else {
-		node->entry_type = MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY;
-		node->size = 0;
-	}
-
-	node->data_type = declaration->data_type;
-	node->next_parameter = NULL;
-	node->already_defined=false;
-
-	return node;
-}
-
-// TODO: really needed?
-struct mCc_symbol_table_node *mCc_symtab_new_parameter_declaration_node(
-    struct mCc_ast_declaration *declaration)
-{
-	struct mCc_symbol_table_node *param_node =
-	    mCc_symtab_new_declaration_node(declaration);
-
-	param_node->entry_type = MCC_SYM_TAB_IDENTIFIER_FUNCTION_PARAMETER;
-	param_node->data_type = declaration->data_type;
-	param_node->next_parameter = NULL;
-
-	return param_node;
-}
-
-/**
- *
- * @param function_def
- * @return
- */
-struct mCc_symbol_table_node *
-mCc_symtab_new_function_def_node(struct mCc_ast_function_def *function_def)
-{
-	assert(function_def);
-
-	struct mCc_symbol_table_node *node = malloc(sizeof(*node));
-	if (!node) {
-		log_error("Malloc failed: Could not aquire heap-space for "
-		          "'mCc_symbol_table_node'.");
-		return NULL;
-	}
-
-	node->entry_type = MCC_SYM_TAB_IDENTIFIER_FUNCTION;
-	node->data_type = function_def->return_type;
-	node->already_defined=false;
-
-	// has params?
-	struct mCc_ast_declaration *parameter = function_def->first_parameter;
-
-	if (parameter) {
-		struct mCc_symtab_parameter_ref *first_param_node =
-		    mCc_symtab_new_parameter_ref(get_declaration_identifier(parameter));
-
-		first_param_node->next_parameter = NULL;
-		struct mCc_symtab_parameter_ref *next_param_node = first_param_node;
-
-		struct mCc_ast_declaration *next_param = parameter->next_declaration;
-
-		while (next_param) {
-			next_param_node->next_parameter = mCc_symtab_new_parameter_ref(
-			    get_declaration_identifier(next_param));
-
-			next_param_node = next_param_node->next_parameter;
-			next_param = next_param->next_declaration;
-		}
-		// concatenation
-		node->next_parameter = first_param_node;
-	} else {
-		node->next_parameter = NULL;
-	}
-
-	return node;
-}
-
 struct mCc_symbol_table *
 mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent, int scope_level)
 {
@@ -167,25 +52,10 @@ void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
 	    mCc_symtab_new_declaration_node(declaration);
 
 	struct mCc_ast_identifier *identifier =
-	    get_declaration_identifier(declaration);
+	    mCc_ast_get_declaration_identifier(declaration);
 	log_debug("Variable: %s", identifier->identifier_name);
 
 	mCc_symtab_insert_node(symbol_table, identifier, to_insert);
-}
-
-//TODO: used?
-void mCc_symtab_insert_param_node(struct mCc_symbol_table *symbol_table,
-                                  struct mCc_ast_declaration *declaration)
-{
-	assert(symbol_table);
-	assert(declaration);
-
-	struct mCc_symbol_table_node *to_insert =
-	    mCc_symtab_new_declaration_node(declaration);
-	to_insert->entry_type = MCC_SYM_TAB_IDENTIFIER_FUNCTION_PARAMETER;
-
-	mCc_symtab_insert_node(symbol_table,
-	                       get_declaration_identifier(declaration), to_insert);
 }
 
 /*

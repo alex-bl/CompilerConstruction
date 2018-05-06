@@ -40,6 +40,14 @@ mCc_ast_new_array_declaration(enum mCc_ast_data_type data_type,
 	return declaration;
 }
 
+struct mCc_ast_identifier *
+mCc_ast_get_declaration_identifier(struct mCc_ast_declaration *decl)
+{
+	return decl->declaration_type == MCC_AST_DECLARATION_PRIMITIVE
+	           ? decl->identifier
+	           : decl->array_identifier;
+}
+
 void mCc_ast_delete_declaration(struct mCc_ast_declaration *declaration)
 {
 	assert(declaration);

@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "mCc/ast_visit.h"
+#include "mCc/ast/visit/ast_visit_program.h"
 
 //"global" visitor needed
 static struct mCc_ast_visitor error_print_visitor(FILE *out)

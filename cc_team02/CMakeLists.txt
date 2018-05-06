@@ -131,13 +131,14 @@ include(GoogleTest)
 # is it that much simple? googleTest is already a module => https://cmake.org/cmake/help/v3.9/module/GoogleTest.html
 
 #create list: add all tests manually here (file-names without *.cpp)
-set(unit_test_list "parser" "builder" "printer")
+#set(unit_test_list "parser" "builder" "printer" "symtab")
+set(unit_test_list "symtab")
 
 #================================================================ valgrind
 
 # custom test-target to enforce a rebuild (see https://stackoverflow.com/questions/733475/cmake-ctest-make-test-doesnt-build-tests)
 # add -V for verbose-info on tests
-add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND})
+add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND} --output-on-failure)
 
 # enabling valgrind => target test_memcheck
 # taken from:
@@ -172,6 +173,7 @@ add_dependencies(integration_test mCc)
 #=============================================================== gtest-execution
 
 foreach(entry_name ${unit_test_list})
+	
 	# build and link
 	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)
 	target_link_libraries(${entry_name}_test_exec mCc_lib mCc_test_utils gtest_main)
@@ -179,7 +181,7 @@ foreach(entry_name ${unit_test_list})
 	# add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 	# native gtest support since cmake 3.9?
 	gtest_add_tests(TARGET ${entry_name}_test_exec
-					EXTRA_ARGS ""
+					EXTRA_ARGS "-V"
 					TEST_PREFIX "mCc_test_"
 					TEST_SUFFIX ".tst"
 					TEST_LIST "list_of_exec_tests")
