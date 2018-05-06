@@ -209,5 +209,5 @@ mCc_test_build_test_function_def(enum mCc_ast_data_type return_type,
 {
 	return mCc_ast_new_non_parameterized_function_def(
 	    mCc_test_build_const_test_identifier(identifier), return_type,
-	    (return_expr ? mCc_ast_new_expression_statement(return_expr) : NULL));
+	    (return_expr ? mCc_ast_new_return_statement(return_expr) : NULL));
 }
