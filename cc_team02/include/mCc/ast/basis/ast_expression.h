@@ -6,6 +6,7 @@
 #include "mCc/ast/basis/ast_literal.h"
 #include "mCc/ast/basis/ast_node.h"
 #include "mCc/ast/basis/ast_operator.h"
+#include "mCc/ast/basis/ast_data_type.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,6 +28,13 @@ struct mCc_ast_expression {
 
 	enum mCc_ast_expression_type type;
 	struct mCc_ast_expression *next_expr;
+
+	//to ease the semantic checks later
+	enum mCc_ast_data_type data_type;
+
+	// for semantic checks
+	struct mCc_validation_status_result *semantic_error;
+
 	union {
 		/* MCC_AST_EXPRESSION_TYPE_LITERAL */
 		struct mCc_ast_literal *literal;

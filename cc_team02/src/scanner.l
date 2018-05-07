@@ -79,10 +79,10 @@ scomment       \/\/.*\n
 {float_literal}   { yylval->TK_FLOAT_LITERAL = atof(yytext); return TK_FLOAT_LITERAL; }
 {bool_literal}    { yylval->TK_BOOL_LITERAL = strcmp(yytext, "true") == 0 ? true : false; return TK_BOOL_LITERAL; }
 {string_literal}  { 
-                    char* tmp = calloc(strlen(yytext)-1, sizeof(char));
-                    strncpy(tmp, &yytext[1], strlen(yytext)-2);
+//                    char* tmp = calloc(strlen(yytext)-1, sizeof(char));
+//                    strncpy(tmp, &yytext[1], strlen(yytext)-2);
                    // tmp[strlen(yytext)-1] = '\0';  
-                    yylval->TK_STRING_LITERAL = tmp;
+                    yylval->TK_STRING_LITERAL = yytext;
                     return TK_STRING_LITERAL;
                   }
 {identifier}      { 

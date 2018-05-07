@@ -7,10 +7,10 @@
 extern "C" {
 #endif
 
-void mCc_symtab_handle_primitive_assignment(struct mCc_ast_assignment *assignment,
+void mCc_symtab_handle_primitive_assignment_post_order(struct mCc_ast_assignment *assignment,
                                   void *data);
 
-void mCc_symtab_handle_array_assignment(struct mCc_ast_assignment *assignment,
+void mCc_symtab_handle_array_assignment_post_order(struct mCc_ast_assignment *assignment,
                                         void *data);
 
 #ifdef __cplusplus

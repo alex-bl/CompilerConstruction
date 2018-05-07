@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "mCc/symtab/validator/validator.h"
+
 /*----------------- function definition-----------------*/
 struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
     struct mCc_ast_identifier *identifier, enum mCc_ast_data_type return_type,
@@ -20,6 +22,7 @@ struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
 	// set explicitly to null
 	function->next_function_def = NULL;
 	function->first_parameter = NULL;
+	function->semantic_error = NULL;
 
 	return function;
 }
@@ -38,8 +41,10 @@ struct mCc_ast_function_def *mCc_ast_new_parameterized_function_def(
 void mCc_ast_delete_function_def(struct mCc_ast_function_def *function_def)
 {
 	assert(function_def);
+	mCc_validator_delete_validation_result(function_def->semantic_error);
 
 	mCc_ast_delete_identifier(function_def->identifier);
+
 	if (function_def->first_statement) {
 		mCc_ast_delete_statement(function_def->first_statement);
 	}
@@ -64,6 +69,7 @@ struct mCc_ast_function_call *mCc_ast_new_non_parameterized_function_call(
 	function->identifier = identifier;
 	// explicitly set to null
 	function->first_argument = NULL;
+	function->semantic_error = NULL;
 
 	return function;
 }
@@ -82,6 +88,7 @@ mCc_ast_new_parameterized_function_call(struct mCc_ast_identifier *identifier,
 void mCc_ast_delete_function_call(struct mCc_ast_function_call *function_call)
 {
 	assert(function_call);
+	mCc_validator_delete_validation_result(function_call->semantic_error);
 
 	mCc_ast_delete_identifier(function_call->identifier);
 	if (function_call->first_argument) {

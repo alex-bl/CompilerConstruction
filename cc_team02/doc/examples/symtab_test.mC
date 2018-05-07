@@ -13,24 +13,41 @@ int call(float a){
 return 2;
 }
 
+int test_func(){
+
+string a;
+
+return a;
+}
+
 void main(){	
 	int a;
 	string b;
 	int d;
 	int[10] bo;
+	bool c;
 	
-	c=2;
+	c=true;
 	a= a + 2 + d + 4 * 3 + d - b;
 	a=6;
-	bo[3+3]=3;
+	bo["2"]=3;
 	
 	a=buuddd("test");
 	d=call();
 	d=call(1,2,3,4);
+	d=call(b);
+	
 	if(a==12){
 		int c;
 	} else{
 		int d;
 	}
-	
+
+	while(!c >= c){}
+	while(!c == c){}
+	while(1 != 2) {}
+	while(1 || 2) {}	
+	while(c && !c) {}
+	while(c || !c) {}
+		
 }

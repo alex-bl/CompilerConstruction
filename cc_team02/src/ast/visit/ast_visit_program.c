@@ -11,8 +11,11 @@ void mCc_ast_visit_program(struct mCc_ast_program *program,
 	assert(visitor);
 
 	visit_if_pre_order(program, visitor->program, visitor);
+	visit_if_both_order(program, visitor->program, visitor);
 
 	mCc_ast_visit_function_def(program->first_function_def, visitor);
 
 	visit_if_post_order(program, visitor->program, visitor);
+	visit_if_both_order(program, visitor->program_post_order, visitor);
+
 }

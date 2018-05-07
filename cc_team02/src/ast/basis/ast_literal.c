@@ -57,9 +57,11 @@ struct mCc_ast_literal *mCc_ast_new_literal_string(char *value)
 
 void mCc_ast_delete_literal(struct mCc_ast_literal *literal)
 {
+	assert(literal);
+
 	if (literal->type == MCC_AST_DATA_TYPE_STRING) {
 		free(literal->s_value);
 	}
-	assert(literal);
+
 	free(literal);
 }

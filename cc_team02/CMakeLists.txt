@@ -104,7 +104,7 @@ add_subdirectory(src)
 
 # link libs with executables
 add_executable(mCc src/bin/mCc.c)
-target_link_libraries(mCc mCc_lib mCc_symtab)
+target_link_libraries(mCc mCc_lib)
 
 add_executable(mC_to_dot src/bin/mC_to_dot.c)
 target_link_libraries(mC_to_dot mCc_lib)
@@ -131,23 +131,24 @@ include(GoogleTest)
 # is it that much simple? googleTest is already a module => https://cmake.org/cmake/help/v3.9/module/GoogleTest.html
 
 #create list: add all tests manually here (file-names without *.cpp)
-set(unit_test_list "parser" "builder" "printer")
+set(unit_test_list "parser" "builder" "printer" "symtab" "validator" "checks")
 
 #================================================================ valgrind
 
 # custom test-target to enforce a rebuild (see https://stackoverflow.com/questions/733475/cmake-ctest-make-test-doesnt-build-tests)
 # add -V for verbose-info on tests
-add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND})
+add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND} --output-on-failure)
 
 # enabling valgrind => target test_memcheck
 # taken from:
 # https://stackoverflow.com/questions/40325957/how-do-i-add-valgrind-tests-to-my-cmake-test-target
 add_custom_target(build_and_test_memcheck
+	COMMAND echo "Removing old log-files..."
+	COMMAND rm -r ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log
     COMMAND ${CMAKE_CTEST_COMMAND} 
         --force-new-ctest-process --test-action memcheck
     # by having 100 unit-tests, a cat of such a number may not senseful => check log-file instead
-    #COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
-    COMMAND echo "Memcheck-log written to ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
+    #COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"    
     )
 
 # Is this enough or should there be a custom valgring-target?
@@ -172,6 +173,7 @@ add_dependencies(integration_test mCc)
 #=============================================================== gtest-execution
 
 foreach(entry_name ${unit_test_list})
+	
 	# build and link
 	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)
 	target_link_libraries(${entry_name}_test_exec mCc_lib mCc_test_utils gtest_main)
@@ -179,7 +181,7 @@ foreach(entry_name ${unit_test_list})
 	# add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 	# native gtest support since cmake 3.9?
 	gtest_add_tests(TARGET ${entry_name}_test_exec
-					EXTRA_ARGS ""
+					EXTRA_ARGS "-V"
 					TEST_PREFIX "mCc_test_"
 					TEST_SUFFIX ".tst"
 					TEST_LIST "list_of_exec_tests")

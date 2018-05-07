@@ -27,6 +27,9 @@ struct mCc_ast_statement {
 
 	struct mCc_ast_statement *next_statement;
 
+	// for semantic checks
+	struct mCc_validation_status_result *semantic_error;
+
 	union {
 
 		// if
