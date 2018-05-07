@@ -188,6 +188,12 @@ static bool binary_op_is_numerical_only(enum mCc_ast_binary_op op)
 	       op == MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN;
 }
 
+static bool binary_op_returns_non_bool(enum mCc_ast_binary_op op)
+{
+	return op == MCC_AST_BINARY_OP_ADD || op == MCC_AST_BINARY_OP_SUB ||
+	       op == MCC_AST_BINARY_OP_MUL || op == MCC_AST_BINARY_OP_DIV;
+}
+
 static bool type_is_numerical(enum mCc_ast_data_type type)
 {
 	return type == MCC_AST_DATA_TYPE_INT || type == MCC_AST_DATA_TYPE_FLOAT;
@@ -201,7 +207,7 @@ static void assign_type(struct mCc_ast_expression *expression,
 	 * just set the type: numerical ops keeps it, boolean ops change
 	 * it to bool
 	 */
-	if (binary_op_is_numerical_only(binary_op)) {
+	if (binary_op_returns_non_bool(binary_op)) {
 		expression->data_type = type;
 	} else {
 		expression->data_type = MCC_AST_DATA_TYPE_BOOL;

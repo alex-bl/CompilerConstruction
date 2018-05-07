@@ -21,7 +21,7 @@
 // is done preorder => needs symtab_info
 static int get_expected_arg_count(struct mCc_symbol_table_node *symtab_info)
 {
-	assert(symtab_info->next_parameter);
+	assert(symtab_info);
 
 	// is a function-identifier
 	struct mCc_symtab_parameter_ref *next_param = symtab_info->next_parameter;
