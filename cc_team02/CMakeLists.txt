@@ -132,7 +132,6 @@ include(GoogleTest)
 
 #create list: add all tests manually here (file-names without *.cpp)
 set(unit_test_list "parser" "builder" "printer" "symtab" "validator" "checks")
-#set(unit_test_list "checks")
 
 #================================================================ valgrind
 
@@ -144,11 +143,12 @@ add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND} --output-on-failure)
 # taken from:
 # https://stackoverflow.com/questions/40325957/how-do-i-add-valgrind-tests-to-my-cmake-test-target
 add_custom_target(build_and_test_memcheck
+	COMMAND echo "Removing old log-files..."
+	COMMAND rm -r ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log
     COMMAND ${CMAKE_CTEST_COMMAND} 
         --force-new-ctest-process --test-action memcheck
     # by having 100 unit-tests, a cat of such a number may not senseful => check log-file instead
-    #COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
-    COMMAND echo "Memcheck-log written to ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
+    #COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"    
     )
 
 # Is this enough or should there be a custom valgring-target?

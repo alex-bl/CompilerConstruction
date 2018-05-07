@@ -44,6 +44,29 @@ handle_identifier(struct mCc_ast_identifier *identifier,
 	info_holder->error_occurred = true;
 }
 
+static struct mCc_symtab_parameter_ref *
+deep_copy_param_ref(struct mCc_symbol_table_node *symtab_info)
+{
+	struct mCc_symtab_parameter_ref *next_param = symtab_info->next_parameter;
+	struct mCc_symtab_parameter_ref *new_ref = NULL;
+	struct mCc_symtab_parameter_ref *tmp_ref = NULL;
+
+	if (next_param) {
+		tmp_ref = mCc_symtab_new_parameter_ref(next_param->identifier);
+		new_ref = tmp_ref;
+		next_param = next_param->next_parameter;
+	}
+
+	while (next_param) {
+		tmp_ref->next_parameter =
+		    mCc_symtab_new_parameter_ref(next_param->identifier);
+		next_param = next_param->next_parameter;
+		tmp_ref = tmp_ref->next_parameter;
+	}
+
+	return new_ref;
+}
+
 static void link_symtab_info(struct mCc_ast_identifier *identifier,
                              struct mCc_symbol_table_node *symtab_info)
 {
@@ -57,6 +80,11 @@ static void link_symtab_info(struct mCc_ast_identifier *identifier,
 			log_error("Memcpy failed: Could not link symtab-info to "
 			          "identifier '%'",
 			          identifier->identifier_name);
+		} else {
+			log_debug("Deep copy on parameter-refs for function '%s'",
+			          identifier->identifier_name);
+			identifier->symtab_info->next_parameter =
+			    deep_copy_param_ref(symtab_info);
 		}
 	}
 }

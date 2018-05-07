@@ -61,7 +61,7 @@ TEST(Validator, NewValidationStatusResult)
 	ASSERT_TRUE(validation_result != NULL);
 	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	          validation_result->validation_status);
-	ASSERT_STREQ(strdup("Invalid type"), validation_result->error_msg);
+	ASSERT_STREQ("Invalid type", validation_result->error_msg);
 	EXPECT_EQ(NULL, validation_result->next);
 
 	mCc_validator_delete_validation_result(validation_result);

@@ -141,7 +141,7 @@ TEST(SemanticChecks, InvalidPrimitiveAssignment)
 
 TEST(SemanticChecks, InvalidArrayAssignment)
 {
-	const char *simple_main = "void main(){int[10] a; a[3]=\"2\";}";
+	const char *simple_main = "void main(){int[10] a; a[3] =\"2\";}";
 	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
 
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);

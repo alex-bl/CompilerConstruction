@@ -1,4 +1,5 @@
 #include "mCc/symtab/symbol_table.h"
+#include "mCc/symtab/symtab_node.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -109,15 +110,26 @@ mCc_symtab_lookup(struct mCc_symbol_table *symbol_table,
 void mCc_symtab_delete_symbol_table(struct mCc_symbol_table *symbol_table)
 {
 	assert(symbol_table);
+
 	/*
-	 * TODO: free all nodes
-	 * Is it already done by map_deinit? => check this also
-	 *
+	 * iterate over all nodes and free them maunally because map_deinit(..) just
+	 * frees its internal structure
 	 */
+	mCc_symbol_table_map_t map = symbol_table->table;
+	const char *key;
+	map_iter_t iter = map_iter(&map);
+
+	while ((key = map_next(&map, &iter))) {
+		struct mCc_symbol_table_node **actual_node_result = map_get(&map, key);
+		struct mCc_symbol_table_node *actual_node = *actual_node_result;
+		// manual free because map_deinit does not touch the values
+		mCc_symtab_delete_symtab_node(actual_node);
+	}
 
 	/*
 	 * just free "current" symbol-table
 	 * do not touch parent!
 	 */
-	map_deinit(&(symbol_table->table));
+	map_deinit(&map);
+	free(symbol_table);
 }
