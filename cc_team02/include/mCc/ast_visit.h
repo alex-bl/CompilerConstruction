@@ -39,6 +39,10 @@
 	visit_if((visitor)->order == MCC_AST_VISIT_POST_ORDER, node, callback, \
 	         visitor)
 
+#define visit_if_both_order(node, callback, visitor) \
+	visit_if((visitor)->order == MCC_AST_VISIT_BOTH_ORDER, node, callback, \
+	         visitor)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,6 +55,7 @@ enum mCc_ast_visit_traversal {
 enum mCc_ast_visit_order {
 	MCC_AST_VISIT_PRE_ORDER,
 	MCC_AST_VISIT_POST_ORDER,
+	MCC_AST_VISIT_BOTH_ORDER
 };
 
 /* Callbacks */
@@ -77,7 +82,7 @@ typedef void (*mCc_ast_visit_program_cb)(struct mCc_ast_program *, void *);
 
 typedef void (*mCc_ast_visit_statement_cb)(struct mCc_ast_statement *, void *);
 
-//scope-handler
+// scope-handler
 typedef void (*mCc_ast_scope_cb)(void *);
 
 struct mCc_ast_visitor {
@@ -92,11 +97,19 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_expression_cb expression_literal;
 	mCc_ast_visit_expression_cb expression_binary_op;
 	mCc_ast_visit_expression_cb expression_parenth;
-
 	mCc_ast_visit_expression_cb expression_function_call;
 	mCc_ast_visit_expression_cb expression_identifier;
 	mCc_ast_visit_expression_cb expression_array_identifier;
 	mCc_ast_visit_expression_cb expression_unary_op;
+
+	mCc_ast_visit_expression_cb expression_post_order;
+	mCc_ast_visit_expression_cb expression_literal_post_order;
+	mCc_ast_visit_expression_cb expression_binary_op_post_order;
+	mCc_ast_visit_expression_cb expression_parenth_post_order;
+	mCc_ast_visit_expression_cb expression_function_call_post_order;
+	mCc_ast_visit_expression_cb expression_identifier_post_order;
+	mCc_ast_visit_expression_cb expression_array_identifier_post_order;
+	mCc_ast_visit_expression_cb expression_unary_op_post_order;
 
 	// literal
 	mCc_ast_visit_literal_cb literal;
@@ -105,10 +118,20 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_literal_cb literal_bool;
 	mCc_ast_visit_literal_cb literal_string;
 
+	mCc_ast_visit_literal_cb literal_post_order;
+	mCc_ast_visit_literal_cb literal_int_post_order;
+	mCc_ast_visit_literal_cb literal_float_post_order;
+	mCc_ast_visit_literal_cb literal_bool_post_order;
+	mCc_ast_visit_literal_cb literal_string_post_order;
+
 	// assignment
 	mCc_ast_visit_assignment_cb assignment;
 	mCc_ast_visit_assignment_cb assignment_primitive;
 	mCc_ast_visit_assignment_cb assignment_array;
+
+	mCc_ast_visit_assignment_cb assignment_post_order;
+	mCc_ast_visit_assignment_cb assignment_primitive_post_order;
+	mCc_ast_visit_assignment_cb assignment_array_post_order;
 
 	// declaration
 	// use this for preorder
@@ -117,10 +140,19 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_declaration_cb declaration_primitive;
 	mCc_ast_visit_declaration_cb declaration_array;
 
+	mCc_ast_visit_declaration_cb declaration_post_order;
+	mCc_ast_visit_declaration_cb declaration_type_post_order;
+	mCc_ast_visit_declaration_cb declaration_primitive_post_order;
+	mCc_ast_visit_declaration_cb declaration_array_post_order;
+
 	// function
 	mCc_ast_visit_function_call_cb function_call;
 	mCc_ast_visit_function_def_cb function_def;
 	mCc_ast_visit_function_def_cb function_def_type;
+
+	mCc_ast_visit_function_call_cb function_call_post_order;
+	mCc_ast_visit_function_def_cb function_def_post_order;
+	mCc_ast_visit_function_def_cb function_def_type_post_order;
 
 	/* at enter scope => manage symtab, add declarations*/
 	mCc_ast_scope_cb function_def_enter_scope;
@@ -132,7 +164,7 @@ struct mCc_ast_visitor {
 
 	// program
 	mCc_ast_visit_program_cb program;
-
+	mCc_ast_visit_program_cb program_post_order;
 	// statement
 	mCc_ast_visit_statement_cb statement;
 	mCc_ast_visit_statement_cb statement_if;
@@ -141,6 +173,14 @@ struct mCc_ast_visitor {
 	mCc_ast_visit_statement_cb statement_declaration;
 	mCc_ast_visit_statement_cb statement_assignment;
 	mCc_ast_visit_statement_cb statement_expression;
+
+	mCc_ast_visit_statement_cb statement_post_order;
+	mCc_ast_visit_statement_cb statement_if_post_order;
+	mCc_ast_visit_statement_cb statement_while_post_order;
+	mCc_ast_visit_statement_cb statement_return_post_order;
+	mCc_ast_visit_statement_cb statement_declaration_post_order;
+	mCc_ast_visit_statement_cb statement_assignment_post_order;
+	mCc_ast_visit_statement_cb statement_expression_post_order;
 
 	/* at enter scope => manage symtab, add declarations*/
 	mCc_ast_scope_cb statement_if_enter_scope;

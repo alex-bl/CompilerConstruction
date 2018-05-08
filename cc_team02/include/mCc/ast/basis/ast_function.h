@@ -19,12 +19,13 @@ struct mCc_ast_function_def {
 	/* MCC_AST_IDENTIFIER */
 	struct mCc_ast_identifier *identifier;
 	enum mCc_ast_data_type return_type;
-	/* Just a helper */
+
 	struct mCc_ast_statement *first_statement;
-
 	struct mCc_ast_declaration *first_parameter;
-
 	struct mCc_ast_function_def *next_function_def;
+
+	// for semantic checks
+	struct mCc_validation_status_result *semantic_error;
 };
 
 struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
@@ -48,6 +49,9 @@ struct mCc_ast_function_call {
 
 	/* MCC_AST_EXPRESSION*/
 	struct mCc_ast_expression *first_argument;
+
+	// for semantic checks
+	struct mCc_validation_status_result *semantic_error;
 };
 
 struct mCc_ast_function_call *

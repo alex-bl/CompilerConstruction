@@ -20,6 +20,9 @@ struct mCc_ast_assignment {
 	struct mCc_ast_identifier *identifier;
 	enum mCc_ast_assignment_type assignment_type;
 
+	// for semantic checks
+	struct mCc_validation_status_result *semantic_error;
+
 	union {
 		/* MCC_AST_EXPRESSION */
 		struct mCc_ast_expression *assigned_expression;
@@ -43,6 +46,9 @@ mCc_ast_new_array_assignment(struct mCc_ast_identifier *identifier,
                              struct mCc_ast_expression *value);
 
 void mCc_ast_delete_assignment(struct mCc_ast_assignment *name);
+
+struct mCc_ast_expression *
+mCc_ast_get_expression(struct mCc_ast_assignment *assignment);
 
 #ifdef __cplusplus
 }

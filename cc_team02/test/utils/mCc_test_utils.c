@@ -4,10 +4,9 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "config.h"
 #include "mCc/ast_print.h"
 
-#define DOT_OUTPUT_DIR "DOT_"
-#define DOT_FILE_SUFFIX ".dot"
 #define NAME_SIZE 64
 
 /**
@@ -22,7 +21,7 @@
  */
 void build_file_name(char buffer[], size_t size, const char *file_name)
 {
-	snprintf(buffer, size, "%s%s%s", DOT_OUTPUT_DIR, file_name,
+	snprintf(buffer, size, "%s%s%s%s", DOT_OUTPUT_DIR, DOT_PREFIX, file_name,
 	         DOT_FILE_SUFFIX);
 }
 
@@ -187,6 +186,14 @@ mCc_test_build_test_declaration(const char *identifier,
 	    type, mCc_test_build_const_test_identifier(identifier));
 }
 
+struct mCc_ast_declaration *
+mCc_test_build_test_array_declaration(const char *identifier,
+                                      enum mCc_ast_data_type type, size_t size)
+{
+	return mCc_ast_new_array_declaration(
+	    type, mCc_test_build_const_test_identifier(identifier), size);
+}
+
 struct mCc_ast_assignment *
 mCc_test_build_test_assignment(const char *identifier, int value)
 {
@@ -202,5 +209,5 @@ mCc_test_build_test_function_def(enum mCc_ast_data_type return_type,
 {
 	return mCc_ast_new_non_parameterized_function_def(
 	    mCc_test_build_const_test_identifier(identifier), return_type,
-	    (return_expr ? mCc_ast_new_expression_statement(return_expr) : NULL));
+	    (return_expr ? mCc_ast_new_return_statement(return_expr) : NULL));
 }

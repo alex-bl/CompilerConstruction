@@ -10,6 +10,10 @@ bison_target(parser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c COMPILE_FL
 
 add_flex_bison_dependency(scanner parser)
 
+# helper-functions
+add_library(mCc_parser_helper SHARED general/parser_helper.c)
+add_library(mCc_print_helper SHARED general/print_helper.c)
+
 # basic ast
 add_library(mCc_ast SHARED  ast/basis/ast_assignment.c
 							ast/basis/ast_declaration.c
@@ -62,10 +66,17 @@ add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 							symtab/handler/symtab_handle_function.c
 							symtab/handler/symtab_handle_identifier.c
 							symtab/handler/symtab_handle_declaration.c
+							symtab/handler/symtab_handle_assignment.c
+							symtab/handler/symtab_handle_expression.c							
+							symtab/handler/symtab_handle_program.c																					
+							symtab/handler/symtab_handle_statement.c																					
 							symtab/symbol_table.c
-							symtab/symtab_build.c
+							symtab/symtab_check.c
 							symtab/validator/validator.c
-							symtab/validator/base_validator.c)
+							symtab/validator/validator_helper.c)
+
+add_library(mCc_semantic_error_print SHARED symtab/symtab_error_print.c
+							symtab/print/error_printer.c)
 												
 # to use strdup => global compile-flag?
 set_property(TARGET mCc_symtab PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
@@ -78,5 +89,5 @@ add_library(mCc_lib SHARED ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})
 set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
 # link remaining
-target_link_libraries(mCc_lib mCc_tac mCc_print mCc_visit mCc_ast)
+target_link_libraries(mCc_lib mCc_semantic_error_print mCc_tac mCc_print mCc_ast mCc_symtab mCc_visit mCc_parser_helper mCc_print_helper)
 

@@ -74,6 +74,10 @@ struct mCc_ast_declaration *
 mCc_test_build_test_declaration(const char *identifier,
                                 enum mCc_ast_data_type type);
 
+struct mCc_ast_declaration *
+mCc_test_build_test_array_declaration(const char *identifier,
+                                      enum mCc_ast_data_type type, size_t size);
+
 struct mCc_ast_assignment *
 mCc_test_build_test_assignment(const char *identifier, int value);
 

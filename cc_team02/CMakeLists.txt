@@ -64,19 +64,31 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.21.supp.in"
   "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
   )
+
+# configure build-ins
+configure_file(
+	"${PROJECT_SOURCE_DIR}/data/buildins.mC.in"
+	"${CMAKE_BINARY_DIR}/data/buildins.mC"
+)
+
+configure_file(
+	"${PROJECT_SOURCE_DIR}/config/README.md.in"
+	"${CMAKE_BINARY_DIR}/test/output/README.md"
+)
    
 #=================================================================== headers
-  
+include_directories(${CMAKE_CURRENT_BINARY_DIR}) 
+# config
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/config)  
 # add the binary tree to the search path for include files
 # so that we will find the headers
-include_directories("${PROJECT_SOURCE_DIR}/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/include")
 # include test-utils-header also => separated from source
-include_directories("${PROJECT_SOURCE_DIR}/test/include" ${CMAKE_CURRENT_BINARY_DIR})
-
+include_directories("${PROJECT_SOURCE_DIR}/test/include")
 # external logging-lib
-include_directories("${PROJECT_SOURCE_DIR}/external/log/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/external/log/include")
 # external hash-map
-include_directories("${PROJECT_SOURCE_DIR}/external/map/include" ${CMAKE_CURRENT_BINARY_DIR})
+include_directories("${PROJECT_SOURCE_DIR}/external/map/include")
 
 #=================================================================== external-src
 
@@ -92,7 +104,7 @@ add_subdirectory(src)
 
 # link libs with executables
 add_executable(mCc src/bin/mCc.c)
-target_link_libraries(mCc mCc_lib mCc_symtab)
+target_link_libraries(mCc mCc_lib)
 
 add_executable(mC_to_dot src/bin/mC_to_dot.c)
 target_link_libraries(mC_to_dot mCc_lib)
@@ -119,23 +131,24 @@ include(GoogleTest)
 # is it that much simple? googleTest is already a module => https://cmake.org/cmake/help/v3.9/module/GoogleTest.html
 
 #create list: add all tests manually here (file-names without *.cpp)
-set(unit_test_list "parser" "builder" "printer")
+set(unit_test_list "parser" "builder" "printer" "symtab" "validator" "checks")
 
 #================================================================ valgrind
 
 # custom test-target to enforce a rebuild (see https://stackoverflow.com/questions/733475/cmake-ctest-make-test-doesnt-build-tests)
 # add -V for verbose-info on tests
-add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND})
+add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND} --output-on-failure)
 
 # enabling valgrind => target test_memcheck
 # taken from:
 # https://stackoverflow.com/questions/40325957/how-do-i-add-valgrind-tests-to-my-cmake-test-target
 add_custom_target(build_and_test_memcheck
+	COMMAND echo "Removing old log-files..."
+	COMMAND rm -rf ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log
     COMMAND ${CMAKE_CTEST_COMMAND} 
         --force-new-ctest-process --test-action memcheck
     # by having 100 unit-tests, a cat of such a number may not senseful => check log-file instead
-    #COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
-    COMMAND echo "Memcheck-log written to ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"
+    #COMMAND cat "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log"    
     )
 
 # Is this enough or should there be a custom valgring-target?
@@ -160,6 +173,7 @@ add_dependencies(integration_test mCc)
 #=============================================================== gtest-execution
 
 foreach(entry_name ${unit_test_list})
+	
 	# build and link
 	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)
 	target_link_libraries(${entry_name}_test_exec mCc_lib mCc_test_utils gtest_main)
@@ -167,7 +181,7 @@ foreach(entry_name ${unit_test_list})
 	# add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 	# native gtest support since cmake 3.9?
 	gtest_add_tests(TARGET ${entry_name}_test_exec
-					EXTRA_ARGS ""
+					EXTRA_ARGS "-V"
 					TEST_PREFIX "mCc_test_"
 					TEST_SUFFIX ".tst"
 					TEST_LIST "list_of_exec_tests")
@@ -183,27 +197,29 @@ foreach(entry_name ${unit_test_list})
 endforeach(entry_name)
 
 #================================================================= benchmark
+# currently not used!
 
 # custom benchmark-target => run all benchmark-binaries within shell-script
-add_custom_target(run_benchmarks
-    COMMAND ${CMAKE_BINARY_DIR}/utils/run_benchmarks)
+#add_custom_target(run_benchmarks
+#    COMMAND ${CMAKE_BINARY_DIR}/utils/run_benchmarks)
 
-add_subdirectory("benchmark" "${GBENCHMARK_DOWNLOAD_DESTINATION}")
+# exclude from build, because currently not used
+# add_subdirectory("benchmark" "${GBENCHMARK_DOWNLOAD_DESTINATION}")
 # do the same as for testing, but with benchmark
-set(my_benchmark_list "just_try")
+# set(my_benchmark_list "just_try")
 
-foreach(entry_name ${my_benchmark_list})
+#foreach(entry_name ${my_benchmark_list})
 	# build and link
-	add_executable(${entry_name}_benchmark_exec benchmark/${entry_name}.cpp)	
+#	add_executable(${entry_name}_benchmark_exec benchmark/${entry_name}.cpp)	
 	# TODO: used the correct binary?
 	# This is actually just a test-file: If using non-test-files also link the mCc_binaries
-	target_link_libraries(${entry_name}_benchmark_exec benchmark)
+#	target_link_libraries(${entry_name}_benchmark_exec benchmark)
 	# copy executables to bench-directory
-	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
-		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/benchmark
-		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/benchmark)
-	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
-endforeach(entry_name)
+#	set_target_properties(${entry_name}_benchmark_exec PROPERTIES
+#		RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/benchmark
+#		RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/benchmark)
+#	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
+#endforeach(entry_name)
 
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-

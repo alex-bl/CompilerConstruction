@@ -1,11 +1,15 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "mCc/ast.h"
-#include "mCc/parser.h"
-#include "mCc/symtab_build.h"
+#include "config.h"
 #include "log.h"
+#include "mCc/ast.h"
+#include "mCc/general/parser_helper.h"
+#include "mCc/parser.h"
+#include "mCc/symtab/symtab_error_print.h"
+#include "mCc/symtab_check.h"
 
 void print_usage(const char *prg)
 {
@@ -33,6 +37,20 @@ int main(int argc, char *argv[])
 	}
 
 	struct mCc_ast_program *prog = NULL;
+	struct mCc_ast_program *buildins = NULL;
+
+	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
+	FILE *out_put = stdout;
+
+	/* deal with build-ins */
+	{
+		struct mCc_parser_result buildins_parsed =
+		    mCc_parser_parse_file(buildin_file);
+		fclose(buildin_file);
+
+		buildins = buildins_parsed.program;
+		buildins->is_library = true;
+	}
 
 	/* parsing phase */
 	{
@@ -45,16 +63,22 @@ int main(int argc, char *argv[])
 			return EXIT_FAILURE;
 		}
 		prog = result.program;
+
+		// include buildins
+		mCc_parser_include_functions(buildins, prog);
 	}
 
 	/* build symbol-table */
 	{
-		struct mCc_validation_status_result *validation_result =
-		    mCc_symtab_build_program(prog);
-		/* print */
-		mCc_validator_print_validation_result(validation_result, stdout);
-		/* delete validation-result */
-		mCc_validator_delete_validation_result(validation_result);
+		bool semantic_check_successfull =
+		    mCc_symtab_perform_semantic_checks(prog);
+
+		if (!semantic_check_successfull) {
+			fprintf(out_put, "Semantic errors detected:\n");
+			fprintf(out_put, "==============================\n");
+			mCc_symtab_print_semantic_errors(prog, out_put);
+			fprintf(out_put, "==============================\n");
+		}
 	}
 
 	/*    TODO
@@ -67,6 +91,7 @@ int main(int argc, char *argv[])
 
 	/* cleanup */
 	mCc_ast_delete_program(prog);
+	mCc_ast_delete_program(buildins);
 
 	return EXIT_SUCCESS;
 }

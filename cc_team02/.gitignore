@@ -3,7 +3,10 @@
 /subprojects/*
 /doc/*
 
+
 !/subprojects/*.wrap
 !/subprojects/README.md
 !/doc/examples/*
 !/doc/*.md
+
+/.cproject

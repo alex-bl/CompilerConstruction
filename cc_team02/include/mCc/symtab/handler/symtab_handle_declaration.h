@@ -7,12 +7,11 @@
 extern "C" {
 #endif
 
-void mCc_symtab_handle_declaration_primitive(struct mCc_ast_declaration *declaration,
-                                   void *data);
+void mCc_symtab_handle_declaration_primitive_pre_order(
+    struct mCc_ast_declaration *declaration, void *data);
 
-void mCc_symtab_handle_declaration_array(struct mCc_ast_declaration *declaration,
-                                   void *data);
-
+void mCc_symtab_handle_declaration_array_pre_order(
+    struct mCc_ast_declaration *declaration, void *data);
 
 #ifdef __cplusplus
 }

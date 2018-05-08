@@ -1,11 +1,9 @@
 #ifndef MCC_SYMBOL_TABLE_H
 #define MCC_SYMBOL_TABLE_H
 
-#include "mCc/ast/basis/ast_declaration.h"
-#include "mCc/ast/basis/ast_function.h"
-#include "mCc/ast/basis/ast_identifier.h"
 #include "mCc/symtab/symtab_node.h"
 #include "mCc/symtab/symtab_types.h"
+#include "mCc/symtab/symtab_node_types.h"
 
 #include <stdbool.h>
 
@@ -16,17 +14,6 @@ extern "C" {
 #endif
 
 /**
- * Creates a new parameter-reference
- *
- * @param identifier_name
- *
- * @return
- * 	A reference to a new parameter_ref or NULL in error-case
- */
-struct mCc_symtab_parameter_ref *
-mCc_symtab_new_parameter_ref(struct mCc_ast_identifier *identifier);
-
-/**
  * Creates and initializes a scope-holder struct
  *
  * @return
@@ -35,48 +22,17 @@ mCc_symtab_new_parameter_ref(struct mCc_ast_identifier *identifier);
 struct mCc_ast_scope_holder *mCc_symtab_create_and_init_scope_holder();
 
 /**
- * Creates a new symbol-table node out of a declaration
- *
- * @param declaration
- * 		The ast-element of declaration
- * @return
- * 		A new symbol-table-node element
- */
-struct mCc_symbol_table_node *
-mCc_symtab_new_declaration_node(struct mCc_ast_declaration *declaration);
-
-/**
- * Creates a new symbol-table node out of a declaration (for parameter)
- *
- * @param declaration
- * 		The ast-element of declaration
- * @return
- * 		A new symbol-table-node element
- */
-struct mCc_symbol_table_node *mCc_symtab_new_parameter_declaration_node(
-    struct mCc_ast_declaration *declaration);
-
-/**
- * Creates a new symbol-table node out of a function def
- *
- * @param function_def
- * 		The ast-element of function_def
- * @return
- * 		A new symbol-table-node element
- */
-struct mCc_symbol_table_node *
-mCc_symtab_new_function_def_node(struct mCc_ast_function_def *function_def);
-
-/**
  * Creates a new symbol-table
  *
  * @param parent
  * 		The parent-symbol-table or NULL if it is already the top-table
+ * @param scope_level
+ * 		The scope level
  * @return
  * 		A new symbol-table
  */
 struct mCc_symbol_table *
-mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent);
+mCc_symtab_new_symbol_table(struct mCc_symbol_table *parent, int scope_level);
 
 /**
  * Inserts a node into the symbol-table
@@ -103,17 +59,6 @@ void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
  */
 void mCc_symtab_insert_var_node(struct mCc_symbol_table *symbol_table,
                                 void *declaration);
-
-/**
- * Inserts a parameter node into the symbol-table. More convenient
- *
- * @param symbol_table
- * 		The symbol-table
- * @param declaration
- * 		The declaration (ast-element)
- */
-void mCc_symtab_insert_param_node(struct mCc_symbol_table *symbol_table,
-                                  struct mCc_ast_declaration *declaration);
 
 /**
  * Inserts a node into the symbol-table. More convenient if adding an
