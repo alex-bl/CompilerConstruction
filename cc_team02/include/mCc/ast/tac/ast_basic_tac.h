@@ -10,6 +10,31 @@
 extern "C" {
 #endif
 
+
+/*
+ * Types of TAC:
+ * Assignment statement: x:= y op z
+ * Assignment statement: x:= op z
+ * copy statement: x:= y
+ * Unconditional jump: goto L
+ * Conditional jump: if x relop y goto L
+ * Procedural call: param x call p return y
+ * Return statement: return y
+ * Indexing statement: x:=y[i] or y[i]:=x
+ * Address assignment: x:=&y
+ */
+
+enum mCc_tac_operation {
+	MCC_TAC_OPARATION_JUMP,
+	MCC_TAC_OPARATION_JUMPFALSE,
+	MCC_TAC_OPARATION_ADDITION,
+	MCC_TAC_OPARATION_SUBTRACTION,
+	MCC_TAC_OPARATION_LABLE,
+	MCC_TAC_OPARATION_GREATERTHAN,
+	MCC_TAC_OPARATION_LESSTHAN,
+	MCC_TAC_OPARATION_ASSIGN,
+};
+
 void tac_begin(FILE *out);
 
 void tac_end(FILE *out);
