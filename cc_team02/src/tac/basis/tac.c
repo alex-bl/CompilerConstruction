@@ -15,6 +15,7 @@ static struct mCc_ast_visitor tac_visitor(FILE *out)
 
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
 		.order = MCC_AST_VISIT_PRE_ORDER,
+		//replace out with data structure for tac
 		.userdata = out,
 
 		//.expression
@@ -77,47 +78,6 @@ static struct mCc_ast_visitor tac_visitor(FILE *out)
 	};
 }
 
-void mCc_ast_tac_assignment(FILE *out,
-                                  struct mCc_ast_assignment *assignment)
-{
-	assert(out);
-	assert(assignment);
-
-	tac_begin(out);
-
-	struct mCc_ast_visitor visitor = tac_visitor(out);
-	mCc_ast_visit_assignment(assignment, &visitor);
-
-	tac_end(out);
-}
-
-void mCc_ast_tac_declaration(FILE *out,
-                                   struct mCc_ast_declaration *declaration)
-{
-	assert(out);
-	assert(declaration);
-
-	tac_begin(out);
-
-	struct mCc_ast_visitor visitor = tac_visitor(out);
-	mCc_ast_visit_declaration(declaration, &visitor);
-
-	tac_end(out);
-}
-
-void mCc_ast_tac_statement(FILE *out, struct mCc_ast_statement *statement)
-{
-	assert(out);
-	assert(statement);
-
-	tac_begin(out);
-
-	struct mCc_ast_visitor visitor = tac_visitor(out);
-	mCc_ast_visit_statement(statement, &visitor);
-
-	tac_end(out);
-}
-
 /*
  * should be the "top"
  * is "global"
@@ -135,71 +95,3 @@ void mCc_ast_tac_program(FILE *out, struct mCc_ast_program *program)
 	tac_end(out);
 }
 
-void mCc_ast_tac_literal(FILE *out, struct mCc_ast_literal *literal)
-{
-	assert(out);
-	assert(literal);
-
-	tac_begin(out);
-
-	struct mCc_ast_visitor visitor = tac_visitor(out);
-	mCc_ast_visit_literal(literal, &visitor);
-
-	tac_end(out);
-}
-
-void mCc_ast_tac_identifier(FILE *out,
-                                  struct mCc_ast_identifier *identifier)
-{
-	assert(out);
-	assert(identifier);
-
-	tac_begin(out);
-
-	struct mCc_ast_visitor visitor = tac_visitor(out);
-	mCc_ast_visit_identifier(identifier, &visitor);
-
-	tac_end(out);
-}
-
-void mCc_ast_tac_function_def(FILE *out,
-                                    struct mCc_ast_function_def *function_def)
-{
-	assert(out);
-	assert(function_def);
-
-	tac_begin(out);
-
-	struct mCc_ast_visitor visitor = tac_visitor(out);
-	mCc_ast_visit_function_def(function_def, &visitor);
-
-	tac_end(out);
-}
-
-void mCc_ast_tac_function_call(
-    FILE *out, struct mCc_ast_function_call *function_call)
-{
-	assert(out);
-	assert(function_call);
-
-	tac_begin(out);
-
-	struct mCc_ast_visitor visitor = tac_visitor(out);
-	mCc_ast_visit_function_call(function_call, &visitor);
-
-	tac_end(out);
-}
-
-void mCc_ast_tac_expression(FILE *out,
-                                  struct mCc_ast_expression *expression)
-{
-	assert(out);
-	assert(expression);
-
-	tac_begin(out);
-
-	struct mCc_ast_visitor visitor = tac_visitor(out);
-	mCc_ast_visit_expression(expression, &visitor);
-
-	tac_end(out);
-}

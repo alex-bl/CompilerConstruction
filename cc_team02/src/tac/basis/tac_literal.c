@@ -1,9 +1,9 @@
-#include "mCc/ast/tac/ast_tac_literal.h"
+#include "mCc/tac/basis/tac_literal.h"
 
 #include <assert.h>
 #include <stdlib.h>
 
-#include "mCc/ast/tac/ast_basic_tac.h"
+#include "mCc/tac/basis/basic_tac.h"
 
 void mCc_tac_literal_int(struct mCc_ast_literal *literal, void *data)
 {
