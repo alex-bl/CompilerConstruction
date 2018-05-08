@@ -2,7 +2,7 @@
 #define MCC_AST_BASIC_TAC_H
 
 #include <stdio.h>
-#include "../basis/ast_data_type.h"
+#include "../../ast/basis/ast_data_type.h"
 
 #define LABEL_SIZE 64
 
