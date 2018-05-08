@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "mCc/tac/basis/ast_expression.h"
+#include "mCc/ast/basis/ast_expression.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,15 +1,15 @@
-#include "../../../include/mCc/tac/basis/tac_expression.h"
+#include "mCc/tac/basis/tac_expression.h"
 
 #include <assert.h>
 
-#include "../../../include/mCc/tac/basis/basic_tac.h"
+#include "mCc/tac/basis/basic_tac.h"
 
-const char *mCc_ast_tac_binary_op(enum mCc_ast_binary_op op)
+const char *mCc_tac_binary_op(enum mCc_ast_binary_op op)
 {
 
 }
 
-const char *mCc_ast_tac_unary_op(enum mCc_ast_unary_op op)
+const char *mCc_tac_unary_op(enum mCc_ast_unary_op op)
 {
 
 }
