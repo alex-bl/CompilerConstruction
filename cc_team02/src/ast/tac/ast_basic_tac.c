@@ -7,10 +7,10 @@
 
 
 
-struct tac_elmenet *tac_elmenet(enum mCc_tac_operation *operation, struct mCc_ast_identifier *argument1,
+struct mCc_tac_elmenet *tac_elmenet(enum mCc_tac_operation *operation, struct mCc_ast_identifier *argument1,
 		struct mCc_ast_identifier *argument2, struct mCc_ast_identifier *result)
 {
-	struct tac_elmenet *tac_elmenet = malloc(sizeof(*tac_elmenet));
+	struct mCc_tac_elmenet *tac_elmenet = malloc(sizeof(tac_elmenet));
 	if (!tac_elmenet) {
 		return NULL;
 	}
@@ -22,7 +22,7 @@ struct tac_elmenet *tac_elmenet(enum mCc_tac_operation *operation, struct mCc_as
 }
 
 
-void mCc_tac_element_delete(struct tac_elmenet *tac_elmenet)
+void mCc_tac_element_delete(struct mCc_tac_elmenet *tac_elmenet)
 {
 	assert(tac_elmenet);
 
@@ -33,12 +33,19 @@ void mCc_tac_element_delete(struct tac_elmenet *tac_elmenet)
 	free(tac_elmenet);
 }
 
+const char *tac_data_type(enum mCc_ast_data_type type)
+{
+	assert(type);
+
+	return "unknown type";
+}
+
 /*void tac_print() {
 
 	printf();
 }*/
 
-void tac_begin(FILE *out)
+/*void tac_begin(FILE *out)
 {
 	assert(out);
 
@@ -76,11 +83,5 @@ void tac_edge_if_dest_exists(FILE *out, const void *src_node,
 	assert(dst_node);
 	assert(label);
 
-}
+}*/
 
-const char *tac_data_type(enum mCc_ast_data_type type)
-{
-	assert(type);
-
-	return "unknown type";
-}

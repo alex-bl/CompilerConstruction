@@ -26,7 +26,7 @@ extern "C" {
 
 enum mCc_tac_operation {
 	MCC_TAC_OPARATION_JUMP,
-	MCC_TAC_OPARATION_JUMPFALSE,
+	MCC_TAC_OPARATION_CONDITIONAL_JUMP,
 	MCC_TAC_OPARATION_ADDITION,
 	MCC_TAC_OPARATION_SUBTRACTION,
 	MCC_TAC_OPARATION_LABLE,
@@ -35,7 +35,10 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_ASSIGN,
 };
 
-void tac_begin(FILE *out);
+struct tac_elmenet *tac_elmenet(enum mCc_tac_operation *operation, struct mCc_ast_identifier *argument1,
+		struct mCc_ast_identifier *argument2, struct mCc_ast_identifier *result);
+
+/*void tac_begin(FILE *out);
 
 void tac_end(FILE *out);
 
@@ -47,7 +50,7 @@ void tac_edge(FILE *out, const void *src_node, const void *dst_node,
 void tac_edge_if_dest_exists(FILE *out, const void *src_node,
                                    const void *dst_node, const char *label);
 
-const char *print_data_type(enum mCc_ast_data_type type);
+const char *print_data_type(enum mCc_ast_data_type type);*/
 
 #ifdef __cplusplus
 }
