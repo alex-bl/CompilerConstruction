@@ -1,9 +1,9 @@
-#include "mCc/ast/tac/ast_basic_tac.h"
+#include "../../../include/mCc/tac/basis/basic_tac.h"
 
 #include <assert.h>
 #include <stdio.h>
 
-#include "mCc/ast/basis/ast_data_type.h"
+//#include "mCc/ast/basis/ast_data_type.h"
 
 /*struct mCc_tac_element tac_element_new_element(enum mCc_tac_operation operation, struct mCc_tac_identifier *argument1,
 		struct mCc_tac_identifier *argument2, struct mCc_tac_identifier *result)
