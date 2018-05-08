@@ -60,7 +60,42 @@ TEST(SemanticChecks, MainAbsence)
 	mCc_ast_delete_program(simple_prog);
 }
 
-//============================================ Main presence/absence
+TEST(SemanticChecks, InvalidMainSignature)
+{
+	const char *simple_main = "int main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_TRUE(simple_prog->semantic_error != NULL);
+	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_SIGNATURE,
+	          simple_prog->semantic_error->validation_status);
+
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, InvalidMainSignatureParams)
+{
+	const char *simple_main = "void main(int a){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_TRUE(simple_prog->semantic_error != NULL);
+	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_SIGNATURE,
+	          simple_prog->semantic_error->validation_status);
+
+	mCc_ast_delete_program(simple_prog);
+}
+
+
+//============================================ Identifier
 
 TEST(SemanticChecks, IdentifierNoDef)
 {
