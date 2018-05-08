@@ -2,6 +2,8 @@
 /builddir/
 /subprojects/*
 /doc/*
+.project
+/.settings/
 
 !/subprojects/*.wrap
 !/subprojects/README.md
