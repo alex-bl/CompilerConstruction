@@ -8,5 +8,5 @@
 !/subprojects/README.md
 !/doc/examples/*
 !/doc/*.md
-/.settings/
+
 /.cproject
