@@ -144,7 +144,7 @@ add_custom_target(build_and_test ${CMAKE_CTEST_COMMAND} --output-on-failure)
 # https://stackoverflow.com/questions/40325957/how-do-i-add-valgrind-tests-to-my-cmake-test-target
 add_custom_target(build_and_test_memcheck
 	COMMAND echo "Removing old log-files..."
-	COMMAND rm -r ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log
+	COMMAND rm -rf ${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log
     COMMAND ${CMAKE_CTEST_COMMAND} 
         --force-new-ctest-process --test-action memcheck
     # by having 100 unit-tests, a cat of such a number may not senseful => check log-file instead
