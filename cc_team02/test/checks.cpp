@@ -461,9 +461,82 @@ TEST(SemanticChecks, InvalidArrayAssignmentIndex)
 }
 
 //============================================ Function (definition)
+
+TEST(SemanticChecks, FunctionNoReturnVoid)
+{
+	const char *simple_main = "void my_void_func(){} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, FunctionEmptyReturnVoid)
+{
+	const char *simple_main = "void my_void_func(){return;} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	mCc_ast_delete_program(simple_prog);
+}
+
 TEST(SemanticChecks, InvalidFunctionReturnVoid)
 {
 	const char *simple_main = "void invalid_return(){return 1;} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	struct mCc_ast_function_def *invalid_function_def =
+	    simple_prog->first_function_def;
+
+	ASSERT_TRUE(invalid_function_def != NULL);
+
+	struct mCc_validation_status_result *error =
+	    invalid_function_def->semantic_error;
+
+	ASSERT_TRUE(error != NULL);
+	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_RETURN, error->validation_status);
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, InvalidFunctionMissingReturn)
+{
+	const char *simple_main = "int invalid_return(){} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	struct mCc_ast_function_def *invalid_function_def =
+	    simple_prog->first_function_def;
+
+	ASSERT_TRUE(invalid_function_def != NULL);
+
+	struct mCc_validation_status_result *error =
+	    invalid_function_def->semantic_error;
+
+	ASSERT_TRUE(error != NULL);
+	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_RETURN, error->validation_status);
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, InvalidFunctionEmptyReturn)
+{
+	const char *simple_main = "int invalid_return(){return;} void main(){}";
 	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
 
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);

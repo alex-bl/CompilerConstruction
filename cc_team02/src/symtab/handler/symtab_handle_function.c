@@ -187,7 +187,7 @@ void_function_checked(struct mCc_ast_function_def *def,
                       enum mCc_ast_data_type function_type,
                       struct mCc_symtab_and_validation_holder *info_holder)
 {
-	if (!return_statement) {
+	if (!return_statement || !return_statement->return_expression) {
 		if (function_type != MCC_AST_DATA_TYPE_VOID) {
 			handle_expected_type(def, function_type, MCC_AST_DATA_TYPE_VOID,
 			                     info_holder);
