@@ -21,7 +21,7 @@ extern "C" {
  * Procedural call: param x call p return y
  * Return statement: return y
  * Indexing statement: x:=y[i] or y[i]:=x
- * Address assignment: x:=&y
+ * Address assignment: x:=&y (not in our language?)
  */
 
 enum mCc_tac_operation {
@@ -35,8 +35,17 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_ASSIGN,
 };
 
-struct tac_elmenet *tac_elmenet(enum mCc_tac_operation *operation, struct mCc_ast_identifier *argument1,
-		struct mCc_ast_identifier *argument2, struct mCc_ast_identifier *result);
+struct mCc_tac_element {
+	enum mCc_tac_operation tac_operation;
+	struct mCc_tac_identifier *tac_argument1;
+	struct mCc_tac_identifier *tac_argument2;
+	struct mCc_tac_identifier *tac_result;
+};
+
+
+struct mCc_tac_identifier {
+	char *name;
+};
 
 /*void tac_begin(FILE *out);
 
