@@ -2,10 +2,11 @@
 /builddir/
 /subprojects/*
 /doc/*
-.project
-/.settings/
+
 
 !/subprojects/*.wrap
 !/subprojects/README.md
 !/doc/examples/*
 !/doc/*.md
+/.settings/
+/.cproject
