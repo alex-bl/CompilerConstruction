@@ -198,6 +198,192 @@ TEST(Parser, BinaryOp_12)
 	mCc_ast_delete_expression(expr);
 }
 
+TEST(Parser, BinaryOpUnaryPrecedenceNegation)
+{
+	const char input[] = "!a && b";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_UNARY_OP, expr->lhs->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_IDENTIFIER, expr->rhs->type);
+
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(Parser, BinaryOpUnaryPrecedenceMinus)
+{
+	const char input[] = "-a && b";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_UNARY_OP, expr->lhs->type);
+	ASSERT_EQ(MCC_AST_UNARY_OP_MINUS, expr->lhs->unary_op);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_IDENTIFIER, expr->rhs->type);
+
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(Parser, BinaryOpPrecedence)
+{
+	const char input[] = "a + b  && b";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->lhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_ADD, expr->lhs->op);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_IDENTIFIER, expr->rhs->type);
+
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(Parser, BinaryOpMulPrecedence)
+{
+	const char input[] = "a + b * 3";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_IDENTIFIER, expr->lhs->type);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->rhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_MUL, expr->rhs->op);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_IDENTIFIER, expr->rhs->lhs->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->rhs->rhs->type);
+
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(Parser, BinaryOpLogicalPrecedence)
+{
+	const char input[] = "a >= b && 3";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->lhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN, expr->lhs->op);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->rhs->type);
+
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(Parser, BinaryOpLogicalPrecedenceEquals)
+{
+	const char input[] = "a == b || 3";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->lhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_EQUALS, expr->lhs->op);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_IDENTIFIER, expr->lhs->lhs->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_IDENTIFIER, expr->lhs->rhs->type);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->rhs->type);
+
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(Parser, BinaryOpLogicalPrecedenceAdvanced)
+{
+	const char input[] = "1 != 2 || 3 <= 4";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_OR, expr->op);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->lhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_NOT_EQUALS, expr->lhs->op);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->rhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN, expr->rhs->op);
+
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(Parser, BinaryOpLogicalPrecedenceAdvanced2)
+{
+	const char input[] = "1 != !true || 3 <= 4";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_OR, expr->op);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->lhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_NOT_EQUALS, expr->lhs->op);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_UNARY_OP, expr->lhs->rhs->type);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->lhs->rhs->unary_rhs->type);
+	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL, expr->lhs->rhs->unary_rhs->literal->type);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->rhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN, expr->rhs->op);
+
+	mCc_ast_delete_expression(expr);
+}
+
+TEST(Parser, BinaryOpLogicalPrecedenceAdvanced3)
+{
+	const char input[] = "1 + 2 == 3 - 4";
+	struct mCc_parser_result result = mCc_parser_parse_string(input);
+	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
+
+	struct mCc_ast_expression *expr = result.expression;
+
+	// root
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_EQUALS, expr->op);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->lhs->type);
+	ASSERT_EQ(MCC_AST_BINARY_OP_ADD, expr->lhs->op);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->lhs->lhs->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->lhs->rhs->type);
+	ASSERT_EQ(1, expr->lhs->lhs->literal->i_value);
+	ASSERT_EQ(2, expr->lhs->rhs->literal->i_value);
+
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_BINARY_OP, expr->rhs->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->rhs->lhs->type);
+	ASSERT_EQ(MCC_AST_EXPRESSION_TYPE_LITERAL, expr->rhs->rhs->type);
+	ASSERT_EQ(3, expr->rhs->lhs->literal->i_value);
+	ASSERT_EQ(4, expr->rhs->rhs->literal->i_value);
+
+	ASSERT_EQ(MCC_AST_BINARY_OP_SUB, expr->rhs->op);
+
+	mCc_ast_delete_expression(expr);
+}
+
 TEST(Parser, NestedExpression_1)
 {
 	const char input[] = "42 * (-192 + 3.14)";
@@ -804,7 +990,6 @@ TEST(Parser, Program_2)
 	const char input[] = "void main(){	int a;string b;int d;	"
 	                     "c=2;a=notDefined(\"test\");d=call();d=call(1,2,3,4);"
 	                     "if(a==12){int c;} else{int d;}}";
-	
 
 	auto result = mCc_parser_parse_string(input);
 	ASSERT_EQ(MCC_PARSER_STATUS_OK, result.status);
