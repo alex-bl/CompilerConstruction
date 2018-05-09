@@ -42,7 +42,15 @@ int main(int argc, char *argv[])
 	// always log to log-file
 	char file_path[FILE_NAME_BUF_SIZE];
 	build_log_file_name(file_path);
-	log_set_fp(fopen(file_path,"a"));
+
+	FILE *log_file = fopen(file_path, "a");
+
+	if (log_file == NULL) {
+		log_error("Cannot open log-file. Logging to stdout instead (if enabled)");
+	} else {
+		log_set_fp(fopen(file_path, "a"));
+	}
+
 	// enable log on stdout
 	log_set_quiet(LOG_QUIET);
 
