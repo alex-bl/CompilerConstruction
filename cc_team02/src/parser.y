@@ -100,11 +100,16 @@ void mCc_parser_error();
 %token EQUALS "=="
 %token NOTEQUALS "!="
 
+// shift/reduce on if/else
+%precedence ")"
+%precedence "else"
+
 %type <enum mCc_ast_binary_op> binary_op_add binary_op_mul binary_op_lv0 binary_op_lv1 binary_op_lv2 binary_op_lv3
 %type <enum mCc_ast_unary_op> unary_op
 %type <enum mCc_ast_data_type> type VOID_TYPE
 
-%type <struct mCc_ast_expression *> expression single_expr arguments single_expr_lev0 single_expr_lev1 single_expr_lev2 single_expr_lev3 single_expr_lev4 single_expr_lev5
+//single_expr_lev0 needed?
+%type <struct mCc_ast_expression *> expression single_expr arguments single_expr_lev1 single_expr_lev2 single_expr_lev3 single_expr_lev4 single_expr_lev5
 %type <struct mCc_ast_literal *> literal
 %type <struct mCc_ast_assignment *> assignment
 %type <struct mCc_ast_declaration *> declaration parameters
@@ -180,9 +185,9 @@ single_expr:  literal                      			    { $$ = mCc_ast_new_expression_
            ;											
 
 //or
-single_expr_lev0:	single_expr_lev1 binary_op_lv0 single_expr_lev0	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
-   				|	single_expr_lev1								{ $$ = $1; loc($$, @1);}
-   				;
+//single_expr_lev0:	single_expr_lev1 binary_op_lv0 single_expr_lev0	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
+//   				|	single_expr_lev1								{ $$ = $1; loc($$, @1);}
+//   				;
 
 //and                      				
 single_expr_lev1:	single_expr_lev2 binary_op_lv1 single_expr_lev1	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
@@ -210,8 +215,8 @@ single_expr_lev5:	single_expr binary_op_mul single_expr_lev5 	{ $$ = mCc_ast_new
 				;
 				
 //?	=> :)				
-expression: single_expr_lev0 binary_op_lv0 expression { $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}		
-		| 	single_expr_lev0                      { $$ = $1; loc($$, @1);}
+expression: single_expr_lev1 binary_op_lv0 expression { $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}		
+		| 	single_expr_lev1                      { $$ = $1; loc($$, @1);}
         ;
 
 literal: INT_LITERAL  		{ $$ = mCc_ast_new_literal_int($1); loc($$, @1); }
