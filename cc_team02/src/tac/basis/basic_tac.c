@@ -43,6 +43,14 @@ struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation, struct
 	return tac_element;
 }
 
+struct mCc_tac_identifier *tac_new_identifier(char *name) {
+	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	if (!tac_identifier) {
+		return NULL;
+	}
+	tac_identifier->name=name;
+	return tac_identifier;
+}
 
 void mCc_tac_element_delete(struct mCc_tac_element *tac_element)
 {
