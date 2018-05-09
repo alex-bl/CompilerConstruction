@@ -1,11 +1,11 @@
-#include "mCc/ast/basis/ast_program.h"
+#include "ast_program.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "mCc/symtab/validator/validator.h"
+#include "validator.h"
 
 struct mCc_ast_program *
 mCc_ast_new_program(struct mCc_ast_function_def *function_defs)

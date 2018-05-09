@@ -1,10 +1,10 @@
-#include "mCc/ast/print/ast_print_function.h"
+#include "ast_print_function.h"
 
 #include <assert.h>
 #include <stdlib.h>
 
-#include "mCc/ast/print/ast_basic_printing.h"
-#include "mCc/general/print_helper.h"
+#include "ast_basic_printing.h"
+#include "print_helper.h"
 
 void mCc_print_dot_function_def(struct mCc_ast_function_def *def, void *data)
 {

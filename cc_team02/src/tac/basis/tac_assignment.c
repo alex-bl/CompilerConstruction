@@ -1,8 +1,8 @@
-#include "mCc/tac/basis/tac_assignment.h"
+#include "tac_assignment.h"
 
 #include <assert.h>
 
-#include "mCc/tac/basis/basic_tac.h"
+#include "basic_tac.h"
 
 void mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
                                         void *data)

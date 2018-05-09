@@ -1,16 +1,16 @@
-#include "mCc/symtab/handler/symtab_handle_assignment.h"
+#include "handler/symtab_handle_assignment.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
 
-#include "mCc/ast/basis/ast_assignment.h"
-#include "mCc/ast/basis/ast_data_type.h"
-#include "mCc/ast/basis/ast_expression.h"
-#include "mCc/ast/basis/ast_identifier.h"
-#include "mCc/general/print_helper.h"
-#include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/validator.h"
+#include "ast_assignment.h"
+#include "ast_data_type.h"
+#include "ast_expression.h"
+#include "ast_identifier.h"
+#include "print_helper.h"
+#include "symbol_table.h"
+#include "validator.h"
 
 static void
 append_error_to_assignment(struct mCc_ast_assignment *assignment,

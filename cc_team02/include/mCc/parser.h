@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "mCc/ast.h"
+#include "parser_helper.h"
 
 #ifdef __cplusplus
 extern "C" {

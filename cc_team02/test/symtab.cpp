@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 
 #include "mCc/ast.h"
-#include "mCc/symtab/symbol_table.h"
+#include "symbol_table.h"
 #include "mCc_test/mCc_test_utils.h"
 #include "map.h"
 

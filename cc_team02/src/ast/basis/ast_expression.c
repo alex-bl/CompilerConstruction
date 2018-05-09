@@ -1,10 +1,10 @@
-#include "mCc/ast/basis/ast_expression.h"
+#include "ast_expression.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "mCc/symtab/validator/validator.h"
+#include "validator.h"
 
 struct mCc_ast_expression *
 mCc_ast_new_expression_literal(struct mCc_ast_literal *literal)

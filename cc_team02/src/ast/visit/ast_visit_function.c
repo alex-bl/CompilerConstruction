@@ -1,11 +1,11 @@
-#include "mCc/ast/visit/ast_visit_function.h"
+#include "ast_visit_function.h"
 
 #include <assert.h>
 
-#include "mCc/ast/visit/ast_visit_declaration.h"
-#include "mCc/ast/visit/ast_visit_expression.h"
-#include "mCc/ast/visit/ast_visit_identifier.h"
-#include "mCc/ast/visit/ast_visit_statement.h"
+#include "ast_visit_declaration.h"
+#include "ast_visit_expression.h"
+#include "ast_visit_identifier.h"
+#include "ast_visit_statement.h"
 
 void mCc_ast_visit_optional_function_def(
     struct mCc_ast_function_def *function_def, struct mCc_ast_visitor *visitor)

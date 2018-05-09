@@ -1,4 +1,4 @@
-#include "mCc/symtab/handler/symtab_handle_identifier.h"
+#include "handler/symtab_handle_identifier.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/validator.h"
+#include "symbol_table.h"
+#include "validator.h"
 
 #include "log.h"
 

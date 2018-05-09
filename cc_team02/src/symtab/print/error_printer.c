@@ -1,10 +1,10 @@
-#include "mCc/symtab/print/error_printer.h"
+#include "print/error_printer.h"
 
 #include <stdio.h>
 #include <string.h>
 
 #include "config.h"
-#include "mCc/symtab/validator/validator.h"
+#include "validator.h"
 
 static void print_error_if_exists(FILE *out, struct mCc_ast_node location,
                                   struct mCc_validation_status_result *error)

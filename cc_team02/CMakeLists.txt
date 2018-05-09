@@ -98,6 +98,22 @@ include_directories("${PROJECT_SOURCE_DIR}/external/log/include")
 # external hash-map
 include_directories("${PROJECT_SOURCE_DIR}/external/map/include")
 
+#=========== all-dev header-includes
+include_directories("${PROJECT_SOURCE_DIR}/src/include/")
+
+include_directories("${PROJECT_SOURCE_DIR}/src/include/ast/basis")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/ast/print")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/ast/visit")
+
+include_directories("${PROJECT_SOURCE_DIR}/src/include/general")
+
+include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/handler")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/print")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/validator")
+
+include_directories("${PROJECT_SOURCE_DIR}/src/include/tac/basis")
+
 #=================================================================== external-src
 
 add_subdirectory(external)

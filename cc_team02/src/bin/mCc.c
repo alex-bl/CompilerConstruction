@@ -7,10 +7,8 @@
 #include "config.h"
 #include "log.h"
 #include "mCc/ast.h"
-#include "mCc/general/parser_helper.h"
 #include "mCc/parser.h"
-#include "mCc/symtab/symtab_error_print.h"
-#include "mCc/symtab_check.h"
+#include "mCc/semantic_check.h"
 
 void print_usage(const char *prg)
 {

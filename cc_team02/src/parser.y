@@ -29,7 +29,7 @@ void mCc_parser_error();
 %define api.value.type union
 %define api.token.prefix {TK_}
 
-%destructor {mCc_ast_delete_expression($$);} expression single_expr_lev2 single_expr_lev1 single_expr arguments
+%destructor {mCc_ast_delete_expression($$);} expression single_expr_lev5 single_expr_lev4 single_expr_lev3 single_expr_lev2 single_expr_lev1 single_expr arguments
 %destructor {mCc_ast_delete_function_call($$);} call_expr
 %destructor {mCc_ast_delete_declaration($$);} parameters 
 %destructor {mCc_ast_delete_identifier($$);} IDENTIFIER 

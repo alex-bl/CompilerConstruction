@@ -1,4 +1,4 @@
-#include "mCc/general/parser_helper.h"
+#include "parser_helper.h"
 
 #include <assert.h>
 #include <stdio.h>

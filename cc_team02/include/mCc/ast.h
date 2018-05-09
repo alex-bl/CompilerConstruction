@@ -1,16 +1,16 @@
 #ifndef MCC_AST_H
 #define MCC_AST_H
 
-#include "mCc/ast/basis/ast_node.h"
-#include "mCc/ast/basis/ast_operator.h"
-#include "mCc/ast/basis/ast_literal.h"
-#include "mCc/ast/basis/ast_identifier.h"
-#include "mCc/ast/basis/ast_declaration.h"
-#include "mCc/ast/basis/ast_expression.h"
-#include "mCc/ast/basis/ast_statement.h"
-#include "mCc/ast/basis/ast_function.h"
-#include "mCc/ast/basis/ast_assignment.h"
-#include "mCc/ast/basis/ast_program.h"
+#include "ast_node.h"
+#include "ast_operator.h"
+#include "ast_literal.h"
+#include "ast_identifier.h"
+#include "ast_declaration.h"
+#include "ast_expression.h"
+#include "ast_statement.h"
+#include "ast_function.h"
+#include "ast_assignment.h"
+#include "ast_program.h"
 
 #ifdef __cplusplus
 extern "C" {

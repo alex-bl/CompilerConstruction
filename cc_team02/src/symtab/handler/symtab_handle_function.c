@@ -1,15 +1,15 @@
-#include "mCc/symtab/handler/symtab_handle_function.h"
+#include "handler/symtab_handle_function.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
 
 #include "log.h"
-#include "mCc/general/print_helper.h"
-#include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/validation_status.h"
-#include "mCc/symtab/validator/validator.h"
-#include "mCc/symtab/validator/validator_helper.h"
+#include "print_helper.h"
+#include "symbol_table.h"
+#include "validation_status.h"
+#include "validator.h"
+#include "validator_helper.h"
 
 #include "config.h"
 

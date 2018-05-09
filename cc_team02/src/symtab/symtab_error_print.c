@@ -1,13 +1,13 @@
-#include "mCc/symtab/symtab_error_print.h"
+#include "symtab_error_print.h"
 
-#include "mCc/symtab/print/error_printer.h"
+#include "print/error_printer.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
 
 #include "mCc/ast_visit.h"
-#include "mCc/ast/visit/ast_visit_program.h"
+#include "ast_visit_program.h"
 
 //"global" visitor needed
 static struct mCc_ast_visitor error_print_visitor(FILE *out)

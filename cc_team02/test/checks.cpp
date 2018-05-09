@@ -4,10 +4,10 @@
 #include "gtest/gtest.h"
 
 #include "mCc/ast.h"
-#include "mCc/general/parser_helper.h"
+#include "parser_helper.h"
 #include "mCc/parser.h"
-#include "mCc/symtab/symtab_error_print.h"
-#include "mCc/symtab_check.h"
+#include "symtab_error_print.h"
+#include "symtab_check.h"
 #include "mCc_test/mCc_test_utils.h"
 
 static struct mCc_ast_assignment *find_assignment(struct mCc_ast_program *entry)

@@ -1,4 +1,4 @@
-#include "mCc/ast/visit/ast_visit_literal.h"
+#include "ast_visit_literal.h"
 
 #include <assert.h>
 

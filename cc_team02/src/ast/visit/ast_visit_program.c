@@ -1,8 +1,8 @@
-#include "mCc/ast/visit/ast_visit_program.h"
+#include "ast_visit_program.h"
 
 #include <assert.h>
 
-#include "mCc/ast/visit/ast_visit_function.h"
+#include "ast_visit_function.h"
 
 void mCc_ast_visit_program(struct mCc_ast_program *program,
                            struct mCc_ast_visitor *visitor)

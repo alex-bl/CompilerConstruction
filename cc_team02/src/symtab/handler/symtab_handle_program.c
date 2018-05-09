@@ -1,12 +1,12 @@
-#include "mCc/symtab/handler/symtab_handle_program.h"
+#include "handler/symtab_handle_program.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "config.h"
-#include "mCc/ast/basis/ast_program.h"
-#include "mCc/symtab/validator/validator.h"
+#include "ast_program.h"
+#include "validator.h"
 
 static void append_error_to_pgrogram(struct mCc_ast_program *program,
 		struct mCc_validation_status_result *error) {

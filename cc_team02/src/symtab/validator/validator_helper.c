@@ -1,4 +1,4 @@
-#include "mCc/symtab/validator/validator_helper.h"
+#include "validator_helper.h"
 
 #include <stddef.h>
 #include <assert.h>
