@@ -60,6 +60,18 @@ add_library(mCc_tac SHARED tac/basis/basic_tac.c
 							tac/basis/tac_literal.c
 							tac/basis/tac_program.c														
 							tac/basis/tac_statement.c)
+							
+#tac print
+add_library(mCc_tac_print SHARED tac/print/basic_tac_print.c
+							tac/print/tac_print.c 
+							tac/print/tac_print_assignment.c
+							tac/print/tac_print_declaration.c 
+							tac/print/tac_print_expression.c
+							tac/print/tac_print_function.c							
+							tac/print/tac_print_identifier.c							
+							tac/print/tac_print_literal.c
+							tac/print/tac_print_program.c														
+							tac/print/tac_print_statement.c)
 
 # symbol-table-handler (for building the symbol-table and validation)
 add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
@@ -89,5 +101,5 @@ add_library(mCc_lib SHARED ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})
 set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
 # link remaining
-target_link_libraries(mCc_lib mCc_semantic_error_print mCc_tac mCc_print mCc_ast mCc_symtab mCc_visit mCc_parser_helper mCc_print_helper)
+target_link_libraries(mCc_lib mCc_semantic_error_print mCc_tac mCc_tac_print mCc_print mCc_ast mCc_symtab mCc_visit mCc_parser_helper mCc_print_helper)
 
