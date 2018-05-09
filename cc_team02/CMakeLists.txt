@@ -26,6 +26,14 @@ endif()
 
 message(STATUS "Build-type: " ${CMAKE_BUILD_TYPE})
 
+set(STDOUT_LOGGING_DISABLED 1)
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+	set(STDOUT_LOGGING_DISABLED 0)	
+endif()
+
+message(STATUS "Logging to stdout: " ${STDOUT_LOGGING_DISABLED})
+
 # base dir for sub-projects
 set(SUB_PROJECTS_BASE_DIR "${CMAKE_BINARY_DIR}/subprojects")
 

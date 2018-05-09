@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "config.h"
 #include "log.h"
@@ -17,12 +18,33 @@ void print_usage(const char *prg)
 	printf("  <FILE>        Input filepath or - for stdin\n");
 }
 
+void build_log_file_name(char file_name_buf[])
+{
+	time_t timer;
+	struct tm *tm_info;
+	char buffer[TIME_BUF_SIZE];
+
+	time(&timer);
+	tm_info = localtime(&timer);
+
+	strftime(buffer, TIME_BUF_SIZE, "%Y-%m-%d", tm_info);
+	snprintf(file_name_buf, FILE_NAME_BUF_SIZE, "%s%s-mCc.log",
+	         LOG_FILE_PATH_BASE_DIR, buffer);
+}
+
 int main(int argc, char *argv[])
 {
 	if (argc < 2) {
 		print_usage(argv[0]);
 		return EXIT_FAILURE;
 	}
+
+	// always log to log-file
+	char file_path[FILE_NAME_BUF_SIZE];
+	build_log_file_name(file_path);
+	log_set_fp(fopen(file_path,"a"));
+	// enable log on stdout
+	log_set_quiet(LOG_QUIET);
 
 	/* determine input source */
 	FILE *in;
