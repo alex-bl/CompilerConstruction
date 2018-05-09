@@ -1,15 +1,15 @@
-#include "mCc/symtab_check.h"
+#include "symtab_check.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
 
 #include "log.h"
-#include "mCc/ast_print_visitors.h"
+#include "ast_print_visitors.h"
 #include "mCc/ast_visit.h"
-#include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/validator.h"
-#include "mCc/symtab_handler.h"
+#include "symbol_table.h"
+#include "validator.h"
+#include "symtab_handler.h"
 
 //"global" visitor needed
 static struct mCc_ast_visitor

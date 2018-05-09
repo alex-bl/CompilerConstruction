@@ -1,13 +1,13 @@
-#include "mCc/symtab/handler/symtab_handle_expression.h"
+#include "handler/symtab_handle_expression.h"
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "config.h"
-#include "mCc/ast/basis/ast_expression.h"
-#include "mCc/general/print_helper.h"
-#include "mCc/symtab/validator/validator.h"
+#include "ast_expression.h"
+#include "print_helper.h"
+#include "validator.h"
 
 static void append_error_to_expr(struct mCc_ast_expression *expression,
                                  struct mCc_validation_status_result *error)

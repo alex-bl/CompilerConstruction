@@ -1,6 +1,6 @@
 void buu(string bo){
 
-return 1;
+return 1 != 2 || 3 <= 4;
 }
 
 int buu(string bo){

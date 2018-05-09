@@ -2,19 +2,51 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "config.h"
 #include "log.h"
 #include "mCc/ast.h"
-#include "mCc/general/parser_helper.h"
 #include "mCc/parser.h"
-#include "mCc/symtab/symtab_error_print.h"
-#include "mCc/symtab_check.h"
+#include "mCc/semantic_check.h"
 
 void print_usage(const char *prg)
 {
 	printf("usage: %s <FILE>\n\n", prg);
 	printf("  <FILE>        Input filepath or - for stdin\n");
+}
+
+void build_log_file_name(char file_name_buf[])
+{
+	time_t timer;
+	struct tm *tm_info;
+	char buffer[TIME_BUF_SIZE];
+
+	time(&timer);
+	tm_info = localtime(&timer);
+
+	strftime(buffer, TIME_BUF_SIZE, "%Y-%m-%d", tm_info);
+	snprintf(file_name_buf, FILE_NAME_BUF_SIZE, "%s%s-mCc.log",
+	         LOG_FILE_PATH_BASE_DIR, buffer);
+}
+
+void config_logging()
+{
+	// always log to log-file
+	char file_path[FILE_NAME_BUF_SIZE];
+	build_log_file_name(file_path);
+
+	FILE *log_file = fopen(file_path, "a");
+
+	if (log_file == NULL) {
+		log_error(
+		    "Cannot open log-file. Logging to stdout instead (if enabled)");
+	} else {
+		log_set_fp(fopen(file_path, "a"));
+	}
+
+	// enable log on stdout
+	log_set_quiet(LOG_QUIET);
 }
 
 int main(int argc, char *argv[])
@@ -23,6 +55,8 @@ int main(int argc, char *argv[])
 		print_usage(argv[0]);
 		return EXIT_FAILURE;
 	}
+
+	config_logging();
 
 	/* determine input source */
 	FILE *in;
@@ -75,9 +109,11 @@ int main(int argc, char *argv[])
 
 		if (!semantic_check_successfull) {
 			fprintf(out_put, "Semantic errors detected:\n");
-			fprintf(out_put, "==============================\n");
+			fprintf(out_put, "================================================="
+			                 "=========================================\n");
 			mCc_symtab_print_semantic_errors(prog, out_put);
-			fprintf(out_put, "==============================\n");
+			fprintf(out_put, "================================================="
+			                 "=========================================\n");
 		}
 	}
 

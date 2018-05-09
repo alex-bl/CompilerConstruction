@@ -1,8 +1,8 @@
-#include "mCc/ast/visit/ast_visit_declaration.h"
+#include "ast_visit_declaration.h"
 
 #include <assert.h>
 
-#include "mCc/ast/visit/ast_visit_identifier.h"
+#include "ast_visit_identifier.h"
 
 void mCc_ast_visit_optional_declaration(struct mCc_ast_declaration *declaration,
                                         struct mCc_ast_visitor *visitor)

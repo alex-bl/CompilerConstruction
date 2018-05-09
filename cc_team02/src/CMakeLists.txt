@@ -6,6 +6,7 @@ find_package(FLEX)
 
 # build flex- and bison-targets
 flex_target(scanner scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.c DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/scanner.h)
+# add -rall to bison-compile-flags if conflicts on parser detected
 bison_target(parser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.c COMPILE_FLAGS "-Wall" DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.h)
 
 add_flex_bison_dependency(scanner parser)

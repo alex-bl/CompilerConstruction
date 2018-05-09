@@ -6,6 +6,10 @@
 #define DOT_FILE_SUFFIX ".dot"
 #define PATH_BUILDINS "${CMAKE_BINARY_DIR}/data/buildins.mC"
 #define ERROR_MSG_BUF_SIZE 128
+#define LOG_FILE_PATH_BASE_DIR "${PROJECT_SOURCE_DIR}/log/"
+#define TIME_BUF_SIZE 16
+#define FILE_NAME_BUF_SIZE 128
+#define LOG_QUIET ${STDOUT_LOGGING_DISABLED}
 
 #ifdef __cplusplus
 extern "C" {

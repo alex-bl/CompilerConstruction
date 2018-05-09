@@ -1,11 +1,11 @@
-#include "mCc/symtab/validator/validator.h"
+#include "validator.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 #include "log.h"
-#include "mCc/symtab/symbol_table.h"
+#include "symbol_table.h"
 
 struct mCc_validation_status_result *mCc_validator_new_validation_result(
     enum mCc_validation_status_type validation_status, char *error_msg)

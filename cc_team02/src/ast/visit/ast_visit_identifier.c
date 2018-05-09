@@ -1,4 +1,4 @@
-#include "mCc/ast/visit/ast_visit_identifier.h"
+#include "ast_visit_identifier.h"
 
 #include <assert.h>
 

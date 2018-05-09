@@ -1,10 +1,10 @@
-#include "mCc/ast/basis/ast_declaration.h"
+#include "ast_declaration.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "mCc/symtab/validator/validator.h"
+#include "validator.h"
 
 struct mCc_ast_declaration *
 mCc_ast_new_primitive_declaration(enum mCc_ast_data_type data_type,

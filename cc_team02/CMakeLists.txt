@@ -26,6 +26,14 @@ endif()
 
 message(STATUS "Build-type: " ${CMAKE_BUILD_TYPE})
 
+set(STDOUT_LOGGING_DISABLED 1)
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+	set(STDOUT_LOGGING_DISABLED 0)	
+endif()
+
+message(STATUS "Logging to stdout: " ${STDOUT_LOGGING_DISABLED})
+
 # base dir for sub-projects
 set(SUB_PROJECTS_BASE_DIR "${CMAKE_BINARY_DIR}/subprojects")
 
@@ -89,6 +97,22 @@ include_directories("${PROJECT_SOURCE_DIR}/test/include")
 include_directories("${PROJECT_SOURCE_DIR}/external/log/include")
 # external hash-map
 include_directories("${PROJECT_SOURCE_DIR}/external/map/include")
+
+#=========== all-dev header-includes
+include_directories("${PROJECT_SOURCE_DIR}/src/include/")
+
+include_directories("${PROJECT_SOURCE_DIR}/src/include/ast/basis")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/ast/print")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/ast/visit")
+
+include_directories("${PROJECT_SOURCE_DIR}/src/include/general")
+
+include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/handler")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/print")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/validator")
+
+include_directories("${PROJECT_SOURCE_DIR}/src/include/tac/basis")
 
 #=================================================================== external-src
 

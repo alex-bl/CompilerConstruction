@@ -1,4 +1,4 @@
-#include "mCc/general/print_helper.h"
+#include "print_helper.h"
 
 #include <assert.h>
 #include <stdio.h>

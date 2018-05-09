@@ -1,14 +1,14 @@
-#include "mCc/symtab/handler/symtab_handle_statement.h"
+#include "handler/symtab_handle_statement.h"
 
 #include <assert.h>
 #include <string.h>
 
 #include "config.h"
 #include "log.h"
-#include "mCc/ast/basis/ast_data_type.h"
-#include "mCc/ast/basis/ast_statement.h"
-#include "mCc/general/print_helper.h"
-#include "mCc/symtab/validator/validator.h"
+#include "ast_data_type.h"
+#include "ast_statement.h"
+#include "print_helper.h"
+#include "validator.h"
 
 static void
 append_error_to_statement(struct mCc_ast_statement *statement,

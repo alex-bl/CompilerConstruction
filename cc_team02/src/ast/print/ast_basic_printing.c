@@ -1,9 +1,9 @@
-#include "mCc/ast/print/ast_basic_printing.h"
+#include "ast_basic_printing.h"
 
 #include <assert.h>
 #include <stdio.h>
 
-#include "mCc/ast/basis/ast_data_type.h"
+#include "ast_data_type.h"
 
 void print_dot_begin(FILE *out)
 {

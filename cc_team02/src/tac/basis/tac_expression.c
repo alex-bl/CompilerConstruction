@@ -1,8 +1,8 @@
-#include "mCc/tac/basis/tac_expression.h"
+#include "tac_expression.h"
 
 #include <assert.h>
 
-#include "mCc/tac/basis/basic_tac.h"
+#include "basic_tac.h"
 
 const char *mCc_tac_binary_op(enum mCc_ast_binary_op op)
 {
