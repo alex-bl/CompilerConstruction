@@ -30,13 +30,8 @@ void build_log_file_name(char file_name_buf[])
 	         LOG_FILE_PATH_BASE_DIR, buffer);
 }
 
-int main(int argc, char *argv[])
+void config_logging()
 {
-	if (argc < 2) {
-		print_usage(argv[0]);
-		return EXIT_FAILURE;
-	}
-
 	// always log to log-file
 	char file_path[FILE_NAME_BUF_SIZE];
 	build_log_file_name(file_path);
@@ -44,13 +39,24 @@ int main(int argc, char *argv[])
 	FILE *log_file = fopen(file_path, "a");
 
 	if (log_file == NULL) {
-		log_error("Cannot open log-file. Logging to stdout instead (if enabled)");
+		log_error(
+		    "Cannot open log-file. Logging to stdout instead (if enabled)");
 	} else {
 		log_set_fp(fopen(file_path, "a"));
 	}
 
 	// enable log on stdout
 	log_set_quiet(LOG_QUIET);
+}
+
+int main(int argc, char *argv[])
+{
+	if (argc < 2) {
+		print_usage(argv[0]);
+		return EXIT_FAILURE;
+	}
+
+	config_logging();
 
 	/* determine input source */
 	FILE *in;
@@ -103,9 +109,11 @@ int main(int argc, char *argv[])
 
 		if (!semantic_check_successfull) {
 			fprintf(out_put, "Semantic errors detected:\n");
-			fprintf(out_put, "==============================\n");
+			fprintf(out_put, "================================================="
+			                 "=========================================\n");
 			mCc_symtab_print_semantic_errors(prog, out_put);
-			fprintf(out_put, "==============================\n");
+			fprintf(out_put, "================================================="
+			                 "=========================================\n");
 		}
 	}
 
