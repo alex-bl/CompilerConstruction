@@ -7,16 +7,16 @@
 #include "mCc/ast_visit.h"
 
 //"global" visitor needed
-static struct mCc_ast_visitor tac_visitor(FILE *out)
+static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
 {
-	assert(out);
+	assert(tac);
 
 	return (struct mCc_ast_visitor){
 
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
 		.order = MCC_AST_VISIT_PRE_ORDER,
 		//replace out with data structure for tac
-		.userdata = out,
+		.userdata = tac,
 
 		//.expression
 		.expression_literal = mCc_tac_expression_literal,
@@ -82,16 +82,16 @@ static struct mCc_ast_visitor tac_visitor(FILE *out)
  * should be the "top"
  * is "global"
  */
-void mCc_ast_tac_program(FILE *out, struct mCc_ast_program *program)
+void mCc_tac_start_program(struct mCc_tac_element *tac, struct mCc_ast_program *program)
 {
-	assert(out);
+	assert(tac);
 	assert(program);
 
-	tac_begin(out);
+	//tac_begin(tac);
 
-	struct mCc_ast_visitor visitor = tac_visitor(out);
+	struct mCc_ast_visitor visitor = tac_visitor(tac);
 	mCc_ast_visit_program(program, &visitor);
 
-	tac_end(out);
+	//tac_end(tac);
 }
 

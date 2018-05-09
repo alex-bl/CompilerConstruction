@@ -10,7 +10,7 @@ void mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	assert(assignment);
 	assert(data);
 
-	//tac_elmenet(assignment->assigned_expression, assignment->identifier, '');
+	//tac_new_element(NULL, assignment->assigned_expression, NULL, assignment->identifier);
 
 	FILE *out = data;
 	fprintf(out, "assignment: %p - identifier: %p - expression: %p", assignment, assignment->identifier, assignment->assigned_expression);

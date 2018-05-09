@@ -25,14 +25,14 @@ extern "C" {
  */
 
 enum mCc_tac_operation {
-	MCC_TAC_OPARATION_JUMP,
+	MCC_TAC_OPARATION_BINARY_OP,
+	MCC_TAC_OPARATION_UNARY_OP,
+	MCC_TAC_OPARATION_COPY,
+	MCC_TAC_OPARATION_UNCONDITIONAL_JUMP,
 	MCC_TAC_OPARATION_CONDITIONAL_JUMP,
-	MCC_TAC_OPARATION_ADDITION,
-	MCC_TAC_OPARATION_SUBTRACTION,
-	MCC_TAC_OPARATION_LABLE,
-	MCC_TAC_OPARATION_GREATERTHAN,
-	MCC_TAC_OPARATION_LESSTHAN,
-	MCC_TAC_OPARATION_ASSIGN,
+	MCC_TAC_OPARATION_PROCEDURAL_CALL,
+	MCC_TAC_OPARATION_RETURN,
+	MCC_TAC_OPARATION_INDEXING,
 };
 
 //void mCc_tac_delete_operation(enum mCc_tac_operation *operation);
@@ -43,6 +43,9 @@ struct mCc_tac_element {
 	struct mCc_tac_identifier *tac_argument2;
 	struct mCc_tac_identifier *tac_result;
 };
+
+struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation, struct mCc_tac_identifier *argument1,
+		struct mCc_tac_identifier *argument2, struct mCc_tac_identifier *result);
 
 
 struct mCc_tac_identifier {

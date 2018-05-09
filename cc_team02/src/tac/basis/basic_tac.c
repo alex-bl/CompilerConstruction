@@ -1,4 +1,4 @@
-#include "../../../include/mCc/tac/basis/basic_tac.h"
+#include "mCc/tac/basis/basic_tac.h"
 
 #include <assert.h>
 #include <stdio.h>
