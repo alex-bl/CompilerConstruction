@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-
+void tac_print(struct mCc_tac_element *element, void *data);
 
 #ifdef __cplusplus
 }
