@@ -14,7 +14,7 @@ void mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(data);
 
-	struct mCc_tac_identifier *argument1;
+	/*struct mCc_tac_identifier *argument1;
 
 	switch (expression->data_type) {
 	case MCC_AST_DATA_TYPE_INT:
@@ -30,9 +30,9 @@ void mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 		argument1 = tac_new_identifier((char *)&expression->literal->s_value);
 		break;
 	default: argument1 = NULL; break;
-	}
+	}*/
 
-	tac_new_element(MCC_TAC_OPERATION_EMPTY, argument1, NULL, NULL);
+	tac_new_element(MCC_TAC_OPERATION_EMPTY, expression->literal, NULL, NULL);
 }
 
 void mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
