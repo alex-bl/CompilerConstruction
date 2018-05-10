@@ -10,6 +10,7 @@ void mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
 	assert(declaration);
 	assert(data);
 
+	//not correct
 	tac_new_element(
 	    MCC_TAC_OPARATION_COPY,
 		tac_new_identifier(
@@ -23,6 +24,7 @@ void mCc_tac_declaration_array(struct mCc_ast_declaration *declaration,
 	assert(declaration);
 	assert(data);
 
+	//not correct
 	tac_new_element(
 	    MCC_TAC_OPARATION_INDEXING,
 	    tac_new_identifier(

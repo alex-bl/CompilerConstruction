@@ -34,6 +34,4 @@ void mCc_tac_assignment_array(struct mCc_ast_assignment *assignment, void *data)
 	    tac_new_identifier(
 	        assignment->array_assigned_expression->identifier->identifier_name),
 	    tac_new_identifier(assignment->identifier));
-
-	// tac_elmenet(assignment->assigned_expression, assignment->identifier, '');
 }
