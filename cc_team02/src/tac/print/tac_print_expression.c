@@ -4,12 +4,9 @@
 
 #include "mCc/tac/basis/basic_tac.h"
 
-const char *mCc_tac_binary_op(enum mCc_ast_binary_op op)
-{
+//const char *mCc_tac_binary_op(enum mCc_ast_binary_op op) {}
 
-}
-
-const char *mCc_tac_unary_op(enum mCc_ast_unary_op op) {}
+//const char *mCc_tac_unary_op(enum mCc_ast_unary_op op) {}
 
 void mCc_tac_expression_literal(struct mCc_ast_expression *expression,
                                 void *data)

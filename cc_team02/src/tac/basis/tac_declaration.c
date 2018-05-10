@@ -12,7 +12,7 @@ void mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
 
 	tac_new_element(
 	    MCC_TAC_OPARATION_COPY,
-	    tac_new_identifier(
+		tac_new_identifier(
 	        declaration->next_declaration->identifier->identifier_name),
 	    NULL, tac_new_identifier(declaration->identifier->identifier_name));
 }

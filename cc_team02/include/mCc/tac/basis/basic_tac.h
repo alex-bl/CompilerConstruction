@@ -66,23 +66,10 @@ struct mCc_tac_identifier {
 	char *name;
 };
 
+struct mCc_tac_identifier *tac_new_identifier(char *name);
+
 void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier);
 
-
-
-/*void tac_begin(FILE *out);
-
-void tac_end(FILE *out);
-
-void tac_node(FILE *out, const void *node, const char *label);
-
-void tac_edge(FILE *out, const void *src_node, const void *dst_node,
-                    const char *label);
-
-void tac_edge_if_dest_exists(FILE *out, const void *src_node,
-                                   const void *dst_node, const char *label);
-
-const char *print_data_type(enum mCc_ast_data_type type);*/
 
 #ifdef __cplusplus
 }
