@@ -4,12 +4,12 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "log.h"
 #include "ast_print_visitors.h"
+#include "log.h"
 #include "mCc/ast_visit.h"
 #include "symbol_table.h"
-#include "validator.h"
 #include "symtab_handler.h"
+#include "validator.h"
 
 //"global" visitor needed
 static struct mCc_ast_visitor
@@ -36,6 +36,15 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.statement_if_post_order = mCc_symtab_handle_if_statement_post_order,
 		.statement_while_post_order =
 		    mCc_symtab_handle_while_statement_post_order,
+
+		.statement_return_post_order =
+		    mCc_symtab_handle_statement_return_post_order,
+		.statement_assignment_post_order =
+		    mCc_symtab_handle_statement_assignment_post_order,
+		.statement_expression_post_order =
+		    mCc_symtab_handle_statement_expression_post_order,
+		.statement_declaration_post_order =
+		    mCc_symtab_handle_statement_declaration_post_order,
 
 		// needed
 		.identifier = mCc_symtab_handle_identifier,
@@ -114,11 +123,6 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.statement_assignment = NULL,
 		.statement_expression = NULL,
 		.statement_declaration = NULL,
-
-		.statement_return_post_order = NULL,
-		.statement_assignment_post_order = NULL,
-		.statement_expression_post_order = NULL,
-		.statement_declaration_post_order = NULL,
 	};
 }
 

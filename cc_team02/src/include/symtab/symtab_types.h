@@ -22,6 +22,8 @@ struct mCc_symtab_and_validation_holder {
 	struct mCc_symbol_table *symbol_table;
 	int scope_level;
 	bool error_occurred;
+	// for error handling at statements
+	struct mCc_ast_identifier *function_identifier;
 };
 
 /**

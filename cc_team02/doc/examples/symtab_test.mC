@@ -20,6 +20,79 @@ string a;
 return a;
 }
 
+int path_test_9(){
+	if(1<2){
+		int a;
+	}else{
+		int c;
+	}
+	return 3;
+}
+
+int path_test(){
+	if(1<2){
+		return 1;
+	}else{
+		return 2;
+	}
+}
+
+int path_test_2(){
+
+}
+
+int path_test_3(){
+	int a;
+}
+
+int path_test_4(){
+	int a;
+	return 1;
+}
+
+int path_test_5(){
+	if(1<2){
+		return true;
+	}else{
+		return 2;
+	}
+}
+
+int path_test_6(){
+	if(1<2){
+		return true;
+	}else{
+		int c;
+	}
+}
+
+int path_test_7(){
+	if(1<2){
+		return true;
+	}else{
+		int c;
+	}
+	return 3;
+}
+
+int path_test_8(){
+	if(1<2){
+		return 1;
+	}else{
+		int c;
+	}
+	return 3;
+}
+
+int path_test_9(){
+	if(1<2){
+		int a;
+	}else{
+		int c;
+	}
+	return 3;
+}
+
 void main(){	
 	int a;
 	string b;
