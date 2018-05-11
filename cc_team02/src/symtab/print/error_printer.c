@@ -11,7 +11,7 @@ static void print_error_if_exists(FILE *out, struct mCc_ast_node location,
 {
 	struct mCc_validation_status_result *next_error = error;
 	while (next_error) {
-		fprintf(out, "Line %d col %d:\t%s\n", location.sloc.start_line,
+		fprintf(out, "Line %3d col %2d: %s\n", location.sloc.start_line,
 		        location.sloc.start_col, error->error_msg);
 		next_error = next_error->next;
 	}
@@ -30,7 +30,7 @@ print_error_if_exists_on_statement(FILE *out,
 			break;
 		}
 		struct mCc_ast_node location = statement->node;
-		fprintf(out, "Line %d col %d:\t%s\n", location.sloc.start_line,
+		fprintf(out, "Line %3d col %2d: %s\n", location.sloc.start_line,
 		        location.sloc.start_col, next_error->error_msg);
 		next_error = next_error->next;
 	}
