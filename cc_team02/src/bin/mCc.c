@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 			mCc_symtab_print_semantic_errors(prog, out_put);
 			fprintf(out_put, "================================================="
 			                 "=========================================\n");
-			fprintf(out_put, "%d errors reported\n", nr_of_semantic_errors);
+			fprintf(out_put, "%d error(s) reported\n", nr_of_semantic_errors);
 			fprintf(out_put, "================================================="
 			                 "=========================================\n");
 		}

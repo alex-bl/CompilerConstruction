@@ -101,6 +101,11 @@ if_statement_returns_on_all_paths(struct mCc_ast_statement *statement)
 	struct mCc_ast_statement *else_statement = statement->else_statement;
 	bool else_is_valid = true;
 
+	//empty if
+	if(!if_statement){
+		return statement->returns_on_control_path;
+	}
+
 	if (!else_statement) {
 		if (!statement->next_statement ||
 		    !statement->next_statement->returns_on_control_path) {
