@@ -36,7 +36,7 @@ handle_expected_type(struct mCc_ast_statement *statement,
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_statement(statement, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_expected_return_type(
@@ -55,7 +55,7 @@ static void handle_expected_return_type(
 	        MCC_VALIDATION_STATUS_INVALID_RETURN,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_statement(statement, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void
@@ -91,7 +91,7 @@ static void handle_returns_on_control_path(
 	        MCC_VALIDATION_STATUS_MISSING_RETURN_PATH,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_statement(statement, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static bool
@@ -99,9 +99,37 @@ if_statement_returns_on_all_paths(struct mCc_ast_statement *statement)
 {
 	struct mCc_ast_statement *if_statement = statement->if_statement;
 	struct mCc_ast_statement *else_statement = statement->else_statement;
+	bool else_is_valid = true;
 
-	return if_statement->returns_on_control_path &&
-	       (!else_statement || else_statement->returns_on_control_path);
+	if (!else_statement) {
+		if (!statement->next_statement ||
+		    !statement->next_statement->returns_on_control_path) {
+			else_is_valid = false;
+		}
+	} else {
+		else_is_valid = else_statement->returns_on_control_path;
+	}
+
+	return if_statement->returns_on_control_path && else_is_valid;
+}
+
+static void
+remove_invalid_path_errors(struct mCc_ast_statement *statement,
+                           struct mCc_symtab_and_validation_holder *info_holder)
+{
+	if (statement->statement_type == MCC_AST_STATEMENT_IF) {
+		remove_invalid_path_errors(statement->if_statement,info_holder);
+		remove_invalid_path_errors(statement->else_statement,info_holder);
+	} else if (statement->statement_type == MCC_AST_STATEMENT_WHILE) {
+		remove_invalid_path_errors(statement->while_statement,info_holder);
+	} else if (statement->next_statement) {
+		remove_invalid_path_errors(statement->next_statement,info_holder);
+	}
+
+	if (!statement->returns_on_control_path) {
+		statement->returns_on_control_path = true;
+		info_holder->error_count--;
+	}
 }
 
 
@@ -117,26 +145,34 @@ You can do this with a recursive walk over the AST. For example:
  *
  *
  */
-static void set_returns_on_control_path(struct mCc_ast_statement *statement)
+static void set_returns_on_control_path(struct mCc_ast_statement *statement,
+		 struct mCc_symtab_and_validation_holder *info_holder)
 {
 	assert(statement);
 
-	struct mCc_ast_statement *next_statement = statement->next_statement;
-	// e.g. on ifs
-	bool special_return_path = false;
-	bool next_stmt_returns = false;
+	if (!statement->returns_on_control_path) {
+		struct mCc_ast_statement *next_statement = statement->next_statement;
+		// e.g. on ifs
+		bool special_return_path = false;
+		bool next_stmt_returns = false;
 
-	// handle if
-	if (statement->statement_type == MCC_AST_STATEMENT_IF) {
-		special_return_path = if_statement_returns_on_all_paths(statement);
+		// handle if
+		if (statement->statement_type == MCC_AST_STATEMENT_IF) {
+			special_return_path = if_statement_returns_on_all_paths(statement);
+		}
+
+		if (next_statement) {
+			next_stmt_returns = next_statement->returns_on_control_path;
+		}
+
+		statement->returns_on_control_path =
+		    special_return_path || next_stmt_returns;
+
+		//if statement has a path
+		if(!special_return_path && next_stmt_returns){
+			remove_invalid_path_errors(statement,info_holder);
+		}
 	}
-
-	if (next_statement) {
-		next_stmt_returns = next_statement->returns_on_control_path;
-	}
-
-	statement->returns_on_control_path =
-	    special_return_path || next_stmt_returns;
 }
 
 static enum mCc_ast_data_type get_expected_type(void *data)
@@ -186,10 +222,10 @@ void mCc_symtab_handle_if_statement_post_order(
 	assert(statement);
 	assert(data);
 
-	set_returns_on_control_path(statement);
-
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
+
+	set_returns_on_control_path(statement,info_holder);
 
 	struct mCc_ast_expression *condition_expr = statement->condition_expression;
 	handle_statement(statement, condition_expr, info_holder);
@@ -206,10 +242,10 @@ void mCc_symtab_handle_while_statement_post_order(
 	assert(statement);
 	assert(data);
 
-	set_returns_on_control_path(statement);
-
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
+
+	set_returns_on_control_path(statement,info_holder);
 
 	struct mCc_ast_expression *loop_condition =
 	    statement->loop_condition_expression;
@@ -279,7 +315,8 @@ void mCc_symtab_handle_statement_declaration_post_order(
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
-	set_returns_on_control_path(statement);
+	set_returns_on_control_path(statement,info_holder);
+
 
 	// wrong return-path and non-void
 	if (statement_is_erroneous(statement, data)) {
@@ -296,7 +333,7 @@ void mCc_symtab_handle_statement_assignment_post_order(
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
-	set_returns_on_control_path(statement);
+	set_returns_on_control_path(statement,info_holder);
 
 	// wrong return-path and non-void
 	if (statement_is_erroneous(statement, data)) {
@@ -313,7 +350,7 @@ void mCc_symtab_handle_statement_expression_post_order(
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
-	set_returns_on_control_path(statement);
+	set_returns_on_control_path(statement,info_holder);
 
 	// wrong return-path and non-void
 	if (statement_is_erroneous(statement, data)) {

@@ -127,7 +127,7 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 }
 
 // TODO: return status
-bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
+int mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 {
 	assert(program);
 
@@ -144,7 +144,7 @@ bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 
 	info_holder.symbol_table = symbol_table;
 	info_holder.scope_level = 0;
-	info_holder.error_occurred = false;
+	info_holder.error_count = 0;
 
 	// TODO: add build-ins
 	struct mCc_ast_visitor visitor = symtab_visitor(&info_holder);
@@ -155,5 +155,5 @@ bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 	// free symtab
 	mCc_symtab_delete_symbol_table(symbol_table);
 
-	return !info_holder.error_occurred;
+	return info_holder.error_count;
 }

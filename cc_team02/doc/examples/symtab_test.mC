@@ -20,15 +20,6 @@ string a;
 return a;
 }
 
-int path_test_9(){
-	if(1<2){
-		int a;
-	}else{
-		int c;
-	}
-	return 3;
-}
-
 int path_test(){
 	if(1<2){
 		return 1;
@@ -91,6 +82,14 @@ int path_test_9(){
 		int c;
 	}
 	return 3;
+}
+
+int path_test_10(){
+	if(1<2){
+		return "3";
+	}else{
+		return 1;
+	}
 }
 
 void main(){	

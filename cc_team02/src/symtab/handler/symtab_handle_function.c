@@ -87,7 +87,7 @@ handle_invalid_param_count(struct mCc_ast_function_call *call, int expected,
 	        strndup(error_msg, strlen(error_msg)));
 
 	append_error_to_function_call(call, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void
@@ -149,7 +149,7 @@ static void handle_expected_return_type(
 	        MCC_VALIDATION_STATUS_INVALID_RETURN,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_def(def, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_expected_type_function_call(
@@ -166,7 +166,7 @@ static void handle_expected_type_function_call(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_call(call, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_unknown_inconsistent_type(
@@ -181,7 +181,7 @@ static void handle_unknown_inconsistent_type(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_call(call, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static bool

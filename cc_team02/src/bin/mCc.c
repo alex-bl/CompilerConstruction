@@ -104,14 +104,18 @@ int main(int argc, char *argv[])
 
 	/* build symbol-table */
 	{
-		bool semantic_check_successfull =
-		    mCc_symtab_perform_semantic_checks(prog);
+		int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
 
-		if (!semantic_check_successfull) {
-			fprintf(out_put, "Semantic errors detected:\n");
+		if (nr_of_semantic_errors > 0) {
+			fprintf(out_put, "================================================="
+			                 "=========================================\n");
+			fprintf(out_put, "Semantic checking finished with errors:\n");
 			fprintf(out_put, "================================================="
 			                 "=========================================\n");
 			mCc_symtab_print_semantic_errors(prog, out_put);
+			fprintf(out_put, "================================================="
+			                 "=========================================\n");
+			fprintf(out_put, "%d errors reported\n", nr_of_semantic_errors);
 			fprintf(out_put, "================================================="
 			                 "=========================================\n");
 		}

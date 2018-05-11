@@ -39,7 +39,7 @@ TEST(SemanticChecks, MainPresence)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	mCc_ast_delete_program(simple_prog);
 }
 
@@ -52,7 +52,7 @@ TEST(SemanticChecks, MainAbsence)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	ASSERT_TRUE(simple_prog->semantic_error != NULL);
 	ASSERT_EQ(MCC_VALIDATION_STATUS_NO_MAIN,
 	          simple_prog->semantic_error->validation_status);
@@ -69,7 +69,7 @@ TEST(SemanticChecks, InvalidMainSignature)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	ASSERT_TRUE(simple_prog->semantic_error != NULL);
 	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_SIGNATURE,
 	          simple_prog->semantic_error->validation_status);
@@ -86,7 +86,7 @@ TEST(SemanticChecks, InvalidMainSignatureParams)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	ASSERT_TRUE(simple_prog->semantic_error != NULL);
 	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_SIGNATURE,
 	          simple_prog->semantic_error->validation_status);
@@ -106,7 +106,7 @@ TEST(SemanticChecks, IdentifierNoDef)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 
 	struct mCc_ast_assignment *assignment =
 	    simple_prog->first_function_def->first_statement->next_statement
@@ -136,7 +136,7 @@ TEST(SemanticChecks, IdentifierAlreadyDefined)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 
 	struct mCc_ast_declaration *duplicate_declaration =
 	    simple_prog->first_function_def->first_statement->next_statement
@@ -164,7 +164,7 @@ TEST(SemanticChecks, InvalidPrimitiveAssignment)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *invalid_assignment =
 	    find_assignment(simple_prog);
 	ASSERT_TRUE(invalid_assignment != NULL);
@@ -183,7 +183,7 @@ TEST(SemanticChecks, InvalidArrayAssignment)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *invalid_assignment =
 	    find_assignment(simple_prog);
 	ASSERT_TRUE(invalid_assignment != NULL);
@@ -205,7 +205,7 @@ TEST(SemanticChecks, ExpressionSetTypeLiteral)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment = find_assignment(simple_prog);
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INT,
@@ -222,7 +222,7 @@ TEST(SemanticChecks, ExpressionSetTypeParenth)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment = find_assignment(simple_prog);
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INT,
@@ -239,7 +239,7 @@ TEST(SemanticChecks, ExpressionSetTypeBinary)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment = find_assignment(simple_prog);
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INT,
@@ -256,7 +256,7 @@ TEST(SemanticChecks, ExpressionSetTypeBinaryBool)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment = find_assignment(simple_prog);
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL,
@@ -273,7 +273,7 @@ TEST(SemanticChecks, ExpressionSetTypeUnary)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment = find_assignment(simple_prog);
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_BOOL,
@@ -290,7 +290,7 @@ TEST(SemanticChecks, ExpressionSetTypeIdentifier)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_statement *first_stmt = find_first_statement(simple_prog);
 	struct mCc_ast_assignment *assignment =
 	    first_stmt->next_statement->next_statement->assignment;
@@ -310,7 +310,7 @@ TEST(SemanticChecks, ExpressionSetTypeFunctionCall)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment =
 	    find_assignment_function_call(simple_prog);
 
@@ -330,7 +330,7 @@ TEST(SemanticChecks, InvalidParentExpression)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment = find_assignment(simple_prog);
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INCONSISTENT,
@@ -353,7 +353,7 @@ TEST(SemanticChecks, InvalidBinaryExpression)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment = find_assignment(simple_prog);
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INCONSISTENT,
@@ -376,7 +376,7 @@ TEST(SemanticChecks, InvalidUnaryOp)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment = find_assignment(simple_prog);
 
 	ASSERT_EQ(MCC_AST_DATA_TYPE_INCOMPATIBLE,
@@ -399,7 +399,7 @@ TEST(SemanticChecks, InvalidUnaryOpIdentifier)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_statement *first_stmt = find_first_statement(simple_prog);
 	struct mCc_ast_assignment *assignment =
 	    first_stmt->next_statement->next_statement->assignment;
@@ -424,7 +424,7 @@ TEST(SemanticChecks, InvalidExpressionFunctionCallUnknown)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment =
 	    find_assignment_function_call(simple_prog);
 
@@ -449,7 +449,7 @@ TEST(SemanticChecks, InvalidArrayAssignmentIndex)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *invalid_assignment =
 	    find_assignment(simple_prog);
 	ASSERT_TRUE(invalid_assignment != NULL);
@@ -471,7 +471,7 @@ TEST(SemanticChecks, FunctionNoReturnVoid)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	mCc_ast_delete_program(simple_prog);
 }
 
@@ -484,7 +484,7 @@ TEST(SemanticChecks, FunctionEmptyReturnVoid)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	mCc_ast_delete_program(simple_prog);
 }
 
@@ -497,7 +497,7 @@ TEST(SemanticChecks, InvalidFunctionReturnVoid)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_function_def *invalid_function_def =
 	    simple_prog->first_function_def;
 
@@ -520,7 +520,7 @@ TEST(SemanticChecks, InvalidFunctionMissingReturn)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_function_def *invalid_function_def =
 	    simple_prog->first_function_def;
 
@@ -543,7 +543,7 @@ TEST(SemanticChecks, InvalidFunctionEmptyReturn)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_function_def *invalid_function_def =
 	    simple_prog->first_function_def;
 
@@ -566,7 +566,7 @@ TEST(SemanticChecks, InvalidFunctionReturnNonVoid)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_function_def *invalid_function_def =
 	    simple_prog->first_function_def;
 
@@ -592,7 +592,7 @@ TEST(SemanticChecks, InvalidFunctionCallSignature)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment =
 	    find_assignment_function_call(simple_prog);
 
@@ -617,7 +617,7 @@ TEST(SemanticChecks, InvalidFunctionCallType)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_assignment *assignment =
 	    find_assignment_function_call(simple_prog);
 
@@ -643,7 +643,7 @@ TEST(SemanticChecks, InvalidIfStatement)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_statement *first_stmt = find_first_statement(simple_prog);
 
 	ASSERT_TRUE(first_stmt != NULL);
@@ -664,7 +664,7 @@ TEST(SemanticChecks, InvalidIfStatementAdvanced)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_statement *first_stmt = find_first_statement(simple_prog);
 
 	ASSERT_TRUE(first_stmt != NULL);
@@ -685,7 +685,7 @@ TEST(SemanticChecks, InvalidWhileStatement)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_FALSE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_NE(0,mCc_symtab_perform_semantic_checks(simple_prog));
 	struct mCc_ast_statement *first_stmt = find_first_statement(simple_prog);
 
 	ASSERT_TRUE(first_stmt != NULL);
@@ -706,7 +706,7 @@ TEST(SemanticChecks, ValidWhileStatementAdvancedCondition)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 
 	mCc_ast_delete_program(simple_prog);
 }
@@ -720,7 +720,7 @@ TEST(SemanticChecks, ValidWhileStatementAdvancedBooleanCondition)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 
 	mCc_ast_delete_program(simple_prog);
 }
@@ -734,7 +734,7 @@ TEST(SemanticChecks, ValidIfStatementSimpleBooleanCondition)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 
 	mCc_ast_delete_program(simple_prog);
 }
@@ -749,7 +749,7 @@ TEST(SemanticChecks, ValidIfStatementFunctionCall)
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
 
-	ASSERT_TRUE(mCc_symtab_perform_semantic_checks(simple_prog));
+	ASSERT_EQ(0,mCc_symtab_perform_semantic_checks(simple_prog));
 
 	mCc_ast_delete_program(simple_prog);
 }
