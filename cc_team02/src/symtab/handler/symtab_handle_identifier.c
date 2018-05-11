@@ -41,7 +41,7 @@ handle_identifier(struct mCc_ast_identifier *identifier,
 	    mCc_validator_new_validation_result(
 	        status, strndup(error_msg, strlen(error_msg)));
 	append_error_to_identifier(identifier, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static struct mCc_symtab_parameter_ref *

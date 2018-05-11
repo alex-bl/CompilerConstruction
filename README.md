@@ -1,15 +1,10 @@
 # CC team02
 
-See [here](README_original.md) for the original README about the given template.
+This repository contains the cc_team02 full code-base.
 
-## Content
+## Known issues
 
-Contains the cc_team02 full code-base.
-
-
-## Internal notes
-
-This section contains internal notes about the project.
+This section contains known issues about the project.
 
 - **False positive memory-leak**: Valgrind reports a [false positive memory-leak](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802778) at `libstdc++.so.6.0.21`.
 
@@ -28,7 +23,7 @@ Minimal prerequisites:
 - libcurl4-openssl-dev 7.47.0
 - cmake 3.9.6
 
-Please note that the downloaded files need to be installed manually using `./bootstrap --system-curl` to [ensure ssl-support](https://stackoverflow.com/questions/29816529/unsupported-protocol-while-download-tar-gz-package) (which is needed to automatically download external projects).
+Please note that the downloaded files (cmake) need to be installed manually using `./bootstrap --system-curl` to [ensure ssl-support](https://stackoverflow.com/questions/29816529/unsupported-protocol-while-download-tar-gz-package) (which is needed to automatically download external projects).
 
 Manual build steps (**recommended**):
 
@@ -60,11 +55,11 @@ This section lists the available targets that can be build.
 | doxygen		| Builds the documentation      |    - 			|
 | test\*			| Runs all gtests (unit)	| - |
 | build\_and\_test\* | Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild. |
-| build\_and\_test_memcheck\* | Runs all gtests together with valgrind | To run tests with valgrind in meson use `$ meson test --wrap=valgrind` (see [here](https://github.com/mesonbuild/meson/blob/master/docs/markdown/Unit-tests.md)). |
+| build\_and\_test_memcheck\* | Runs all gtests together with valgrind | - |
 | integration\_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration). |
 | run\_benchmarks | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. |
 
-\* Test-targets execute also printer-tests: They don't have any "gtest-assertions" but print the asts (dot-notation) into the build-directory. This dot files are named as follow:
+\* Test-targets execute also printer-tests: They don't have any "gtest-assertions" but print the asts (dot-notation) into `build/<release_type>/test/output`. This dot files are named as follow:
 
 
 `DOT_<test_name>.dot`

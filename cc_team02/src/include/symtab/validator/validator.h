@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 
-#include "config.h"
 #include "ast_identifier.h"
+#include "config.h"
 #include "symbol_table.h"
 #include "symtab_types.h"
 #include "validation_status.h"
@@ -40,6 +40,13 @@ struct mCc_validation_status_result *mCc_validator_new_validation_result(
 void mCc_validator_append_semantic_error(
     struct mCc_validation_status_result *target,
     struct mCc_validation_status_result *to_append);
+
+/**
+ *
+ * @param result
+ */
+void mCc_validator_free_validator_result_simple(
+    struct mCc_validation_status_result *result);
 
 /**
  * Frees the whole error-report

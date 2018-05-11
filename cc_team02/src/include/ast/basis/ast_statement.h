@@ -6,6 +6,8 @@
 #include "ast_expression.h"
 #include "ast_node.h"
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -29,6 +31,7 @@ struct mCc_ast_statement {
 
 	// for semantic checks
 	struct mCc_validation_status_result *semantic_error;
+	bool returns_on_control_path;
 
 	union {
 

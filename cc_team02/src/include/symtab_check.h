@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 // TODO: only this one needed?
-bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program);
+int mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program);
 
 #ifdef __cplusplus
 }

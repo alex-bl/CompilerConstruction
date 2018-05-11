@@ -28,10 +28,10 @@ int main(void)
 
 	/* parsing phase */
 	{
-		struct mCc_parser_result result = mCc_parser_parse_string(stdin);
-		mCc_parser_print_status(stdout, result);
+		struct mCc_parser_result result = mCc_parser_parse_file(stdin);
 
 		if (result.status != MCC_PARSER_STATUS_OK) {
+			mCc_parser_print_status(stdout, result);
 			mCc_parser_destroy_parser(result);
 			return EXIT_FAILURE;
 		}

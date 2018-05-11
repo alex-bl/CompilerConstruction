@@ -41,7 +41,7 @@ handle_inconsistent_type(struct mCc_ast_expression *expression,
 
 	append_error_to_expr(expression, error);
 	expression->data_type = type;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_identifier(struct mCc_ast_expression *expression,
@@ -73,7 +73,7 @@ handle_expected_type(struct mCc_ast_expression *expression,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_expected_numerical_type(
@@ -91,7 +91,7 @@ static void handle_expected_numerical_type(
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_expected_numerical_and_bool_type(
@@ -110,7 +110,7 @@ static void handle_expected_numerical_and_bool_type(
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_invalid_operation(
@@ -129,7 +129,7 @@ static void handle_invalid_operation(
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_invalid_operation_numerical(
@@ -149,7 +149,7 @@ static void handle_invalid_operation_numerical(
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void
@@ -170,7 +170,7 @@ handle_inconsistent_sides(struct mCc_ast_expression *expression,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCONSISTENT;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static bool binary_op_is_numerical(enum mCc_ast_binary_op op)

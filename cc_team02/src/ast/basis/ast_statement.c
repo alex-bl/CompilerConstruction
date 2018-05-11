@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "validator.h"
 
@@ -23,6 +24,7 @@ mCc_ast_new_if_statement(struct mCc_ast_expression *condition_expr,
 	statement->if_statement = if_stmt;
 	statement->else_statement = else_stmt;
 	statement->semantic_error = NULL;
+	statement->returns_on_control_path=false;
 
 	return statement;
 }
@@ -42,6 +44,7 @@ mCc_ast_new_while_statement(struct mCc_ast_expression *loop_expr,
 	statement->loop_condition_expression = loop_expr;
 	statement->while_statement = while_stmt;
 	statement->semantic_error = NULL;
+	statement->returns_on_control_path=false;
 
 	return statement;
 }
@@ -58,6 +61,7 @@ mCc_ast_new_return_statement(struct mCc_ast_expression *return_expression)
 	statement->statement_type = MCC_AST_STATEMENT_RETURN;
 	statement->return_expression = return_expression;
 	statement->semantic_error = NULL;
+	statement->returns_on_control_path=true;
 
 	return statement;
 }
@@ -75,6 +79,7 @@ mCc_ast_new_expression_statement(struct mCc_ast_expression *expression_stmt)
 	statement->statement_type = MCC_AST_STATEMENT_EXPRESSION;
 	statement->expression = expression_stmt;
 	statement->semantic_error = NULL;
+	statement->returns_on_control_path=false;
 
 	return statement;
 }
@@ -92,6 +97,7 @@ mCc_ast_new_declaration_statement(struct mCc_ast_declaration *declaration)
 	statement->statement_type = MCC_AST_STATEMENT_DECLARATION;
 	statement->declaration = declaration;
 	statement->semantic_error = NULL;
+	statement->returns_on_control_path=false;
 
 	return statement;
 }
@@ -109,6 +115,7 @@ mCc_ast_new_assign_statement(struct mCc_ast_assignment *assignment)
 	statement->statement_type = MCC_AST_STATEMENT_ASSIGNMENT;
 	statement->assignment = assignment;
 	statement->semantic_error = NULL;
+	statement->returns_on_control_path=false;
 
 	return statement;
 }

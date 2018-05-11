@@ -76,7 +76,7 @@ handle_assignment(struct mCc_ast_assignment *assignment,
 	    expression_type != MCC_AST_DATA_TYPE_UNKNOWN &&
 	    expression_type != MCC_AST_DATA_TYPE_INCONSISTENT) {
 		handle_expected_type(assignment, identifier_type, expression_type);
-		info_holder->error_occurred = true;
+		info_holder->error_count++;
 	}
 }
 
@@ -93,7 +93,7 @@ handle_assignment_array(struct mCc_ast_assignment *assignment,
 	    arr_index_expr_type != MCC_AST_DATA_TYPE_INT) {
 		handle_expected_type_array_expr(assignment, MCC_AST_DATA_TYPE_INT,
 		                                arr_index_expr_type);
-		info_holder->error_occurred = true;
+		info_holder->error_count++;
 	}
 }
 

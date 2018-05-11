@@ -61,7 +61,7 @@ static void handle_main_presence(struct mCc_ast_program *program,
 			mCc_validator_new_validation_result(validation_error,
 					strndup(error_msg, strlen(error_msg)));
 	append_error_to_pgrogram(program, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 void mCc_symtab_handle_program_post_order(struct mCc_ast_program *program,

@@ -245,6 +245,11 @@ endforeach(entry_name)
 #	add_dependencies(run_benchmarks ${entry_name}_benchmark_exec)
 #endforeach(entry_name)
 
+#================================================================= logging
+add_custom_target(cleanup_logger
+			COMMAND echo "Removing log-files..."
+			COMMAND rm -f ${PROJECT_SOURCE_DIR}/log/*.log) 
+
 #================================================================ doxygen
 # why doxygen cannot be in upper-case???? => not compilant to BISON, FLEX find_package -.-
 find_package(Doxygen)

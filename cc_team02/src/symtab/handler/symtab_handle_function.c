@@ -1,4 +1,4 @@
-#include "handler/symtab_handle_function.h"
+#include "symtab_handle_function.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -87,7 +87,7 @@ handle_invalid_param_count(struct mCc_ast_function_call *call, int expected,
 	        strndup(error_msg, strlen(error_msg)));
 
 	append_error_to_function_call(call, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void
@@ -108,6 +108,8 @@ handle_function_def(struct mCc_ast_function_def *function_def,
 	} else {
 		mCc_symtab_insert_function_def_node(info_holder->symbol_table->parent,
 		                                    function_def);
+		// append to holder for error-handling at statement-level
+		info_holder->function_identifier = identifier;
 		log_debug("New function declaration inserted to symbol-table scope %d",
 		          scope_level);
 	}
@@ -131,22 +133,23 @@ void mCc_symtab_handle_function_def_pre_order(struct mCc_ast_function_def *def,
 }
 
 // TODO: refactor => duplicate to symtab_handle_statement except return
-static void
-handle_expected_type(struct mCc_ast_function_def *def,
-                     enum mCc_ast_data_type expected,
-                     enum mCc_ast_data_type actual,
-                     struct mCc_symtab_and_validation_holder *info_holder)
+static void handle_expected_return_type(
+    struct mCc_ast_function_def *def, enum mCc_ast_data_type expected,
+    enum mCc_ast_data_type actual,
+    struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
-	         "Incompatible return type: Expected '%s' but have '%s'",
-	         print_data_type(expected), print_data_type(actual));
+	         "In function '%s': Expected a return-type of '%s' but have '%s' "
+	         "(incompatible return type)",
+	         def->identifier->identifier_name, print_data_type(expected),
+	         print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_RETURN,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_def(def, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_expected_type_function_call(
@@ -163,7 +166,7 @@ static void handle_expected_type_function_call(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_call(call, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_unknown_inconsistent_type(
@@ -178,7 +181,7 @@ static void handle_unknown_inconsistent_type(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_function_call(call, error);
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static bool
@@ -189,8 +192,8 @@ void_function_checked(struct mCc_ast_function_def *def,
 {
 	if (!return_statement || !return_statement->return_expression) {
 		if (function_type != MCC_AST_DATA_TYPE_VOID) {
-			handle_expected_type(def, function_type, MCC_AST_DATA_TYPE_VOID,
-			                     info_holder);
+			handle_expected_return_type(def, function_type,
+			                            MCC_AST_DATA_TYPE_VOID, info_holder);
 		}
 		// everything is fine if function is void
 		return true;
@@ -217,29 +220,14 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 	if (def->semantic_error || def->identifier->semantic_error) {
 		log_debug("Error already detected. Do not check return type");
 	} else {
-		struct mCc_ast_statement *return_statement =
-		    mCc_validator_find_return_statement(def);
-		enum mCc_ast_data_type function_type =
-		    identifier->symtab_info->data_type;
-
-		// no more checks needed
-		if (void_function_checked(def, return_statement, function_type,
-		                          info_holder)) {
-			return;
-		}
-
-		enum mCc_ast_data_type return_type =
-		    return_statement->return_expression->data_type;
-		// if return is void and no return-expression is set => valid
-		if (!return_statement->return_expression &&
-		    return_type == MCC_AST_DATA_TYPE_VOID) {
-			return;
-		}
-		// incompatible types
-		if (return_type != MCC_AST_DATA_TYPE_INCONSISTENT &&
-		    return_type != MCC_AST_DATA_TYPE_UNKNOWN &&
-		    return_type != function_type) {
-			handle_expected_type(def, function_type, return_type, info_holder);
+		struct mCc_ast_statement *return_statement = def->first_statement;
+		// this stage just requires to check an empty function
+		if (return_statement == NULL) {
+			enum mCc_ast_data_type function_type =
+			    identifier->symtab_info->data_type;
+			// no more checks needed
+			void_function_checked(def, return_statement, function_type,
+			                      info_holder);
 		}
 	}
 	log_debug("Function-def return-type-checking completed");
