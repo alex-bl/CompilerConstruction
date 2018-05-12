@@ -5,6 +5,9 @@
 
 //#include "mCc/ast/basis/ast_data_type.h"
 
+//add another parameter for defining the next tac element?
+//or how to define the next tac element?
+//improving the whole tac structure
 struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation, struct mCc_tac_identifier *argument1,
 		struct mCc_tac_identifier *argument2, struct mCc_tac_identifier *result)
 {
