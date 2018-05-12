@@ -5,7 +5,7 @@
 
 #include "mCc/tac/basis/basic_tac.h"
 
-void mCc_tac_identifier(struct mCc_ast_identifier *identifier, void *data)
+void mCc_tac_print_identifier(struct mCc_ast_identifier *identifier, void *data)
 {
 	assert(identifier);
 	assert(data);

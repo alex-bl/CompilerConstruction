@@ -82,7 +82,7 @@ static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
  * should be the "top"
  * is "global"
  */
-void mCc_tac_start_program(struct mCc_tac_element *tac, struct mCc_ast_program *program)
+void mCc_tac_print_start_program(struct mCc_tac_element *tac, struct mCc_ast_program *program)
 {
 	assert(tac);
 	assert(program);
