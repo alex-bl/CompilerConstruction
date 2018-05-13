@@ -939,3 +939,63 @@ TEST(SemanticChecks, ValidIfStatementFunctionCall)
 
 	mCc_ast_delete_program(simple_prog);
 }
+
+TEST(SemanticChecks, ValidIfStatementArray)
+{
+	const char *simple_main = "bool is_valid(){return true;} void "
+	                          "main(){bool[3] arr; if(arr[3]==true){}}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_EQ(0, mCc_symtab_perform_semantic_checks(simple_prog));
+
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, ValidNegUnaryOp)
+{
+	const char *simple_main = "bool is_valid(){int a; a=-3; return true;} void "
+	                          "main(){bool[3] arr; if(arr[3]==true){}}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_EQ(0, mCc_symtab_perform_semantic_checks(simple_prog));
+
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, ValidIfStatementArrayInvalid)
+{
+	const char *simple_main = "bool is_valid(){return true;} void "
+	                          "main(){bool[3] arr; if(arr[3]==\"2\"){}}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_EQ(1, mCc_symtab_perform_semantic_checks(simple_prog));
+
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, ValidIfStatementFunctionCallMultipleStatements)
+{
+	const char *simple_main = "bool is_valid(){int a; int b; string c; return "
+	                          "true;} void main(){if(is_valid()){}}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_EQ(0, mCc_symtab_perform_semantic_checks(simple_prog));
+
+	mCc_ast_delete_program(simple_prog);
+}

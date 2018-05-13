@@ -125,6 +125,10 @@ int main(int argc, char *argv[])
 			fprintf(out_put, "%d error(s) reported\n", nr_of_semantic_errors);
 			fprintf(out_put, "================================================="
 			                 "=========================================\n");
+			mCc_ast_delete_program(prog);
+			mCc_ast_delete_program(buildins);
+
+			return EXIT_FAILURE;
 		}
 	}
 

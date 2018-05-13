@@ -1,11 +1,11 @@
 float calc_diameter(float radius)
 {
-	return 2 * radius;
+	return 2.0 * radius;
 }
 
 float calc_circumference(float radius, float pi)
 {
-	return 2 * radius * pi;
+	return 2.0 * radius * pi;
 }
 
 float calc_area(float radius, float pi)

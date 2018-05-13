@@ -312,13 +312,13 @@ void mCc_handle_expression_identifier_array_post_order(
 
 		if (arr_expr_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
 		    arr_expr_type == MCC_AST_DATA_TYPE_UNKNOWN) {
-			expression->data_type = arr_expr_type;
+			expression->array_index_expression->data_type = arr_expr_type;
 		} else if (arr_expr_type != MCC_AST_DATA_TYPE_INT) {
 			handle_expected_type(expression, MCC_AST_DATA_TYPE_INT,
 			                     arr_expr_type, info_holder);
 		} else {
 			// type is int as expected
-			expression->data_type = arr_expr_type;
+			expression->array_index_expression->data_type = arr_expr_type;
 		}
 	}
 }
@@ -348,7 +348,7 @@ void mCc_handle_expression_unary_op_post_order(
 	}
 	// minus on non-numerical-type
 	else if (unary_op == MCC_AST_UNARY_OP_MINUS &&
-	         (unary_op_data_type != MCC_AST_DATA_TYPE_INT ||
+	         (unary_op_data_type != MCC_AST_DATA_TYPE_INT &&
 	          unary_op_data_type != MCC_AST_DATA_TYPE_FLOAT)) {
 
 		handle_expected_numerical_type(expression, unary_op_data_type,

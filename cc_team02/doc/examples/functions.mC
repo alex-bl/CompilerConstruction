@@ -1,11 +1,3 @@
-void main() {
-    int test;
-    while_function (3.3, true);
-    test = dangling_else_function();
-    print(test);
-    array_functions();
-}
-
 int dangling_else_function() {
     if (true && true) (42 + 2) * 4;
         if (false || false) 42 * 1 + 14;
@@ -17,7 +9,7 @@ void while_function(float f, bool b) {
     int i;
     i = 0;
     while (i < 2) {
-        print(i);
+        print_int(i);
         i = i + 1;
     }
     string str;
@@ -34,8 +26,17 @@ void while_function(float f, bool b) {
 void array_functions() {
     int[10] arr;
     if (7 == 7) arr[1+1] = 8;
-    print(arr[2]);
+    print_int(arr[2]);
     if (6 != 6) arr[3] = 6;
     print(arr[3]);
     return;
 }
+
+void main() {
+    int test;
+    while_function (3.3, true);
+    test = dangling_else_function();
+    print_int(test);
+    array_functions();
+}
+

@@ -21,6 +21,10 @@ return a;
 }
 
 int path_test(){
+	int a;
+	int b;
+	string c;
+	
 	if(1<2){
 		return 1;
 	}else{

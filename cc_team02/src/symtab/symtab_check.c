@@ -135,7 +135,7 @@ int mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 	    mCc_symtab_new_symbol_table(NULL, 0);
 	if (!symbol_table) {
 		log_error("Malloc failed: Could not init top-level symbol-table");
-		return NULL;
+		return -1;
 	}
 	log_debug("Top-level symbol-table with scope %d created",
 	          symbol_table->scope_level);

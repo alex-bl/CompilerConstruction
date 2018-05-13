@@ -94,6 +94,31 @@ static void handle_returns_on_control_path(
 	info_holder->error_count++;
 }
 
+// do that recursively
+static bool statement_returns(struct mCc_ast_statement *statement)
+{
+	if (statement) {
+		if (statement->statement_type == MCC_AST_STATEMENT_IF) {
+			bool if_returns = statement_returns(statement->if_statement);
+			bool else_returns =
+			    (statement->else_statement == NULL
+			         ? true
+			         : statement_returns(statement->else_statement));
+
+			statement->returns_on_control_path = if_returns && else_returns;
+		}
+
+		if (statement->next_statement && !statement->returns_on_control_path) {
+			// set while traversing
+			statement->returns_on_control_path =
+			    statement_returns(statement->next_statement);
+		}
+		return statement->returns_on_control_path;
+	} else {
+		return false;
+	}
+}
+
 static bool
 if_statement_returns_on_all_paths(struct mCc_ast_statement *statement)
 {
@@ -123,12 +148,14 @@ remove_invalid_path_errors(struct mCc_ast_statement *statement,
                            struct mCc_symtab_and_validation_holder *info_holder)
 {
 	if (statement->statement_type == MCC_AST_STATEMENT_IF) {
-		remove_invalid_path_errors(statement->if_statement,info_holder);
-		remove_invalid_path_errors(statement->else_statement,info_holder);
+		remove_invalid_path_errors(statement->if_statement, info_holder);
+		if (statement->else_statement) {
+			remove_invalid_path_errors(statement->else_statement, info_holder);
+		}
 	} else if (statement->statement_type == MCC_AST_STATEMENT_WHILE) {
-		remove_invalid_path_errors(statement->while_statement,info_holder);
+		remove_invalid_path_errors(statement->while_statement, info_holder);
 	} else if (statement->next_statement) {
-		remove_invalid_path_errors(statement->next_statement,info_holder);
+		remove_invalid_path_errors(statement->next_statement, info_holder);
 	}
 
 	if (!statement->returns_on_control_path) {
@@ -136,7 +163,6 @@ remove_invalid_path_errors(struct mCc_ast_statement *statement,
 		info_holder->error_count--;
 	}
 }
-
 
 /*
  * TODO: https://stackoverflow.com/questions/21945891/how-do-i-check-whether-all-code-paths-return-a-value
@@ -167,7 +193,7 @@ static void set_returns_on_control_path(struct mCc_ast_statement *statement,
 		}
 
 		if (next_statement) {
-			next_stmt_returns = next_statement->returns_on_control_path;
+			next_stmt_returns = statement_returns(next_statement);
 		}
 
 		statement->returns_on_control_path =
