@@ -125,5 +125,6 @@ void main(){
 	while(1 || 2) {}	
 	while(c && !c) {}
 	while(c || !c) {}
-		
+	
+	return;	
 }

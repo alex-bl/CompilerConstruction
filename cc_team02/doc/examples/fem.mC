@@ -5,7 +5,7 @@ void main()
 	float dt;
 	float R;
 	float C;
-	int iter;
+	float iter;
 	float t;
 	float Ic;
 	float dV;
@@ -28,14 +28,14 @@ void main()
 	if (R < 0.0 || C < 0.0) {
 		print("Part values must be positive");
 		print_nl();
-		return -1;
+		return;
 	}
 
 	print("Time step: ");
 	dt = read_float();
 
 	print("Number of iterations: ");
-	iter = read_int();
+	iter = read_float();
 
 	if (dt < 0.0 && iter < 0.0) {
 		dt = -dt;
@@ -44,16 +44,16 @@ void main()
 		print_nl();
 	}
 
-	if (dt < 0.0 || iter < 0) {
+	if (dt < 0.0 || iter < 0.0) {
 		print("Cowardly refusing to go backwards in time");
 		print_nl();
-		return -1;
+		return;
 	}
 
 	Vc = 0.0;
 	t = 0.0;
 
-	while (iter > 0) {
+	while (iter > 0.0) {
 		print("Capacitor voltage after ");
 		print_float(t);
 		print("s: ");
@@ -65,6 +65,6 @@ void main()
 
 		Vc = Vc + dV;
 		t = t + dt;
-		iter = iter - 1;
+		iter = iter - 1.0;
 	}
 }

@@ -28,7 +28,7 @@ void array_functions() {
     if (7 == 7) arr[1+1] = 8;
     print_int(arr[2]);
     if (6 != 6) arr[3] = 6;
-    print(arr[3]);
+    print_int(arr[3]);
     return;
 }
 
