@@ -55,12 +55,13 @@ struct mCc_tac_element {
 	struct mCc_tac_identifier *tac_argument1;
 	struct mCc_tac_identifier *tac_argument2;
 	struct mCc_tac_identifier *tac_result;
-	struct mCc_tac_next_elment* tac_next_element;
+	struct mCc_tac_element *tac_next_element;
 };
 
 struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation, struct mCc_tac_identifier *argument1,
 		struct mCc_tac_identifier *argument2, struct mCc_tac_identifier *result);
 
+void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac, struct mCc_tac_element *tac);
 
 struct mCc_tac_identifier {
 	char *name;
