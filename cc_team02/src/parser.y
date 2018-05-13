@@ -459,5 +459,20 @@ void mCc_parser_print_status(FILE *out, struct mCc_parser_result result)
 		        result.error_location.sloc.start_line,
 		        result.error_location.sloc.start_col);
 		break;
+	case MCC_PARSER_STATUS_INVALID_TOP_LEVEL:{
+		int start_line=0;
+		int start_col=0;
+		// invalid top-level => expression or statement
+		if(result.top_level_type == MCC_PARSER_TOP_LEVEL_EXPRESSION){
+			start_line=result.expression->node.sloc.start_line;
+			start_col=result.expression->node.sloc.start_col;			
+		}else{
+			start_line=result.statement->node.sloc.start_line;
+			start_col=result.statement->node.sloc.start_col;						
+		}
+		fprintf(out, "Syntax error near line %d col %d\n", start_line, start_col);		
+		break;		
+	}
+
 	}
 }

@@ -65,7 +65,7 @@ void tac_edge(FILE *out, const void *src_node, const void *dst_node,
 void tac_edge_if_dest_exists(FILE *out, const void *src_node,
                                    const void *dst_node, const char *label);
 
-const char *print_data_type(enum mCc_ast_data_type type);*/
+const char *mCc_ast_print_data_type(enum mCc_ast_data_type type);*/
 
 #ifdef __cplusplus
 }

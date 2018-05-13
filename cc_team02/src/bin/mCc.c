@@ -91,11 +91,18 @@ int main(int argc, char *argv[])
 		struct mCc_parser_result result = mCc_parser_parse_file(in);
 		fclose(in);
 
+		// wrong top-level
+		if (result.top_level_type != MCC_PARSER_TOP_LEVEL_PROGRAM &&
+		    result.status == MCC_PARSER_STATUS_OK) {
+			result.status = MCC_PARSER_STATUS_INVALID_TOP_LEVEL;
+		}
+
 		if (result.status != MCC_PARSER_STATUS_OK) {
 			mCc_parser_print_status(stderr, result);
 			mCc_parser_destroy_parser(result);
 			return EXIT_FAILURE;
 		}
+
 		prog = result.program;
 
 		// include buildins
@@ -118,6 +125,10 @@ int main(int argc, char *argv[])
 			fprintf(out_put, "%d error(s) reported\n", nr_of_semantic_errors);
 			fprintf(out_put, "================================================="
 			                 "=========================================\n");
+			mCc_ast_delete_program(prog);
+			mCc_ast_delete_program(buildins);
+
+			return EXIT_FAILURE;
 		}
 	}
 

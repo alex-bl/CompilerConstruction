@@ -16,16 +16,6 @@
 
 #define YYLTYPE MCC_PARSER_LTYPE
 
-/* TODO:
- * - track lines
- * - take line breaks into account
- */
-//#define YY_USER_ACTION \
-//	yylloc->first_column = yylloc->last_column; \
-//	yylloc->last_column += yyleng; \
-//	yylloc->first_line = yylloc->last_line; \
-//	yylloc->last_line = yylineno;
-
 //from https://stackoverflow.com/questions/656703/how-does-flex-support-bison-location-exactly/22125500#22125500
 #define YY_USER_ACTION \
     yylloc->first_line = yylloc->last_line; \

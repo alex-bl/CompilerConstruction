@@ -30,5 +30,5 @@ void main()
 	print_int(result);
 	print_nl();
 	
-    return 0;
+    return;
 }

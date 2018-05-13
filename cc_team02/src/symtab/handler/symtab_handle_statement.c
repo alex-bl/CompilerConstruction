@@ -30,7 +30,7 @@ handle_expected_type(struct mCc_ast_statement *statement,
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types: Expected '%s' but have '%s'",
-	         print_data_type(expected), print_data_type(actual));
+	         mCc_ast_print_data_type(expected), mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
@@ -49,7 +49,7 @@ static void handle_expected_return_type(
 	         "In function '%s': Expected a return-type of '%s' but have '%s' "
 	         "(incompatible return type)",
 	         info_holder->function_identifier->identifier_name,
-	         print_data_type(expected), print_data_type(actual));
+	         mCc_ast_print_data_type(expected), mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_RETURN,
@@ -85,13 +85,40 @@ static void handle_returns_on_control_path(
 	    error_msg, ERROR_MSG_BUF_SIZE,
 	    "In function '%s': Missing return of type '%s' on this execution path",
 	    identifier->identifier_name,
-	    print_data_type(identifier->symtab_info->data_type));
+	    mCc_ast_print_data_type(identifier->symtab_info->data_type));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_MISSING_RETURN_PATH,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_statement(statement, error);
 	info_holder->error_count++;
+}
+
+// do that recursively
+static bool statement_returns(struct mCc_ast_statement *statement)
+{
+	if (statement) {
+
+		if (statement->next_statement && !statement->returns_on_control_path) {
+					// set while traversing
+					statement->returns_on_control_path =
+					    statement_returns(statement->next_statement);
+		}
+
+		if (statement->statement_type == MCC_AST_STATEMENT_IF && !statement->returns_on_control_path) {
+			bool if_returns = statement_returns(statement->if_statement);
+			bool else_returns =
+			    (statement->else_statement == NULL
+			         ? true
+			         : statement_returns(statement->else_statement));
+
+			statement->returns_on_control_path = if_returns && else_returns;
+		}
+
+		return statement->returns_on_control_path;
+	} else {
+		return false;
+	}
 }
 
 static bool
@@ -123,12 +150,14 @@ remove_invalid_path_errors(struct mCc_ast_statement *statement,
                            struct mCc_symtab_and_validation_holder *info_holder)
 {
 	if (statement->statement_type == MCC_AST_STATEMENT_IF) {
-		remove_invalid_path_errors(statement->if_statement,info_holder);
-		remove_invalid_path_errors(statement->else_statement,info_holder);
+		remove_invalid_path_errors(statement->if_statement, info_holder);
+		if (statement->else_statement) {
+			remove_invalid_path_errors(statement->else_statement, info_holder);
+		}
 	} else if (statement->statement_type == MCC_AST_STATEMENT_WHILE) {
-		remove_invalid_path_errors(statement->while_statement,info_holder);
+		remove_invalid_path_errors(statement->while_statement, info_holder);
 	} else if (statement->next_statement) {
-		remove_invalid_path_errors(statement->next_statement,info_holder);
+		remove_invalid_path_errors(statement->next_statement, info_holder);
 	}
 
 	if (!statement->returns_on_control_path) {
@@ -136,7 +165,6 @@ remove_invalid_path_errors(struct mCc_ast_statement *statement,
 		info_holder->error_count--;
 	}
 }
-
 
 /*
  * TODO: https://stackoverflow.com/questions/21945891/how-do-i-check-whether-all-code-paths-return-a-value
@@ -150,34 +178,38 @@ You can do this with a recursive walk over the AST. For example:
  *
  *
  */
-static void set_returns_on_control_path(struct mCc_ast_statement *statement,
-		 struct mCc_symtab_and_validation_holder *info_holder)
+static void set_returns_on_control_path(
+    struct mCc_ast_statement *statement,
+    struct mCc_symtab_and_validation_holder *info_holder)
 {
 	assert(statement);
 
-	if (!statement->returns_on_control_path) {
-		struct mCc_ast_statement *next_statement = statement->next_statement;
-		// e.g. on ifs
-		bool special_return_path = false;
-		bool next_stmt_returns = false;
+	// do this check(s) always
+	//	if (!statement->returns_on_control_path) {
+	struct mCc_ast_statement *next_statement = statement->next_statement;
+	// e.g. on ifs
+	bool special_return_path = false;
+	bool next_stmt_returns = false;
 
-		// handle if
-		if (statement->statement_type == MCC_AST_STATEMENT_IF) {
-			special_return_path = if_statement_returns_on_all_paths(statement);
-		}
-
-		if (next_statement) {
-			next_stmt_returns = next_statement->returns_on_control_path;
-		}
-
-		statement->returns_on_control_path =
-		    special_return_path || next_stmt_returns;
-
-		//if statement has a path
-		if(!special_return_path && next_stmt_returns){
-			remove_invalid_path_errors(statement,info_holder);
-		}
+	// handle if
+	if (statement->statement_type == MCC_AST_STATEMENT_IF) {
+		special_return_path = if_statement_returns_on_all_paths(statement);
 	}
+
+	if (next_statement) {
+		next_stmt_returns = statement_returns(next_statement);
+	}
+
+	statement->returns_on_control_path =
+	    special_return_path || next_stmt_returns;
+
+	// on void functions there isn't any missing return-error to remove
+	if (!special_return_path && next_stmt_returns &&
+	    info_holder->function_identifier->symtab_info->data_type !=
+	        MCC_AST_DATA_TYPE_VOID) {
+		remove_invalid_path_errors(statement, info_holder);
+	}
+	//	}
 }
 
 static enum mCc_ast_data_type get_expected_type(void *data)

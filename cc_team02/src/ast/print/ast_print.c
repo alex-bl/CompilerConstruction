@@ -83,12 +83,12 @@ void mCc_ast_print_dot_assignment(FILE *out,
 	assert(out);
 	assert(assignment);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_assignment(assignment, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }
 
 void mCc_ast_print_dot_declaration(FILE *out,
@@ -97,12 +97,12 @@ void mCc_ast_print_dot_declaration(FILE *out,
 	assert(out);
 	assert(declaration);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_declaration(declaration, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }
 
 void mCc_ast_print_dot_statement(FILE *out, struct mCc_ast_statement *statement)
@@ -110,12 +110,12 @@ void mCc_ast_print_dot_statement(FILE *out, struct mCc_ast_statement *statement)
 	assert(out);
 	assert(statement);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_statement(statement, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }
 
 /*
@@ -127,12 +127,12 @@ void mCc_ast_print_dot_program(FILE *out, struct mCc_ast_program *program)
 	assert(out);
 	assert(program);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_program(program, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }
 
 void mCc_ast_print_dot_literal(FILE *out, struct mCc_ast_literal *literal)
@@ -140,12 +140,12 @@ void mCc_ast_print_dot_literal(FILE *out, struct mCc_ast_literal *literal)
 	assert(out);
 	assert(literal);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_literal(literal, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }
 
 void mCc_ast_print_dot_identifier(FILE *out,
@@ -154,12 +154,12 @@ void mCc_ast_print_dot_identifier(FILE *out,
 	assert(out);
 	assert(identifier);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_identifier(identifier, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }
 
 void mCc_ast_print_dot_function_def(FILE *out,
@@ -168,12 +168,12 @@ void mCc_ast_print_dot_function_def(FILE *out,
 	assert(out);
 	assert(function_def);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_function_def(function_def, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }
 
 void mCc_ast_print_dot_function_call(
@@ -182,12 +182,12 @@ void mCc_ast_print_dot_function_call(
 	assert(out);
 	assert(function_call);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_function_call(function_call, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }
 
 void mCc_ast_print_dot_expression(FILE *out,
@@ -196,10 +196,10 @@ void mCc_ast_print_dot_expression(FILE *out,
 	assert(out);
 	assert(expression);
 
-	print_dot_begin(out);
+	mCc_ast_print_dot_begin(out);
 
 	struct mCc_ast_visitor visitor = print_dot_visitor(out);
 	mCc_ast_visit_expression(expression, &visitor);
 
-	print_dot_end(out);
+	mCc_ast_print_dot_end(out);
 }

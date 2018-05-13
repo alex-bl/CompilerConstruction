@@ -10,13 +10,13 @@ bool is_even(int n) {
 
 float calculate_pi(float n){
     float i;
-    i = 3;
+    i = 3.0;
     bool neg;
     neg = true;
     float val;
     bool flag;
     flag = true;
-    val = 4;
+    val = 4.0;
     while(i < n) {
         if (flag == true) {
             float tmp;

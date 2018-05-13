@@ -14,7 +14,7 @@ void main(){
     }
     print(g);
     print_nl();
-    if (a!=b && b!= 1){
+    if (a!=b && b!= 1.0){
         g="Compiler Construction";
     }
     print(g);

@@ -27,5 +27,5 @@ void main()
 	print(" = ");
 	print_int(result);
 	
-    return 0;
+	return;
 }

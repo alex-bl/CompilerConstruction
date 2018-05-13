@@ -1,6 +1,6 @@
 float calc_mean(float a, float b){
 	float c;
-	c = (a+b) / 2;
+	c = (a+b) / 2.0;
 	return c;
 }
 
@@ -13,15 +13,15 @@ void main(){
 	bool swap;
 	int i;
 
-	arr_a[0] = 10;
-	arr_b[0] = 10;
-	change = 10;
+	arr_a[0] = 10.0;
+	arr_b[0] = 10.0;
+	change = 10.0;
 	swap = true;
 	i = 1;
 
 	while(i < 100){
-		arr_a[i] = 0;
-		arr_b[i] = 0;
+		arr_a[i] = 0.0;
+		arr_b[i] = 0.0;
 		i = i + 1;
 	}
 
@@ -31,7 +31,7 @@ void main(){
 
 	while(change > threshold){
 		count = 0;
-		change = 0;
+		change = 0.0;
 		while(count < 98){
 			if(swap){
 				arr_b[count+1] = calc_mean(arr_a[count], arr_a[count+2]);

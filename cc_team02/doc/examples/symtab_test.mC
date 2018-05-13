@@ -21,6 +21,10 @@ return a;
 }
 
 int path_test(){
+	int a;
+	int b;
+	string c;
+	
 	if(1<2){
 		return 1;
 	}else{
@@ -121,5 +125,6 @@ void main(){
 	while(1 || 2) {}	
 	while(c && !c) {}
 	while(c || !c) {}
-		
+	
+	return;	
 }

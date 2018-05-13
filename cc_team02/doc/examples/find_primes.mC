@@ -1,3 +1,12 @@
+int modulo(int a, int b)
+{
+    int tmp;
+    tmp = a / b;
+    tmp = b * tmp;
+    return a - tmp;
+
+}
+
 bool check_primes_(int n, int i)
 {
     if (n == i) {
@@ -14,15 +23,6 @@ bool check_primes(int n)
 	return check_primes_(n, 2);
 }
 
-int modulo(int a, int b)
-{
-    int tmp;
-    tmp = a / b;
-    tmp = b * tmp;
-    return a - tmp;
-
-}
-
 void main()
 {
 	print("Please enter a number: ");
@@ -31,7 +31,7 @@ void main()
 	n = read_int();
 	print_nl();
 
-	int result;
+	bool result;
 	result = check_primes(n);
 
 	if (result) {
