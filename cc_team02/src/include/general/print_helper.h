@@ -9,9 +9,7 @@
 extern "C" {
 #endif
 
-const char *print_data_type(enum mCc_ast_data_type type);
-
-void print_signature(struct mCc_ast_identifier *identifier, char *buffer);
+const char *mCc_ast_print_data_type(enum mCc_ast_data_type type);
 
 const char *mCc_ast_print_binary_op(enum mCc_ast_binary_op op);
 

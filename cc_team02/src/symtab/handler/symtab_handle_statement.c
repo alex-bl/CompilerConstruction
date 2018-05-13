@@ -30,7 +30,7 @@ handle_expected_type(struct mCc_ast_statement *statement,
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types: Expected '%s' but have '%s'",
-	         print_data_type(expected), print_data_type(actual));
+	         mCc_ast_print_data_type(expected), mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
@@ -49,7 +49,7 @@ static void handle_expected_return_type(
 	         "In function '%s': Expected a return-type of '%s' but have '%s' "
 	         "(incompatible return type)",
 	         info_holder->function_identifier->identifier_name,
-	         print_data_type(expected), print_data_type(actual));
+	         mCc_ast_print_data_type(expected), mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_RETURN,
@@ -85,7 +85,7 @@ static void handle_returns_on_control_path(
 	    error_msg, ERROR_MSG_BUF_SIZE,
 	    "In function '%s': Missing return of type '%s' on this execution path",
 	    identifier->identifier_name,
-	    print_data_type(identifier->symtab_info->data_type));
+	    mCc_ast_print_data_type(identifier->symtab_info->data_type));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_MISSING_RETURN_PATH,

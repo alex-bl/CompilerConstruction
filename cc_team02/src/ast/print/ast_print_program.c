@@ -10,6 +10,6 @@ void mCc_print_dot_program(struct mCc_ast_program *program, void *data)
 	assert(data);
 
 	FILE *out = data;
-	print_dot_node(out, program, "program");
-	print_dot_edge(out, program, program->first_function_def, "first function");
+	mCc_ast_print_dot_node(out, program, "program");
+	mCc_ast_print_dot_edge(out, program, program->first_function_def, "first function");
 }
