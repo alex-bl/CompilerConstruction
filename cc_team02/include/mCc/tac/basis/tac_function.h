@@ -4,15 +4,17 @@
 #include <stdio.h>
 
 #include "mCc/ast/basis/ast_function.h"
+#include "mCc/tac/basis/basic_tac.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void mCc_tac_function_def(struct mCc_ast_function_def *def, void *data);
+void mCc_tac_function_def(struct mCc_ast_function_def *def,
+                          struct mCc_tac_element *previous_tac);
 
 void mCc_tac_function_call(struct mCc_ast_function_call *call,
-                                 void *data);
+                           struct mCc_tac_element *previous_tac);
 
 #ifdef __cplusplus
 }

@@ -4,10 +4,11 @@
 
 #include "mCc/tac/basis/basic_tac.h"
 
-void mCc_tac_program(struct mCc_ast_program *program, void *data)
+void mCc_tac_program(struct mCc_ast_program *program,
+                     struct mCc_tac_element *previous_tac)
 {
 	assert(program);
-	assert(data);
+	assert(previous_tac);
 
 	tac_new_element(MCC_TAC_OPARATION_RETURN, program->first_function_def, NULL,
 	                NULL);

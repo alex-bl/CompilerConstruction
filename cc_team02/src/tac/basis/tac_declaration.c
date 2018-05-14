@@ -5,10 +5,10 @@
 #include "mCc/tac/basis/basic_tac.h"
 
 void mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
-                                   void *data)
+                                   struct mCc_tac_element *previous_tac)
 {
 	assert(declaration);
-	assert(data);
+	assert(previous_tac);
 
 	// not correct?
 	tac_new_element(
@@ -18,10 +18,10 @@ void mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
 }
 
 void mCc_tac_declaration_array(struct mCc_ast_declaration *declaration,
-                               void *data)
+                               struct mCc_tac_element *previous_tac)
 {
 	assert(declaration);
-	assert(data);
+	assert(previous_tac);
 
 	// not correct?
 	tac_new_element(

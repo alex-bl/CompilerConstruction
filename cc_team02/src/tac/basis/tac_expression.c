@@ -9,26 +9,26 @@
 // const char *mCc_tac_unary_op(enum mCc_ast_unary_op op) {}
 
 void mCc_tac_expression_literal(struct mCc_ast_expression *expression,
-                                void *data)
+                                struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
-	assert(data);
+	assert(previous_tac);
 
 	/*struct mCc_tac_identifier *argument1;
 
 	switch (expression->data_type) {
 	case MCC_AST_DATA_TYPE_INT:
-		argument1 = tac_new_identifier((char *)&expression->literal->i_value);
-		break;
+	    argument1 = tac_new_identifier((char *)&expression->literal->i_value);
+	    break;
 	case MCC_AST_DATA_TYPE_FLOAT:
-		argument1 = tac_new_identifier((char *)&expression->literal->f_value);
-		break;
+	    argument1 = tac_new_identifier((char *)&expression->literal->f_value);
+	    break;
 	case MCC_AST_DATA_TYPE_BOOL:
-		argument1 = tac_new_identifier((char *)&expression->literal->b_value);
-		break;
+	    argument1 = tac_new_identifier((char *)&expression->literal->b_value);
+	    break;
 	case MCC_AST_DATA_TYPE_STRING:
-		argument1 = tac_new_identifier((char *)&expression->literal->s_value);
-		break;
+	    argument1 = tac_new_identifier((char *)&expression->literal->s_value);
+	    break;
 	default: argument1 = NULL; break;
 	}*/
 
@@ -36,10 +36,10 @@ void mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 }
 
 void mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
-                                  void *data)
+                                  struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
-	assert(data);
+	assert(previous_tac);
 
 	enum mCc_tac_operation operation;
 
@@ -88,19 +88,19 @@ void mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 }
 
 void mCc_tac_expression_parenth(struct mCc_ast_expression *expression,
-                                void *data)
+                                struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
-	assert(data);
+	assert(previous_tac);
 
 	// TODO add tac element
 }
 
 void mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
-                                   void *data)
+                                   struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
-	assert(data);
+	assert(previous_tac);
 
 	tac_new_element(MCC_TAC_OPERATION_EMPTY,
 	                tac_new_identifier(expression->identifier->identifier_name),
@@ -108,10 +108,10 @@ void mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
 }
 
 void mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
-                                         void *data)
+                                         struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
-	assert(data);
+	assert(previous_tac);
 
 	tac_new_element(
 	    MCC_TAC_OPERATION_EMPTY,
@@ -120,10 +120,10 @@ void mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
 }
 
 void mCc_tac_expression_function_call(struct mCc_ast_expression *expression,
-                                      void *data)
+                                      struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
-	assert(data);
+	assert(previous_tac);
 
 	tac_new_element(MCC_TAC_OPARATION_PROCEDURAL_CALL,
 	                tac_new_identifier(
@@ -132,10 +132,10 @@ void mCc_tac_expression_function_call(struct mCc_ast_expression *expression,
 }
 
 void mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
-                                 void *data)
+                                 struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
-	assert(data);
+	assert(previous_tac);
 
 	enum mCc_tac_operation operation;
 

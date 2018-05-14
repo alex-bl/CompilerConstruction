@@ -5,10 +5,10 @@
 #include "mCc/tac/basis/basic_tac.h"
 
 void mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
-                                  void *data)
+                                  struct mCc_tac_element *previous_tac)
 {
 	assert(assignment);
-	assert(data);
+	assert(previous_tac);
 
 	tac_new_element(MCC_TAC_OPERATION_EMPTY,
 	                tac_new_identifier(assignment->assigned_expression), NULL,
@@ -19,10 +19,11 @@ void mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	// assignment, assignment->identifier, assignment->assigned_expression);
 }
 
-void mCc_tac_assignment_array(struct mCc_ast_assignment *assignment, void *data)
+void mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
+                              struct mCc_tac_element *previous_tac)
 {
 	assert(assignment);
-	assert(data);
+	assert(previous_tac);
 
 	// array_index_expression->array_identifier
 	// array_index_expression->array_index_expression
