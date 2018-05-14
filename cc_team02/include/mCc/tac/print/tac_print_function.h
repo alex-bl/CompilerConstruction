@@ -9,9 +9,9 @@
 extern "C" {
 #endif
 
-void mCc_tac_function_def(struct mCc_ast_function_def *def, void *data);
+void mCc_tac_print_function_def(struct mCc_ast_function_def *def, void *data);
 
-void mCc_tac_function_call(struct mCc_ast_function_call *call,
+void mCc_tac_print_function_call(struct mCc_ast_function_call *call,
                                  void *data);
 
 #ifdef __cplusplus

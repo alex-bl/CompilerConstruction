@@ -9,10 +9,10 @@
 extern "C" {
 #endif
 
-void mCc_tac_declaration_primitive(
+void mCc_tac_print_declaration_primitive(
     struct mCc_ast_declaration *declaration, void *data);
 
-void mCc_tac_declaration_array(struct mCc_ast_declaration *declaration,
+void mCc_tac_print_declaration_array(struct mCc_ast_declaration *declaration,
                                      void *data);
 
 #ifdef __cplusplus

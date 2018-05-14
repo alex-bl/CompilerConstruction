@@ -9,10 +9,10 @@
 extern "C" {
 #endif
 
-void mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
+void mCc_tac_print_assignment_primitive(struct mCc_ast_assignment *assignment,
                                         void *data);
 
-void mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
+void mCc_tac_print_assignment_array(struct mCc_ast_assignment *assignment,
                                     void *data);
 
 #ifdef __cplusplus

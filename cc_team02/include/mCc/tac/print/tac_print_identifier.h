@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-void mCc_tac_identifier(struct mCc_ast_identifier *identifier,
+void mCc_tac_print_identifier(struct mCc_ast_identifier *identifier,
                               void *data);
 
 #ifdef __cplusplus
