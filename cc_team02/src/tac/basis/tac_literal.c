@@ -11,18 +11,11 @@ void mCc_tac_literal_int(struct mCc_ast_literal *literal,
 	assert(literal);
 	assert(previous_tac);
 
-	tac_new_element(MCC_TAC_OPERATION_EMPTY,
-	                tac_new_identifier((char *)&literal->i_value), NULL, NULL);
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPERATION_EMPTY, tac_new_identifier((char *)&literal->i_value),
+	    NULL, NULL);
+	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
-
-/*void mCc_tac_literal_float(struct mCc_ast_literal *literal, void *data)
-{
-    assert(literal);
-    assert(data);
-
-    tac_new_element(MCC_TAC_OPERATION_EMPTY, tac_new_identifier((char *)
-&literal->f_value), NULL, NULL);
-}*/
 
 void mCc_tac_literal_float(struct mCc_ast_literal *literal,
                            struct mCc_tac_element *previous_tac)
@@ -30,11 +23,12 @@ void mCc_tac_literal_float(struct mCc_ast_literal *literal,
 	assert(literal);
 	assert(previous_tac);
 
-	tac_new_element(MCC_TAC_OPERATION_EMPTY,
-	                tac_new_identifier((char *)&literal->f_value), NULL, NULL);
-	// struct mCc_tac_element tac = tac_new_element(MCC_TAC_OPERATION_EMPTY,
-	// tac_new_identifier((char *) &literal->b_value), NULL, NULL);
-	// mCc_tac_connect_tac_entry(previous_tac ,tac);
+	// tac_new_element(MCC_TAC_OPERATION_EMPTY, tac_new_identifier((char
+	// *)&literal->f_value), NULL, NULL);
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPERATION_EMPTY, tac_new_identifier((char *)&literal->b_value),
+	    NULL, NULL);
+	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
 
 void mCc_tac_literal_bool(struct mCc_ast_literal *literal,
@@ -43,8 +37,10 @@ void mCc_tac_literal_bool(struct mCc_ast_literal *literal,
 	assert(literal);
 	assert(previous_tac);
 
-	tac_new_element(MCC_TAC_OPERATION_EMPTY,
-	                tac_new_identifier((char *)&literal->b_value), NULL, NULL);
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPERATION_EMPTY, tac_new_identifier((char *)&literal->b_value),
+	    NULL, NULL);
+	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
 
 void mCc_tac_literal_string(struct mCc_ast_literal *literal,
@@ -53,6 +49,8 @@ void mCc_tac_literal_string(struct mCc_ast_literal *literal,
 	assert(literal);
 	assert(previous_tac);
 
-	tac_new_element(MCC_TAC_OPERATION_EMPTY,
-	                tac_new_identifier((char *)&literal->s_value), NULL, NULL);
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPERATION_EMPTY, tac_new_identifier((char *)&literal->s_value),
+	    NULL, NULL);
+	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
