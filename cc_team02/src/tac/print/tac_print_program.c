@@ -8,5 +8,4 @@ void mCc_tac_print_program(struct mCc_ast_program *program, void *data)
 {
 	assert(program);
 	assert(data);
-
 }

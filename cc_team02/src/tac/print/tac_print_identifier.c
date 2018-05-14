@@ -9,5 +9,4 @@ void mCc_tac_print_identifier(struct mCc_ast_identifier *identifier, void *data)
 {
 	assert(identifier);
 	assert(data);
-
 }

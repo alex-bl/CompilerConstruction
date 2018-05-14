@@ -5,7 +5,7 @@
 #include "mCc/tac/basis/basic_tac.h"
 
 void mCc_tac_print_assignment_primitive(struct mCc_ast_assignment *assignment,
-                                  void *data)
+                                        void *data)
 {
 	assert(assignment);
 	assert(data);
@@ -16,7 +16,8 @@ void mCc_tac_print_assignment_primitive(struct mCc_ast_assignment *assignment,
 	// assignment->assigned_expression);
 }
 
-void mCc_tac_print_assignment_array(struct mCc_ast_assignment *assignment, void *data)
+void mCc_tac_print_assignment_array(struct mCc_ast_assignment *assignment,
+                                    void *data)
 {
 	assert(assignment);
 	assert(data);
