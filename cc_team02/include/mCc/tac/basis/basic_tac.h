@@ -25,7 +25,7 @@ extern "C" {
  */
 
 enum mCc_tac_operation {
-	MCC_TAC_OPERATION_EMPTY,
+	MCC_TAC_OPARATION_EMPTY,
 	MCC_TAC_OPARATION_BINARY_OP_ADD,
 	MCC_TAC_OPARATION_BINARY_OP_SUB,
 	MCC_TAC_OPARATION_BINARY_OP_MUL,
@@ -46,6 +46,7 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_PROCEDURAL_CALL,
 	MCC_TAC_OPARATION_RETURN,
 	MCC_TAC_OPARATION_INDEXING,
+	MCC_TAC_OPARATION_LABLE,
 };
 
 //void mCc_tac_delete_operation(enum mCc_tac_operation *operation);

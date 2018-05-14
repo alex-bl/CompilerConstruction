@@ -14,26 +14,26 @@ void mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(previous_tac);
 
-	/*struct mCc_tac_identifier *argument1;
+	struct mCc_tac_identifier *argument1;
 
 	switch (expression->data_type) {
 	case MCC_AST_DATA_TYPE_INT:
-	    argument1 = tac_new_identifier((char *)&expression->literal->i_value);
-	    break;
+		argument1 = tac_new_identifier((char *)&expression->literal->i_value);
+		break;
 	case MCC_AST_DATA_TYPE_FLOAT:
-	    argument1 = tac_new_identifier((char *)&expression->literal->f_value);
-	    break;
+		argument1 = tac_new_identifier((char *)&expression->literal->f_value);
+		break;
 	case MCC_AST_DATA_TYPE_BOOL:
-	    argument1 = tac_new_identifier((char *)&expression->literal->b_value);
-	    break;
+		argument1 = tac_new_identifier((char *)&expression->literal->b_value);
+		break;
 	case MCC_AST_DATA_TYPE_STRING:
-	    argument1 = tac_new_identifier((char *)&expression->literal->s_value);
-	    break;
+		argument1 = tac_new_identifier((char *)&expression->literal->s_value);
+		break;
 	default: argument1 = NULL; break;
-	}*/
+	}
 
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPERATION_EMPTY, expression->literal, NULL, NULL);
+	struct mCc_tac_element *tac =
+	    tac_new_element(MCC_TAC_OPARATION_EMPTY, argument1, NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
 
@@ -82,12 +82,13 @@ void mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	case MCC_AST_BINARY_OP_NOT_EQUALS:
 		operation = MCC_TAC_OPARATION_BINARY_OP_NOT_EQUALS;
 		break;
-	default: operation = MCC_TAC_OPERATION_EMPTY; break;
+	default: operation = MCC_TAC_OPARATION_EMPTY; break;
 	}
 
-	struct mCc_tac_element *tac =
-	    tac_new_element(operation, tac_new_identifier(expression->lhs),
-	                    tac_new_identifier(expression->rhs), NULL);
+	struct mCc_tac_element *tac = tac_new_element(
+	    operation,
+	    tac_new_identifier(expression->lhs->identifier->identifier_name),
+	    tac_new_identifier(expression->rhs->identifier->identifier_name), NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
 
@@ -107,7 +108,7 @@ void mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPERATION_EMPTY,
+	    MCC_TAC_OPARATION_EMPTY,
 	    tac_new_identifier(expression->identifier->identifier_name), NULL,
 	    NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
@@ -120,9 +121,11 @@ void mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPERATION_EMPTY,
+	    MCC_TAC_OPARATION_EMPTY,
 	    tac_new_identifier(expression->array_identifier->identifier_name),
-	    tac_new_identifier(expression->array_index_expression), NULL);
+	    tac_new_identifier(
+	        expression->array_index_expression->identifier->identifier_name),
+	    NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
 
@@ -155,11 +158,10 @@ void mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
 	case MCC_AST_UNARY_OP_NEGATION:
 		operation = MCC_TAC_OPARATION_UNARY_OP_NEGATION;
 		break;
-	default: operation = MCC_TAC_OPERATION_EMPTY; break;
+	default: operation = MCC_TAC_OPARATION_EMPTY; break;
 	}
 
 	struct mCc_tac_element *tac = tac_new_element(
-	    operation, tac_new_identifier(expression->unary_rhs), NULL, NULL);
+	    operation, tac_new_identifier(expression->unary_rhs->identifier->identifier_name), NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
-
