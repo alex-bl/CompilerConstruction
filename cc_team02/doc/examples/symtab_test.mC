@@ -140,6 +140,34 @@ void main(){
 	
 	return;	
 }
+
+bool test(){
+
+	if(true){
+		if(true){
+			int a;
+		}else{
+			if(true){
+				return true;
+			}else{
+				int c;
+			}
+		}
+	}else{
+		if(true){
+			if(true){
+				return true;
+			}else{
+				int a;
+				a=23;
+				return false;
+			}
+		}else{
+			int i;
+		}
+	}
+	return !true || false && !(1==1);
+}
 */
 
 void main(){

@@ -199,17 +199,41 @@ static void handle_returns_on_control_path(
 	info_holder->error_count++;
 }
 
+static bool error_already_reported(struct mCc_ast_statement *statement)
+{
+	if (statement->statement_type == MCC_AST_STATEMENT_IF) {
+		bool if_stmt_reported =
+		    (statement->if_statement
+		         ? statement->if_statement->return_error_already_reported
+		         : false);
+		bool else_stmt_reported =
+		    (statement->else_statement
+		         ? statement->else_statement->return_error_already_reported
+		         : false);
+		return statement->return_error_already_reported || if_stmt_reported ||
+		       else_stmt_reported;
+	} else if (statement->statement_type == MCC_AST_STATEMENT_WHILE) {
+		bool while_stmt_reported =
+		    (statement->while_statement
+		         ? statement->while_statement->return_error_already_reported
+		         : false);
+		return statement->return_error_already_reported || while_stmt_reported;
+	}
+	return statement->return_error_already_reported;
+}
+
 static bool
 return_path_error_already_reported(struct mCc_ast_statement *statement)
 {
 	assert(statement);
 	struct mCc_ast_statement *next_statement = statement->next_statement;
-	bool already_reported = false;
+	bool already_reported = error_already_reported(statement);
 
 	if (next_statement) {
-		already_reported = next_statement->return_error_already_reported;
-		statement->return_error_already_reported = already_reported;
+		already_reported = error_already_reported(next_statement);
 	}
+	statement->return_error_already_reported = already_reported;
+
 	return already_reported;
 }
 
