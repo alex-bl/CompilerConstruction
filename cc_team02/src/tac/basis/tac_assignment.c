@@ -44,20 +44,21 @@ mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
 	assert(assignment);
 	assert(previous_tac);
 
-	struct mCc_tac_identifier *argument1 =
+	struct mCc_tac_element *tac_arguement1 =
 	    mCc_tac_expression_identifier_array(assignment->array_index_expression,
-	                                        previous_tac)
-	        ->tac_result;
+	                                        previous_tac);
 
-	struct mCc_tac_identifier *argument2 =
+	struct mCc_tac_identifier *argument1 = tac_arguement1->tac_result;
+
+	struct mCc_tac_element *tac_arguement2 =
 	    mCc_tac_expression_identifier_array(
-	        assignment->array_assigned_expression, previous_tac)
-	        ->tac_result;
+	        assignment->array_assigned_expression, tac_arguement1);
+	struct mCc_tac_identifier *argument2 = tac_arguement2->tac_result;
 
 	// y[i]:=x
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_INDEXING, argument1, argument2,
 	    tac_new_identifier(assignment->identifier->identifier_name));
-	mCc_tac_connect_tac_entry(previous_tac, tac);
+	mCc_tac_connect_tac_entry(tac_arguement2, tac);
 	return tac;
 }
