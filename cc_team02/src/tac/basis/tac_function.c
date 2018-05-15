@@ -12,7 +12,7 @@ void mCc_tac_function_def(struct mCc_ast_function_def *def,
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_RETURN,
+	    tac_new_element(MCC_TAC_OPARATION_LABLE,
 	                    tac_new_identifier(def->identifier->identifier_name),
 	                    tac_new_identifier((char *)def->return_type), NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);

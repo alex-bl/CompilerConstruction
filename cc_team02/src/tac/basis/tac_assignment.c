@@ -47,3 +47,4 @@ void mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
 	    tac_new_identifier(assignment->identifier->identifier_name));
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 }
+
