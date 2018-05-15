@@ -45,7 +45,7 @@ void main()
     
     result = multiply(num, multiplicator);
     
-    print=("The result is: ");
+    print("The result is: ");
     print_nl();
     print_int(result);
 }

@@ -1,4 +1,4 @@
-float transform_x(int x)
+float transform_x(float x)
 {
 	float fx;
 
@@ -7,7 +7,7 @@ float transform_x(int x)
 	return (-2.0) + ((1.0) - (-2.0)) * (fx / 80.0);
 }
 
-float transform_y(int y)
+float transform_y(float y)
 {
 	float fy;
 
@@ -44,18 +44,18 @@ void main()
 {
 	float fx;
 	float fy;
-	int x;
-	int y;
+	float x;
+	float y;
 
-	y = 0;
+	y = 0.0;
 
-	while (y < 50) {
-		x = 0;
+	while (y < 50.0) {
+		x = 0.0;
 
-		while (x < 80) {
+		while (x < 80.0) {
 			fx = transform_x(x);
 			fy = transform_y(y);
-			x = x + 1;
+			x = x + 1.0;
 
 			if (is_in_set(fx, fy)) {
 				print(".");
@@ -65,6 +65,6 @@ void main()
 		}
 
 		print_nl();
-		y = y + 1;
+		y = y + 1.0;
 	}
 }
