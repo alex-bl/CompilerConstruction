@@ -81,16 +81,21 @@ static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
  * should be the "top"
  * is "global"
  */
-void mCc_tac_start_program(struct mCc_tac_element *tac,
-                           struct mCc_ast_program *program)
+struct mCc_tac_element mCc_tac_start_program(struct mCc_tac_element *tac,
+                                             struct mCc_ast_program *program)
 {
 	assert(tac);
 	assert(program);
 
 	// tac_begin(tac);
 
-	struct mCc_ast_visitor visitor = tac_visitor(tac);
+	struct mCc_tac_element *empty_tac =
+	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, NULL);
+
+	struct mCc_ast_visitor visitor = tac_visitor(empty_tac);
 	mCc_ast_visit_program(program, &visitor);
+
+	return *tac;
 
 	// tac_end(tac);
 }

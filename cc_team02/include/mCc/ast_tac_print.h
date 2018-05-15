@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-void mCc_ast_tac_print_assignment(FILE *out,
+/*void mCc_ast_tac_print_assignment(FILE *out,
                                   struct mCc_ast_assignment *assignment);
 
 void mCc_ast_tac_print_statement(FILE *out,
@@ -38,7 +38,9 @@ void mCc_ast_tac_print_expression(FILE *out,
                                   struct mCc_ast_expression *expression);
 
 void mCc_ast_tac_print_declaration(FILE *out,
-                                   struct mCc_ast_declaration *declaration);
+                                   struct mCc_ast_declaration *declaration);*/
+
+void mCc_tac_print_start_program(struct mCc_tac_element *tac, void *data);
 
 #ifdef __cplusplus
 }

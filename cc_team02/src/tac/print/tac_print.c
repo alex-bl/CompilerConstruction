@@ -1,5 +1,5 @@
-#include "mCc/ast_tac_print.h"
 #include "basic_tac.h"
+#include "mCc/ast_tac_print.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -8,7 +8,7 @@
 #include "mCc/ast_visit.h"
 
 //"global" visitor needed
-static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
+/*static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
 {
 	assert(tac);
 
@@ -26,7 +26,8 @@ static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
 
 		.expression_function_call = mCc_tac_print_expression_function_call,
 		.expression_identifier = mCc_tac_print_expression_identifier,
-		.expression_array_identifier = mCc_tac_print_expression_identifier_array,
+		.expression_array_identifier =
+		    mCc_tac_print_expression_identifier_array,
 		.expression_unary_op = mCc_tac_print_expression_unary_op,
 
 		//.literal
@@ -76,22 +77,29 @@ static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
 		.statement_while_enter_scope = NULL,
 		.statement_while_leave_scope = NULL
 	};
-}
+}*/
 
 /*
  * should be the "top"
  * is "global"
  */
-void mCc_tac_print_start_program(struct mCc_tac_element *tac,
-                                 struct mCc_ast_program *program)
+void mCc_tac_print_start_program(struct mCc_tac_element *tac, void *data)
 {
 	assert(tac);
-	assert(program);
+
+	FILE *out = data;
+	while (tac != NULL) {
+		fprintf(out,
+		        "operation: %i - argument1: %p - argument2: %p - result: %p\n",
+		        tac->tac_operation, tac->tac_argument1->name,
+		        tac->tac_argument2->name, tac->tac_result->name);
+		tac = tac->tac_next_element;
+	}
 
 	// tac_begin(tac);
 
-	struct mCc_ast_visitor visitor = tac_visitor(tac);
-	mCc_ast_visit_program(program, &visitor);
+	// struct mCc_ast_visitor visitor = tac_visitor(tac);
+	// mCc_ast_visit_program(program, &visitor);
 
 	// tac_end(tac);
 }
