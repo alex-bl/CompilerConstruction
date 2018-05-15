@@ -11,4 +11,6 @@
 TEST(TAC, firstTest)
 {
 
+	ASSERT_TRUE(true);
+	ASSERT_EQ(true, true);
 }
