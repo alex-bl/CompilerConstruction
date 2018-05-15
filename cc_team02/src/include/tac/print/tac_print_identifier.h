@@ -3,15 +3,14 @@
 
 #include <stdio.h>
 
-#include "basic_tac.h"
 #include "ast_identifier.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void mCc_tac_identifier(struct mCc_ast_identifier *identifier,
-                        struct mCc_tac_element *previous_tac);
+void mCc_tac_print_identifier(struct mCc_ast_identifier *identifier,
+                              void *data);
 
 #ifdef __cplusplus
 }
