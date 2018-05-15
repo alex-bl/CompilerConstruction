@@ -5,8 +5,9 @@
 
 #include "basic_tac.h"
 
-void mCc_tac_literal_int(struct mCc_ast_literal *literal,
-                         struct mCc_tac_element *previous_tac)
+struct mCc_tac_element *
+mCc_tac_literal_int(struct mCc_ast_literal *literal,
+                    struct mCc_tac_element *previous_tac)
 {
 	assert(literal);
 	assert(previous_tac);
@@ -15,10 +16,12 @@ void mCc_tac_literal_int(struct mCc_ast_literal *literal,
 	    MCC_TAC_OPARATION_EMPTY, tac_new_identifier((char *)&literal->i_value),
 	    NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
 
-void mCc_tac_literal_float(struct mCc_ast_literal *literal,
-                           struct mCc_tac_element *previous_tac)
+struct mCc_tac_element *
+mCc_tac_literal_float(struct mCc_ast_literal *literal,
+                      struct mCc_tac_element *previous_tac)
 {
 	assert(literal);
 	assert(previous_tac);
@@ -29,10 +32,12 @@ void mCc_tac_literal_float(struct mCc_ast_literal *literal,
 	    MCC_TAC_OPARATION_EMPTY, tac_new_identifier((char *)&literal->b_value),
 	    NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
 
-void mCc_tac_literal_bool(struct mCc_ast_literal *literal,
-                          struct mCc_tac_element *previous_tac)
+struct mCc_tac_element *
+mCc_tac_literal_bool(struct mCc_ast_literal *literal,
+                     struct mCc_tac_element *previous_tac)
 {
 	assert(literal);
 	assert(previous_tac);
@@ -41,10 +46,12 @@ void mCc_tac_literal_bool(struct mCc_ast_literal *literal,
 	    MCC_TAC_OPARATION_EMPTY, tac_new_identifier((char *)&literal->b_value),
 	    NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
 
-void mCc_tac_literal_string(struct mCc_ast_literal *literal,
-                            struct mCc_tac_element *previous_tac)
+struct mCc_tac_element *
+mCc_tac_literal_string(struct mCc_ast_literal *literal,
+                       struct mCc_tac_element *previous_tac)
 {
 	assert(literal);
 	assert(previous_tac);
@@ -53,4 +60,5 @@ void mCc_tac_literal_string(struct mCc_ast_literal *literal,
 	    MCC_TAC_OPARATION_EMPTY, tac_new_identifier((char *)&literal->s_value),
 	    NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }

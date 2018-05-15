@@ -42,17 +42,11 @@ void mCc_tac_element_delete(struct mCc_tac_element *tac_element)
 {
 	assert(tac_element);
 
-	//mCc_tac_delete_operation(tac_element->tac_operation);
 	mCc_tac_delete_identifier(tac_element->tac_argument1);
 	mCc_tac_delete_identifier(tac_element->tac_argument2);
 	mCc_tac_delete_identifier(tac_element->tac_result);
 	free(tac_element);
 }
-
-/*void mCc_tac_delete_operation(enum mCc_tac_operation operation) {
-	free(operation);
-}*/
-
 void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier) {
 	free(identifier);
 }

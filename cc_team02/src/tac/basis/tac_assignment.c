@@ -5,13 +5,14 @@
 #include "basic_tac.h"
 
 // x:= y
-void mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
-                                  struct mCc_tac_element *previous_tac)
+struct mCc_tac_element *
+mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
+                             struct mCc_tac_element *previous_tac)
 {
 	assert(assignment);
 	assert(previous_tac);
 
-	//TODO change s_value
+	// TODO change s_value
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_COPY,
 	    tac_new_identifier(assignment->assigned_expression->literal->s_value),
@@ -29,10 +30,12 @@ void mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	    NULL, tac_new_identifier(assignment->identifier->identifier_name));
 	mCc_tac_connect_tac_entry(tac, tac2);
 	 */
+	return tac;
 }
 
-void mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
-                              struct mCc_tac_element *previous_tac)
+struct mCc_tac_element *
+mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
+                         struct mCc_tac_element *previous_tac)
 {
 	assert(assignment);
 	assert(previous_tac);
@@ -46,5 +49,5 @@ void mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
 	        assignment->array_assigned_expression->identifier->identifier_name),
 	    tac_new_identifier(assignment->identifier->identifier_name));
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
-
