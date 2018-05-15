@@ -26,7 +26,7 @@ int path_test(){
 	string c;
 	
 	if(1<2){
-		return 1;
+
 	}else{
 		return 2;
 	}

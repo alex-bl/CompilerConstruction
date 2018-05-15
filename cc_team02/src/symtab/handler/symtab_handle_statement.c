@@ -150,7 +150,9 @@ remove_invalid_path_errors(struct mCc_ast_statement *statement,
                            struct mCc_symtab_and_validation_holder *info_holder)
 {
 	if (statement->statement_type == MCC_AST_STATEMENT_IF) {
-		remove_invalid_path_errors(statement->if_statement, info_holder);
+		if(statement->if_statement){
+			remove_invalid_path_errors(statement->if_statement, info_holder);
+		}
 		if (statement->else_statement) {
 			remove_invalid_path_errors(statement->else_statement, info_holder);
 		}
