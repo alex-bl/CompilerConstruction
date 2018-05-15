@@ -14,7 +14,7 @@ static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
 	return (struct mCc_ast_visitor){
 
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
-		.order = MCC_AST_VISIT_PRE_ORDER,
+		.order = MCC_AST_VISIT_POST_ORDER,
 		// replace out with data structure for tac
 		.userdata = tac,
 

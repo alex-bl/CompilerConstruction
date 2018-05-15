@@ -11,6 +11,7 @@ void mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	assert(assignment);
 	assert(previous_tac);
 
+	//TODO change s_value
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_COPY,
 	    tac_new_identifier(assignment->assigned_expression->literal->s_value),
