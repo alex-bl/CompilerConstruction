@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stddef.h>
 
-#include "mCc/ast_tac_visitors.h"
+#include "ast_tac_visitors.h"
 #include "mCc/ast_visit.h"
 
 //"global" visitor needed

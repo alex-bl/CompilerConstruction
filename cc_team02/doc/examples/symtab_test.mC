@@ -1,6 +1,6 @@
 void buu(string bo){
 
-return 1;
+return 1 != 2 || 3 <= 4;
 }
 
 int buu(string bo){
@@ -18,6 +18,82 @@ int test_func(){
 string a;
 
 return a;
+}
+
+int path_test(){
+	int a;
+	int b;
+	string c;
+	
+	if(1<2){
+		return 1;
+	}else{
+		return 2;
+	}
+}
+
+int path_test_2(){
+
+}
+
+int path_test_3(){
+	int a;
+}
+
+int path_test_4(){
+	int a;
+	return 1;
+}
+
+int path_test_5(){
+	if(1<2){
+		return true;
+	}else{
+		return 2;
+	}
+}
+
+int path_test_6(){
+	if(1<2){
+		return true;
+	}else{
+		int c;
+	}
+}
+
+int path_test_7(){
+	if(1<2){
+		return true;
+	}else{
+		int c;
+	}
+	return 3;
+}
+
+int path_test_8(){
+	if(1<2){
+		return 1;
+	}else{
+		int c;
+	}
+	return 3;
+}
+
+int path_test_9(){
+	if(1<2){
+		int a;
+	}else{
+		int c;
+	}
+	return 3;
+}
+
+int path_test_10(){
+	if(1<2){
+		return "3";
+	}else{
+		return 1;
+	}
 }
 
 void main(){	
@@ -49,5 +125,6 @@ void main(){
 	while(1 || 2) {}	
 	while(c && !c) {}
 	while(c || !c) {}
-		
+	
+	return;	
 }

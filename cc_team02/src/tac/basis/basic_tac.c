@@ -1,9 +1,11 @@
 #include "mCc/tac/basis/basic_tac.h"
+#include "basic_tac.h"
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-//#include "mCc/ast/basis/ast_data_type.h"
+//#include "ast_data_type.h"
 
 //add another parameter for defining the next tac element?
 //or how to define the next tac element?

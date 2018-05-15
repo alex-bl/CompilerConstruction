@@ -1,8 +1,8 @@
-#include "mCc/tac/basis/tac_declaration.h"
+#include "tac_declaration.h"
 
 #include <assert.h>
 
-#include "mCc/tac/basis/basic_tac.h"
+#include "basic_tac.h"
 
 // x:= y
 void mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,

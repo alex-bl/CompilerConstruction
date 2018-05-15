@@ -1,10 +1,10 @@
-#include "mCc/ast/basis/ast_function.h"
+#include "ast_function.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "mCc/symtab/validator/validator.h"
+#include "validator.h"
 
 /*----------------- function definition-----------------*/
 struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(

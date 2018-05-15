@@ -1,13 +1,13 @@
-#include "mCc/symtab/handler/symtab_handle_expression.h"
+#include "handler/symtab_handle_expression.h"
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "config.h"
-#include "mCc/ast/basis/ast_expression.h"
-#include "mCc/general/print_helper.h"
-#include "mCc/symtab/validator/validator.h"
+#include "ast_expression.h"
+#include "print_helper.h"
+#include "validator.h"
 
 static void append_error_to_expr(struct mCc_ast_expression *expression,
                                  struct mCc_validation_status_result *error)
@@ -41,7 +41,7 @@ handle_inconsistent_type(struct mCc_ast_expression *expression,
 
 	append_error_to_expr(expression, error);
 	expression->data_type = type;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_identifier(struct mCc_ast_expression *expression,
@@ -66,14 +66,14 @@ handle_expected_type(struct mCc_ast_expression *expression,
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types: Expected '%s' but have '%s'",
-	         print_data_type(expected), print_data_type(actual));
+	         mCc_ast_print_data_type(expected), mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_expected_numerical_type(
@@ -83,15 +83,15 @@ static void handle_expected_numerical_type(
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types: Expected '%s' or '%s' but have '%s'",
-	         print_data_type(MCC_AST_DATA_TYPE_INT),
-	         print_data_type(MCC_AST_DATA_TYPE_FLOAT), print_data_type(actual));
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_INT),
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_FLOAT), mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_expected_numerical_and_bool_type(
@@ -101,16 +101,16 @@ static void handle_expected_numerical_and_bool_type(
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types: Expected '%s' or '%s' or '%s' but have '%s'",
-	         print_data_type(MCC_AST_DATA_TYPE_INT),
-	         print_data_type(MCC_AST_DATA_TYPE_FLOAT),
-	         print_data_type(MCC_AST_DATA_TYPE_BOOL), print_data_type(actual));
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_INT),
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_FLOAT),
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_BOOL), mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_invalid_operation(
@@ -121,15 +121,15 @@ static void handle_invalid_operation(
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Invalid operation '%s' on '%s'-types: Expected '%s'",
-	         mCc_ast_print_binary_op(op), print_data_type(actual),
-	         print_data_type(expected));
+	         mCc_ast_print_binary_op(op), mCc_ast_print_data_type(actual),
+	         mCc_ast_print_data_type(expected));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void handle_invalid_operation_numerical(
@@ -140,16 +140,16 @@ static void handle_invalid_operation_numerical(
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Invalid operation '%s' on '%s'-types: Expected '%s' or '%s'",
-	         mCc_ast_print_binary_op(op), print_data_type(actual),
-	         print_data_type(MCC_AST_DATA_TYPE_INT),
-	         print_data_type(MCC_AST_DATA_TYPE_FLOAT));
+	         mCc_ast_print_binary_op(op), mCc_ast_print_data_type(actual),
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_INT),
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_FLOAT));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static void
@@ -162,15 +162,15 @@ handle_inconsistent_sides(struct mCc_ast_expression *expression,
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Operation '%s' has incompatible types: '%s' at left "
 	         "hand side, but '%s' at right hand side",
-	         mCc_ast_print_binary_op(expression->op), print_data_type(lhs_type),
-	         print_data_type(rhs_type));
+	         mCc_ast_print_binary_op(expression->op), mCc_ast_print_data_type(lhs_type),
+	         mCc_ast_print_data_type(rhs_type));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCONSISTENT;
-	info_holder->error_occurred = true;
+	info_holder->error_count++;
 }
 
 static bool binary_op_is_numerical(enum mCc_ast_binary_op op)
@@ -312,13 +312,13 @@ void mCc_handle_expression_identifier_array_post_order(
 
 		if (arr_expr_type == MCC_AST_DATA_TYPE_INCONSISTENT ||
 		    arr_expr_type == MCC_AST_DATA_TYPE_UNKNOWN) {
-			expression->data_type = arr_expr_type;
+			expression->array_index_expression->data_type = arr_expr_type;
 		} else if (arr_expr_type != MCC_AST_DATA_TYPE_INT) {
 			handle_expected_type(expression, MCC_AST_DATA_TYPE_INT,
 			                     arr_expr_type, info_holder);
 		} else {
 			// type is int as expected
-			expression->data_type = arr_expr_type;
+			expression->array_index_expression->data_type = arr_expr_type;
 		}
 	}
 }
@@ -348,7 +348,7 @@ void mCc_handle_expression_unary_op_post_order(
 	}
 	// minus on non-numerical-type
 	else if (unary_op == MCC_AST_UNARY_OP_MINUS &&
-	         (unary_op_data_type != MCC_AST_DATA_TYPE_INT ||
+	         (unary_op_data_type != MCC_AST_DATA_TYPE_INT &&
 	          unary_op_data_type != MCC_AST_DATA_TYPE_FLOAT)) {
 
 		handle_expected_numerical_type(expression, unary_op_data_type,

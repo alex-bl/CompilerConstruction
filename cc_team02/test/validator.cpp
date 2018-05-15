@@ -4,9 +4,9 @@
 #include "gtest/gtest.h"
 
 #include "mCc/ast.h"
-#include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/validator.h"
-#include "mCc/symtab/validator/validator_helper.h"
+#include "symbol_table.h"
+#include "validator.h"
+#include "validator_helper.h"
 #include "mCc_test/mCc_test_utils.h"
 #include "map.h"
 

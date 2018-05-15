@@ -1,5 +1,5 @@
-#include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/symtab_node.h"
+#include "symbol_table.h"
+#include "symtab_node.h"
 
 #include <assert.h>
 #include <stdbool.h>

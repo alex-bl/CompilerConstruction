@@ -1,15 +1,15 @@
 #ifndef MCC_AST_TAC_H
 #define MCC_AST_TAC_H
 
-#include "tac/basis/basic_tac.h"
-#include "tac/basis/tac_assignment.h"
-#include "tac/basis/tac_declaration.h"
-#include "tac/basis/tac_expression.h"
-#include "tac/basis/tac_function.h"
-#include "tac/basis/tac_identifier.h"
-#include "tac/basis/tac_literal.h"
-#include "tac/basis/tac_program.h"
-#include "tac/basis/tac_statement.h"
+#include "basic_tac.h"
+#include "tac_assignment.h"
+#include "tac_declaration.h"
+#include "tac_expression.h"
+#include "tac_function.h"
+#include "tac_identifier.h"
+#include "tac_literal.h"
+#include "tac_program.h"
+#include "tac_statement.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,9 +1,9 @@
-#include "mCc/symtab/symtab_node.h"
+#include "symtab_node.h"
 
-#include "mCc/ast/basis/ast_declaration.h"
-#include "mCc/ast/basis/ast_function.h"
-#include "mCc/ast/basis/ast_identifier.h"
-#include "mCc/symtab/symtab_types.h"
+#include "ast_declaration.h"
+#include "ast_function.h"
+#include "ast_identifier.h"
+#include "symtab_types.h"
 
 #include "log.h"
 #include <assert.h>

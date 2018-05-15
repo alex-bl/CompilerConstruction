@@ -1,9 +1,9 @@
-#include "mCc/ast/visit/ast_visit_assignment.h"
+#include "ast_visit_assignment.h"
 
 #include <assert.h>
 
-#include "mCc/ast/visit/ast_visit_expression.h"
-#include "mCc/ast/visit/ast_visit_identifier.h"
+#include "ast_visit_expression.h"
+#include "ast_visit_identifier.h"
 
 void mCc_ast_visit_assignment(struct mCc_ast_assignment *assignment,
                               struct mCc_ast_visitor *visitor)

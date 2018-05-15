@@ -1,11 +1,11 @@
-#include "mCc/symtab/handler/symtab_handle_declaration.h"
+#include "handler/symtab_handle_declaration.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 
 #include "log.h"
-#include "mCc/symtab/symbol_table.h"
+#include "symbol_table.h"
 /*
  * TODO: Do checks if already defined within this scope!
  * - primitives and arrays are currently treated equally

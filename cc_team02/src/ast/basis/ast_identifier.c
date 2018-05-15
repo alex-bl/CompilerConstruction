@@ -1,11 +1,11 @@
-#include "mCc/ast/basis/ast_identifier.h"
-#include "mCc/symtab/symtab_node.h"
+#include "ast_identifier.h"
+#include "symtab_node.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
-#include "mCc/symtab/validator/validator.h"
+#include "validator.h"
 
 struct mCc_ast_identifier *mCc_ast_new_identifier(char *name)
 {

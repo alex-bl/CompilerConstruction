@@ -1,9 +1,9 @@
-#include "mCc/symtab/handler/symtab_handle_scope.h"
+#include "handler/symtab_handle_scope.h"
 
 #include <assert.h>
 
 #include "log.h"
-#include "mCc/symtab/symbol_table.h"
+#include "symbol_table.h"
 
 void mCc_symtab_enter_scope(void *data)
 {

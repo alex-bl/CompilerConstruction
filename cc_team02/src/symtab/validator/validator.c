@@ -1,11 +1,11 @@
-#include "mCc/symtab/validator/validator.h"
+#include "validator.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 #include "log.h"
-#include "mCc/symtab/symbol_table.h"
+#include "symbol_table.h"
 
 struct mCc_validation_status_result *mCc_validator_new_validation_result(
     enum mCc_validation_status_type validation_status, char *error_msg)
@@ -43,15 +43,15 @@ void mCc_validator_append_semantic_error(
 }
 
 // maybe some advanced logic here if validator-result is expanded
-static void
-free_validator_result_simple(struct mCc_validation_status_result *result)
+void mCc_validator_free_validator_result_simple(
+    struct mCc_validation_status_result *result)
 {
 	assert(result);
 	free(result->error_msg);
 	free(result);
 }
 
-//frees if present
+// frees if present
 void mCc_validator_delete_validation_result(
     struct mCc_validation_status_result *first_result)
 {
@@ -62,7 +62,7 @@ void mCc_validator_delete_validation_result(
 		while (next_validation_result) {
 			struct mCc_validation_status_result *tmp = next_validation_result;
 			next_validation_result = next_validation_result->next;
-			free_validator_result_simple(tmp);
+			mCc_validator_free_validator_result_simple(tmp);
 		}
 	}
 }

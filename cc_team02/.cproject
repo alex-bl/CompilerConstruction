@@ -47,7 +47,7 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 			<storageModule buildDir="build/${ConfigName}" moduleId="de.marw.cdt.cmake.core.settings">
-				<options clearCache="true" warnUnitialized="true" warnUnused="true"/>
+				<options clearCache="true" warnUnitialized="true"/>
 				<linux command="cmake" generator="UnixMakefiles" use-default="true">
 				</linux>
 				<win32 command="cmake" generator="MinGWMakefiles" use-default="true">
@@ -221,6 +221,21 @@
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
 				<buildArguments/>
 				<buildTarget>mCc_symtab</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="mC_to_dot" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
+				<buildTarget>mC_to_dot</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="cleanup_logger" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
+				<buildArguments/>
+				<buildTarget>cleanup_logger</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>

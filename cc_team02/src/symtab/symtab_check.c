@@ -1,15 +1,15 @@
-#include "mCc/symtab_check.h"
+#include "symtab_check.h"
 
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
 
+#include "ast_print_visitors.h"
 #include "log.h"
-#include "mCc/ast_print_visitors.h"
 #include "mCc/ast_visit.h"
-#include "mCc/symtab/symbol_table.h"
-#include "mCc/symtab/validator/validator.h"
-#include "mCc/symtab_handler.h"
+#include "symbol_table.h"
+#include "symtab_handler.h"
+#include "validator.h"
 
 //"global" visitor needed
 static struct mCc_ast_visitor
@@ -36,6 +36,15 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.statement_if_post_order = mCc_symtab_handle_if_statement_post_order,
 		.statement_while_post_order =
 		    mCc_symtab_handle_while_statement_post_order,
+
+		.statement_return_post_order =
+		    mCc_symtab_handle_statement_return_post_order,
+		.statement_assignment_post_order =
+		    mCc_symtab_handle_statement_assignment_post_order,
+		.statement_expression_post_order =
+		    mCc_symtab_handle_statement_expression_post_order,
+		.statement_declaration_post_order =
+		    mCc_symtab_handle_statement_declaration_post_order,
 
 		// needed
 		.identifier = mCc_symtab_handle_identifier,
@@ -114,16 +123,11 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.statement_assignment = NULL,
 		.statement_expression = NULL,
 		.statement_declaration = NULL,
-
-		.statement_return_post_order = NULL,
-		.statement_assignment_post_order = NULL,
-		.statement_expression_post_order = NULL,
-		.statement_declaration_post_order = NULL,
 	};
 }
 
 // TODO: return status
-bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
+int mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 {
 	assert(program);
 
@@ -131,7 +135,7 @@ bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 	    mCc_symtab_new_symbol_table(NULL, 0);
 	if (!symbol_table) {
 		log_error("Malloc failed: Could not init top-level symbol-table");
-		return NULL;
+		return -1;
 	}
 	log_debug("Top-level symbol-table with scope %d created",
 	          symbol_table->scope_level);
@@ -140,7 +144,7 @@ bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 
 	info_holder.symbol_table = symbol_table;
 	info_holder.scope_level = 0;
-	info_holder.error_occurred = false;
+	info_holder.error_count = 0;
 
 	// TODO: add build-ins
 	struct mCc_ast_visitor visitor = symtab_visitor(&info_holder);
@@ -151,5 +155,5 @@ bool mCc_symtab_perform_semantic_checks(struct mCc_ast_program *program)
 	// free symtab
 	mCc_symtab_delete_symbol_table(symbol_table);
 
-	return !info_holder.error_occurred;
+	return info_holder.error_count;
 }
