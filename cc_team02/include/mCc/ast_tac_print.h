@@ -1,15 +1,15 @@
 #ifndef MCC_AST_TAC_H
 #define MCC_AST_TAC_H
 
-#include "tac/print/basic_tac_print.h"
-#include "tac/print/tac_print_assignment.h"
-#include "tac/print/tac_print_declaration.h"
-#include "tac/print/tac_print_expression.h"
-#include "tac/print/tac_print_function.h"
-#include "tac/print/tac_print_identifier.h"
-#include "tac/print/tac_print_literal.h"
-#include "tac/print/tac_print_program.h"
-#include "tac/print/tac_print_statement.h"
+#include "basic_tac_print.h"
+#include "tac_print_assignment.h"
+#include "tac_print_declaration.h"
+#include "tac_print_expression.h"
+#include "tac_print_function.h"
+#include "tac_print_identifier.h"
+#include "tac_print_literal.h"
+#include "tac_print_program.h"
+#include "tac_print_statement.h"
 
 #ifdef __cplusplus
 extern "C" {

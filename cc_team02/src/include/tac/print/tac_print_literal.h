@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "mCc/ast/basis/ast_literal.h"
+#include "ast_literal.h"
 
 #ifdef __cplusplus
 extern "C" {

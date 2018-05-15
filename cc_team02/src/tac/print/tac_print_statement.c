@@ -1,8 +1,8 @@
-#include "mCc/tac/basis/tac_statement.h"
+#include "tac_statement.h"
 
 #include <assert.h>
 
-#include "mCc/tac/basis/basic_tac.h"
+#include "basic_tac.h"
 
 void mCc_tac_print_statement_if(struct mCc_ast_statement *statement, void *data)
 {
