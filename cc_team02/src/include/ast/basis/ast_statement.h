@@ -32,6 +32,7 @@ struct mCc_ast_statement {
 	// for semantic checks
 	struct mCc_validation_status_result *semantic_error;
 	bool returns_on_control_path;
+	bool return_error_already_reported;
 
 	union {
 

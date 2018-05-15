@@ -1,3 +1,4 @@
+/*
 void buu(string bo){
 
 return 1 != 2 || 3 <= 4;
@@ -26,7 +27,7 @@ int path_test(){
 	string c;
 	
 	if(1<2){
-		return 1;
+
 	}else{
 		return 2;
 	}
@@ -96,6 +97,17 @@ int path_test_10(){
 	}
 }
 
+string path_test_11(){
+	if(1<2){
+		while(1){}
+		if("true"){}
+	}else{
+
+	}
+	return "2";
+}
+
+
 void main(){	
 	int a;
 	string b;
@@ -127,4 +139,37 @@ void main(){
 	while(c || !c) {}
 	
 	return;	
+}
+
+bool test(){
+
+	if(true){
+		if(true){
+			int a;
+		}else{
+			if(true){
+				return true;
+			}else{
+				int c;
+			}
+		}
+	}else{
+		if(true){
+			if(true){
+				return true;
+			}else{
+				int a;
+				a=23;
+				return false;
+			}
+		}else{
+			int i;
+		}
+	}
+	return !true || false && !(1==1);
+}
+*/
+
+void main(){
+	return;
 }

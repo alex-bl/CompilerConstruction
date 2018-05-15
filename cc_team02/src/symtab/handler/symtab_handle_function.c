@@ -114,6 +114,268 @@ handle_function_def(struct mCc_ast_function_def *function_def,
 		          scope_level);
 	}
 }
+
+static void reset_returns_on_control_path(struct mCc_ast_statement *statement)
+{
+	if (statement) {
+		statement->returns_on_control_path = true;
+
+		switch (statement->statement_type) {
+
+		case MCC_AST_STATEMENT_IF:
+			reset_returns_on_control_path(statement->if_statement);
+			reset_returns_on_control_path(statement->else_statement);
+			break;
+		case MCC_AST_STATEMENT_WHILE:
+			reset_returns_on_control_path(statement->while_statement);
+			break;
+		case MCC_AST_STATEMENT_RETURN:
+		case MCC_AST_STATEMENT_DECLARATION:
+		case MCC_AST_STATEMENT_ASSIGNMENT:
+		case MCC_AST_STATEMENT_EXPRESSION: break;
+		}
+
+		if (statement->next_statement) {
+			reset_returns_on_control_path(statement->next_statement);
+		}
+	}
+}
+
+static bool
+is_void_function_scope(struct mCc_symtab_and_validation_holder *info_holder)
+{
+	return info_holder->function_identifier->symtab_info->data_type ==
+	       MCC_AST_DATA_TYPE_VOID;
+}
+
+static void
+append_error_to_statement(struct mCc_ast_statement *statement,
+                          struct mCc_validation_status_result *error)
+{
+	if (!statement->semantic_error) {
+		statement->semantic_error = error;
+	} else {
+		mCc_validator_append_semantic_error(statement->semantic_error, error);
+	}
+}
+
+static void handle_expected_return_type_statement(
+    struct mCc_ast_statement *statement, enum mCc_ast_data_type expected,
+    enum mCc_ast_data_type actual,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "In function '%s': Expected a return-type of '%s' but have '%s' "
+	         "(incompatible return type)",
+	         info_holder->function_identifier->identifier_name,
+	         mCc_ast_print_data_type(expected),
+	         mCc_ast_print_data_type(actual));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_RETURN,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_statement(statement, error);
+	info_holder->error_count++;
+}
+
+static void handle_returns_on_control_path(
+    struct mCc_ast_statement *statement,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	struct mCc_ast_identifier *identifier = info_holder->function_identifier;
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(
+	    error_msg, ERROR_MSG_BUF_SIZE,
+	    "In function '%s': Missing return of type '%s' on this execution path",
+	    identifier->identifier_name,
+	    mCc_ast_print_data_type(identifier->symtab_info->data_type));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_MISSING_RETURN_PATH,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_statement(statement, error);
+	statement->return_error_already_reported = true;
+	info_holder->error_count++;
+}
+
+static bool error_already_reported(struct mCc_ast_statement *statement)
+{
+	if (statement->statement_type == MCC_AST_STATEMENT_IF) {
+		bool if_stmt_reported =
+		    (statement->if_statement
+		         ? statement->if_statement->return_error_already_reported
+		         : false);
+		bool else_stmt_reported =
+		    (statement->else_statement
+		         ? statement->else_statement->return_error_already_reported
+		         : false);
+		return statement->return_error_already_reported || if_stmt_reported ||
+		       else_stmt_reported;
+	} else if (statement->statement_type == MCC_AST_STATEMENT_WHILE) {
+		bool while_stmt_reported =
+		    (statement->while_statement
+		         ? statement->while_statement->return_error_already_reported
+		         : false);
+		return statement->return_error_already_reported || while_stmt_reported;
+	}
+	return statement->return_error_already_reported;
+}
+
+static bool
+return_path_error_already_reported(struct mCc_ast_statement *statement)
+{
+	assert(statement);
+	struct mCc_ast_statement *next_statement = statement->next_statement;
+	bool already_reported = error_already_reported(statement);
+
+	if (next_statement) {
+		already_reported = error_already_reported(next_statement);
+	}
+	statement->return_error_already_reported = already_reported;
+
+	return already_reported;
+}
+
+static bool void_function_checked_statement(
+    struct mCc_ast_statement *return_statement,
+    enum mCc_ast_data_type function_type,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	if (!return_statement || !return_statement->return_expression) {
+		if (function_type != MCC_AST_DATA_TYPE_VOID) {
+			handle_expected_return_type_statement(
+			    return_statement, function_type, MCC_AST_DATA_TYPE_VOID,
+			    info_holder);
+		}
+		// everything is fine if function is void
+		return true;
+	}
+	return false;
+}
+
+static void
+handle_wrong_return_type(struct mCc_ast_statement *statement,
+                         struct mCc_symtab_and_validation_holder *info_holder)
+{
+
+	assert(statement);
+
+	struct mCc_ast_identifier *identifier = info_holder->function_identifier;
+	log_debug("Processing type-checking on function return '%s'...",
+	          identifier->identifier_name);
+
+	// error detected previously
+	if (statement->semantic_error || identifier->semantic_error) {
+		log_debug("Error already detected. Do not check return type");
+	} else {
+
+		enum mCc_ast_data_type function_type =
+		    identifier->symtab_info->data_type;
+
+		// no more checks needed
+		if (void_function_checked_statement(statement, function_type,
+		                                    info_holder)) {
+			return;
+		}
+
+		enum mCc_ast_data_type return_type =
+		    statement->return_expression->data_type;
+		// if return is void and no return-expression is set => valid
+		if (!statement->return_expression &&
+		    return_type == MCC_AST_DATA_TYPE_VOID) {
+			return;
+		}
+		// incompatible types
+		if (return_type != MCC_AST_DATA_TYPE_INCONSISTENT &&
+		    return_type != MCC_AST_DATA_TYPE_UNKNOWN &&
+		    return_type != function_type) {
+			handle_expected_return_type_statement(statement, function_type,
+			                                      return_type, info_holder);
+		}
+	}
+	log_debug("Function-def return-type-checking completed");
+}
+
+static bool get_returns_on_control_path(
+    struct mCc_ast_statement *statement,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	if (!statement->next_statement) {
+		return info_holder->function_identifier->symtab_info->data_type ==
+		       MCC_AST_DATA_TYPE_VOID;
+	}
+	return statement->next_statement->returns_on_control_path;
+}
+
+static bool
+check_return_path(struct mCc_ast_statement *statement,
+                  struct mCc_symtab_and_validation_holder *info_holder)
+{
+	assert(info_holder);
+
+	// if empty
+	if (!statement) {
+		return is_void_function_scope(info_holder);
+	}
+
+	bool return_path_exists = false;
+	// check next statement first
+	if (statement->next_statement) {
+		return_path_exists =
+		    check_return_path(statement->next_statement, info_holder);
+	} else {
+		// if there isn't any other statement left
+		return_path_exists = is_void_function_scope(info_holder);
+	}
+
+	switch (statement->statement_type) {
+
+	case MCC_AST_STATEMENT_IF:
+		// a return path exists => set it
+		if (return_path_exists) {
+			// handles null-values
+			reset_returns_on_control_path(statement->if_statement);
+			reset_returns_on_control_path(statement->else_statement);
+		}
+		/*
+		 * If the function is a void function, it isn't enough to reset the
+		 * control-path-flag, checks for invalid return-types are also required!
+		 */
+		if (!return_path_exists || is_void_function_scope(info_holder)) {
+			bool returns_if_branch =
+			    check_return_path(statement->if_statement, info_holder);
+			bool returns_else_branch =
+			    check_return_path(statement->else_statement, info_holder);
+			return_path_exists = (returns_if_branch && returns_else_branch) ||
+			                     is_void_function_scope(info_holder);
+		}
+		break;
+	case MCC_AST_STATEMENT_WHILE:
+		if (return_path_exists) {
+			reset_returns_on_control_path(statement->while_statement);
+		}
+		break;
+	case MCC_AST_STATEMENT_RETURN:
+		statement->returns_on_control_path = true;
+		return_path_exists = true;
+		handle_wrong_return_type(statement, info_holder);
+		break;
+	case MCC_AST_STATEMENT_DECLARATION:
+	case MCC_AST_STATEMENT_ASSIGNMENT:
+	case MCC_AST_STATEMENT_EXPRESSION:
+		return_path_exists =
+		    get_returns_on_control_path(statement, info_holder);
+		break;
+	}
+	statement->returns_on_control_path = return_path_exists;
+	if (!return_path_exists && !return_path_error_already_reported(statement)) {
+		handle_returns_on_control_path(statement, info_holder);
+	}
+	// needed?
+	return statement->returns_on_control_path;
+}
+
 // do this preorder
 void mCc_symtab_handle_function_def_pre_order(struct mCc_ast_function_def *def,
                                               void *data)
@@ -142,7 +404,8 @@ static void handle_expected_return_type(
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "In function '%s': Expected a return-type of '%s' but have '%s' "
 	         "(incompatible return type)",
-	         def->identifier->identifier_name, mCc_ast_print_data_type(expected),
+	         def->identifier->identifier_name,
+	         mCc_ast_print_data_type(expected),
 	         mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
@@ -160,7 +423,8 @@ static void handle_expected_type_function_call(
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types at argument %d: Expected '%s' but have '%s'",
-	         arg_nr, mCc_ast_print_data_type(expected), mCc_ast_print_data_type(actual));
+	         arg_nr, mCc_ast_print_data_type(expected),
+	         mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
@@ -184,21 +448,17 @@ static void handle_unknown_inconsistent_type(
 	info_holder->error_count++;
 }
 
-static bool
-void_function_checked(struct mCc_ast_function_def *def,
-                      struct mCc_ast_statement *return_statement,
-                      enum mCc_ast_data_type function_type,
-                      struct mCc_symtab_and_validation_holder *info_holder)
+static void
+empty_function_checked(struct mCc_ast_function_def *def,
+                       struct mCc_symtab_and_validation_holder *info_holder)
 {
-	if (!return_statement || !return_statement->return_expression) {
-		if (function_type != MCC_AST_DATA_TYPE_VOID) {
-			handle_expected_return_type(def, function_type,
-			                            MCC_AST_DATA_TYPE_VOID, info_holder);
-		}
-		// everything is fine if function is void
-		return true;
+	enum mCc_ast_data_type function_type =
+	    def->identifier->symtab_info->data_type;
+	if (function_type != MCC_AST_DATA_TYPE_VOID) {
+		handle_expected_return_type(def, function_type, MCC_AST_DATA_TYPE_VOID,
+		                            info_holder);
 	}
-	return false;
+	// everything is fine if function is void
 }
 
 // check for return-type
@@ -214,21 +474,15 @@ void mCc_symtab_handle_function_def_post_order(struct mCc_ast_function_def *def,
 	struct mCc_ast_identifier *identifier = def->identifier;
 
 	log_debug("Processing type-checking on function return '%s'...",
-	          def->identifier->identifier_name);
+	          identifier->identifier_name);
 
 	// error detected previously
-	if (def->semantic_error || def->identifier->semantic_error) {
+	if (def->semantic_error || identifier->semantic_error) {
 		log_debug("Error already detected. Do not check return type");
+	} else if (def->first_statement) {
+		check_return_path(def->first_statement, info_holder);
 	} else {
-		struct mCc_ast_statement *return_statement = def->first_statement;
-		// this stage just requires to check an empty function
-		if (return_statement == NULL) {
-			enum mCc_ast_data_type function_type =
-			    identifier->symtab_info->data_type;
-			// no more checks needed
-			void_function_checked(def, return_statement, function_type,
-			                      info_holder);
-		}
+		empty_function_checked(def, info_holder);
 	}
 	log_debug("Function-def return-type-checking completed");
 }
