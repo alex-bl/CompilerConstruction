@@ -7,16 +7,16 @@
 #include "mCc/ast_visit.h"
 
 //"global" visitor needed
-static struct mCc_ast_visitor tac_visitor(FILE *out)
+static struct mCc_ast_visitor tac_visitor(struct mCc_tac_element *tac)
 {
-	assert(out);
+	assert(tac);
 
 	return (struct mCc_ast_visitor){
 
 		.traversal = MCC_AST_VISIT_DEPTH_FIRST,
-		.order = MCC_AST_VISIT_PRE_ORDER,
-		//replace out with data structure for tac
-		.userdata = out,
+		.order = MCC_AST_VISIT_POST_ORDER,
+		// replace out with data structure for tac
+		.userdata = tac,
 
 		//.expression
 		.expression_literal = mCc_tac_expression_literal,
@@ -25,8 +25,7 @@ static struct mCc_ast_visitor tac_visitor(FILE *out)
 
 		.expression_function_call = mCc_tac_expression_function_call,
 		.expression_identifier = mCc_tac_expression_identifier,
-		.expression_array_identifier =
-		    mCc_tac_expression_identifier_array,
+		.expression_array_identifier = mCc_tac_expression_identifier_array,
 		.expression_unary_op = mCc_tac_expression_unary_op,
 
 		//.literal
@@ -60,21 +59,21 @@ static struct mCc_ast_visitor tac_visitor(FILE *out)
 		.statement_assignment = mCc_tac_statement_assignment,
 		.statement_expression = mCc_tac_statement_expression,
 
-		//not needed for print
-		.statement=NULL,
-		.assignment=NULL,
-		.declaration=NULL,
-		.literal=NULL,
-		.expression=NULL,
+		// not needed for print
+		.statement = NULL,
+		.assignment = NULL,
+		.declaration = NULL,
+		.literal = NULL,
+		.expression = NULL,
 
 		// scope enter/leave hooks also not needed here
-		.function_def_enter_scope=NULL,
-		.function_def_leave_scope=NULL,
+		.function_def_enter_scope = NULL,
+		.function_def_leave_scope = NULL,
 
-		.statement_if_enter_scope=NULL,
-		.statement_if_leave_scope=NULL,
-		.statement_while_enter_scope=NULL,
-		.statement_while_leave_scope=NULL
+		.statement_if_enter_scope = NULL,
+		.statement_if_leave_scope = NULL,
+		.statement_while_enter_scope = NULL,
+		.statement_while_leave_scope = NULL
 	};
 }
 
@@ -82,16 +81,16 @@ static struct mCc_ast_visitor tac_visitor(FILE *out)
  * should be the "top"
  * is "global"
  */
-void mCc_ast_tac_program(FILE *out, struct mCc_ast_program *program)
+void mCc_tac_start_program(struct mCc_tac_element *tac,
+                           struct mCc_ast_program *program)
 {
-	assert(out);
+	assert(tac);
 	assert(program);
 
-	tac_begin(out);
+	// tac_begin(tac);
 
-	struct mCc_ast_visitor visitor = tac_visitor(out);
+	struct mCc_ast_visitor visitor = tac_visitor(tac);
 	mCc_ast_visit_program(program, &visitor);
 
-	tac_end(out);
+	// tac_end(tac);
 }
-
