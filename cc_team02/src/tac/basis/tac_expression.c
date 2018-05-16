@@ -8,7 +8,8 @@
 
 // const char *mCc_tac_unary_op(enum mCc_ast_unary_op op) {}
 
-void mCc_tac_expression_literal(struct mCc_ast_expression *expression,
+//TODO recursive structure
+struct mCc_tac_element *mCc_tac_expression_literal(struct mCc_ast_expression *expression,
                                 struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
@@ -35,9 +36,11 @@ void mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	struct mCc_tac_element *tac =
 	    tac_new_element(MCC_TAC_OPARATION_EMPTY, argument1, NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
 
-void mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
+//TODO recursive structure
+struct mCc_tac_element *mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
                                   struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
@@ -90,18 +93,22 @@ void mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	    tac_new_identifier(expression->lhs->identifier->identifier_name),
 	    tac_new_identifier(expression->rhs->identifier->identifier_name), NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
 
-void mCc_tac_expression_parenth(struct mCc_ast_expression *expression,
+//TODO recursive structure
+struct mCc_tac_element *mCc_tac_expression_parenth(struct mCc_ast_expression *expression,
                                 struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
 	assert(previous_tac);
 
 	// TODO add tac element
+	return NULL;
 }
 
-void mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
+//TODO recursive structure
+struct mCc_tac_element *mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
                                    struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
@@ -112,9 +119,11 @@ void mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
 	    tac_new_identifier(expression->identifier->identifier_name), NULL,
 	    NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
 
-void mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
+//TODO recursive structure
+struct mCc_tac_element *mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
                                          struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
@@ -127,9 +136,11 @@ void mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
 	        expression->array_index_expression->identifier->identifier_name),
 	    NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
 
-void mCc_tac_expression_function_call(struct mCc_ast_expression *expression,
+//TODO recursive structure
+struct mCc_tac_element *mCc_tac_expression_function_call(struct mCc_ast_expression *expression,
                                       struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
@@ -141,9 +152,11 @@ void mCc_tac_expression_function_call(struct mCc_ast_expression *expression,
 	        expression->function_call->identifier->identifier_name),
 	    NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
 
-void mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
+//TODO recursive structure
+struct mCc_tac_element *mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
                                  struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
@@ -164,4 +177,5 @@ void mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
 	struct mCc_tac_element *tac = tac_new_element(
 	    operation, tac_new_identifier(expression->unary_rhs->identifier->identifier_name), NULL, NULL);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
