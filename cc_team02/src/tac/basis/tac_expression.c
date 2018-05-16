@@ -1,4 +1,5 @@
 #include "tac_expression.h"
+#include "tac_function.h"
 
 #include <assert.h>
 
@@ -43,7 +44,6 @@ helper_get_tac_of_expression(struct mCc_ast_expression *expression,
 	return tac_statement;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_expression_literal(struct mCc_ast_expression *expression,
                            struct mCc_tac_element *previous_tac)
@@ -51,9 +51,15 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(previous_tac);
 
+	/* MCC_AST_DATA_TYPE_VOID,
+	MCC_AST_DATA_TYPE_INT,
+	MCC_AST_DATA_TYPE_FLOAT,
+	MCC_AST_DATA_TYPE_BOOL,
+	MCC_AST_DATA_TYPE_STRING,*/
+
 	struct mCc_tac_identifier *argument1;
 
-	switch (expression->data_type) {
+	switch (expression->literal->type) {
 	case MCC_AST_DATA_TYPE_INT:
 		argument1 = tac_new_identifier((char *)&expression->literal->i_value);
 		break;
@@ -69,13 +75,13 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	default: argument1 = NULL; break;
 	}
 
-	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, argument1, NULL, NULL);
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPARATION_EMPTY, argument1, NULL,
+	    tac_new_identifier(expression->identifier->identifier_name));
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
                              struct mCc_tac_element *previous_tac)
@@ -128,12 +134,12 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	struct mCc_tac_element *tac = tac_new_element(
 	    operation,
 	    tac_new_identifier(expression->lhs->identifier->identifier_name),
-	    tac_new_identifier(expression->rhs->identifier->identifier_name), NULL);
+	    tac_new_identifier(expression->rhs->identifier->identifier_name),
+	    tac_new_identifier(expression->identifier->identifier_name));
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_expression_parenth(struct mCc_ast_expression *expression,
                            struct mCc_tac_element *previous_tac)
@@ -141,11 +147,13 @@ mCc_tac_expression_parenth(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(previous_tac);
 
-	// TODO add tac element
-	return NULL;
+	// TODO check if it is right
+	struct mCc_tac_element *tac =
+	    helper_get_tac_of_expression(expression->expression, previous_tac);
+
+	return tac;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
                               struct mCc_tac_element *previous_tac)
@@ -153,15 +161,16 @@ mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(previous_tac);
 
+	// expression->identifier
+
+	// TODO check if that is correct and needed
 	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY,
-	    tac_new_identifier(expression->identifier->identifier_name), NULL,
-	    NULL);
+	    MCC_TAC_OPARATION_EMPTY, NULL, NULL,
+	    tac_new_identifier(expression->identifier->identifier_name));
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
                                     struct mCc_tac_element *previous_tac)
@@ -169,17 +178,14 @@ mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(previous_tac);
 
+	// TODO check if that is correct and needed
 	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY,
-	    tac_new_identifier(expression->array_identifier->identifier_name),
-	    tac_new_identifier(
-	        expression->array_index_expression->identifier->identifier_name),
-	    NULL);
+	    MCC_TAC_OPARATION_EMPTY, NULL, NULL,
+	    tac_new_identifier(expression->array_identifier->identifier_name));
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_expression_function_call(struct mCc_ast_expression *expression,
                                  struct mCc_tac_element *previous_tac)
@@ -187,12 +193,15 @@ mCc_tac_expression_function_call(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac = tac_new_element(
+	struct mCc_tac_element *tac =
+	    mCc_tac_function_call(expression->function_call, previous_tac);
+
+	/*struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_PROCEDURAL_CALL,
 	    tac_new_identifier(
 	        expression->function_call->identifier->identifier_name),
 	    NULL, NULL);
-	mCc_tac_connect_tac_entry(previous_tac, tac);
+	mCc_tac_connect_tac_entry(previous_tac, tac);*/
 	return tac;
 }
 
@@ -213,13 +222,13 @@ mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
 	case MCC_AST_UNARY_OP_NEGATION:
 		operation = MCC_TAC_OPARATION_UNARY_OP_NEGATION;
 		break;
-	default: operation = MCC_TAC_OPARATION_EMPTY; break;
 	}
 
+	struct mCc_tac_element *tac_unary_rhs_expression =
+	    helper_get_tac_of_expression(expression->unary_rhs, previous_tac);
+
 	struct mCc_tac_element *tac = tac_new_element(
-	    operation,
-	    tac_new_identifier(expression->unary_rhs->identifier->identifier_name),
-	    NULL, NULL);
-	mCc_tac_connect_tac_entry(previous_tac, tac);
+	    operation, tac_unary_rhs_expression->tac_result, NULL, NULL);
+	mCc_tac_connect_tac_entry(tac_unary_rhs_expression, tac);
 	return tac;
 }

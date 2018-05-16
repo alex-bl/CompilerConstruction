@@ -5,7 +5,9 @@
 
 #include "basic_tac.h"
 
-//TODO recursive structure
+// literals are not needed? -> get generated in the tac_expression
+
+// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_literal_int(struct mCc_ast_literal *literal,
                     struct mCc_tac_element *previous_tac)
@@ -20,7 +22,7 @@ mCc_tac_literal_int(struct mCc_ast_literal *literal,
 	return tac;
 }
 
-//TODO recursive structure
+// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_literal_float(struct mCc_ast_literal *literal,
                       struct mCc_tac_element *previous_tac)
@@ -37,7 +39,7 @@ mCc_tac_literal_float(struct mCc_ast_literal *literal,
 	return tac;
 }
 
-//TODO recursive structure
+// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_literal_bool(struct mCc_ast_literal *literal,
                      struct mCc_tac_element *previous_tac)
@@ -52,7 +54,7 @@ mCc_tac_literal_bool(struct mCc_ast_literal *literal,
 	return tac;
 }
 
-//TODO recursive structure
+// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_literal_string(struct mCc_ast_literal *literal,
                        struct mCc_tac_element *previous_tac)
@@ -66,3 +68,5 @@ mCc_tac_literal_string(struct mCc_ast_literal *literal,
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
+
+//->DELETE?
