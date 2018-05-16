@@ -1,5 +1,5 @@
-#ifndef MCC_AST_TAC_H
-#define MCC_AST_TAC_H
+#ifndef MCC_TAC_PRINT_H
+#define MCC_TAC_PRINT_H
 
 #include "tac_print.h"
 
