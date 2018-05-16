@@ -5,6 +5,7 @@
 
 #include "basic_tac.h"
 
+//TODO recursive structure
 struct mCc_tac_element *mCc_tac_identifier(struct mCc_ast_identifier *identifier,
                         struct mCc_tac_element *previous_tac)
 {

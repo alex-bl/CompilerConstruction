@@ -4,6 +4,7 @@
 
 #include "basic_tac.h"
 
+//TODO recursive structure
 // x:= y
 struct mCc_tac_element *
 mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
@@ -20,6 +21,7 @@ mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
 	return tac;
 }
 
+//TODO recursive structure
 // y[i]:=x
 struct mCc_tac_element *
 mCc_tac_declaration_array(struct mCc_ast_declaration *declaration,

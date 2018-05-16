@@ -5,6 +5,7 @@
 
 #include "basic_tac.h"
 
+//TODO recursive structure
 // x:= y
 struct mCc_tac_element *
 mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
@@ -37,6 +38,7 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	return tac;
 }
 
+//TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
                          struct mCc_tac_element *previous_tac)
