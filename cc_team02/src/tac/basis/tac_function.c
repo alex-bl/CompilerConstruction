@@ -1,5 +1,6 @@
 #include "tac_function.h"
 #include "tac_declaration.h"
+#include "tac_expression.h"
 #include "tac_statement.h"
 
 #include <assert.h>
@@ -18,7 +19,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL,
 	                    tac_new_identifier(def->identifier->identifier_name));
 	mCc_tac_connect_tac_entry(previous_tac, tac);
-	previous_tac=tac;
+	previous_tac = tac;
 
 	// stores parameter into tac table
 	struct mCc_ast_declaration *parameter = def->first_parameter;
@@ -54,11 +55,9 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		statement = statement->next_statement;
 	}
 
-
 	return previous_tac;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_function_call(struct mCc_ast_function_call *call,
                       struct mCc_tac_element *previous_tac)
@@ -66,10 +65,26 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 	assert(call);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_PROCEDURAL_CALL,
-	                    tac_new_identifier(call->identifier->identifier_name),
-	                    tac_new_identifier((char *)call->first_argument), NULL);
+	// call->first_argument
+	// stores arguments into tac table
+	struct mCc_ast_expression *argument = call->first_argument;
+	while (argument != NULL) {
+		struct mCc_tac_element *tac_argument =
+		    helper_get_tac_of_expression(argument, previous_tac);
+
+		struct mCc_tac_element *tac = tac_new_element(
+		    MCC_TAC_OPARATION_LABLE, tac_argument->tac_result, NULL,
+		    tac_new_identifier(call->identifier->identifier_name));
+		mCc_tac_connect_tac_entry(tac_argument, tac);
+		previous_tac = tac;
+		argument = argument->next_expr;
+	}
+
+	// call->identifier->identifier_name
+	// stores call into tac table
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPARATION_PROCEDURAL_CALL, previous_tac->tac_result, NULL,
+	    tac_new_identifier(call->identifier->identifier_name));
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
