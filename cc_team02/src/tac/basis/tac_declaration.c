@@ -4,7 +4,8 @@
 
 #include "basic_tac.h"
 
-//TODO put helper function on an higher base -> better reachable from other functions
+// TODO put helper function on an higher base -> better reachable from other
+// functions  or not!
 char *helper_data_type_to_char(enum mCc_ast_data_type data_type)
 {
 	/*MCC_AST_DATA_TYPE_VOID,
