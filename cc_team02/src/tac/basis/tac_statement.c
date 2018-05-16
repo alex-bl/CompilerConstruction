@@ -1,5 +1,6 @@
 #include "tac_statement.h"
 #include "ast_expression.h"
+#include "tac_declaration.h"
 #include "tac_expression.h"
 
 #include <assert.h>
@@ -56,7 +57,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	    tac_else_statement->tac_result, tac_if_statement->tac_result);
 	mCc_tac_connect_tac_entry(tac_statement, tac_if_condition);
 	mCc_tac_connect_tac_entry(tac_if_condition, tac_if_statement);
-	mCc_tac_connect_tac_entry(tac_statement, tac_else_statement);
+	mCc_tac_connect_tac_entry(tac_if_statement, tac_else_statement);
 
 	return tac_else_statement;
 }
@@ -69,18 +70,26 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	assert(statement);
 	assert(previous_tac);
 
-	// TODO next
+	struct mCc_tac_element *tac_while_expression = helper_get_tac_of_expression(
+	    statement->loop_condition_expression, previous_tac);
 
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY,
-	    tac_new_identifier(statement->while_statement->condition_expression
-	                           ->identifier->identifier_name),
-	    NULL, NULL);
-	mCc_tac_connect_tac_entry(previous_tac, tac);
-	return tac;
+	struct mCc_tac_element *tac_while_statement =
+	    helper_get_tac_of_statement(statement, tac_while_expression);
+
+	// TODO add label where to jump, if while is false
+	//struct mCc_tac_element *tac_while_false_statement = tac_new_element(
+	//    MCC_TAC_OPARATION_LABLE, NULL, NULL, NULL /*add label*/);
+
+	struct mCc_tac_element *tac_while_condition = tac_new_element(
+	    MCC_TAC_OPARATION_CONDITIONAL_JUMP, tac_while_statement->tac_result,
+	    NULL, tac_while_statement->tac_result);
+
+	mCc_tac_connect_tac_entry(previous_tac, tac_while_expression);
+	mCc_tac_connect_tac_entry(tac_while_expression, tac_while_condition);
+	mCc_tac_connect_tac_entry(tac_while_condition, tac_while_statement);
+	return tac_while_statement;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_statement_return(struct mCc_ast_statement *statement,
                          struct mCc_tac_element *previous_tac)
@@ -88,16 +97,17 @@ mCc_tac_statement_return(struct mCc_ast_statement *statement,
 	assert(statement);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_RETURN,
-	    tac_new_identifier(
-	        statement->return_expression->identifier->identifier_name),
-	    NULL, NULL);
-	mCc_tac_connect_tac_entry(previous_tac, tac);
+	struct mCc_tac_element *tac_return_expression =
+	    helper_get_tac_of_expression(statement->return_expression,
+	                                 previous_tac);
+
+	struct mCc_tac_element *tac =
+	    tac_new_element(MCC_TAC_OPARATION_RETURN, NULL, NULL,
+	                    tac_return_expression->tac_result);
+	mCc_tac_connect_tac_entry(tac_return_expression, tac);
 	return tac;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_statement_declaration(struct mCc_ast_statement *statement,
                               struct mCc_tac_element *previous_tac)
@@ -105,12 +115,17 @@ mCc_tac_statement_declaration(struct mCc_ast_statement *statement,
 	assert(statement);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY,
-	    tac_new_identifier(statement->declaration->identifier->identifier_name),
-	    NULL, NULL);
-	mCc_tac_connect_tac_entry(previous_tac, tac);
-	return tac;
+	struct mCc_tac_element *tac_declaration;
+	if (statement->declaration->declaration_type ==
+	    MCC_AST_DECLARATION_PRIMITIVE) {
+		tac_declaration =
+		    mCc_tac_declaration_primitive(statement->declaration, previous_tac);
+	} else if (statement->declaration->declaration_type ==
+	           MCC_AST_DECLARATION_ARRAY) {
+		tac_declaration =
+		    mCc_tac_declaration_array(statement->declaration, previous_tac);
+	}
+	return tac_declaration;
 }
 
 // TODO recursive structure
