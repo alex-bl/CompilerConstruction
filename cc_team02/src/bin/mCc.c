@@ -11,8 +11,8 @@
 #include "mCc/ast_print.h"
 #include "mCc/parser.h"
 #include "mCc/semantic_check.h"
-#include "mCc/tac.h"
 #include "mCc/tac_print.h"
+#include "mCc/tac.h"
 
 /*Argp: Inspired by
  * https://www.gnu.org/software/libc/manual/html_node/Argp-Example-4.html#Argp-Example-4*/
