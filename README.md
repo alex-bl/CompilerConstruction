@@ -19,7 +19,7 @@ Please note that the downloaded files (cmake) need to be installed manually usin
 
 Manual build steps (**recommended**):
 
-1. Clone or download the code-base.
+1. Clone or download the code-base (and move to the /cc_team02 folder).
 2. Create the directory where to store the makefiles + binaries: `$ mkdir build`
 3. Move to the build-directory: `$ cd build`
 4. Build cmake-infrastructure: `$ cmake ../`
@@ -29,7 +29,7 @@ Manual build steps (**recommended**):
 
 Using the setup-wrapper (experimental):
 
-1. Clone or download the code-base.
+1. Clone or download the code-base (and move to the /cc_team02 folder).
 2. Build cmake-infrastructure: `$ ./setup-wrapper "<cmake-args>"`
 3. Move to the build-directory: `$ cd build`
 4. Execute targets (See possible targets) via: `$ make <target>`
@@ -96,6 +96,7 @@ See [issues](https://github.com/alex-bl/CompilerConstruction/issues) for project
 ### Assigmnent 2
 
 - **Incorrect location information (line-/column-number) on the first statements inside a new scope (if/else, while):** This first statement gets the same location-information as the parent that opens the scope. All subsequent statements are correct. 
+- **Memory Leaks on TAC tests:** Testing the TAC code still shows memory leaks. This will be improved shortly.
 
 ## 4. Changelog
 
@@ -111,7 +112,7 @@ This section contains the fixed issues from the previous assignments.
 - Warnings on unused parameters are suppressed now.
 - Include-pahts are managed by the build-system now.
 - Restructuring on the `include`-directory done.
-- A logging-mechanism was introduced: Everything is logged now into [logfiles](cc_team02/log) (In `Release`-mode logging to `stdout` is suppressed).
+- A logging mechanism was introduced (logging to stdout and/or logfiles can be configured using command-line arguments).
 
 Unfixed issues:
 
