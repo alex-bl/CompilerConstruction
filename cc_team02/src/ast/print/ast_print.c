@@ -59,21 +59,21 @@ static struct mCc_ast_visitor print_dot_visitor(FILE *out)
 		.statement_assignment = mCc_print_dot_statement_assignment,
 		.statement_expression = mCc_print_dot_statement_expression,
 
-		//not needed for print
-		.statement=NULL,
-		.assignment=NULL,
-		.declaration=NULL,
-		.literal=NULL,
-		.expression=NULL,
+		// not needed for print
+		.statement = NULL,
+		.assignment = NULL,
+		.declaration = NULL,
+		.literal = NULL,
+		.expression = NULL,
 
 		// scope enter/leave hooks also not needed here
-		.function_def_enter_scope=NULL,
-		.function_def_leave_scope=NULL,
+		.function_def_enter_scope = NULL,
+		.function_def_leave_scope = NULL,
 
-		.statement_if_enter_scope=NULL,
-		.statement_if_leave_scope=NULL,
-		.statement_while_enter_scope=NULL,
-		.statement_while_leave_scope=NULL
+		.statement_if_enter_scope = NULL,
+		.statement_if_leave_scope = NULL,
+		.statement_while_enter_scope = NULL,
+		.statement_while_leave_scope = NULL
 	};
 }
 

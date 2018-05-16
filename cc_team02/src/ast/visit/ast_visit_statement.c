@@ -2,10 +2,10 @@
 
 #include <assert.h>
 
-#include "log.h"
 #include "ast_visit_assignment.h"
 #include "ast_visit_declaration.h"
 #include "ast_visit_expression.h"
+#include "log.h"
 
 // TODO: warning if dead-code is detected?
 void mCc_ast_visit_optional_statement(struct mCc_ast_statement *statement,

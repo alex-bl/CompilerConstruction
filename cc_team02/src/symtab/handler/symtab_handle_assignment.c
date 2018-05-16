@@ -1,4 +1,4 @@
-#include "handler/symtab_handle_assignment.h"
+#include "symtab_handle_assignment.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -30,7 +30,8 @@ static void handle_expected_type(struct mCc_ast_assignment *assignment,
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Invalid assignment: Expected '%s' but have '%s'",
-	         mCc_ast_print_data_type(expected), mCc_ast_print_data_type(actual));
+	         mCc_ast_print_data_type(expected),
+	         mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,

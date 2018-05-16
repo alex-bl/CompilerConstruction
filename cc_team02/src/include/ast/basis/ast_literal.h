@@ -1,9 +1,10 @@
 #ifndef MCC_AST_LITERAL_H
 #define MCC_AST_LITERAL_H
 
+#include <stdbool.h>
+
 #include "ast_data_type.h"
 #include "ast_node.h"
-#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
