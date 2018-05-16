@@ -229,7 +229,6 @@ int main(int argc, char *argv[])
 		mCc_ast_print_dot_program(out_put, prog);
 	}
 	if (arguments.print_tac) {
-		/* build tac-table */
 		// TAC
 		struct mCc_tac_element *tac = mCc_tac_start_program(prog);
 		// TAC print

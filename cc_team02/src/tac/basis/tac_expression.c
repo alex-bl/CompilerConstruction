@@ -9,35 +9,36 @@ struct mCc_tac_element *
 helper_get_tac_of_expression(struct mCc_ast_expression *expression,
                              struct mCc_tac_element *previous_tac)
 {
-	struct mCc_tac_element *tac_statement;
+	struct mCc_tac_element *tac_expression;
 
 	switch (expression->type) {
 	case MCC_AST_EXPRESSION_TYPE_LITERAL:
-		tac_statement = mCc_tac_expression_literal(expression, previous_tac);
+		tac_expression = mCc_tac_expression_literal(expression, previous_tac);
 		break;
 	case MCC_AST_EXPRESSION_TYPE_BINARY_OP:
-		tac_statement = mCc_tac_expression_binary_op(expression, previous_tac);
+		tac_expression = mCc_tac_expression_binary_op(expression, previous_tac);
 		break;
 	case MCC_AST_EXPRESSION_TYPE_PARENTH:
-		tac_statement = mCc_tac_expression_parenth(expression, previous_tac);
+		tac_expression = mCc_tac_expression_parenth(expression, previous_tac);
 		break;
 	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER:
-		tac_statement = mCc_tac_expression_identifier(expression, previous_tac);
+		tac_expression =
+		    mCc_tac_expression_identifier(expression, previous_tac);
 		break;
 	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY:
-		tac_statement =
+		tac_expression =
 		    mCc_tac_expression_identifier_array(expression, previous_tac);
 		break;
 	case MCC_AST_EXPRESSION_TYPE_CALL_EXPR:
-		tac_statement =
+		tac_expression =
 		    mCc_tac_expression_function_call(expression, previous_tac);
 		break;
 	case MCC_AST_EXPRESSION_TYPE_UNARY_OP:
-		tac_statement = mCc_tac_expression_unary_op(expression, previous_tac);
+		tac_expression = mCc_tac_expression_unary_op(expression, previous_tac);
 		break;
 	}
-	mCc_tac_connect_tac_entry(previous_tac, tac_statement);
-	return tac_statement;
+	mCc_tac_connect_tac_entry(previous_tac, tac_expression);
+	return tac_expression;
 }
 
 struct mCc_tac_element *
