@@ -50,12 +50,13 @@ This section lists the available targets that can be build.
 | build\_and\_test\* | Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild. |
 | build\_and\_test_memcheck\* | Runs all gtests together with valgrind | - |
 | integration\_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration). |
-| run\_benchmarks | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. |
+| run\_benchmarks\*\* | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. |
 
-\* Test-targets execute also printer-tests: They don't have any "gtest-assertions" but print the asts (dot-notation) into `build/<release_type>/test/output`. This dot files are named as follow:
-
+\* Test-targets execute also printer-tests: They don't have any "gtest-assertions" but print the AST (dot-notation) into `build/<release_type>/test/output`. This dot files are named as follow:
 
 `DOT_<test_name>.dot`
+
+\*\* Currently disabled
 
 ## 2. Usage
 
