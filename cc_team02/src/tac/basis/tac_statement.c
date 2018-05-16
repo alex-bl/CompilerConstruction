@@ -31,7 +31,7 @@ case MCC_AST_EXPRESSION_TYPE_UNARY_OP: return_char = "incompatible"; break;
 }
 return return_char;
 }*/
-struct mCc_ast_statement *
+struct mCc_tac_element *
 helper_get_tac_of_statement(struct mCc_ast_statement *statement,
                             struct mCc_tac_element *previous_tac)
 {
@@ -57,6 +57,7 @@ helper_get_tac_of_statement(struct mCc_ast_statement *statement,
 		break;
 	}
 	mCc_tac_connect_tac_entry(previous_tac, statement_tac);
+	return statement_tac;
 }
 
 // TODO recursive structure
@@ -103,10 +104,11 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 
 	// TODO switch from tac_function.c can be used here!
 	// struct mCc_tac_element *if_statement=statement->if_statement->;
-
-	struct mCc_tac_element *tac = tac_new_element(
+	struct mCc_tac_element *tac_if_cond =
+	    helper_get_tac_of_statement(statement, tac_statement);
+	/*struct mCc_tac_element *tac_else_cond = tac_new_element(
 	    MCC_TAC_OPARATION_CONDITIONAL_JUMP, tac_statement->tac_result,
-	    NULL /*if statement*/, NULL /*else statement*/);
+	    NULL , NULL );*/
 
 	// statement->if_statement;
 	// statement->else_statement;

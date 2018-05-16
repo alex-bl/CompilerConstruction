@@ -35,7 +35,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		parameter = parameter->next_declaration;
 	}
 
-	//TODO auslagern -> available from statements
+	// TODO auslagern -> available from statements
 	// tac table creation for statements:
 	struct mCc_ast_statement *statement = def->first_statement;
 	while (statement != NULL) {
@@ -51,30 +51,31 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		/*struct mCc_tac_element *statement_tac;
 		switch (statement->statement_type) {
 		case MCC_AST_STATEMENT_IF:
-			statement_tac = mCc_tac_statement_if(statement, previous_tac);
-			break;
+		    statement_tac = mCc_tac_statement_if(statement, previous_tac);
+		    break;
 		case MCC_AST_STATEMENT_WHILE:
-			statement_tac = mCc_tac_statement_while(statement, previous_tac);
-			break;
+		    statement_tac = mCc_tac_statement_while(statement, previous_tac);
+		    break;
 		case MCC_AST_STATEMENT_RETURN:
-			statement_tac = mCc_tac_statement_return(statement, previous_tac);
-			break;
+		    statement_tac = mCc_tac_statement_return(statement, previous_tac);
+		    break;
 		case MCC_AST_STATEMENT_DECLARATION:
-			statement_tac =
-			    mCc_tac_statement_declaration(statement, previous_tac);
-			break;
+		    statement_tac =
+		        mCc_tac_statement_declaration(statement, previous_tac);
+		    break;
 		case MCC_AST_STATEMENT_ASSIGNMENT:
-			statement_tac =
-			    mCc_tac_statement_assignment(statement, previous_tac);
-			break;
+		    statement_tac =
+		        mCc_tac_statement_assignment(statement, previous_tac);
+		    break;
 		case MCC_AST_STATEMENT_EXPRESSION:
-			statement_tac =
-			    mCc_tac_statement_expression(statement, previous_tac);
-			break;
+		    statement_tac =
+		        mCc_tac_statement_expression(statement, previous_tac);
+		    break;
 		}
 		mCc_tac_connect_tac_entry(previous_tac, statement_tac);*/
-		struct mCc_tac_element *statement_tac=helper_get_tac_of_statement(statement, previous_tac);
-		//Has a statement to be in the tac table?
+		struct mCc_tac_element *statement_tac =
+		    helper_get_tac_of_statement(statement, previous_tac);
+		// Has a statement to be in the tac table?
 		struct mCc_tac_element *tac = tac_new_element(
 		    MCC_TAC_OPARATION_LABLE, statement_tac->tac_result, NULL,
 		    tac_new_identifier(def->identifier->identifier_name));
