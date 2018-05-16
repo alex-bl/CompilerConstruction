@@ -74,10 +74,13 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	}
 	mCc_tac_connect_tac_entry(previous_tac, tac_statement);
 
+	//struct mCc_tac_element *if_statement=statement->if_statement->;
+
+
 	struct mCc_tac_element *tac = tac_new_element(
 			MCC_TAC_OPARATION_CONDITIONAL_JUMP,
 		   tac_statement->tac_result,
-		    NULL/*if statement*/, NULL);
+		    NULL/*if statement*/, NULL/*else statement*/);
 
 	//statement->if_statement;
 	//statement->else_statement;
