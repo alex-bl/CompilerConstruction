@@ -66,5 +66,7 @@ void mCc_tac_delete(struct mCc_tac_element *tac_element) {
 
 void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier)
 {
+	assert(identifier);
+
 	free(identifier);
 }

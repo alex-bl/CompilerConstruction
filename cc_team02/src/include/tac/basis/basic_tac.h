@@ -68,7 +68,7 @@ struct mCc_tac_identifier {
 
 struct mCc_tac_identifier *tac_new_identifier(char *name);
 
-//void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier);
+void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier);
 
 void mCc_tac_element_delete(struct mCc_tac_element *tac_element);
 
