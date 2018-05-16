@@ -113,7 +113,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/print")
 include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/validator")
 
 include_directories("${PROJECT_SOURCE_DIR}/src/include/tac/basis")
-include_directories("${PROJECT_SOURCE_DIR}/src/include/tac/print")
 
 #=================================================================== external-src
 

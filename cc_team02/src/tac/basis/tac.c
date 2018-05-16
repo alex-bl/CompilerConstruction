@@ -1,4 +1,4 @@
-#include "mCc/ast_tac.h"
+#include "mCc/tac.h"
 
 #include <assert.h>
 #include <stddef.h>

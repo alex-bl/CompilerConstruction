@@ -47,20 +47,27 @@ void mCc_tac_element_delete(struct mCc_tac_element *tac_element)
 {
 	assert(tac_element);
 
-	mCc_tac_delete_identifier(tac_element->tac_argument1);
-	mCc_tac_delete_identifier(tac_element->tac_argument2);
-	mCc_tac_delete_identifier(tac_element->tac_result);
+	if (tac_element->tac_argument1 != NULL) {
+		mCc_tac_delete_identifier(tac_element->tac_argument1);
+	}
+	if (tac_element->tac_argument2 != NULL) {
+		mCc_tac_delete_identifier(tac_element->tac_argument2);
+	}
+	if (tac_element->tac_result != NULL) {
+		mCc_tac_delete_identifier(tac_element->tac_result);
+	}
 	free(tac_element);
 }
 
-void mCc_tac_delete(struct mCc_tac_element *tac_element) {
+void mCc_tac_delete(struct mCc_tac_element *tac_element)
+{
 	assert(tac_element);
 
 	struct mCc_tac_element *next_tac_element;
-	while (tac_element!=NULL) {
-		next_tac_element=tac_element->tac_next_element;
+	while (tac_element != NULL) {
+		next_tac_element = tac_element->tac_next_element;
 		mCc_tac_element_delete(tac_element);
-		tac_element=next_tac_element;
+		tac_element = next_tac_element;
 	}
 }
 
@@ -68,5 +75,7 @@ void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier)
 {
 	assert(identifier);
 
-	free(identifier);
+	if (identifier != NULL) {
+		free(identifier);
+	}
 }

@@ -1,13 +1,11 @@
-#ifndef MCC_AST_TAC_H
-#define MCC_AST_TAC_H
+#ifndef MCC_TAC_H
+#define MCC_TAC_H
 
 #include "basic_tac.h"
 #include "tac_assignment.h"
 #include "tac_declaration.h"
 #include "tac_expression.h"
 #include "tac_function.h"
-#include "tac_identifier.h"
-#include "tac_literal.h"
 #include "tac_program.h"
 #include "tac_statement.h"
 
