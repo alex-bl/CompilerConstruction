@@ -231,12 +231,11 @@ int main(int argc, char *argv[])
 	if (arguments.print_tac) {
 		/* build tac-table */
 		// TAC
-		struct mCc_tac_element *tac = mCc_tac_start_program(
-		    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, NULL), prog);
+		struct mCc_tac_element *tac = mCc_tac_start_program(prog);
 		// TAC print
 		mCc_tac_print_start_program(tac, out_put);
 
-		// mCc_tac_element_delete(tac);
+		mCc_tac_delete(tac);
 	}
 
 	/* cleanup */

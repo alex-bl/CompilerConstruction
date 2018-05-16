@@ -40,8 +40,7 @@ void mCc_ast_tac_expression(FILE *out,
 void mCc_ast_tac_declaration(FILE *out,
                                    struct mCc_ast_declaration *declaration);
 
-struct mCc_tac_element *mCc_tac_start_program(struct mCc_tac_element *tac,
-                           struct mCc_ast_program *program);
+struct mCc_tac_element *mCc_tac_start_program(struct mCc_ast_program *program);
 
 #ifdef __cplusplus
 }
