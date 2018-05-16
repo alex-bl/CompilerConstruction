@@ -11,6 +11,10 @@ extern "C" {
 #endif
 
 struct mCc_tac_element *
+helper_get_tac_of_statement(struct mCc_ast_statement *statement,
+                            struct mCc_tac_element *previous_tac);
+
+struct mCc_tac_element *
 mCc_tac_statement_if(struct mCc_ast_statement *statement,
                      struct mCc_tac_element *previous_tac);
 
