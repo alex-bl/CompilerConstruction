@@ -91,5 +91,5 @@ add_library(mCc_lib SHARED ${BISON_parser_OUTPUTS} ${FLEX_scanner_OUTPUTS})
 set_property(TARGET mCc_lib PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
 # link remaining
-target_link_libraries(mCc_lib mCc_semantic_error_print mCc_tac_print mCc_tac mCc_print mCc_ast mCc_symtab mCc_visit mCc_parser_helper mCc_print_helper)
+target_link_libraries(mCc_lib mCc_semantic_error_print mCc_tac mCc_tac_print mCc_print mCc_ast mCc_symtab mCc_visit mCc_parser_helper mCc_print_helper)
 
