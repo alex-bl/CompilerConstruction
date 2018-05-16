@@ -1,9 +1,9 @@
 #include "tac_assignment.h"
-#include "tac_expression.h"
 
 #include <assert.h>
 
 #include "basic_tac.h"
+#include "tac_expression.h"
 
 // x:= y
 struct mCc_tac_element *

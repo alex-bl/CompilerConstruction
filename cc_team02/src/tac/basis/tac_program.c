@@ -1,9 +1,9 @@
 #include "tac_program.h"
-#include "tac_function.h"
 
 #include <assert.h>
 
 #include "basic_tac.h"
+#include "tac_function.h"
 
 struct mCc_tac_element *mCc_tac_program(struct mCc_ast_program *program,
                                         struct mCc_tac_element *previous_tac)

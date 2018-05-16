@@ -1,13 +1,9 @@
 #include "tac_expression.h"
-#include "tac_function.h"
 
 #include <assert.h>
 
 #include "basic_tac.h"
-
-// const char *mCc_tac_binary_op(enum mCc_ast_binary_op op) {}
-
-// const char *mCc_tac_unary_op(enum mCc_ast_unary_op op) {}
+#include "tac_function.h"
 
 struct mCc_tac_element *
 helper_get_tac_of_expression(struct mCc_ast_expression *expression,

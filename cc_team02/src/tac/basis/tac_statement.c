@@ -1,11 +1,12 @@
 #include "tac_statement.h"
-#include "ast_expression.h"
-#include "tac_declaration.h"
-#include "tac_expression.h"
 
 #include <assert.h>
 
+#include "ast_expression.h"
 #include "basic_tac.h"
+#include "tac_assignment.h"
+#include "tac_declaration.h"
+#include "tac_expression.h"
 
 struct mCc_tac_element *
 helper_get_tac_of_statement(struct mCc_ast_statement *statement,
@@ -139,11 +140,11 @@ mCc_tac_statement_assignment(struct mCc_ast_statement *statement,
 	if (statement->assignment->assignment_type ==
 	    MCC_AST_ASSIGNMENT_PRIMITIVE) {
 		tac_assignment =
-		    mCc_tac_assignment_primitive(statement->declaration, previous_tac);
+		    mCc_tac_assignment_primitive(statement->assignment, previous_tac);
 	} else if (statement->assignment->assignment_type ==
 	           MCC_AST_ASSIGNMENT_ARRAY) {
 		tac_assignment =
-		    mCc_tac_assignment_array(statement->declaration, previous_tac);
+		    mCc_tac_assignment_array(statement->assignment, previous_tac);
 	}
 	return tac_assignment;
 }
