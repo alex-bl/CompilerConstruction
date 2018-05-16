@@ -128,12 +128,18 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	default: operation = MCC_TAC_OPARATION_EMPTY; break;
 	}
 
+	struct mCc_tac_element *tac_lhs = helper_get_tac_of_expression(
+	    expression->lhs, previous_tac);
+
+	struct mCc_tac_element *tac_rhs = helper_get_tac_of_expression(
+	    expression->rhs, tac_lhs);
+
 	struct mCc_tac_element *tac = tac_new_element(
 	    operation,
-	    tac_new_identifier(expression->lhs->identifier->identifier_name),
-	    tac_new_identifier(expression->rhs->identifier->identifier_name),
+		tac_lhs->tac_result,
+		tac_lhs->tac_result,
 	    tac_new_identifier(expression->identifier->identifier_name));
-	mCc_tac_connect_tac_entry(previous_tac, tac);
+	mCc_tac_connect_tac_entry(tac_rhs, tac);
 	return tac;
 }
 
