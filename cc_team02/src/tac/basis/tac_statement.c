@@ -7,29 +7,56 @@
 #include "basic_tac.h"
 
 // not really used - till now?
-char *helper_type_to_char(enum mCc_ast_expression_type type)
+/*char *helper_type_to_char(enum mCc_ast_expression_type type)
 {
-	/*	MCC_AST_EXPRESSION_TYPE_LITERAL,
-	MCC_AST_EXPRESSION_TYPE_BINARY_OP,
-	MCC_AST_EXPRESSION_TYPE_PARENTH,
-	MCC_AST_EXPRESSION_TYPE_IDENTIFIER,
-	MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY,
-	MCC_AST_EXPRESSION_TYPE_CALL_EXPR,
-	MCC_AST_EXPRESSION_TYPE_UNARY_OP */
+    /*	MCC_AST_EXPRESSION_TYPE_LITERAL,
+    MCC_AST_EXPRESSION_TYPE_BINARY_OP,
+    MCC_AST_EXPRESSION_TYPE_PARENTH,
+    MCC_AST_EXPRESSION_TYPE_IDENTIFIER,
+    MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY,
+    MCC_AST_EXPRESSION_TYPE_CALL_EXPR,
+    MCC_AST_EXPRESSION_TYPE_UNARY_OP */
 
-	char *return_char;
-	switch (type) {
-	case MCC_AST_EXPRESSION_TYPE_LITERAL: return_char = "void"; break;
-	case MCC_AST_EXPRESSION_TYPE_BINARY_OP: return_char = "int"; break;
-	case MCC_AST_EXPRESSION_TYPE_PARENTH: return_char = "float"; break;
-	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER: return_char = "bool"; break;
-	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY:
-		return_char = "string";
+/*char *return_char;
+switch (type) {
+case MCC_AST_EXPRESSION_TYPE_LITERAL: return_char = "void"; break;
+case MCC_AST_EXPRESSION_TYPE_BINARY_OP: return_char = "int"; break;
+case MCC_AST_EXPRESSION_TYPE_PARENTH: return_char = "float"; break;
+case MCC_AST_EXPRESSION_TYPE_IDENTIFIER: return_char = "bool"; break;
+case MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY:
+    return_char = "string";
+    break;
+case MCC_AST_EXPRESSION_TYPE_CALL_EXPR: return_char = "inconsistent"; break;
+case MCC_AST_EXPRESSION_TYPE_UNARY_OP: return_char = "incompatible"; break;
+}
+return return_char;
+}*/
+struct mCc_ast_statement *
+helper_get_tac_of_statement(struct mCc_ast_statement *statement,
+                            struct mCc_tac_element *previous_tac)
+{
+	struct mCc_tac_element *statement_tac;
+	switch (statement->statement_type) {
+	case MCC_AST_STATEMENT_IF:
+		statement_tac = mCc_tac_statement_if(statement, previous_tac);
 		break;
-	case MCC_AST_EXPRESSION_TYPE_CALL_EXPR: return_char = "inconsistent"; break;
-	case MCC_AST_EXPRESSION_TYPE_UNARY_OP: return_char = "incompatible"; break;
+	case MCC_AST_STATEMENT_WHILE:
+		statement_tac = mCc_tac_statement_while(statement, previous_tac);
+		break;
+	case MCC_AST_STATEMENT_RETURN:
+		statement_tac = mCc_tac_statement_return(statement, previous_tac);
+		break;
+	case MCC_AST_STATEMENT_DECLARATION:
+		statement_tac = mCc_tac_statement_declaration(statement, previous_tac);
+		break;
+	case MCC_AST_STATEMENT_ASSIGNMENT:
+		statement_tac = mCc_tac_statement_assignment(statement, previous_tac);
+		break;
+	case MCC_AST_STATEMENT_EXPRESSION:
+		statement_tac = mCc_tac_statement_expression(statement, previous_tac);
+		break;
 	}
-	return return_char;
+	mCc_tac_connect_tac_entry(previous_tac, statement_tac);
 }
 
 // TODO recursive structure
@@ -74,16 +101,15 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	}
 	mCc_tac_connect_tac_entry(previous_tac, tac_statement);
 
-	//struct mCc_tac_element *if_statement=statement->if_statement->;
-
+	// TODO switch from tac_function.c can be used here!
+	// struct mCc_tac_element *if_statement=statement->if_statement->;
 
 	struct mCc_tac_element *tac = tac_new_element(
-			MCC_TAC_OPARATION_CONDITIONAL_JUMP,
-		   tac_statement->tac_result,
-		    NULL/*if statement*/, NULL/*else statement*/);
+	    MCC_TAC_OPARATION_CONDITIONAL_JUMP, tac_statement->tac_result,
+	    NULL /*if statement*/, NULL /*else statement*/);
 
-	//statement->if_statement;
-	//statement->else_statement;
+	// statement->if_statement;
+	// statement->else_statement;
 
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_EMPTY,
