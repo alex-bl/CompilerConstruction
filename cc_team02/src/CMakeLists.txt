@@ -56,23 +56,12 @@ add_library(mCc_tac SHARED tac/basis/basic_tac.c
 							tac/basis/tac_assignment.c
 							tac/basis/tac_declaration.c 
 							tac/basis/tac_expression.c
-							tac/basis/tac_function.c							
-							tac/basis/tac_identifier.c							
-							tac/basis/tac_literal.c
+							tac/basis/tac_function.c
 							tac/basis/tac_program.c														
 							tac/basis/tac_statement.c)
 							
 #tac print
-add_library(mCc_tac_print SHARED tac/print/basic_tac_print.c
-							tac/print/tac_print.c 
-							tac/print/tac_print_assignment.c
-							tac/print/tac_print_declaration.c 
-							tac/print/tac_print_expression.c
-							tac/print/tac_print_function.c							
-							tac/print/tac_print_identifier.c							
-							tac/print/tac_print_literal.c
-							tac/print/tac_print_program.c														
-							tac/print/tac_print_statement.c)
+add_library(mCc_tac_print SHARED tac/tac_print.c)
 
 # symbol-table-handler (for building the symbol-table and validation)
 add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c

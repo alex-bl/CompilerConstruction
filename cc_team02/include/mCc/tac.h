@@ -6,8 +6,6 @@
 #include "tac_declaration.h"
 #include "tac_expression.h"
 #include "tac_function.h"
-#include "tac_identifier.h"
-#include "tac_literal.h"
 #include "tac_program.h"
 #include "tac_statement.h"
 
