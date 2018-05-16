@@ -1,10 +1,11 @@
 #ifndef MCC_AST_DECLARATION_H
 #define MCC_AST_DECLARATION_H
 
+#include <stddef.h>
+
 #include "ast_data_type.h"
 #include "ast_identifier.h"
 #include "ast_node.h"
-#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {

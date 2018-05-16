@@ -29,8 +29,8 @@ void mCc_ast_print_dot_node(FILE *out, const void *node, const char *label)
 	fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n", node, label);
 }
 
-void mCc_ast_print_dot_edge(FILE *out, const void *src_node, const void *dst_node,
-                    const char *label)
+void mCc_ast_print_dot_edge(FILE *out, const void *src_node,
+                            const void *dst_node, const char *label)
 {
 	assert(out);
 	assert(src_node);
@@ -42,7 +42,8 @@ void mCc_ast_print_dot_edge(FILE *out, const void *src_node, const void *dst_nod
 }
 
 void mCc_ast_print_dot_edge_if_dest_exists(FILE *out, const void *src_node,
-                                   const void *dst_node, const char *label)
+                                           const void *dst_node,
+                                           const char *label)
 {
 	if (dst_node) {
 		mCc_ast_print_dot_edge(out, src_node, dst_node, label);

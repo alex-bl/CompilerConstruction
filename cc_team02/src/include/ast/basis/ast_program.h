@@ -1,8 +1,8 @@
 #ifndef MCC_AST_PROGRAM_H
 #define MCC_AST_PROGRAM_H
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #include "ast_function.h"
 #include "ast_node.h"

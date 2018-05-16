@@ -1,7 +1,7 @@
 #include "validator_helper.h"
 
-#include <stddef.h>
 #include <assert.h>
+#include <stddef.h>
 
 #include "log.h"
 

@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
 	if (strcmp("-", arguments.args[0]) == 0) {
 		in = stdin;
 	} else {
-		in = fopen(argv[1], "r");
+		in = fopen(arguments.args[0], "r");
 		if (!in) {
 			perror("fopen");
 			return EXIT_FAILURE;

@@ -2,7 +2,6 @@
 #define MCC_AST_VISIT_ASSIGNMENT_H
 
 #include "ast_assignment.h"
-// is "container"  of ast_visitors
 #include "mCc/ast_visit.h"
 
 #ifdef __cplusplus

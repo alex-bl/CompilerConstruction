@@ -20,9 +20,12 @@ void mCc_print_dot_function_def(struct mCc_ast_function_def *def, void *data)
 	// TODO:
 	// mCc_ast_print_dot_edge(out, def, def->return_type, "func: type");
 	mCc_ast_print_dot_edge(out, def, def->identifier, "identifier");
-	mCc_ast_print_dot_edge_if_dest_exists(out, def, def->first_parameter, "parameter");
-	mCc_ast_print_dot_edge_if_dest_exists(out, def, def->first_statement, "statement");
-	mCc_ast_print_dot_edge_if_dest_exists(out, def, def->next_function_def, "next");
+	mCc_ast_print_dot_edge_if_dest_exists(out, def, def->first_parameter,
+	                                      "parameter");
+	mCc_ast_print_dot_edge_if_dest_exists(out, def, def->first_statement,
+	                                      "statement");
+	mCc_ast_print_dot_edge_if_dest_exists(out, def, def->next_function_def,
+	                                      "next");
 }
 
 void mCc_print_dot_function_call(struct mCc_ast_function_call *call, void *data)
@@ -33,5 +36,6 @@ void mCc_print_dot_function_call(struct mCc_ast_function_call *call, void *data)
 	FILE *out = data;
 	mCc_ast_print_dot_node(out, call, "function_call()");
 	mCc_ast_print_dot_edge(out, call, call->identifier, "identifier");
-	mCc_ast_print_dot_edge_if_dest_exists(out, call, call->first_argument, "argument");
+	mCc_ast_print_dot_edge_if_dest_exists(out, call, call->first_argument,
+	                                      "argument");
 }

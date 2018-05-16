@@ -1,10 +1,11 @@
 #ifndef MCC_SYMTAB_NODE_TYPES_H
 #define MCC_SYMTAB_NODE_TYPES_H
 
-#include "ast_data_type.h"
-#include "symtab_types.h"
-#include "map.h"
 #include <stdbool.h>
+
+#include "ast_data_type.h"
+#include "map.h"
+#include "symtab_types.h"
 
 #ifdef __cplusplus
 extern "C" {

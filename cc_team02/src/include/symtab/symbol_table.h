@@ -1,13 +1,12 @@
 #ifndef MCC_SYMBOL_TABLE_H
 #define MCC_SYMBOL_TABLE_H
 
-#include "symtab_node.h"
-#include "symtab_types.h"
-#include "symtab_node_types.h"
-
 #include <stdbool.h>
 
 #include "map.h"
+#include "symtab_node.h"
+#include "symtab_node_types.h"
+#include "symtab_types.h"
 
 #ifdef __cplusplus
 extern "C" {

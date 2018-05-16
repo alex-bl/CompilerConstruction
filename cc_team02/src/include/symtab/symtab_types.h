@@ -1,8 +1,9 @@
 #ifndef MCC_SYMTAB_TYPES_H
 #define MCC_SYMTAB_TYPES_H
 
-#include "map.h"
 #include <stdbool.h>
+
+#include "map.h"
 
 #ifdef __cplusplus
 extern "C" {

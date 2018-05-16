@@ -30,7 +30,7 @@ Manual build steps (**recommended**):
 Using the setup-wrapper (experimental):
 
 1. Clone or download the code-base.
-2. Build cmake-infrastructure: `$ ./setup-wrapper cmake "<cmake-args>"`
+2. Build cmake-infrastructure: `$ ./setup-wrapper "<cmake-args>"`
 3. Move to the build-directory: `$ cd build`
 4. Execute targets (See possible targets) via: `$ make <target>`
 

@@ -1,11 +1,11 @@
-#include "handler/symtab_handle_expression.h"
+#include "symtab_handle_expression.h"
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "config.h"
 #include "ast_expression.h"
+#include "config.h"
 #include "print_helper.h"
 #include "validator.h"
 
@@ -66,7 +66,8 @@ handle_expected_type(struct mCc_ast_expression *expression,
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types: Expected '%s' but have '%s'",
-	         mCc_ast_print_data_type(expected), mCc_ast_print_data_type(actual));
+	         mCc_ast_print_data_type(expected),
+	         mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
@@ -84,7 +85,8 @@ static void handle_expected_numerical_type(
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Incompatible types: Expected '%s' or '%s' but have '%s'",
 	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_INT),
-	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_FLOAT), mCc_ast_print_data_type(actual));
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_FLOAT),
+	         mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
@@ -103,7 +105,8 @@ static void handle_expected_numerical_and_bool_type(
 	         "Incompatible types: Expected '%s' or '%s' or '%s' but have '%s'",
 	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_INT),
 	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_FLOAT),
-	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_BOOL), mCc_ast_print_data_type(actual));
+	         mCc_ast_print_data_type(MCC_AST_DATA_TYPE_BOOL),
+	         mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
@@ -162,7 +165,8 @@ handle_inconsistent_sides(struct mCc_ast_expression *expression,
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
 	         "Operation '%s' has incompatible types: '%s' at left "
 	         "hand side, but '%s' at right hand side",
-	         mCc_ast_print_binary_op(expression->op), mCc_ast_print_data_type(lhs_type),
+	         mCc_ast_print_binary_op(expression->op),
+	         mCc_ast_print_data_type(lhs_type),
 	         mCc_ast_print_data_type(rhs_type));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(

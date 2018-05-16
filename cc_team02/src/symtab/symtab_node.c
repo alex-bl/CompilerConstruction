@@ -1,13 +1,13 @@
 #include "symtab_node.h"
 
+#include <assert.h>
+#include <stdlib.h>
+
 #include "ast_declaration.h"
 #include "ast_function.h"
 #include "ast_identifier.h"
-#include "symtab_types.h"
-
 #include "log.h"
-#include <assert.h>
-#include <stdlib.h>
+#include "symtab_types.h"
 
 struct mCc_symtab_parameter_ref *
 mCc_symtab_new_parameter_ref(struct mCc_ast_identifier *identifier)
