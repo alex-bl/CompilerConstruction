@@ -77,7 +77,7 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	    helper_get_tac_of_statement(statement, tac_while_expression);
 
 	// TODO add label where to jump, if while is false
-	//struct mCc_tac_element *tac_while_false_statement = tac_new_element(
+	// struct mCc_tac_element *tac_while_false_statement = tac_new_element(
 	//    MCC_TAC_OPARATION_LABLE, NULL, NULL, NULL /*add label*/);
 
 	struct mCc_tac_element *tac_while_condition = tac_new_element(
@@ -128,7 +128,6 @@ mCc_tac_statement_declaration(struct mCc_ast_statement *statement,
 	return tac_declaration;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_statement_assignment(struct mCc_ast_statement *statement,
                              struct mCc_tac_element *previous_tac)
@@ -136,15 +135,19 @@ mCc_tac_statement_assignment(struct mCc_ast_statement *statement,
 	assert(statement);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY,
-	    tac_new_identifier(statement->assignment->identifier->identifier_name),
-	    NULL, NULL);
-	mCc_tac_connect_tac_entry(previous_tac, tac);
-	return tac;
+	struct mCc_tac_element *tac_assignment;
+	if (statement->assignment->assignment_type ==
+	    MCC_AST_ASSIGNMENT_PRIMITIVE) {
+		tac_assignment =
+		    mCc_tac_assignment_primitive(statement->declaration, previous_tac);
+	} else if (statement->assignment->assignment_type ==
+	           MCC_AST_ASSIGNMENT_ARRAY) {
+		tac_assignment =
+		    mCc_tac_assignment_array(statement->declaration, previous_tac);
+	}
+	return tac_assignment;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_statement_expression(struct mCc_ast_statement *statement,
                              struct mCc_tac_element *previous_tac)
@@ -152,10 +155,8 @@ mCc_tac_statement_expression(struct mCc_ast_statement *statement,
 	assert(statement);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY,
-	    tac_new_identifier(statement->expression->identifier->identifier_name),
-	    NULL, NULL);
-	mCc_tac_connect_tac_entry(previous_tac, tac);
-	return tac;
+	struct mCc_tac_element *tac_expression =
+	    helper_get_tac_of_expression(statement->expression, previous_tac);
+
+	return tac_expression;
 }
