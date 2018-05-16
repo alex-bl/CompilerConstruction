@@ -13,6 +13,8 @@ mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
 	assert(declaration);
 	assert(previous_tac);
 
+	//declaration->
+
 	// not correct?
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_COPY, NULL, NULL,
