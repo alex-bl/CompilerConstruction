@@ -9,9 +9,9 @@
 #include "log.h"
 #include "mCc/ast.h"
 #include "mCc/ast_print.h"
-#include "mCc/ast_tac.h"
 #include "mCc/parser.h"
 #include "mCc/semantic_check.h"
+#include "mCc/tac.h"
 #include "mCc/tac_print.h"
 
 /*Argp: Inspired by
