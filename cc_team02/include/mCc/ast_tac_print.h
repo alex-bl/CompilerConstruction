@@ -1,7 +1,9 @@
 #ifndef MCC_AST_TAC_H
 #define MCC_AST_TAC_H
 
-#include "basic_tac_print.h"
+#include "mCc/ast_tac_print.h"
+#include "basic_tac.h"
+/*#include "basic_tac_print.h"
 #include "tac_print_assignment.h"
 #include "tac_print_declaration.h"
 #include "tac_print_expression.h"
@@ -9,13 +11,13 @@
 #include "tac_print_identifier.h"
 #include "tac_print_literal.h"
 #include "tac_print_program.h"
-#include "tac_print_statement.h"
+#include "tac_print_statement.h"*/
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void mCc_ast_tac_print_assignment(FILE *out,
+/*void mCc_ast_tac_print_assignment(FILE *out,
                                   struct mCc_ast_assignment *assignment);
 
 void mCc_ast_tac_print_statement(FILE *out,
@@ -38,7 +40,9 @@ void mCc_ast_tac_print_expression(FILE *out,
                                   struct mCc_ast_expression *expression);
 
 void mCc_ast_tac_print_declaration(FILE *out,
-                                   struct mCc_ast_declaration *declaration);
+                                   struct mCc_ast_declaration *declaration);*/
+
+void mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out);
 
 #ifdef __cplusplus
 }

@@ -8,6 +8,8 @@
 #include "config.h"
 #include "log.h"
 #include "mCc/ast.h"
+#include "mCc/ast_tac.h"
+#include "mCc/ast_tac_print.h"
 #include "mCc/ast_print.h"
 #include "mCc/parser.h"
 #include "mCc/semantic_check.h"
@@ -227,7 +229,13 @@ int main(int argc, char *argv[])
 		mCc_ast_print_dot_program(out_put, prog);
 	}
 	if (arguments.print_tac) {
-		/*TODO: print tac here*/
+		/* build tac-table */
+		// TAC
+		struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+		// TAC print
+		mCc_tac_print_start_program(tac, out_put);
+
+		mCc_tac_delete(tac);
 	}
 
 	/* cleanup */

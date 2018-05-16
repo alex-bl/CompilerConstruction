@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-void mCc_tac_identifier(struct mCc_ast_identifier *identifier,
+struct mCc_tac_element *mCc_tac_identifier(struct mCc_ast_identifier *identifier,
                         struct mCc_tac_element *previous_tac);
 
 #ifdef __cplusplus

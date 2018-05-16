@@ -49,8 +49,6 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_LABLE,
 };
 
-//void mCc_tac_delete_operation(enum mCc_tac_operation *operation);
-
 struct mCc_tac_element {
 	enum mCc_tac_operation tac_operation;
 	struct mCc_tac_identifier *tac_argument1;
@@ -71,6 +69,10 @@ struct mCc_tac_identifier {
 struct mCc_tac_identifier *tac_new_identifier(char *name);
 
 void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier);
+
+void mCc_tac_element_delete(struct mCc_tac_element *tac_element);
+
+void mCc_tac_delete(struct mCc_tac_element *tac_element);
 
 
 #ifdef __cplusplus
