@@ -13,19 +13,6 @@ void mCc_symtab_handle_if_statement_post_order(
 void mCc_symtab_handle_while_statement_post_order(
     struct mCc_ast_statement *statement, void *data);
 
-
-void mCc_symtab_handle_statement_return_post_order(
-    struct mCc_ast_statement *statement, void *data);
-
-void mCc_symtab_handle_statement_declaration_post_order(
-    struct mCc_ast_statement *statement, void *data);
-
-void mCc_symtab_handle_statement_assignment_post_order(
-    struct mCc_ast_statement *statement, void *data);
-
-void mCc_symtab_handle_statement_expression_post_order(
-    struct mCc_ast_statement *statement, void *data);
-
 #ifdef __cplusplus
 }
 #endif

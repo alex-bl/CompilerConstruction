@@ -10,3 +10,4 @@
 !/doc/*.md
 
 /.cproject
+/doc/examples/symtab_test.mC

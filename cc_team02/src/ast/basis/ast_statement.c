@@ -25,6 +25,7 @@ mCc_ast_new_if_statement(struct mCc_ast_expression *condition_expr,
 	statement->else_statement = else_stmt;
 	statement->semantic_error = NULL;
 	statement->returns_on_control_path=false;
+	statement->return_error_already_reported=false;
 
 	return statement;
 }
@@ -45,6 +46,7 @@ mCc_ast_new_while_statement(struct mCc_ast_expression *loop_expr,
 	statement->while_statement = while_stmt;
 	statement->semantic_error = NULL;
 	statement->returns_on_control_path=false;
+	statement->return_error_already_reported=false;
 
 	return statement;
 }
@@ -62,6 +64,7 @@ mCc_ast_new_return_statement(struct mCc_ast_expression *return_expression)
 	statement->return_expression = return_expression;
 	statement->semantic_error = NULL;
 	statement->returns_on_control_path=true;
+	statement->return_error_already_reported=false;
 
 	return statement;
 }
@@ -80,6 +83,7 @@ mCc_ast_new_expression_statement(struct mCc_ast_expression *expression_stmt)
 	statement->expression = expression_stmt;
 	statement->semantic_error = NULL;
 	statement->returns_on_control_path=false;
+	statement->return_error_already_reported=false;
 
 	return statement;
 }
@@ -98,6 +102,7 @@ mCc_ast_new_declaration_statement(struct mCc_ast_declaration *declaration)
 	statement->declaration = declaration;
 	statement->semantic_error = NULL;
 	statement->returns_on_control_path=false;
+	statement->return_error_already_reported=false;
 
 	return statement;
 }
@@ -116,6 +121,7 @@ mCc_ast_new_assign_statement(struct mCc_ast_assignment *assignment)
 	statement->assignment = assignment;
 	statement->semantic_error = NULL;
 	statement->returns_on_control_path=false;
+	statement->return_error_already_reported=false;
 
 	return statement;
 }

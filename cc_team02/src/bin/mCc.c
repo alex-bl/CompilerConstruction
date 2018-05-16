@@ -1,3 +1,4 @@
+#include <argp.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,14 +10,86 @@
 #include "mCc/ast.h"
 #include "mCc/ast_tac.h"
 #include "mCc/ast_tac_print.h"
+#include "mCc/ast_print.h"
 #include "mCc/parser.h"
 #include "mCc/semantic_check.h"
 
-void print_usage(const char *prg)
+/*Argp: Inspired by
+ * https://www.gnu.org/software/libc/manual/html_node/Argp-Example-4.html#Argp-Example-4*/
+const char *argp_program_version = "mCc 1.6.2";
+const char *argp_program_bug_address = "directly to the members of team02";
+
+/* Program documentation */
+static char doc[] = "mCc -- A compiler for the mC-language";
+
+/* A description of the arguments */
+static char args_doc[] = "INPUT_FILE or '-' for stdin";
+
+/* Available options */
+static struct argp_option options[] = {
+	{ .name = "dot",
+	  .key = 'd',
+	  .flags = 0,
+	  .group = 0,
+	  .doc = "Print the AST in dot-notation\t(default=false)" },
+	{ .name = "tac",
+	  .key = 't',
+	  .flags = 0,
+	  .group = 0,
+	  .doc = "Print the Three-adress-code\t(default=false)" },
+	{ .name = "stdoutLog",
+	  .key = 'l',
+	  .flags = 0,
+	  .group = 0,
+	  .doc = "Log to stdout\t\t\t(default=false)" },
+	{ .name = "fileLog",
+	  .key = 'f',
+	  .flags = 0,
+	  .group = 0,
+	  .doc = "Log into <project_dir>/log/\t(default=false)" },
+	{ 0 }
+};
+
+/* Used by main to communicate with parse_opt */
+struct arguments {
+	char *args[1];
+	bool to_dot;
+	bool print_tac;
+	bool log_on_stdout;
+	bool file_log;
+};
+
+/* Parse a single option */
+static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
-	printf("usage: %s <FILE>\n\n", prg);
-	printf("  <FILE>        Input filepath or - for stdin\n");
+	/* Get the input argument from argp_parse */
+	struct arguments *arguments = state->input;
+
+	switch (key) {
+	case 'd': arguments->to_dot = true; break;
+	case 't': arguments->print_tac = true; break;
+	case 'l': arguments->log_on_stdout = true; break;
+	case 'f': arguments->file_log = true; break;
+	case ARGP_KEY_ARG:
+		if (state->arg_num >= 1)
+			/* Too many arguments */
+			argp_usage(state);
+		arguments->args[state->arg_num] = arg;
+		break;
+	case ARGP_KEY_END:
+		if (state->arg_num < 1)
+			/* Not enough arguments */
+			argp_usage(state);
+		break;
+	default: return ARGP_ERR_UNKNOWN;
+	}
+	return 0;
 }
+
+/* The argp parser */
+static struct argp argp = {
+	.options = options, .parser = parse_opt, .args_doc = args_doc, .doc = doc
+};
 
 void build_log_file_name(char file_name_buf[])
 {
@@ -32,37 +105,44 @@ void build_log_file_name(char file_name_buf[])
 	         LOG_FILE_PATH_BASE_DIR, buffer);
 }
 
-void config_logging()
+void config_logging(bool log_to_stdout, bool log_to_file)
 {
-	// always log to log-file
-	char file_path[FILE_NAME_BUF_SIZE];
-	build_log_file_name(file_path);
+	if (log_to_file) {
+		char file_path[FILE_NAME_BUF_SIZE];
+		build_log_file_name(file_path);
 
-	FILE *log_file = fopen(file_path, "a");
+		FILE *log_file = fopen(file_path, "a");
 
-	if (log_file == NULL) {
-		log_error(
-		    "Cannot open log-file. Logging to stdout instead (if enabled)");
-	} else {
-		log_set_fp(fopen(file_path, "a"));
+		if (log_file == NULL) {
+			log_error(
+			    "Cannot open log-file. Logging to stdout instead (if enabled)");
+		} else {
+			log_set_fp(fopen(file_path, "a"));
+		}
 	}
 
 	// enable log on stdout
-	log_set_quiet(LOG_QUIET);
+	log_set_quiet(!log_to_stdout);
 }
 
 int main(int argc, char *argv[])
 {
-	if (argc < 2) {
-		print_usage(argv[0]);
-		return EXIT_FAILURE;
-	}
+	struct arguments arguments;
 
-	config_logging();
+	/* Default values: Disable all logging + printing */
+	arguments.to_dot = false;
+	arguments.print_tac = false;
+	arguments.log_on_stdout = false;
+	arguments.file_log = false;
 
-	/* determine input source */
+	/* Parse arguments */
+	argp_parse(&argp, argc, argv, 0, 0, &arguments);
+
+	config_logging(arguments.log_on_stdout, arguments.file_log);
+
+	/* Determine input source */
 	FILE *in;
-	if (strcmp("-", argv[1]) == 0) {
+	if (strcmp("-", arguments.args[0]) == 0) {
 		in = stdin;
 	} else {
 		in = fopen(argv[1], "r");
@@ -78,7 +158,7 @@ int main(int argc, char *argv[])
 	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
 	FILE *out_put = stdout;
 
-	/* deal with build-ins */
+	/* Deal with build-ins */
 	{
 		struct mCc_parser_result buildins_parsed =
 		    mCc_parser_parse_file(buildin_file);
@@ -88,7 +168,7 @@ int main(int argc, char *argv[])
 		buildins->is_library = true;
 	}
 
-	/* parsing phase */
+	/* Parsing phase */
 	{
 		struct mCc_parser_result result = mCc_parser_parse_file(in);
 		fclose(in);
@@ -107,11 +187,16 @@ int main(int argc, char *argv[])
 
 		prog = result.program;
 
-		// include buildins
+		/* Include buildins */
 		mCc_parser_include_functions(buildins, prog);
 	}
 
-	/* build symbol-table */
+	/*    TODO
+	 * - run semantic checks		[done]
+	 * - create three-address code	[done]
+	 */
+
+	/* Build symbol-table */
 	{
 		int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
 
@@ -134,8 +219,17 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	/* build tac-table */
-	{
+	/*    TODO
+	 * - do some optimisations
+	 * - output assembly code
+	 * - invoke backend compiler
+	 */
+
+	if (arguments.to_dot) {
+		mCc_ast_print_dot_program(out_put, prog);
+	}
+	if (arguments.print_tac) {
+		/* build tac-table */
 		// TAC
 		struct mCc_tac_element *tac = mCc_tac_start_program(
 		    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, NULL), prog);
@@ -144,14 +238,6 @@ int main(int argc, char *argv[])
 
 		// mCc_tac_element_delete(tac);
 	}
-
-	/*    TODO
-	 * - run semantic checks
-	 * - create three-address code
-	 * - do some optimisations
-	 * - output assembly code
-	 * - invoke backend compiler
-	 */
 
 	/* cleanup */
 	mCc_ast_delete_program(prog);

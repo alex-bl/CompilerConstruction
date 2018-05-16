@@ -14,7 +14,7 @@ float sinus_func(float x) {
 		previous_sum = (x / (iteration + 1.0)) * (x / (iteration + 2.0)) * previous_sum;
 		sum = sum + sign * previous_sum;
 
-		if(sign < 0) sign = 1.0; else { sign = -1.0; }
+		if(sign < 0.0) sign = 1.0; else { sign = -1.0; }
 		iteration = iteration + 2.0;
 	}
 

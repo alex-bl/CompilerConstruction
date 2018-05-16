@@ -17,55 +17,36 @@ static void print_error_if_exists(FILE *out, struct mCc_ast_node location,
 	}
 }
 
-static void
-print_error_if_exists_on_statement(FILE *out,
-                                   struct mCc_ast_statement *statement)
-{
-	struct mCc_validation_status_result *next_error = statement->semantic_error;
-
-	while (next_error) {
-		if (next_error->validation_status ==
-		        MCC_VALIDATION_STATUS_MISSING_RETURN_PATH &&
-		    statement->returns_on_control_path) {
-			break;
-		}
-		struct mCc_ast_node location = statement->node;
-		fprintf(out, "Line %3d col %2d: %s\n", location.sloc.start_line,
-		        location.sloc.start_col, next_error->error_msg);
-		next_error = next_error->next;
-	}
-}
-
 void mCc_print_error_statement_if(struct mCc_ast_statement *statement,
                                   void *data)
 {
-	print_error_if_exists_on_statement(data, statement);
+	print_error_if_exists(data, statement->node, statement->semantic_error);
 };
 
 void mCc_print_error_statement_while(struct mCc_ast_statement *statement,
                                      void *data)
 {
-	print_error_if_exists_on_statement(data, statement);
+	print_error_if_exists(data, statement->node, statement->semantic_error);
 };
 void mCc_print_error_statement_return(struct mCc_ast_statement *statement,
                                       void *data)
 {
-	print_error_if_exists_on_statement(data, statement);
+	print_error_if_exists(data, statement->node, statement->semantic_error);
 };
 void mCc_print_error_statement_declaration(struct mCc_ast_statement *statement,
                                            void *data)
 {
-	print_error_if_exists_on_statement(data, statement);
+	print_error_if_exists(data, statement->node, statement->semantic_error);
 };
 void mCc_print_error_statement_assignment(struct mCc_ast_statement *statement,
                                           void *data)
 {
-	print_error_if_exists_on_statement(data, statement);
+	print_error_if_exists(data, statement->node, statement->semantic_error);
 };
 void mCc_print_error_statement_expression(struct mCc_ast_statement *statement,
                                           void *data)
 {
-	print_error_if_exists_on_statement(data, statement);
+	print_error_if_exists(data, statement->node, statement->semantic_error);
 };
 
 void mCc_print_error_program(struct mCc_ast_program *program, void *data)

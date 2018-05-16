@@ -2,15 +2,7 @@
 
 This repository contains the cc_team02 full code-base.
 
-## Known issues
-
-This section contains known issues about the project.
-
-- **False positive memory-leak**: Valgrind reports a [false positive memory-leak](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802778) at `libstdc++.so.6.0.21`.
-
-See [issues](https://github.com/YusufIpek/CompilerConstruction/issues) for project progress and additional information.
-
-## Setup
+## 1. Project setup
 
 This section describes the minimal prerequisites, the build steps as well as a detailed description about the different targets. This project offers a build configuration for **cmake**.
 
@@ -52,6 +44,7 @@ This section lists the available targets that can be build.
 | ------------- |-------------	|------------------	|
 | all			| Self explanatory | -	|
 | clean			| Self explanatory      |   -			|
+| cleanup_logger			| Removes all log-files      |   -			|
 | doxygen		| Builds the documentation      |    - 			|
 | test\*			| Runs all gtests (unit)	| - |
 | build\_and\_test\* | Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild. |
@@ -63,3 +56,63 @@ This section lists the available targets that can be build.
 
 
 `DOT_<test_name>.dot`
+
+## 2. Usage
+
+The execution of the `mC-compiler` is configurable using various options.
+
+Run `./mCc --help` to display all options:
+
+```
+$ ./mCc --help
+Usage: mCc [OPTION...] INPUT_FILE or '-' for stdin
+mCc -- A compiler for the mC-language
+
+  -d, --dot                  Print the AST in dot-notation      (default=false)
+  -f, --fileLog              Log into <project_dir>/log/        (default=false)
+  -l, --stdoutLog            Log to stdout                      (default=false)
+  -t, --tac                  Print the Three-adress-code        (default=false)
+  -?, --help                 Give this help list
+      --usage                Give a short usage message
+  -V, --version              Print program version
+
+Report bugs to the members of team02.
+```
+
+**Note:**   
+The printing functionalities are integrated into the `mCc`-executable.  The `mC_to_dot`-executable still exists and hence it can be executed. But note that it just prints out the AST in dot-notation without performing any semantic checks.
+
+## 3. Known issues
+
+This section contains known issues about the project.
+
+### Assigmnent 1
+
+- **False positive memory-leak**: Valgrind reports a [false positive memory-leak](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802778) at `libstdc++.so.6.0.21`.
+
+See [issues](https://github.com/alex-bl/CompilerConstruction/issues) for project progress and additional information.
+
+### Assigmnent 2
+
+- **Incorrect location information (line-/column-number) on the first statements inside a new scope (if/else, while):** This first statement gets the same location-information as the parent that opens the scope. All subsequent statements are correct. 
+
+## 4. Changelog
+
+This section contains the fixed issues from the previous assignments.
+
+- `Meson`-support is dropped. Only `CMake` is used now as build-tool.
+- `Segmentation-fault` on `mCc` and `mCc_to_dot` is fixed (The wrong toplevel was detected).
+- Parser now results in an error if toplevel is a statement/expression (Using a workaround, because we couldn't get working the [the suggested approach](https://www.gnu.org/software/bison/manual/html_node/Multiple-start_002dsymbols.html) spending a reasonable amount of time).
+- Incorrect operator precedence in the parser was detected and fixed.
+- Missing location-information on identifiers was fixed.
+- README-restructuring done.
+- All exported library symbols are prefixed now.
+- Warnings on unused parameters are suppressed now.
+- Include-pahts are managed by the build-system now.
+- Restructuring on the `include`-directory done.
+- A logging-mechanism was introduced: Everything is logged now into [logfiles](cc_team02/log) (In `Release`-mode logging to `stdout` is suppressed).
+
+Unfixed issues:
+
+- Checking return-values after memory-allocation: Not done at every single place (-.-). An error is logged if such an allocation fails.
+- Checking return-values inside the parser: Our colleague that did the whole parser + lexer (only with small exceptions) left the project. So we wanted to touch the parser/lexer stuff only on critical issues such as incorrect precendence-rules (which we had to do). We know that this isn't any excuse. It is just an explanation.
