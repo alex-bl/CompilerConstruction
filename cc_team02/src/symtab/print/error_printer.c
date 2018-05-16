@@ -1,4 +1,4 @@
-#include "print/error_printer.h"
+#include "error_printer.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -12,7 +12,7 @@ static void print_error_if_exists(FILE *out, struct mCc_ast_node location,
 	struct mCc_validation_status_result *next_error = error;
 	while (next_error) {
 		fprintf(out, "Line %3d col %2d: %s\n", location.sloc.start_line,
-		        location.sloc.start_col, error->error_msg);
+		        location.sloc.start_col, next_error->error_msg);
 		next_error = next_error->next;
 	}
 }
