@@ -57,8 +57,32 @@ This section lists the available targets that can be build.
 
 `DOT_<test_name>.dot`
 
+## 2. Usage
 
-## 2. Known issues
+The execution of the `mC-compiler` is configurable using various options.
+
+Run `./mCc --help` to display all options:
+
+```
+$ ./mCc --help
+Usage: mCc [OPTION...] INPUT_FILE or '-' for stdin
+mCc -- A compiler for the mC-language
+
+  -d, --dot                  Print the AST in dot-notation      (default=false)
+  -f, --fileLog              Log into <project_dir>/log/        (default=false)
+  -l, --stdoutLog            Log to stdout                      (default=false)
+  -t, --tac                  Print the Three-adress-code        (default=false)
+  -?, --help                 Give this help list
+      --usage                Give a short usage message
+  -V, --version              Print program version
+
+Report bugs to the members of team02.
+```
+
+**Note:**   
+The printing functionalities are integrated into the `mCc`-executable.  The `mC_to_dot`-executable still exists and hence it can be executed. But note that it just prints out the AST in dot-notation without performing any semantic checks.
+
+## 3. Known issues
 
 This section contains known issues about the project.
 
@@ -72,7 +96,7 @@ See [issues](https://github.com/alex-bl/CompilerConstruction/issues) for project
 
 - **Incorrect location information (line-/column-number) on the first statements inside a new scope (if/else, while):** This first statement gets the same location-information as the parent that opens the scope. All subsequent statements are correct. 
 
-## 3. Changelog
+## 4. Changelog
 
 This section contains the fixed issues from the previous assignments.
 
