@@ -47,8 +47,8 @@ void mCc_print_dot_statement_return(struct mCc_ast_statement *statement,
 
 	FILE *out = data;
 	mCc_ast_print_dot_node(out, statement, "statement: return");
-	mCc_ast_print_dot_edge(out, statement, statement->return_expression,
-	                       "of-type");
+	mCc_ast_print_dot_edge_if_dest_exists(
+	    out, statement, statement->return_expression, "of-type");
 
 	// TODO: required here? Does dead-code throws an error?
 	mCc_ast_print_dot_edge_if_dest_exists(out, statement,
