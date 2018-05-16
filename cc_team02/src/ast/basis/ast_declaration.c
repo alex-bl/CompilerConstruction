@@ -20,7 +20,7 @@ mCc_ast_new_primitive_declaration(enum mCc_ast_data_type data_type,
 	declaration->identifier = identifier;
 	// set explicitly to null
 	declaration->next_declaration = NULL;
-	declaration->semantic_error=NULL;
+	declaration->semantic_error = NULL;
 
 	return declaration;
 }
@@ -41,7 +41,7 @@ mCc_ast_new_array_declaration(enum mCc_ast_data_type data_type,
 	declaration->size = size;
 	// set explicitly to null
 	declaration->next_declaration = NULL;
-	declaration->semantic_error=NULL;
+	declaration->semantic_error = NULL;
 
 	return declaration;
 }

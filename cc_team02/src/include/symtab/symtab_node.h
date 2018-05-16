@@ -5,11 +5,10 @@
 #include <stddef.h>
 
 #include "ast_data_type.h"
-#include "symtab_node_types.h"
 #include "ast_declaration.h"
 #include "ast_function.h"
 #include "ast_identifier.h"
-
+#include "symtab_node_types.h"
 
 #ifdef __cplusplus
 extern "C" {

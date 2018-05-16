@@ -31,12 +31,9 @@ void mCc_ast_visit_literal(struct mCc_ast_literal *literal,
 		// a literal having a void-type should never happen
 	case MCC_AST_DATA_TYPE_INCONSISTENT:
 	case MCC_AST_DATA_TYPE_UNKNOWN:
-	case MCC_AST_DATA_TYPE_INCOMPATIBLE:
-		assert(false);
-		break;
+	case MCC_AST_DATA_TYPE_INCOMPATIBLE: assert(false); break;
 	}
 
 	visit_if_post_order(literal, visitor->literal, visitor);
 	visit_if_pre_order(literal, visitor->literal_post_order, visitor);
-
 }

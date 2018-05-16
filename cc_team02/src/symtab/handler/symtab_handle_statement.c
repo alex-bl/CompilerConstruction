@@ -33,8 +33,8 @@ handle_expected_type(struct mCc_ast_statement *statement,
 
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
-	         "%s-condition has incompatible types: Expected '%s' but have '%s'", type,
-	         mCc_ast_print_data_type(expected),
+	         "%s-condition has incompatible types: Expected '%s' but have '%s'",
+	         type, mCc_ast_print_data_type(expected),
 	         mCc_ast_print_data_type(actual));
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(

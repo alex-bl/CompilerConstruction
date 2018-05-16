@@ -4,14 +4,13 @@
 #include <stddef.h>
 #include <string.h>
 
+#include "config.h"
 #include "log.h"
 #include "print_helper.h"
 #include "symbol_table.h"
 #include "validation_status.h"
 #include "validator.h"
 #include "validator_helper.h"
-
-#include "config.h"
 
 /*
  * TODO:

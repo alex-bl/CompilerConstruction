@@ -1,4 +1,4 @@
-#include "handler/symtab_handle_identifier.h"
+#include "symtab_handle_identifier.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -6,10 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "log.h"
 #include "symbol_table.h"
 #include "validator.h"
-
-#include "log.h"
 
 static void
 append_error_to_identifier(struct mCc_ast_identifier *identifier,

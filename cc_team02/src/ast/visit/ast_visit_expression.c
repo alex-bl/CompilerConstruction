@@ -31,7 +31,8 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		mCc_ast_visit_literal(expression->literal, visitor);
 
 		visit_if_post_order(expression, visitor->expression_literal, visitor);
-		visit_if_both_order(expression, visitor->expression_literal_post_order, visitor);
+		visit_if_both_order(expression, visitor->expression_literal_post_order,
+		                    visitor);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_BINARY_OP:
@@ -42,7 +43,8 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		mCc_ast_visit_expression(expression->rhs, visitor);
 
 		visit_if_post_order(expression, visitor->expression_binary_op, visitor);
-		visit_if_both_order(expression, visitor->expression_binary_op_post_order, visitor);
+		visit_if_both_order(expression,
+		                    visitor->expression_binary_op_post_order, visitor);
 
 		break;
 
@@ -53,32 +55,35 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		mCc_ast_visit_expression(expression->expression, visitor);
 
 		visit_if_post_order(expression, visitor->expression_parenth, visitor);
-		visit_if_both_order(expression, visitor->expression_parenth_post_order, visitor);
+		visit_if_both_order(expression, visitor->expression_parenth_post_order,
+		                    visitor);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_CALL_EXPR:
 		visit_if_pre_order(expression, visitor->expression_function_call,
 		                   visitor);
 		visit_if_both_order(expression, visitor->expression_function_call,
-		                   visitor);
+		                    visitor);
 
 		mCc_ast_visit_function_call(expression->function_call, visitor);
 
 		visit_if_post_order(expression, visitor->expression_function_call,
 		                    visitor);
-		visit_if_both_order(expression, visitor->expression_function_call_post_order,
-		                   visitor);
+		visit_if_both_order(
+		    expression, visitor->expression_function_call_post_order, visitor);
 		break;
 
 	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER:
 		visit_if_pre_order(expression, visitor->expression_identifier, visitor);
-		visit_if_both_order(expression, visitor->expression_identifier, visitor);
+		visit_if_both_order(expression, visitor->expression_identifier,
+		                    visitor);
 
 		mCc_ast_visit_identifier(expression->identifier, visitor);
 
 		visit_if_post_order(expression, visitor->expression_identifier,
 		                    visitor);
-		visit_if_both_order(expression, visitor->expression_identifier_post_order, visitor);
+		visit_if_both_order(expression,
+		                    visitor->expression_identifier_post_order, visitor);
 
 		break;
 
@@ -86,15 +91,16 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		visit_if_pre_order(expression, visitor->expression_array_identifier,
 		                   visitor);
 		visit_if_both_order(expression, visitor->expression_array_identifier,
-		                   visitor);
+		                    visitor);
 
 		mCc_ast_visit_identifier(expression->array_identifier, visitor);
 		mCc_ast_visit_expression(expression->array_index_expression, visitor);
 
 		visit_if_post_order(expression, visitor->expression_array_identifier,
 		                    visitor);
-		visit_if_both_order(expression, visitor->expression_array_identifier_post_order,
-		                   visitor);
+		visit_if_both_order(expression,
+		                    visitor->expression_array_identifier_post_order,
+		                    visitor);
 
 		break;
 
@@ -105,7 +111,8 @@ void mCc_ast_visit_expression(struct mCc_ast_expression *expression,
 		mCc_ast_visit_expression(expression->unary_rhs, visitor);
 
 		visit_if_post_order(expression, visitor->expression_unary_op, visitor);
-		visit_if_both_order(expression, visitor->expression_unary_op_post_order, visitor);
+		visit_if_both_order(expression, visitor->expression_unary_op_post_order,
+		                    visitor);
 
 		break;
 	}
