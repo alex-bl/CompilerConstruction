@@ -88,6 +88,8 @@ void mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out)
 	assert(tac);
 	assert(out);
 
+	fprintf(out, "Printing TAC-TABEL:\n");
+
 	while (tac != NULL) {
 		fprintf(out,
 		        "operation: %i - argument1: %p - argument2: %p - result: %p\n",
@@ -96,10 +98,6 @@ void mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out)
 		tac = tac->tac_next_element;
 	}
 
-	// tac_begin(tac);
-
 	// struct mCc_ast_visitor visitor = tac_visitor(tac);
 	// mCc_ast_visit_program(program, &visitor);
-
-	// tac_end(tac);
 }
