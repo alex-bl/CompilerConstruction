@@ -43,7 +43,7 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 	if (!tac_identifier) {
 		return NULL;
 	}
-	tac_identifier->name = name;
+	tac_identifier->name = strndup(name, strlen(name));
 	return tac_identifier;
 }
 
@@ -51,29 +51,25 @@ void mCc_tac_element_delete(struct mCc_tac_element *tac_element)
 {
 	assert(tac_element);
 
-	if (tac_element != NULL) {
-		if (tac_element->tac_argument1 != NULL) {
-			mCc_tac_delete_identifier(tac_element->tac_argument1);
-		}
-		if (tac_element->tac_argument2 != NULL) {
-			mCc_tac_delete_identifier(tac_element->tac_argument2);
-		}
-		if (tac_element->tac_result != NULL) {
-			mCc_tac_delete_identifier(tac_element->tac_result);
-		}
-		free(tac_element);
+	if (tac_element->tac_argument1 != NULL) {
+		mCc_tac_delete_identifier(tac_element->tac_argument1);
 	}
+	if (tac_element->tac_argument2 != NULL) {
+		mCc_tac_delete_identifier(tac_element->tac_argument2);
+	}
+	if (tac_element->tac_result != NULL) {
+		mCc_tac_delete_identifier(tac_element->tac_result);
+	}
+	free(tac_element);
 }
 
 void mCc_tac_delete(struct mCc_tac_element *tac_element)
 {
 	assert(tac_element);
 
-	struct mCc_tac_element *next_tac_element = NULL;
+	struct mCc_tac_element *next_tac_element;
 	while (tac_element != NULL) {
-		if (tac_element->tac_next_element != NULL) {
-			next_tac_element = tac_element->tac_next_element;
-		}
+		next_tac_element = tac_element->tac_next_element;
 		mCc_tac_element_delete(tac_element);
 		tac_element = next_tac_element;
 	}
@@ -83,10 +79,8 @@ void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier)
 {
 	assert(identifier);
 
-	if (identifier != NULL) {
-		if (identifier->name != NULL) {
-			free(identifier->name);
-		}
-		free(identifier);
+	if (identifier->name != NULL) {
+		free(identifier->name);
 	}
+	free(identifier);
 }

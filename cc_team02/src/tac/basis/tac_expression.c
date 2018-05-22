@@ -55,28 +55,35 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	MCC_AST_DATA_TYPE_STRING,*/
 
 	struct mCc_tac_identifier *argument1;
+	enum mCc_tac_type tac_type;
 
 	switch (expression->literal->type) {
 	case MCC_AST_DATA_TYPE_INT:
 		argument1 = tac_new_identifier((char *)&expression->literal->i_value);
+		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
 	case MCC_AST_DATA_TYPE_FLOAT:
 		argument1 = tac_new_identifier((char *)&expression->literal->f_value);
+		tac_type = MCC_TAC_TYPE_FLOAT;
 		break;
 	case MCC_AST_DATA_TYPE_BOOL:
 		argument1 = tac_new_identifier((char *)&expression->literal->b_value);
+		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
 	case MCC_AST_DATA_TYPE_STRING:
 		argument1 = tac_new_identifier((char *)&expression->literal->s_value);
+		tac_type = MCC_TAC_TYPE_FLOAT;
 		break;
-	default: argument1 = NULL; break;
+	default:
+		argument1 = NULL;
+		tac_type = MCC_TAC_TYPE_NO_TYPE;
+		break;
 	}
 
 	// has no identifier -
 	// tac_new_identifier(expression->identifier->identifier_name)
-	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, argument1,
-	                    MCC_TAC_TYPE_NO_TYPE, NULL);
+	struct mCc_tac_element *tac = tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL,
+	                                              NULL, argument1, tac_type, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }

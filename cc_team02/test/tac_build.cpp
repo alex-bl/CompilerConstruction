@@ -13,18 +13,19 @@
 //============================================ TAC
 TEST(TAC, BasicTAC)
 {
-	char name[] = "ident_name";
-	struct mCc_tac_identifier *ident1 = tac_new_identifier(name);
+	char name[] = "test";
+	struct mCc_tac_identifier *ident1 =
+	    tac_new_identifier(name);
 
-	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, ident1, NULL, NULL,
-	                    MCC_TAC_TYPE_NO_TYPE, NULL);
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident1, MCC_TAC_TYPE_NO_TYPE, 0);
 
 	// ASSERT_TRUE(true);
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
-	ASSERT_EQ(tac->tac_argument1->name, name);
+	 ASSERT_STREQ(tac->tac_result->name, name);
 
 	// mCc_tac_delete_identifier(ident1);
+	// free(name);
 	mCc_tac_delete(tac);
 }
 
@@ -34,13 +35,11 @@ TEST(TAC, ConnectionBetweenTACs)
 	struct mCc_tac_identifier *ident1 = tac_new_identifier(name);
 	struct mCc_tac_identifier *ident2 = tac_new_identifier(name);
 
-	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident1,
-	                    MCC_TAC_TYPE_NO_TYPE, NULL);
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident1, MCC_TAC_TYPE_NO_TYPE, 0);
 
-	struct mCc_tac_element *tac2 =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident2,
-	                    MCC_TAC_TYPE_NO_TYPE, NULL);
+	struct mCc_tac_element *tac2 = tac_new_element(
+	    MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident2, MCC_TAC_TYPE_NO_TYPE, 0);
 
 	mCc_tac_connect_tac_entry(tac, tac2);
 
@@ -48,6 +47,7 @@ TEST(TAC, ConnectionBetweenTACs)
 	ASSERT_EQ(tac->tac_next_element->tac_result, tac2->tac_result);
 
 	// mCc_tac_delete_identifier(ident1);
+	// free(name);
 	mCc_tac_delete(tac);
 }
 
@@ -56,9 +56,8 @@ TEST(TAC, TACFloatLiteralExpression)
 	char name[] = "ident_name";
 	struct mCc_tac_identifier *ident1 = tac_new_identifier(name);
 
-	struct mCc_tac_element *previous_tac =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident1,
-	                    MCC_TAC_TYPE_NO_TYPE, NULL);
+	struct mCc_tac_element *previous_tac = tac_new_element(
+	    MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident1, MCC_TAC_TYPE_NO_TYPE, 0);
 
 	struct mCc_ast_literal *literal = mCc_ast_new_literal_float(12.3);
 
@@ -69,13 +68,14 @@ TEST(TAC, TACFloatLiteralExpression)
 	    mCc_tac_expression_literal(expression, previous_tac);
 
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
-	ASSERT_EQ(tac->tac_result->name, (char *)&expression->literal->f_value);
+	ASSERT_STREQ(tac->tac_result->name, (char *)&expression->literal->f_value);
 
 	// mCc_tac_delete_identifier(ident1);
+	// free(name);
 	mCc_ast_delete_literal(literal);
 	mCc_ast_delete_expression(expression);
 	mCc_tac_delete(previous_tac);
-	mCc_tac_delete(tac);
+	 mCc_tac_delete(tac);
 }
 
 TEST(TAC, TACIntLiteralExpression)
@@ -83,9 +83,8 @@ TEST(TAC, TACIntLiteralExpression)
 	char name[] = "ident_name";
 	struct mCc_tac_identifier *ident1 = tac_new_identifier(name);
 
-	struct mCc_tac_element *previous_tac =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident1,
-	                    MCC_TAC_TYPE_NO_TYPE, NULL);
+	struct mCc_tac_element *previous_tac = tac_new_element(
+	    MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident1, MCC_TAC_TYPE_NO_TYPE, 0);
 
 	struct mCc_ast_literal *literal = mCc_ast_new_literal_int(4);
 
@@ -96,11 +95,12 @@ TEST(TAC, TACIntLiteralExpression)
 	    mCc_tac_expression_literal(expression, previous_tac);
 
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
-	ASSERT_EQ(tac->tac_result->name, (char *)&expression->literal->i_value);
+	ASSERT_STREQ(tac->tac_result->name, (char *)&expression->literal->i_value);
 
 	// mCc_tac_delete_identifier(ident1);
+	// free(name);
 	mCc_ast_delete_literal(literal);
 	mCc_ast_delete_expression(expression);
 	mCc_tac_delete(previous_tac);
-	mCc_tac_delete(tac);
+	// mCc_tac_delete(tac);
 }

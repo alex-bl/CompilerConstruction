@@ -50,8 +50,8 @@ enum mCc_tac_operation {
 
 enum mCc_tac_type {
 	MCC_TAC_TYPE_NO_TYPE,
-	MCC_TAC_TYPE_LONG,
-	MCC_TAC_TYPE_DOUBLE,
+	MCC_TAC_TYPE_INTEGER,
+	MCC_TAC_TYPE_FLOAT,
 	MCC_TAC_TYPE_STRING
 };
 
