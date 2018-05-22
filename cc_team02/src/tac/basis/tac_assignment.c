@@ -19,7 +19,8 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_COPY, tac_assigned_expression->tac_result, NULL,
-	    tac_new_identifier(assignment->identifier->identifier_name));
+	    tac_new_identifier(assignment->identifier->identifier_name),
+	    MCC_TAC_TYPE_NO_TYPE, NULL);
 
 	mCc_tac_connect_tac_entry(tac_assigned_expression, tac);
 
@@ -48,7 +49,8 @@ mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_INDEXING, tac_assigned_expression->tac_result,
 	    tac_index_expression->tac_result,
-	    tac_new_identifier(assignment->identifier->identifier_name));
+	    tac_new_identifier(assignment->identifier->identifier_name),
+	    MCC_TAC_TYPE_NO_TYPE, NULL);
 
 	mCc_tac_connect_tac_entry(tac_index_expression, tac);
 

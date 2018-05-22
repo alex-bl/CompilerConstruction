@@ -17,7 +17,7 @@ TEST(TACPrint, firstTest)
 	struct mCc_tac_identifier *ident1 = tac_new_identifier(name);
 
 	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, ident1, ident1, ident1);
+	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, ident1, MCC_TAC_TYPE_NO_TYPE, NULL);
 
 	// ASSERT_TRUE(true);
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);

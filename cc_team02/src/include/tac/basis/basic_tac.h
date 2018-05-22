@@ -1,15 +1,14 @@
 #ifndef MCC_AST_BASIC_TAC_H
 #define MCC_AST_BASIC_TAC_H
 
-#include <stdio.h>
 #include "ast_data_type.h"
+#include <stdio.h>
 
 #define LABEL_SIZE 64
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 /*
  * Types of TAC:
@@ -50,6 +49,7 @@ enum mCc_tac_operation {
 };
 
 enum mCc_tac_type {
+	MCC_TAC_TYPE_NO_TYPE,
 	MCC_TAC_TYPE_LONG,
 	MCC_TAC_TYPE_DOUBLE,
 	MCC_TAC_TYPE_STRING
@@ -60,15 +60,20 @@ struct mCc_tac_element {
 	struct mCc_tac_identifier *tac_argument1;
 	struct mCc_tac_identifier *tac_argument2;
 	struct mCc_tac_identifier *tac_result;
-	//enum mCc_tac_type tac_type;
+	enum mCc_tac_type tac_type;
 	int tac_scope;
 	struct mCc_tac_element *tac_next_element;
 };
 
-struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation, struct mCc_tac_identifier *argument1,
-		struct mCc_tac_identifier *argument2, struct mCc_tac_identifier *result);
+struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation,
+                                        struct mCc_tac_identifier *argument1,
+                                        struct mCc_tac_identifier *argument2,
+                                        struct mCc_tac_identifier *result,
+                                        enum mCc_tac_type tac_type,
+                                        int tac_scope);
 
-void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac, struct mCc_tac_element *tac);
+void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
+                               struct mCc_tac_element *tac);
 
 struct mCc_tac_identifier {
 	char *name;
@@ -81,7 +86,6 @@ void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier);
 void mCc_tac_element_delete(struct mCc_tac_element *tac_element);
 
 void mCc_tac_delete(struct mCc_tac_element *tac_element);
-
 
 #ifdef __cplusplus
 }
