@@ -60,7 +60,7 @@ struct mCc_tac_element {
 	struct mCc_tac_identifier *tac_argument1;
 	struct mCc_tac_identifier *tac_argument2;
 	struct mCc_tac_identifier *tac_result;
-	enum mCc_tac_type tac_type;
+	//enum mCc_tac_type tac_type;
 	int tac_scope;
 	struct mCc_tac_element *tac_next_element;
 };

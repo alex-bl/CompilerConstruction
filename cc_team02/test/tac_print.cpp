@@ -26,4 +26,5 @@ TEST(TACPrint, firstTest)
 	// mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out);
 	// ASSERT_EQ(, "operation: 0 - argument1: ident_name - argument2: NULL -
 	// result: NULL\n");
+	mCc_tac_delete(tac);
 }

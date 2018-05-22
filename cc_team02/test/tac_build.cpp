@@ -15,15 +15,17 @@ TEST(TAC, BasicTAC)
 {
 	char name[] = "ident_name";
 	struct mCc_tac_identifier *ident1 = tac_new_identifier(name);
+	struct mCc_tac_identifier *ident2 = tac_new_identifier(name);
+	struct mCc_tac_identifier *ident3 = tac_new_identifier(name);
 
 	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_EMPTY, ident1, ident1, ident1);
+	    tac_new_element(MCC_TAC_OPARATION_EMPTY, ident1, ident2, ident3);
 
 	// ASSERT_TRUE(true);
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
 	ASSERT_EQ(tac->tac_argument1->name, name);
 
-	mCc_tac_delete_identifier(ident1);
+	//mCc_tac_delete_identifier(ident1);
 	mCc_tac_delete(tac);
 }
 
