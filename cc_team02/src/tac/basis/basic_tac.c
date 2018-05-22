@@ -76,6 +76,9 @@ void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier)
 	assert(identifier);
 
 	if (identifier != NULL) {
+		if (identifier->name != NULL) {
+			free(identifier->name);
+		}
 		free(identifier);
 	}
 }

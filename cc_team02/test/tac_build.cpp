@@ -64,7 +64,7 @@ TEST(TAC, TACFloatLiteralExpression)
 	    mCc_tac_expression_literal(expression, previous_tac);
 
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
-	ASSERT_EQ(tac->tac_argument1->name, (char *)&expression->literal->f_value);
+	ASSERT_EQ(tac->tac_result->name, (char *)&expression->literal->f_value);
 
 	mCc_tac_delete_identifier(ident1);
 	mCc_ast_delete_literal(literal);
@@ -90,7 +90,7 @@ TEST(TAC, TACIntLiteralExpression)
 	    mCc_tac_expression_literal(expression, previous_tac);
 
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
-	ASSERT_EQ(tac->tac_argument1->name, (char *)&expression->literal->i_value);
+	ASSERT_EQ(tac->tac_result->name, (char *)&expression->literal->i_value);
 
 	mCc_tac_delete_identifier(ident1);
 	mCc_ast_delete_literal(literal);

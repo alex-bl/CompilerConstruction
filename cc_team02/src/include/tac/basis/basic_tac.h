@@ -49,11 +49,19 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_LABLE,
 };
 
+enum mCc_tac_type {
+	MCC_TAC_TYPE_LONG,
+	MCC_TAC_TYPE_DOUBLE,
+	MCC_TAC_TYPE_STRING
+};
+
 struct mCc_tac_element {
 	enum mCc_tac_operation tac_operation;
 	struct mCc_tac_identifier *tac_argument1;
 	struct mCc_tac_identifier *tac_argument2;
 	struct mCc_tac_identifier *tac_result;
+	enum mCc_tac_type tac_type;
+	int tac_scope;
 	struct mCc_tac_element *tac_next_element;
 };
 

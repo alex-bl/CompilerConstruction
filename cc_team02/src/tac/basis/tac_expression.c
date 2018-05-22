@@ -72,9 +72,10 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	default: argument1 = NULL; break;
 	}
 
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY, argument1, NULL,
-	    tac_new_identifier(expression->identifier->identifier_name));
+	// has no identifier -
+	// tac_new_identifier(expression->identifier->identifier_name)
+	struct mCc_tac_element *tac =
+	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, argument1);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
@@ -128,17 +129,14 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	default: operation = MCC_TAC_OPARATION_EMPTY; break;
 	}
 
-	struct mCc_tac_element *tac_lhs = helper_get_tac_of_expression(
-	    expression->lhs, previous_tac);
+	struct mCc_tac_element *tac_lhs =
+	    helper_get_tac_of_expression(expression->lhs, previous_tac);
 
-	struct mCc_tac_element *tac_rhs = helper_get_tac_of_expression(
-	    expression->rhs, tac_lhs);
+	struct mCc_tac_element *tac_rhs =
+	    helper_get_tac_of_expression(expression->rhs, tac_lhs);
 
 	struct mCc_tac_element *tac = tac_new_element(
-	    operation,
-		tac_lhs->tac_result,
-		tac_lhs->tac_result,
-	    tac_new_identifier(expression->identifier->identifier_name));
+	    operation, tac_lhs->tac_result, tac_lhs->tac_result, NULL);
 	mCc_tac_connect_tac_entry(tac_rhs, tac);
 	return tac;
 }
