@@ -16,6 +16,20 @@ static struct mCc_ast_assignment *find_assignment(struct mCc_ast_program *entry)
 	    ->assignment;
 }
 
+static struct mCc_ast_assignment *
+find_assignment_sec_fct(struct mCc_ast_program *entry)
+{
+	return entry->first_function_def->next_function_def->first_statement
+	    ->next_statement->assignment;
+}
+
+static struct mCc_ast_assignment *
+find_next_assignment(struct mCc_ast_program *entry)
+{
+	return entry->first_function_def->first_statement->next_statement
+	    ->next_statement->assignment;
+}
+
 static struct mCc_ast_statement *
 find_first_statement(struct mCc_ast_program *entry)
 {
@@ -188,6 +202,26 @@ TEST(SemanticChecks, InvalidArrayAssignment)
 	ASSERT_TRUE(invalid_assignment != NULL);
 	ASSERT_TRUE(invalid_assignment->semantic_error != NULL);
 	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_TYPE,
+	          invalid_assignment->semantic_error->validation_status);
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, InvalidAssignmentToArray)
+{
+	const char *simple_main = "void main(){int[10] a; a=2;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_NE(0, mCc_symtab_perform_semantic_checks(simple_prog));
+	struct mCc_ast_assignment *invalid_assignment =
+	    find_assignment(simple_prog);
+	ASSERT_TRUE(invalid_assignment != NULL);
+
+	ASSERT_TRUE(invalid_assignment->semantic_error != NULL);
+	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_ASSIGNMENT,
 	          invalid_assignment->semantic_error->validation_status);
 	mCc_ast_delete_program(simple_prog);
 }
@@ -456,6 +490,70 @@ TEST(SemanticChecks, InvalidArrayAssignmentIndex)
 	ASSERT_TRUE(invalid_assignment->semantic_error != NULL);
 	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_TYPE,
 	          invalid_assignment->semantic_error->validation_status);
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, InvalidIdentifierExpressionArray)
+{
+	const char *simple_main = "void main(){int[10] a; int c; c=a+2;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_NE(0, mCc_symtab_perform_semantic_checks(simple_prog));
+	struct mCc_ast_assignment *assignment = find_next_assignment(simple_prog);
+	ASSERT_TRUE(assignment != NULL);
+
+	ASSERT_TRUE(assignment->assigned_expression->semantic_error != NULL);
+	ASSERT_EQ(MCC_VALIDATION_STATUS_INVALID_EXPR_IDENTIFIER,
+	          assignment->assigned_expression->lhs->semantic_error
+	              ->validation_status);
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, InvalidIdentifierExpressionFunction)
+{
+	const char *simple_main =
+	    "int ret_int(){return 1;} void main(){int a; a=ret_int;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_NE(0, mCc_symtab_perform_semantic_checks(simple_prog));
+	struct mCc_ast_assignment *assignment =
+	    find_assignment_sec_fct(simple_prog);
+	ASSERT_TRUE(assignment != NULL);
+
+	ASSERT_TRUE(assignment->assigned_expression->semantic_error != NULL);
+	ASSERT_EQ(
+	    MCC_VALIDATION_STATUS_INVALID_EXPR_IDENTIFIER,
+	    assignment->assigned_expression->semantic_error->validation_status);
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, InvalidIdentifierExpressionFunctionArr)
+{
+	const char *simple_main =
+	    "int ret_int(){return 1;} void main(){int a; a=ret_int[2];}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_NE(0, mCc_symtab_perform_semantic_checks(simple_prog));
+	struct mCc_ast_assignment *assignment =
+	    find_assignment_sec_fct(simple_prog);
+	ASSERT_TRUE(assignment != NULL);
+
+	ASSERT_TRUE(assignment->assigned_expression->semantic_error != NULL);
+	ASSERT_EQ(
+	    MCC_VALIDATION_STATUS_INVALID_EXPR_IDENTIFIER,
+	    assignment->assigned_expression->semantic_error->validation_status);
 	mCc_ast_delete_program(simple_prog);
 }
 

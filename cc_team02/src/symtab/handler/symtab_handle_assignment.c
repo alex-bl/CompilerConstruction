@@ -23,9 +23,11 @@ append_error_to_assignment(struct mCc_ast_assignment *assignment,
 	}
 }
 
-static void handle_expected_type(struct mCc_ast_assignment *assignment,
-                                 enum mCc_ast_data_type expected,
-                                 enum mCc_ast_data_type actual)
+static void
+handle_expected_type(struct mCc_ast_assignment *assignment,
+                     enum mCc_ast_data_type expected,
+                     enum mCc_ast_data_type actual,
+                     struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
@@ -37,12 +39,28 @@ static void handle_expected_type(struct mCc_ast_assignment *assignment,
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_assignment(assignment, error);
+	info_holder->error_count++;
 }
 
 static void
-handle_expected_type_array_expr(struct mCc_ast_assignment *assignment,
-                                enum mCc_ast_data_type expected,
-                                enum mCc_ast_data_type actual)
+handle_assignment_to_array(struct mCc_ast_assignment *assignment,
+                           struct mCc_symtab_and_validation_holder *info_holder)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE, "Invalid assignment to array '%s'",
+	         assignment->identifier->identifier_name);
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_ASSIGNMENT,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_assignment(assignment, error);
+	info_holder->error_count++;
+}
+
+static void handle_expected_type_array_expr(
+    struct mCc_ast_assignment *assignment, enum mCc_ast_data_type expected,
+    enum mCc_ast_data_type actual,
+    struct mCc_symtab_and_validation_holder *info_holder)
 {
 	char error_msg[ERROR_MSG_BUF_SIZE];
 	snprintf(
@@ -54,6 +72,16 @@ handle_expected_type_array_expr(struct mCc_ast_assignment *assignment,
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_assignment(assignment, error);
+	info_holder->error_count++;
+}
+
+static bool
+is_primitive_assignment_to_array(struct mCc_ast_assignment *assignment)
+{
+	assert(assignment);
+	return assignment->identifier->symtab_info->entry_type ==
+	           MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY &&
+	       assignment->assignment_type == MCC_AST_ASSIGNMENT_PRIMITIVE;
 }
 
 static void
@@ -76,8 +104,10 @@ handle_assignment(struct mCc_ast_assignment *assignment,
 	if (identifier_type != expression_type &&
 	    expression_type != MCC_AST_DATA_TYPE_UNKNOWN &&
 	    expression_type != MCC_AST_DATA_TYPE_INCONSISTENT) {
-		handle_expected_type(assignment, identifier_type, expression_type);
-		info_holder->error_count++;
+		handle_expected_type(assignment, identifier_type, expression_type,
+		                     info_holder);
+	} else if (is_primitive_assignment_to_array(assignment)) {
+		handle_assignment_to_array(assignment, info_holder);
 	}
 }
 
@@ -93,8 +123,7 @@ handle_assignment_array(struct mCc_ast_assignment *assignment,
 	    arr_index_expr_type != MCC_AST_DATA_TYPE_INCONSISTENT &&
 	    arr_index_expr_type != MCC_AST_DATA_TYPE_INT) {
 		handle_expected_type_array_expr(assignment, MCC_AST_DATA_TYPE_INT,
-		                                arr_index_expr_type);
-		info_holder->error_count++;
+		                                arr_index_expr_type, info_holder);
 	}
 }
 
