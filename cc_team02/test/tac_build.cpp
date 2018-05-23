@@ -44,7 +44,6 @@ TEST(TAC, ConnectionBetweenTACs)
 	ASSERT_EQ(tac->tac_next_element, tac2);
 	ASSERT_EQ(tac->tac_next_element->tac_result, tac2->tac_result);
 
-	// free(name);
 	mCc_tac_delete(tac);
 }
 
@@ -67,7 +66,7 @@ TEST(TAC, TACFloatLiteralExpression)
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
 	ASSERT_STREQ(tac->tac_result->name, (char *)&expression->literal->f_value);
 
-	mCc_ast_delete_literal(literal);
+	//mCc_ast_delete_literal(literal);
 	mCc_ast_delete_expression(expression);
 	mCc_tac_delete(previous_tac);
 	//mCc_tac_delete(tac);
@@ -92,7 +91,7 @@ TEST(TAC, TACIntLiteralExpression)
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
 	ASSERT_STREQ(tac->tac_result->name, (char *)&expression->literal->i_value);
 
-	mCc_ast_delete_literal(literal);
+	//mCc_ast_delete_literal(literal);
 	mCc_ast_delete_expression(expression);
 	mCc_tac_delete(previous_tac);
 	// mCc_tac_delete(tac);

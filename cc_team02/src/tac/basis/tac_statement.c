@@ -54,8 +54,10 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	struct mCc_tac_element *tac_else_statement = helper_get_tac_of_statement(
 	    statement->else_statement, tac_if_statement);
 	struct mCc_tac_element *tac_if_condition = tac_new_element(
-	    MCC_TAC_OPARATION_CONDITIONAL_JUMP, tac_new_identifier(tac_statement->tac_result->name),
-		tac_new_identifier(tac_else_statement->tac_result->name), tac_new_identifiertac_if_statement->tac_result->name),
+	    MCC_TAC_OPARATION_CONDITIONAL_JUMP,
+	    tac_new_identifier(tac_statement->tac_result->name),
+	    tac_new_identifier(tac_else_statement->tac_result->name),
+	    tac_new_identifier(tac_if_statement->tac_result->name),
 	    MCC_TAC_TYPE_NO_TYPE, NULL);
 	mCc_tac_connect_tac_entry(tac_statement, tac_if_condition);
 	mCc_tac_connect_tac_entry(tac_if_condition, tac_if_statement);
@@ -83,8 +85,10 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	//    MCC_TAC_OPARATION_LABLE, NULL, NULL, NULL /*add label*/);
 
 	struct mCc_tac_element *tac_while_condition = tac_new_element(
-	    MCC_TAC_OPARATION_CONDITIONAL_JUMP, tac_while_statement->tac_result,
-	    NULL, tac_while_statement->tac_result, MCC_TAC_TYPE_NO_TYPE, NULL);
+	    MCC_TAC_OPARATION_CONDITIONAL_JUMP,
+	    tac_new_identifier(tac_while_statement->tac_result->name), NULL,
+	    tac_new_identifier(tac_while_statement->tac_result->name),
+	    MCC_TAC_TYPE_NO_TYPE, NULL);
 
 	mCc_tac_connect_tac_entry(previous_tac, tac_while_expression);
 	mCc_tac_connect_tac_entry(tac_while_expression, tac_while_condition);
@@ -104,7 +108,8 @@ mCc_tac_statement_return(struct mCc_ast_statement *statement,
 	                                 previous_tac);
 
 	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_RETURN, NULL, NULL, tac_return_expression->tac_result,
+	    MCC_TAC_OPARATION_RETURN, NULL, NULL,
+	    tac_new_identifier(tac_return_expression->tac_result->name),
 	    MCC_TAC_TYPE_NO_TYPE, NULL);
 	mCc_tac_connect_tac_entry(tac_return_expression, tac);
 	return tac;
