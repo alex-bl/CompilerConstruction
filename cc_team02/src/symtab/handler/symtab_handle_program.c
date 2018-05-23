@@ -1,4 +1,4 @@
-#include "handler/symtab_handle_program.h"
+#include "symtab_handle_program.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -6,7 +6,33 @@
 
 #include "ast_program.h"
 #include "config.h"
+#include "log.h"
+#include "symbol_table.h"
 #include "validator.h"
+
+static void
+handle_function_def(struct mCc_ast_function_def *function_def,
+                    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	struct mCc_ast_identifier *identifier = function_def->identifier;
+	int scope_level = info_holder->symbol_table->scope_level;
+	struct mCc_symbol_table_node *symtab_info =
+	    mCc_symtab_lookup(info_holder->symbol_table, identifier, true);
+
+	// already existing
+	if (symtab_info) {
+		symtab_info->already_defined = true;
+		log_debug("Identifier '%s' already defined",
+		          identifier->identifier_name);
+		// other error handling done at identifier-level
+	} else {
+		mCc_symtab_insert_function_def_node(info_holder->symbol_table,
+		                                    function_def);
+		// linking is done at function-level
+		log_debug("New function declaration inserted to symbol-table scope %d",
+		          scope_level);
+	}
+}
 
 static void append_error_to_pgrogram(struct mCc_ast_program *program,
                                      struct mCc_validation_status_result *error)
@@ -78,4 +104,22 @@ void mCc_symtab_handle_program_post_order(struct mCc_ast_program *program,
 
 	// do the main-check
 	handle_main_presence(program, info_holder);
+}
+
+void mCc_symtab_handle_program_pre_order(struct mCc_ast_program *program,
+                                         void *data)
+{
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
+	struct mCc_ast_function_def *next_function_def =
+	    program->first_function_def;
+
+	while (next_function_def) {
+		struct mCc_ast_identifier *identifier = next_function_def->identifier;
+		// make sure that function-identifiers are in symtab at this stage
+		handle_function_def(next_function_def, info_holder);
+
+		next_function_def = next_function_def->next_function_def;
+	}
 }
