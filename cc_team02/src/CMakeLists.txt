@@ -82,6 +82,7 @@ add_library(mCc_semantic_error_print SHARED symtab/symtab_error_print.c
 												
 # to use strdup => global compile-flag?
 set_property(TARGET mCc_symtab PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
+set_property(TARGET mCc_tac PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 
 # intermediate
 target_link_libraries(mCc_symtab ext_log_c ext_map)
