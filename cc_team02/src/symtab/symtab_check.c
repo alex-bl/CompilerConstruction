@@ -74,6 +74,8 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		    mCc_symtab_handle_array_assignment_post_order,
 
 		.program_post_order = mCc_symtab_handle_program_post_order,
+		.program = mCc_symtab_handle_program_pre_order,
+
 		//=================================
 
 		// assignment preorder
@@ -104,8 +106,6 @@ symtab_visitor(struct mCc_symtab_and_validation_holder *symtab_info_holder)
 		.literal_float_post_order = NULL,
 		.literal_bool_post_order = NULL,
 		.literal_string_post_order = NULL,
-		// program
-		.program = NULL,
 
 		// statement
 		.statement_if = NULL,

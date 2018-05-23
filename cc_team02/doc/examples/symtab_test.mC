@@ -168,8 +168,38 @@ bool test(){
 	}
 	return !true || false && !(1==1);
 }
+
+int bo(){
+return 1;
+}
+
+int hoiasasas(){
+	return 9;
+}
 */
 
 void main(){
+
+/*
+	int[3] test_arr;
+	int boo;
+	
+	test_arr=boo;
+	test_arr=3;
+	test_arr[0]=3+2;
+	
+	boo=test_arr[2]+2+bo[0]+bo;
+
+	int a;
+	int b;
+	a=ma_bo();
+	b=hoiasasas();
+*/
 	return;
 }
+/*
+int ma_bo(){
+
+return 1;
+}
+*/

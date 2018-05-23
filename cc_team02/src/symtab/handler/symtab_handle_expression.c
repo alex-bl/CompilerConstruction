@@ -1,5 +1,6 @@
 #include "symtab_handle_expression.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -71,6 +72,32 @@ handle_expected_type(struct mCc_ast_expression *expression,
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_expr(expression, error);
+	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
+	info_holder->error_count++;
+}
+
+static void
+handle_invalid_identifier(struct mCc_ast_expression *expression,
+                          struct mCc_ast_identifier *expr_identifier,
+                          struct mCc_symtab_and_validation_holder *info_holder)
+{
+	const char *actual_string;
+	if (expr_identifier->symtab_info->entry_type ==
+	    MCC_SYM_TAB_IDENTIFIER_FUNCTION) {
+		actual_string = "a function";
+	} else {
+		actual_string = "an array";
+	}
+
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Invalid expression-identifier: '%s' is %s",
+	         expr_identifier->identifier_name, actual_string);
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_EXPR_IDENTIFIER,
 	        strndup(error_msg, strlen(error_msg)));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
@@ -218,6 +245,18 @@ static void assign_type(struct mCc_ast_expression *expression,
 	}
 }
 
+static bool identifier_is_array(struct mCc_ast_identifier *identifier)
+{
+	return identifier->symtab_info->entry_type ==
+	       MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY;
+}
+
+static bool identifier_is_function(struct mCc_ast_identifier *identifier)
+{
+	return identifier->symtab_info->entry_type ==
+	       MCC_SYM_TAB_IDENTIFIER_FUNCTION;
+}
+
 void mCc_handle_expression_literal_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
@@ -294,8 +333,16 @@ void mCc_handle_expression_parenth_post_order(
 void mCc_handle_expression_identifier_post_order(
     struct mCc_ast_expression *expression, void *data)
 {
+	struct mCc_symtab_and_validation_holder *info_holder =
+	    (struct mCc_symtab_and_validation_holder *)data;
+
 	struct mCc_ast_identifier *identifier = expression->identifier;
 	handle_identifier(expression, identifier);
+
+	if (identifier->symtab_info && (identifier_is_array(identifier) ||
+	                                identifier_is_function(identifier))) {
+		handle_invalid_identifier(expression, identifier, info_holder);
+	}
 }
 
 void mCc_handle_expression_identifier_array_post_order(
@@ -320,6 +367,8 @@ void mCc_handle_expression_identifier_array_post_order(
 		} else if (arr_expr_type != MCC_AST_DATA_TYPE_INT) {
 			handle_expected_type(expression, MCC_AST_DATA_TYPE_INT,
 			                     arr_expr_type, info_holder);
+		} else if (identifier_is_function(identifier)) {
+			handle_invalid_identifier(expression, identifier, info_holder);
 		} else {
 			// type is int as expected
 			expression->array_index_expression->data_type = arr_expr_type;

@@ -1,13 +1,12 @@
 /build/
-/builddir/
-/subprojects/*
 /doc/*
+/assembler/*
 
-
-!/subprojects/*.wrap
-!/subprojects/README.md
 !/doc/examples/*
 !/doc/*.md
 
-/.cproject
 /doc/examples/symtab_test.mC
+
+!/assembler/sample/
+!/assembler/links.md
+!/assembler/output/

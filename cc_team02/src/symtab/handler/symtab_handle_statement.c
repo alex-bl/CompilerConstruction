@@ -1,4 +1,4 @@
-#include "handler/symtab_handle_statement.h"
+#include "symtab_handle_statement.h"
 
 #include <assert.h>
 #include <string.h>
