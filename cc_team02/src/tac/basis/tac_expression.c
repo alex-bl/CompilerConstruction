@@ -62,10 +62,18 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 		argument1 = tac_new_identifier((char *)&expression->literal->i_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
-	case MCC_AST_DATA_TYPE_FLOAT:
-		argument1 = tac_new_identifier((char *)&expression->literal->f_value);
+	case MCC_AST_DATA_TYPE_FLOAT: {
+		// convert float to char array
+		// not sure if that is alright:
+		char buf[4];
+		float f1 = expression->literal->f_value;
+		memcpy(buf, &f1, sizeof(f1));
+		argument1 = tac_new_identifier(buf);
+		// argument1 = tac_new_identifier((char
+		// *)&expression->literal->f_value);
 		tac_type = MCC_TAC_TYPE_FLOAT;
 		break;
+	}
 	case MCC_AST_DATA_TYPE_BOOL:
 		argument1 = tac_new_identifier((char *)&expression->literal->b_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;

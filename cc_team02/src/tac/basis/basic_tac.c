@@ -40,6 +40,8 @@ void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
 
 struct mCc_tac_identifier *tac_new_identifier(char *name)
 {
+	assert(name);
+
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
 		return NULL;
