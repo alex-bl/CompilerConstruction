@@ -691,6 +691,37 @@ TEST(SemanticChecks, FunctionDefSimpleReturnValid)
 	mCc_ast_delete_program(simple_prog);
 }
 
+TEST(SemanticChecks, FunctionDefForwardDeclaration)
+{
+	const char *simple_main = "int my_void_func(){return 1;} void main(){int "
+	                          "a; int b; a=my_void_func(); "
+	                          "b=my_void_func_2();} int "
+	                          "my_void_func_2(){return 1;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_EQ(0, mCc_symtab_perform_semantic_checks(simple_prog));
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, FunctionDefForwardDeclarationNested)
+{
+	const char *simple_main =
+	    "int my_void_func(){return my_void_func_2();} void main(){int "
+	    "a;  a=my_void_func();} int my_void_func_2(){return 1;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_EQ(0, mCc_symtab_perform_semantic_checks(simple_prog));
+	mCc_ast_delete_program(simple_prog);
+}
+
 TEST(SemanticChecks, FunctionDefSimpleVoidReturnValid)
 {
 	const char *simple_main =

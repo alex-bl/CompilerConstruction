@@ -1,4 +1,4 @@
-#include "handler/symtab_handle_scope.h"
+#include "symtab_handle_scope.h"
 
 #include <assert.h>
 

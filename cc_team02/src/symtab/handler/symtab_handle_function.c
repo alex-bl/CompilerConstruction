@@ -98,19 +98,12 @@ handle_function_def(struct mCc_ast_function_def *function_def,
 	struct mCc_symbol_table_node *symtab_info =
 	    mCc_symtab_lookup(info_holder->symbol_table->parent, identifier, true);
 
-	// already existing
-	if (symtab_info) {
-		symtab_info->already_defined = true;
-		log_debug("Identifier '%s' already defined",
-		          identifier->identifier_name);
-		// other error handling done at identifier-level
-	} else {
-		mCc_symtab_insert_function_def_node(info_holder->symbol_table->parent,
-		                                    function_def);
+	// it shouldn't be null at this stage
+	assert(symtab_info);
+
+	if (!symtab_info->already_defined) {
 		// append to holder for error-handling at statement-level
 		info_holder->function_identifier = identifier;
-		log_debug("New function declaration inserted to symbol-table scope %d",
-		          scope_level);
 	}
 }
 
@@ -388,6 +381,7 @@ void mCc_symtab_handle_function_def_pre_order(struct mCc_ast_function_def *def,
 	struct mCc_symtab_and_validation_holder *info_holder =
 	    (struct mCc_symtab_and_validation_holder *)data;
 
+	// just for linking symtab-info into info_holder
 	handle_function_def(def, info_holder);
 
 	log_debug("Function-def checking completed");

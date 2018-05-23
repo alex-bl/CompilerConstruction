@@ -172,9 +172,14 @@ bool test(){
 int bo(){
 return 1;
 }
+
+int hoiasasas(){
+	return 9;
+}
 */
 
 void main(){
+
 /*
 	int[3] test_arr;
 	int boo;
@@ -184,6 +189,17 @@ void main(){
 	test_arr[0]=3+2;
 	
 	boo=test_arr[2]+2+bo[0]+bo;
-*/	
+
+	int a;
+	int b;
+	a=ma_bo();
+	b=hoiasasas();
+*/
 	return;
 }
+/*
+int ma_bo(){
+
+return 1;
+}
+*/
