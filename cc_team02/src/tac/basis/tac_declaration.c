@@ -44,7 +44,8 @@ mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_LABLE,
 	    tac_new_identifier(helper_data_type_to_char(declaration->data_type)),
-	    NULL, tac_new_identifier(declaration->identifier->identifier_name));
+	    NULL, tac_new_identifier(declaration->identifier->identifier_name),
+	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
@@ -61,7 +62,8 @@ mCc_tac_declaration_array(struct mCc_ast_declaration *declaration,
 	    MCC_TAC_OPARATION_LABLE,
 	    tac_new_identifier(helper_data_type_to_char(declaration->data_type)),
 	    tac_new_identifier((char *)&declaration->size),
-	    tac_new_identifier(declaration->array_identifier->identifier_name));
+	    tac_new_identifier(declaration->array_identifier->identifier_name),
+	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
