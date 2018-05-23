@@ -54,8 +54,8 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	struct mCc_tac_element *tac_else_statement = helper_get_tac_of_statement(
 	    statement->else_statement, tac_if_statement);
 	struct mCc_tac_element *tac_if_condition = tac_new_element(
-	    MCC_TAC_OPARATION_CONDITIONAL_JUMP, tac_statement->tac_result,
-	    tac_else_statement->tac_result, tac_if_statement->tac_result,
+	    MCC_TAC_OPARATION_CONDITIONAL_JUMP, tac_new_identifier(tac_statement->tac_result->name),
+		tac_new_identifier(tac_else_statement->tac_result->name), tac_new_identifiertac_if_statement->tac_result->name),
 	    MCC_TAC_TYPE_NO_TYPE, NULL);
 	mCc_tac_connect_tac_entry(tac_statement, tac_if_condition);
 	mCc_tac_connect_tac_entry(tac_if_condition, tac_if_statement);
