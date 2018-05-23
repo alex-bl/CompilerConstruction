@@ -9,6 +9,10 @@ struct mCc_tac_element *
 helper_get_tac_of_expression(struct mCc_ast_expression *expression,
                              struct mCc_tac_element *previous_tac)
 {
+	//problem here! expression not defined?
+	assert(expression);
+	assert(previous_tac);
+
 	struct mCc_tac_element *tac_expression;
 
 	switch (expression->type) {
@@ -36,6 +40,7 @@ helper_get_tac_of_expression(struct mCc_ast_expression *expression,
 	case MCC_AST_EXPRESSION_TYPE_UNARY_OP:
 		tac_expression = mCc_tac_expression_unary_op(expression, previous_tac);
 		break;
+	default: tac_expression = NULL; break;
 	}
 	mCc_tac_connect_tac_entry(previous_tac, tac_expression);
 	return tac_expression;
@@ -165,8 +170,8 @@ mCc_tac_expression_parenth(struct mCc_ast_expression *expression,
 	assert(previous_tac);
 
 	// TODO check if it is right
-	struct mCc_tac_element *tac =
-	    helper_get_tac_of_expression(expression->expression, previous_tac);
+	struct mCc_tac_element *tac =NULL;
+	//    helper_get_tac_of_expression(expression->expression, previous_tac);
 
 	return tac;
 }
