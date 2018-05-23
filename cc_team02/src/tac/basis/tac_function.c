@@ -18,7 +18,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	struct mCc_tac_element *tac =
 	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL,
 	                    tac_new_identifier(def->identifier->identifier_name),
-	                    MCC_TAC_TYPE_NO_TYPE, NULL);
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	previous_tac = tac;
 
@@ -38,7 +38,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		    MCC_TAC_OPARATION_LABLE,
 		    tac_new_identifier(parameter_tac->tac_result->name), NULL,
 		    tac_new_identifier(def->identifier->identifier_name),
-		    MCC_TAC_TYPE_NO_TYPE, NULL);
+		    MCC_TAC_TYPE_NO_TYPE, 0);
 		mCc_tac_connect_tac_entry(parameter_tac, tac);
 		previous_tac = tac;
 		parameter = parameter->next_declaration;
@@ -54,7 +54,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		    MCC_TAC_OPARATION_LABLE,
 		    tac_new_identifier(statement_tac->tac_result->name), NULL,
 		    tac_new_identifier(def->identifier->identifier_name),
-		    MCC_TAC_TYPE_NO_TYPE, NULL);
+		    MCC_TAC_TYPE_NO_TYPE, 0);
 		mCc_tac_connect_tac_entry(statement_tac, tac);
 		previous_tac = tac;
 		statement = statement->next_statement;
@@ -81,7 +81,7 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 		    MCC_TAC_OPARATION_LABLE,
 		    tac_new_identifier(tac_argument->tac_result->name), NULL,
 		    tac_new_identifier(call->identifier->identifier_name),
-		    MCC_TAC_TYPE_NO_TYPE, NULL);
+		    MCC_TAC_TYPE_NO_TYPE, 0);
 		mCc_tac_connect_tac_entry(tac_argument, tac);
 		previous_tac = tac;
 		argument = argument->next_expr;
@@ -93,7 +93,7 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 	    MCC_TAC_OPARATION_PROCEDURAL_CALL,
 	    tac_new_identifier(previous_tac->tac_result->name), NULL,
 	    tac_new_identifier(call->identifier->identifier_name),
-	    MCC_TAC_TYPE_NO_TYPE, NULL);
+	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
