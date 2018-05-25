@@ -3,16 +3,19 @@
 #include <assert.h>
 #include <stdio.h>
 
+/* Mark as build-in stubs for assembley-code-generation later*/
 static struct mCc_ast_function_def *
 get_last_function_def(struct mCc_ast_program *buildins)
 {
 	assert(buildins);
-	struct mCc_ast_function_def *first_function_def =
+	struct mCc_ast_function_def *next_function_def =
 	    buildins->first_function_def;
-	while (first_function_def->next_function_def) {
-		first_function_def = first_function_def->next_function_def;
+	while (next_function_def->next_function_def) {
+		next_function_def->build_in_stub = true;
+		next_function_def = next_function_def->next_function_def;
 	}
-	return first_function_def;
+	next_function_def->build_in_stub = true;
+	return next_function_def;
 }
 
 void mCc_parser_include_functions(struct mCc_ast_program *to_include,

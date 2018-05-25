@@ -11,8 +11,8 @@
 #include "mCc/ast_print.h"
 #include "mCc/parser.h"
 #include "mCc/semantic_check.h"
-#include "mCc/tac_print.h"
 #include "mCc/tac.h"
+#include "mCc/tac_print.h"
 
 /*Argp: Inspired by
  * https://www.gnu.org/software/libc/manual/html_node/Argp-Example-4.html#Argp-Example-4*/
@@ -198,6 +198,7 @@ int main(int argc, char *argv[])
 
 	/* Build symbol-table */
 	{
+		/* Also check build-ins (for duplicates)*/
 		int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
 
 		if (nr_of_semantic_errors > 0) {
