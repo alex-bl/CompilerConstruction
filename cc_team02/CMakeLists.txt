@@ -53,7 +53,9 @@ set(MCC_VALGRIND_ARGS "--leak-check=full --show-reachable=yes --track-origins=ye
 set(MCC_VALGRIND_SUPPRESSIONS "--suppressions=${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp")
 
 set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS}")
-#============================================================  
+#============================================================  assembler config
+set(BUILD_IN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/out")
+#============================================================
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
@@ -73,10 +75,16 @@ configure_file (
   "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
   )
 
-# configure build-ins
+# configure build-ins (semantic checks)
 configure_file(
 	"${PROJECT_SOURCE_DIR}/data/buildins.mC.in"
 	"${CMAKE_BINARY_DIR}/data/buildins.mC"
+)
+
+# configure build-ins (implementation)
+configure_file(
+	"${PROJECT_SOURCE_DIR}/data/buildins.c.in"
+	"${CMAKE_BINARY_DIR}/data/buildins.c"
 )
 
 configure_file(
@@ -129,6 +137,8 @@ add_subdirectory(src)
 # link libs with executables
 add_executable(mCc src/bin/mCc.c)
 target_link_libraries(mCc mCc_lib)
+# to ensure the output-dir is generated
+add_dependencies(mCc build_assembler_output_dir)
 
 add_executable(mC_to_dot src/bin/mC_to_dot.c)
 target_link_libraries(mC_to_dot mCc_lib)
@@ -256,4 +266,6 @@ add_custom_target(cleanup_logger
 find_package(Doxygen)
 doxygen_add_docs(doxygen "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}/src" COMMENT "Generating docs")
 
-#================================================================
+#================================================================ assembler
+add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_IN_OUTPUT_DIR})
+

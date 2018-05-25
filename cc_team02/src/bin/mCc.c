@@ -47,6 +47,12 @@ static struct argp_option options[] = {
 	  .flags = 0,
 	  .group = 0,
 	  .doc = "Log into <project_dir>/log/\t(default=false)" },
+	{ .name = "output",
+	  .key = 'o',
+	  .arg = "FILE",
+	  .flags = 0,
+	  .group = 0,
+	  .doc = "Output to FILE\t\t\t(default=a.out)" },
 	{ 0 }
 };
 
@@ -57,6 +63,7 @@ struct arguments {
 	bool print_tac;
 	bool log_on_stdout;
 	bool file_log;
+	char *output_file;
 };
 
 /* Parse a single option */
@@ -70,6 +77,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	case 't': arguments->print_tac = true; break;
 	case 'l': arguments->log_on_stdout = true; break;
 	case 'f': arguments->file_log = true; break;
+	case 'o': arguments->output_file = arg; break;
 	case ARGP_KEY_ARG:
 		if (state->arg_num >= 1)
 			/* Too many arguments */
@@ -134,6 +142,7 @@ int main(int argc, char *argv[])
 	arguments.print_tac = false;
 	arguments.log_on_stdout = false;
 	arguments.file_log = false;
+	arguments.output_file = "a.out";
 
 	/* Parse arguments */
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
@@ -236,6 +245,16 @@ int main(int argc, char *argv[])
 		mCc_tac_print_start_program(tac, out_put);
 
 		mCc_tac_delete(tac);
+	}
+
+	/* backend-compiler */
+	{
+		/* TODO: invoke the backend-compiler also for the generated assembler*/
+		char command[GCC_CMD_BUF_SIZE];
+		snprintf(command, GCC_CMD_BUF_SIZE, "gcc -m32 -c %s -o %s/buildins.o",
+		         PATH_BUILDINS_IMPL, DEFAULT_OUTPUT_PATH_EXECUTABLES);
+		// log_debug(command);
+		system(command);
 	}
 
 	/* cleanup */
