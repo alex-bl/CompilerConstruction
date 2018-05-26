@@ -13,7 +13,7 @@ void mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out)
 	assert(tac);
 	assert(out);
 
-	fprintf(out, "Printing TAC-TABEL:\n");
+	fprintf(out, "Printing TAC-table:\n");
 
 	while (tac != NULL) {
 		fprintf(out,

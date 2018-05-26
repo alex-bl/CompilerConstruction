@@ -33,7 +33,7 @@ helper_get_tac_of_statement(struct mCc_ast_statement *statement,
 		statement_tac = mCc_tac_statement_expression(statement, previous_tac);
 		break;
 	}
-	mCc_tac_connect_tac_entry(previous_tac, statement_tac);
+	//mCc_tac_connect_tac_entry(previous_tac, statement_tac);
 	return statement_tac;
 }
 
@@ -42,6 +42,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
                      struct mCc_tac_element *previous_tac)
 {
 	assert(statement);
+	assert(statement->condition_expression);
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac_statement = helper_get_tac_of_expression(
@@ -72,6 +73,7 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
                         struct mCc_tac_element *previous_tac)
 {
 	assert(statement);
+	assert(statement->loop_condition_expression);
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac_while_expression = helper_get_tac_of_expression(
@@ -103,16 +105,20 @@ mCc_tac_statement_return(struct mCc_ast_statement *statement,
 	assert(statement);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac_return_expression =
-	    helper_get_tac_of_expression(statement->return_expression,
-	                                 previous_tac);
-
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_RETURN, NULL, NULL,
-	    tac_new_identifier(tac_return_expression->tac_result->name),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(tac_return_expression, tac);
-	return tac;
+	if (statement->return_expression!=NULL) {
+		struct mCc_tac_element *tac_return_expression =
+			helper_get_tac_of_expression(statement->return_expression,
+										 previous_tac);
+assert(tac_return_expression->tac_result->name);
+		struct mCc_tac_element *tac = tac_new_element(
+			MCC_TAC_OPARATION_RETURN, NULL, NULL,
+			tac_new_identifier(tac_return_expression->tac_result->name),
+			MCC_TAC_TYPE_NO_TYPE, 0);
+		mCc_tac_connect_tac_entry(tac_return_expression, tac);
+		return tac;
+	} else {
+		return previous_tac;
+	}
 }
 
 struct mCc_tac_element *
@@ -160,6 +166,7 @@ mCc_tac_statement_expression(struct mCc_ast_statement *statement,
                              struct mCc_tac_element *previous_tac)
 {
 	assert(statement);
+	assert(statement->expression);
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac_expression =
