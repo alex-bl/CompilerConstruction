@@ -54,7 +54,8 @@ set(MCC_VALGRIND_SUPPRESSIONS "--suppressions=${CMAKE_BINARY_DIR}/config/valgrin
 
 set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS}")
 #============================================================  assembler config
-set(BUILD_IN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/out")
+set(OBJECT_OUTPUT_DIR "${CMAKE_BINARY_DIR}/out")
+set(ASSEMBLY_OUTPUT_DIR "${CMAKE_BINARY_DIR}/assembly")
 #============================================================
 # configure a header file to pass some of the CMake settings
 # to the source code
@@ -138,7 +139,7 @@ add_subdirectory(src)
 add_executable(mCc src/bin/mCc.c)
 target_link_libraries(mCc mCc_lib)
 # to ensure the output-dir is generated
-add_dependencies(mCc build_assembler_output_dir)
+add_dependencies(mCc build_assembler_output_dir object_output_dir)
 
 add_executable(mC_to_dot src/bin/mC_to_dot.c)
 target_link_libraries(mC_to_dot mCc_lib)
@@ -267,5 +268,6 @@ find_package(Doxygen)
 doxygen_add_docs(doxygen "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}/src" COMMENT "Generating docs")
 
 #================================================================ assembler
-add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${BUILD_IN_OUTPUT_DIR})
+add_custom_target(object_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${OBJECT_OUTPUT_DIR})
+add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSEMBLY_OUTPUT_DIR})
 

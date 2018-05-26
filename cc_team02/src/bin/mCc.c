@@ -133,6 +133,33 @@ void config_logging(bool log_to_stdout, bool log_to_file)
 	log_set_quiet(!log_to_stdout);
 }
 
+int compile_file(const char *base_path, const char *input_file_name,
+                 const char *output_file_name)
+{
+	char command[GCC_CMD_BUF_SIZE];
+	snprintf(command, GCC_CMD_BUF_SIZE, "gcc -m32 -c %s/%s -o %s/%s", base_path,
+	         input_file_name, DEFAULT_OUTPUT_PATH_EXECUTABLES,
+	         output_file_name);
+	log_debug("Executing the backend-compiler: %s", command);
+	return system(command);
+}
+
+int link_with_buildins(const char *output)
+{
+	char command[GCC_CMD_BUF_SIZE];
+	snprintf(command, GCC_CMD_BUF_SIZE, "gcc -m32 %s/%s %s/%s -o %s",
+	         DEFAULT_OUTPUT_PATH_EXECUTABLES, GENERATED_OBJECT_FILE_NAME,
+	         DEFAULT_OUTPUT_PATH_EXECUTABLES, BUILDIN_OBJ_FILE, output);
+	log_debug("Linking builins with compiled file: %s", command);
+	return system(command);
+}
+
+void cleanup_ast(struct mCc_ast_program *prog, struct mCc_ast_program *buildins)
+{
+	mCc_ast_delete_program(prog);
+	mCc_ast_delete_program(buildins);
+}
+
 int main(int argc, char *argv[])
 {
 	struct arguments arguments;
@@ -163,6 +190,7 @@ int main(int argc, char *argv[])
 
 	struct mCc_ast_program *prog = NULL;
 	struct mCc_ast_program *buildins = NULL;
+	struct mCc_tac_element *tac = NULL;
 
 	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
 	FILE *out_put = stdout;
@@ -222,11 +250,24 @@ int main(int argc, char *argv[])
 			fprintf(out_put, "%d error(s) reported\n", nr_of_semantic_errors);
 			fprintf(out_put, "================================================="
 			                 "=========================================\n");
-			mCc_ast_delete_program(prog);
-			mCc_ast_delete_program(buildins);
 
+			cleanup_ast(prog, buildins);
 			return EXIT_FAILURE;
 		}
+	}
+
+	/* print ast*/
+	if (arguments.to_dot) {
+		mCc_ast_print_dot_program(out_put, prog);
+	}
+
+	/* build TAC and remove AST*/
+	{
+		// TAC
+		// tac = mCc_tac_start_program(prog);
+		log_debug("Freeing AST-elements...");
+		cleanup_ast(prog, buildins);
+		log_debug("Freeing AST-elements\t\t[ok]");
 	}
 
 	/*    TODO
@@ -235,31 +276,38 @@ int main(int argc, char *argv[])
 	 * - invoke backend compiler
 	 */
 
-	if (arguments.to_dot) {
-		mCc_ast_print_dot_program(out_put, prog);
-	}
 	if (arguments.print_tac) {
-		// TAC
-		struct mCc_tac_element *tac = mCc_tac_start_program(prog);
 		// TAC print
 		mCc_tac_print_start_program(tac, out_put);
-
-		mCc_tac_delete(tac);
 	}
 
-	/* backend-compiler */
+	/* backend-compiler invocation*/
 	{
-		/* TODO: invoke the backend-compiler also for the generated assembler*/
-		char command[GCC_CMD_BUF_SIZE];
-		snprintf(command, GCC_CMD_BUF_SIZE, "gcc -m32 -c %s -o %s/buildins.o",
-		         PATH_BUILDINS_IMPL, DEFAULT_OUTPUT_PATH_EXECUTABLES);
-		// log_debug(command);
-		system(command);
-	}
+		/* compile build-ins */
+		int build_in_compile_status = compile_file(
+		    PATH_BUILDINS_IMPL, BUILDIN_FILE_NAME, BUILDIN_OBJ_FILE);
+		/* compile the generated assembly-file*/
+		int mc_compile_status = compile_file(DEFAULT_OUTPUT_PATH_ASSEMBLY,
+		                                     GENERATED_ASSEMBLY_FILE_NAME,
+		                                     GENERATED_OBJECT_FILE_NAME);
 
-	/* cleanup */
-	mCc_ast_delete_program(prog);
-	mCc_ast_delete_program(buildins);
+		// log_debug(command);
+		if (build_in_compile_status != EXIT_SUCCESS ||
+		    mc_compile_status != EXIT_SUCCESS) {
+			log_error("Backend-compiler-invocation failed. See output");
+			// mCc_tac_delete(tac);
+			return EXIT_FAILURE;
+		}
+
+		int linking_status = link_with_buildins(arguments.output_file);
+
+		if (linking_status != EXIT_SUCCESS) {
+			log_error("Linking object-files failed. See output");
+			// mCc_tac_delete(tac);
+			return EXIT_FAILURE;
+		}
+		// mCc_tac_delete(tac);
+	}
 
 	return EXIT_SUCCESS;
 }

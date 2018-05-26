@@ -34,6 +34,7 @@ long test(int a, int b){
 
 int main( int argc, char *argv[] )
 {
-        long hoi = add(2,3);
+        long hoi = add(1,1);
+        printf("%ld\n", hoi);
         return 0;
 }
