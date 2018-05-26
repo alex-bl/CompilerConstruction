@@ -11,6 +11,7 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
                              struct mCc_tac_element *previous_tac)
 {
 	assert(assignment);
+	assert(assignment->assigned_expression);
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac_assigned_expression =
@@ -34,6 +35,8 @@ mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
                          struct mCc_tac_element *previous_tac)
 {
 	assert(assignment);
+	assert(assignment->array_index_expression);
+	assert(assignment->array_assigned_expression);
 	assert(previous_tac);
 
 	// assignment->array_assigned_expression

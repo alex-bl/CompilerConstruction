@@ -9,7 +9,7 @@ struct mCc_tac_element *
 helper_get_tac_of_expression(struct mCc_ast_expression *expression,
                              struct mCc_tac_element *previous_tac)
 {
-	//problem here! expression not defined?
+	// problem here! expression not defined?
 	assert(expression);
 	assert(previous_tac);
 
@@ -42,7 +42,7 @@ helper_get_tac_of_expression(struct mCc_ast_expression *expression,
 		break;
 	default: tac_expression = NULL; break;
 	}
-	mCc_tac_connect_tac_entry(previous_tac, tac_expression);
+	// mCc_tac_connect_tac_entry(previous_tac, tac_expression);
 	return tac_expression;
 }
 
@@ -155,9 +155,8 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	    helper_get_tac_of_expression(expression->rhs, tac_lhs);
 
 	struct mCc_tac_element *tac = tac_new_element(
-	    operation, tac_new_identifier(tac_lhs->tac_result->name),
-	    tac_new_identifier(tac_lhs->tac_result->name), NULL,
-	    MCC_TAC_TYPE_NO_TYPE, 0);
+	    operation, NULL, tac_new_identifier(tac_lhs->tac_result->name),
+	    tac_new_identifier(tac_rhs->tac_result->name), MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_rhs, tac);
 	return tac;
 }
@@ -170,10 +169,10 @@ mCc_tac_expression_parenth(struct mCc_ast_expression *expression,
 	assert(previous_tac);
 
 	// TODO check if it is right
-	struct mCc_tac_element *tac =NULL;
+	// struct mCc_tac_element *tac =NULL;
 	//    helper_get_tac_of_expression(expression->expression, previous_tac);
 
-	return tac;
+	return previous_tac;
 }
 
 struct mCc_tac_element *
@@ -252,9 +251,9 @@ mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
 	    helper_get_tac_of_expression(expression->unary_rhs, previous_tac);
 
 	struct mCc_tac_element *tac = tac_new_element(
-	    operation,
-	    tac_new_identifier(tac_unary_rhs_expression->tac_result->name), NULL,
-	    NULL, MCC_TAC_TYPE_NO_TYPE, 0);
+	    operation, NULL, NULL,
+	    tac_new_identifier(tac_unary_rhs_expression->tac_result->name),
+	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_unary_rhs_expression, tac);
 	return tac;
 }
