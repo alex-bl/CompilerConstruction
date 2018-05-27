@@ -47,6 +47,7 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 		return NULL;
 	}
 	tac_identifier->name = strndup(name, strlen(name));
+	//tac_identifier->stack_offset;
 	return tac_identifier;
 }
 

@@ -32,7 +32,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		} else if (parameter->declaration_type == MCC_AST_DECLARATION_ARRAY) {
 			parameter_tac = mCc_tac_declaration_array(parameter, previous_tac);
 		}
-		mCc_tac_connect_tac_entry(previous_tac, parameter_tac);
+		//mCc_tac_connect_tac_entry(previous_tac, parameter_tac);
 
 		struct mCc_tac_element *tac = tac_new_element(
 		    MCC_TAC_OPARATION_LABLE,

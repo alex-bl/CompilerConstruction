@@ -77,6 +77,7 @@ void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
 
 struct mCc_tac_identifier {
 	char *name;
+	int stack_offset;
 };
 
 struct mCc_tac_identifier *tac_new_identifier(char *name);

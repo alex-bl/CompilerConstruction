@@ -1,6 +1,7 @@
 /build/
 /doc/*
 /assembler/*
+/subprojects/cmake/*
 
 !/doc/examples/*
 !/doc/*.md

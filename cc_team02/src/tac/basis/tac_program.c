@@ -20,7 +20,7 @@ struct mCc_tac_element *mCc_tac_program(struct mCc_ast_program *program,
 	while (function_def != NULL) {
 		struct mCc_tac_element *tac =
 		    mCc_tac_function_def(function_def, previous_tac);
-		mCc_tac_connect_tac_entry(previous_tac, tac);
+		//mCc_tac_connect_tac_entry(previous_tac, tac);
 		previous_tac = tac;
 		function_def = function_def->next_function_def;
 	}
