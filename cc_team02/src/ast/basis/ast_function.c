@@ -1,6 +1,7 @@
 #include "ast_function.h"
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -23,6 +24,7 @@ struct mCc_ast_function_def *mCc_ast_new_non_parameterized_function_def(
 	function->next_function_def = NULL;
 	function->first_parameter = NULL;
 	function->semantic_error = NULL;
+	function->build_in_stub = false;
 
 	return function;
 }

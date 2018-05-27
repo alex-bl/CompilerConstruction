@@ -2,6 +2,7 @@
 #define MCC_AST_FUNCTION_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 #include "ast_data_type.h"
 #include "ast_declaration.h"
@@ -20,6 +21,7 @@ struct mCc_ast_function_def {
 	/* MCC_AST_IDENTIFIER */
 	struct mCc_ast_identifier *identifier;
 	enum mCc_ast_data_type return_type;
+	bool build_in_stub;
 
 	struct mCc_ast_statement *first_statement;
 	struct mCc_ast_declaration *first_parameter;
