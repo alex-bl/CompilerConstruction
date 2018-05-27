@@ -48,8 +48,6 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	struct mCc_tac_element *tac_statement = helper_get_tac_of_expression(
 	    statement->condition_expression, previous_tac);
 
-	// TODO switch from tac_function.c can be used here!
-	// struct mCc_tac_element *if_statement=statement->if_statement->;
 	struct mCc_tac_element *tac_if_statement =
 	    helper_get_tac_of_statement(statement->if_statement, tac_statement);
 	struct mCc_tac_element *tac_else_statement = helper_get_tac_of_statement(
@@ -60,14 +58,17 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	    tac_new_identifier(tac_else_statement->tac_result->name),
 	    tac_new_identifier(tac_if_statement->tac_result->name),
 	    MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(tac_statement, tac_if_condition);
+	// mCc_tac_connect_tac_entry(tac_statement, tac_if_condition);
 	// mCc_tac_connect_tac_entry(tac_if_condition, tac_if_statement);
 	// mCc_tac_connect_tac_entry(tac_if_statement, tac_else_statement);
+	//return tac_else_statement;
 
-	return tac_else_statement;
+	// TODO: forms loop? -> don't know if it is correct:
+	mCc_tac_connect_tac_entry(tac_else_statement, tac_if_condition);
+
+	return tac_if_condition;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_statement_while(struct mCc_ast_statement *statement,
                         struct mCc_tac_element *previous_tac)
@@ -94,8 +95,13 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 
 	// mCc_tac_connect_tac_entry(previous_tac, tac_while_expression);
 	// mCc_tac_connect_tac_entry(tac_while_expression, tac_while_condition);
-	mCc_tac_connect_tac_entry(tac_while_condition, tac_while_statement);
-	return tac_while_statement;
+	// mCc_tac_connect_tac_entry(tac_while_condition, tac_while_statement);
+	//	return tac_while_statement;
+
+	//TODO: maybe not working -> wrong order of tac_elements?
+	mCc_tac_connect_tac_entry(tac_while_statement, tac_while_condition);
+
+	return tac_while_condition;
 }
 
 struct mCc_tac_element *

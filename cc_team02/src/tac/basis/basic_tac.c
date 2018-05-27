@@ -17,6 +17,9 @@ struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation,
                                         enum mCc_tac_type tac_type,
                                         int tac_scope)
 {
+	assert(operation);
+	assert(result);
+
 	struct mCc_tac_element *tac_element = malloc(sizeof(*tac_element));
 	if (!tac_element) {
 		return NULL;
@@ -35,6 +38,9 @@ struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation,
 void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
                                struct mCc_tac_element *tac)
 {
+	assert(previous_tac);
+	assert(tac);
+
 	previous_tac->tac_next_element = tac;
 }
 
@@ -47,7 +53,7 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 		return NULL;
 	}
 	tac_identifier->name = strndup(name, strlen(name));
-	//tac_identifier->stack_offset;
+	// tac_identifier->stack_offset;
 	return tac_identifier;
 }
 
