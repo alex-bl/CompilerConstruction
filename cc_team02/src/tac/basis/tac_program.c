@@ -12,6 +12,11 @@ struct mCc_tac_element *mCc_tac_program(struct mCc_ast_program *program,
 	assert(previous_tac);
 
 	struct mCc_ast_function_def *function_def = program->first_function_def;
+	/* Skip all build-ins */
+	while (function_def != NULL && function_def->build_in_stub) {
+		function_def = function_def->next_function_def;
+	}
+
 	while (function_def != NULL) {
 		struct mCc_tac_element *tac =
 		    mCc_tac_function_def(function_def, previous_tac);

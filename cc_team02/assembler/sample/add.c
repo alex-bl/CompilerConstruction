@@ -29,11 +29,35 @@ long test(int a, int b){
 	int f=3;
 	int g=2;
 
+	int h=g*f;
+	h=e-c;
+
 	return f+e+c+g;
+}
+
+float test_float_add(float a, float b){
+	float c=a+b;
+	return c;
+}
+
+float test_float_sub(float a, float b){
+	float c=a-b;
+	return c;
+}
+
+float test_float_mul(float a, float b){
+	float c=a*b;
+	return c;
+}
+
+float test_float_div(float a, float b){
+	float c=a/b;
+	return c;
 }
 
 int main( int argc, char *argv[] )
 {
-        long hoi = add(2,3);
+        long hoi = add(1,1);
+        printf("%ld\n", hoi);
         return 0;
 }

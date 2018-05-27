@@ -28,6 +28,7 @@ void mCc_ast_delete_program(struct mCc_ast_program *program)
 
 	mCc_validator_delete_validation_result(program->semantic_error);
 
+	/* Delete AST only if it is the "real" program*/
 	if (program->first_function_def && !program->is_library) {
 		mCc_ast_delete_function_def(program->first_function_def);
 	}
