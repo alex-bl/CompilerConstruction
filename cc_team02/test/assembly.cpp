@@ -11,5 +11,6 @@
 
 TEST(AssemblyGeneration, SimpleIntegerAdd)
 {
+
 	/*TODO*/
 }

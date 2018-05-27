@@ -181,6 +181,13 @@ int hoiasasas(){
 void main(){
 
 /*
+int a;
+int b;
+int c;
+
+c=a+b;
+*/
+/*
 	int[3] test_arr;
 	int boo;
 	
