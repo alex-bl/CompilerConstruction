@@ -17,8 +17,7 @@ struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation,
                                         enum mCc_tac_type tac_type,
                                         int tac_scope)
 {
-	assert(operation);
-	assert(result);
+	//assert(result);
 
 	struct mCc_tac_element *tac_element = malloc(sizeof(*tac_element));
 	if (!tac_element) {
