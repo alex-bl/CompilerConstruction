@@ -1,6 +1,8 @@
 #ifndef MCC_AST_EXPRESSION_H
 #define MCC_AST_EXPRESSION_H
 
+#include <stdbool.h>
+
 #include "ast_data_type.h"
 #include "ast_function.h"
 #include "ast_identifier.h"
@@ -28,6 +30,7 @@ struct mCc_ast_expression {
 
 	enum mCc_ast_expression_type type;
 	struct mCc_ast_expression *next_expr;
+	bool is_function_parameter;
 
 	// to ease the semantic checks later
 	enum mCc_ast_data_type data_type;

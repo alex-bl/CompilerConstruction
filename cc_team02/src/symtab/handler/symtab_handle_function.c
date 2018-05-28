@@ -94,7 +94,6 @@ handle_function_def(struct mCc_ast_function_def *function_def,
                     struct mCc_symtab_and_validation_holder *info_holder)
 {
 	struct mCc_ast_identifier *identifier = function_def->identifier;
-	int scope_level = info_holder->symbol_table->scope_level;
 	struct mCc_symbol_table_node *symtab_info =
 	    mCc_symtab_lookup(info_holder->symbol_table->parent, identifier, true);
 
@@ -426,6 +425,54 @@ static void handle_expected_type_function_call(
 	info_holder->error_count++;
 }
 
+const char *print_identifier_type(enum mCc_symtab_identifier_type type)
+{
+	if (type == MCC_SYM_TAB_IDENTIFIER_VARIABLE_PRIMITIVE) {
+		return "";
+	}
+	return "[]";
+}
+
+static void handle_array_primitive_missmatch(
+    struct mCc_ast_function_call *call,
+    enum mCc_symtab_identifier_type expected,
+    enum mCc_symtab_identifier_type actual, enum mCc_ast_data_type data_type,
+    int arg_nr, struct mCc_symtab_and_validation_holder *info_holder)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(
+	    error_msg, ERROR_MSG_BUF_SIZE,
+	    "Incompatible types at argument %d: Expected '%s%s' but have '%s%s'",
+	    arg_nr, mCc_ast_print_data_type(data_type),
+	    print_identifier_type(expected), mCc_ast_print_data_type(data_type),
+	    print_identifier_type(actual));
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_function_call(call, error);
+	info_holder->error_count++;
+}
+
+static void handle_array_size_missmatch(
+    struct mCc_ast_function_call *call, size_t expected, size_t actual,
+    enum mCc_ast_data_type data_type, int arg_nr,
+    struct mCc_symtab_and_validation_holder *info_holder)
+{
+	char error_msg[ERROR_MSG_BUF_SIZE];
+	snprintf(error_msg, ERROR_MSG_BUF_SIZE,
+	         "Incompatible types at argument %d: Expected '%s[%ld]' but have "
+	         "'%s[%ld]'",
+	         arg_nr, mCc_ast_print_data_type(data_type), expected,
+	         mCc_ast_print_data_type(data_type), actual);
+	struct mCc_validation_status_result *error =
+	    mCc_validator_new_validation_result(
+	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
+	        strndup(error_msg, strlen(error_msg)));
+	append_error_to_function_call(call, error);
+	info_holder->error_count++;
+}
+
 static void handle_unknown_inconsistent_type(
     struct mCc_ast_function_call *call, int arg_nr,
     struct mCc_symtab_and_validation_holder *info_holder)
@@ -452,6 +499,52 @@ empty_function_checked(struct mCc_ast_function_def *def,
 		                            info_holder);
 	}
 	// everything is fine if function is void
+}
+
+static void mark_parameters(struct mCc_ast_function_call *call)
+{
+	struct mCc_ast_expression *next_param = call->first_argument;
+	while (next_param) {
+		next_param->is_function_parameter = true;
+		next_param = next_param->next_expr;
+	}
+}
+
+static bool
+array_primitive_missmatch(struct mCc_symtab_parameter_ref *next_param,
+                          struct mCc_ast_expression *next_argument)
+{
+	enum mCc_symtab_identifier_type param_type =
+	    next_param->identifier->symtab_info->entry_type;
+	enum mCc_ast_expression_type expr_type = next_argument->type;
+
+	if (expr_type == MCC_AST_EXPRESSION_TYPE_IDENTIFIER) {
+		enum mCc_symtab_identifier_type expr_identifier_type =
+		    next_argument->identifier->symtab_info->entry_type;
+		return param_type != expr_identifier_type;
+	} else if (expr_type == MCC_AST_EXPRESSION_TYPE_LITERAL) {
+		return param_type == MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY;
+	}
+
+	return false;
+}
+
+static bool array_size_missmatch(struct mCc_symtab_parameter_ref *next_param,
+                                 struct mCc_ast_expression *next_argument)
+{
+	struct mCc_symbol_table_node *symtab_info =
+	    next_param->identifier->symtab_info;
+	enum mCc_ast_expression_type expr_type = next_argument->type;
+
+	if (symtab_info->entry_type == MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY &&
+	    expr_type == MCC_AST_EXPRESSION_TYPE_IDENTIFIER) {
+
+		struct mCc_symbol_table_node *symtab_info_arg =
+		    next_argument->identifier->symtab_info;
+
+		return symtab_info->size != symtab_info_arg->size;
+	}
+	return false;
 }
 
 // check for return-type
@@ -495,6 +588,8 @@ void mCc_symtab_handle_function_call_pre_order(
 	struct mCc_symbol_table_node *identifier_info =
 	    mCc_symtab_lookup(info_holder->symbol_table, call->identifier, false);
 
+	mark_parameters(call);
+
 	// Reported later
 	if (identifier_info && !identifier_info->already_defined) {
 		int expected_nr_args = get_expected_arg_count(identifier_info);
@@ -507,6 +602,15 @@ void mCc_symtab_handle_function_call_pre_order(
 	}
 
 	log_debug("Signature checking completed");
+}
+
+static enum mCc_symtab_identifier_type
+get_identifier_type(struct mCc_ast_expression *expr)
+{
+	if (expr->type == MCC_AST_EXPRESSION_TYPE_LITERAL) {
+		return MCC_SYM_TAB_IDENTIFIER_VARIABLE_PRIMITIVE;
+	}
+	return expr->identifier->symtab_info->entry_type;
 }
 
 /*
@@ -557,6 +661,21 @@ void mCc_symtab_handle_function_call_post_order(
 			else if (arg_type != def_type) {
 				handle_expected_type_function_call(call, def_type, arg_type,
 				                                   arg_counter, info_holder);
+			} else if (array_primitive_missmatch(next_param, next_argument)) {
+				enum mCc_symtab_identifier_type expected =
+				    next_param->identifier->symtab_info->entry_type;
+				enum mCc_symtab_identifier_type actual =
+				    get_identifier_type(next_argument);
+
+				handle_array_primitive_missmatch(
+				    call, expected, actual, def_type, arg_counter, info_holder);
+			} else if (array_size_missmatch(next_param, next_argument)) {
+				size_t expected_size =
+				    next_param->identifier->symtab_info->size;
+				size_t actual_size =
+				    next_argument->identifier->symtab_info->size;
+				handle_array_size_missmatch(call, expected_size, actual_size,
+				                            def_type, arg_counter, info_holder);
 			}
 			arg_counter++;
 			next_param = next_param->next_parameter;
