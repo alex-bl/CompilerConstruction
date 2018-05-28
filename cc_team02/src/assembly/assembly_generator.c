@@ -1,4 +1,5 @@
 #include "assembly_generator.h"
+#include "assembly_template.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -80,9 +81,13 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 }
 
 void mCc_assembly_generate(struct mCc_assembly_generator gen_cb,
-                           struct mCc_tac_element *first_tac_elem)
+                           struct mCc_tac_element *first_tac_elem,
+                           const char *file_name)
 {
 	struct mCc_tac_element *next_tac_elem = first_tac_elem;
+	if (next_tac_elem) {
+		assembly_new_header(gen_cb.out, file_name, "next_function");
+	}
 	while (next_tac_elem) {
 		mCc_assembly_generate_tac_elem(gen_cb, next_tac_elem);
 		next_tac_elem = next_tac_elem->tac_next_element;

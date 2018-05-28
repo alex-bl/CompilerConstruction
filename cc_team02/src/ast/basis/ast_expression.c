@@ -1,6 +1,7 @@
 #include "ast_expression.h"
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -105,6 +106,7 @@ mCc_ast_new_expression_identifier(struct mCc_ast_identifier *identifier)
 	// set explicitly to null
 	expr->next_expr = NULL;
 	expr->semantic_error = NULL;
+	expr->is_function_parameter = false;
 
 	return expr;
 }

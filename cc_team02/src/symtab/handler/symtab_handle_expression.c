@@ -339,8 +339,10 @@ void mCc_handle_expression_identifier_post_order(
 	struct mCc_ast_identifier *identifier = expression->identifier;
 	handle_identifier(expression, identifier);
 
-	if (identifier->symtab_info && (identifier_is_array(identifier) ||
-	                                identifier_is_function(identifier))) {
+	/* special treatment for arrays as parameter */
+	if ((identifier->symtab_info && identifier_is_function(identifier)) ||
+	    (identifier_is_array(identifier) &&
+	     !expression->is_function_parameter)) {
 		handle_invalid_identifier(expression, identifier, info_holder);
 	}
 }

@@ -37,6 +37,13 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb label;
 };
 
+void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
+                                    struct mCc_tac_element *tac_elem);
+void mCc_assembly_generate(struct mCc_assembly_generator gen_cb,
+                           struct mCc_tac_element *first_tac_elem,
+                           const char *file_name);
+struct mCc_assembly_generator gen_setup(FILE *out);
+
 #ifdef __cplusplus
 }
 #endif
