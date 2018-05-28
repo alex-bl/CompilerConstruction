@@ -93,5 +93,6 @@ struct mCc_tac_element *mCc_tac_start_program(struct mCc_ast_program *program)
 	    MCC_TAC_OPARATION_EMPTY, NULL, NULL, NULL, MCC_TAC_TYPE_NO_TYPE, 0);
 	struct mCc_tac_element *tac = mCc_tac_program(program, first_tac);
 
-	return tac;
+	//return tac;
+	return first_tac;
 }
