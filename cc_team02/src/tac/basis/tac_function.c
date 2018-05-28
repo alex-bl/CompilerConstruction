@@ -16,7 +16,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac =
-	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL,
+	    tac_new_element(MCC_TAC_OPARATION_FUNCTION_DEF, NULL, NULL,
 	                    tac_new_identifier(def->identifier->identifier_name),
 	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
@@ -32,10 +32,10 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		} else if (parameter->declaration_type == MCC_AST_DECLARATION_ARRAY) {
 			parameter_tac = mCc_tac_declaration_array(parameter, previous_tac);
 		}
-		mCc_tac_connect_tac_entry(previous_tac, parameter_tac);
+		// mCc_tac_connect_tac_entry(previous_tac, parameter_tac);
 
 		struct mCc_tac_element *tac = tac_new_element(
-		    MCC_TAC_OPARATION_LABLE,
+		    MCC_TAC_OPARATION_FUNCTION_PARAMETER,
 		    tac_new_identifier(parameter_tac->tac_result->name), NULL,
 		    tac_new_identifier(def->identifier->identifier_name),
 		    MCC_TAC_TYPE_NO_TYPE, 0);

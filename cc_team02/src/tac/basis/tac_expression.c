@@ -228,7 +228,6 @@ mCc_tac_expression_function_call(struct mCc_ast_expression *expression,
 	return tac;
 }
 
-// TODO recursive structure
 struct mCc_tac_element *
 mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
                             struct mCc_tac_element *previous_tac)

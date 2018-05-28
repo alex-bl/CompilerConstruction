@@ -46,6 +46,8 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_RETURN,
 	MCC_TAC_OPARATION_INDEXING,
 	MCC_TAC_OPARATION_LABLE,
+	MCC_TAC_OPARATION_FUNCTION_DEF,
+	MCC_TAC_OPARATION_FUNCTION_PARAMETER,
 };
 
 enum mCc_tac_type {
@@ -77,6 +79,7 @@ void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
 
 struct mCc_tac_identifier {
 	char *name;
+	int stack_offset;
 };
 
 struct mCc_tac_identifier *tac_new_identifier(char *name);
