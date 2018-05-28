@@ -2,7 +2,8 @@
 
 long add(long a, long b)
 {
-	return a+b;
+	int c=a+b;
+	return c;
 }
 
 int addthree( int a, int b, int c )
@@ -53,6 +54,17 @@ float test_float_mul(float a, float b){
 float test_float_div(float a, float b){
 	float c=a/b;
 	return c;
+}
+
+void test_if(){
+	int a=0;
+	int b=32;
+
+	if(a==4){
+		b=12;
+	}else{
+		b=3;
+	}
 }
 
 int main( int argc, char *argv[] )

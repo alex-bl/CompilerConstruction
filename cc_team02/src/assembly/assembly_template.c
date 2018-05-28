@@ -89,5 +89,5 @@ void assembly_div_integers(FILE *out, const char *operant_1,
                            const char *operant_2)
 {
 	//divide edx:eax (-1) by ebx (1)
-	fprintf(out, "\tidivl\t%%edx\n", operant_1, operant_2);
+	//fprintf(out, "\tidivl\t%%edx\n", operant_1, operant_2);
 }
