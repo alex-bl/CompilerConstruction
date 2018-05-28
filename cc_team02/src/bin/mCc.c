@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
 	/* build TAC and remove AST*/
 	{
 		// TAC
-		//tac = mCc_tac_start_program(prog);
+		tac = mCc_tac_start_program(prog);
 		log_debug("Freeing AST-elements...");
 		cleanup_ast(prog, buildins);
 		log_debug("Freeing AST-elements\t\t[ok]");
@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
 		if (build_in_compile_status != EXIT_SUCCESS ||
 		    mc_compile_status != EXIT_SUCCESS) {
 			log_error("Backend-compiler-invocation failed. See output");
-			//mCc_tac_delete(tac);
+			mCc_tac_delete(tac);
 			return EXIT_FAILURE;
 		}
 
@@ -303,10 +303,10 @@ int main(int argc, char *argv[])
 
 		if (linking_status != EXIT_SUCCESS) {
 			log_error("Linking object-files failed. See output");
-			//mCc_tac_delete(tac);
+			mCc_tac_delete(tac);
 			return EXIT_FAILURE;
 		}
-		//mCc_tac_delete(tac);
+		mCc_tac_delete(tac);
 	}
 
 	return EXIT_SUCCESS;

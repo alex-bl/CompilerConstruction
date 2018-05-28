@@ -3,6 +3,7 @@
 
 #include "ast_data_type.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 #define LABEL_SIZE 64
 
@@ -57,6 +58,13 @@ enum mCc_tac_type {
 	MCC_TAC_TYPE_STRING
 };
 
+enum mCc_tac_identifier_type {
+	MCC_IDENTIFIER_TAC_TYPE_INTEGER,
+	MCC_IDENTIFIER_TAC_TYPE_FLOAT,
+	MCC_IDENTIFIER_TAC_TYPE_BOOL,
+	MCC_IDENTIFIER_TAC_TYPE_STRING
+};
+
 struct mCc_tac_element {
 	enum mCc_tac_operation tac_operation;
 	struct mCc_tac_identifier *tac_argument1;
@@ -78,17 +86,32 @@ void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
                                struct mCc_tac_element *tac);
 
 struct mCc_tac_identifier {
-	char *name;
+	enum mCc_tac_identifier_type type;
+	union {
+		char *name;
+		double f_val;
+		long i_val;
+		bool b_val;
+	};
 	int stack_offset;
 };
 
 struct mCc_tac_identifier *tac_new_identifier(char *name);
+
+struct mCc_tac_identifier *tac_new_identifier_float(double value);
+
+struct mCc_tac_identifier *tac_new_identifier_int(long value);
+
+struct mCc_tac_identifier *tac_new_identifier_bool(bool value);
 
 void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier);
 
 void mCc_tac_element_delete(struct mCc_tac_element *tac_element);
 
 void mCc_tac_delete(struct mCc_tac_element *tac_element);
+
+struct mCc_tac_identifier *
+mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier);
 
 #ifdef __cplusplus
 }

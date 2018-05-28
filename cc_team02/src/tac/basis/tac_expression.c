@@ -64,27 +64,23 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 
 	switch (expression->literal->type) {
 	case MCC_AST_DATA_TYPE_INT:
-		argument1 = tac_new_identifier((char *)&expression->literal->i_value);
+		argument1 = tac_new_identifier_int(expression->literal->i_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
-	case MCC_AST_DATA_TYPE_FLOAT: {
+	case MCC_AST_DATA_TYPE_FLOAT:
 		// convert float to char array
 		// not sure if that is alright:
-		char buf[4];
-		float f1 = expression->literal->f_value;
-		memcpy(buf, &f1, sizeof(f1));
-		argument1 = tac_new_identifier(buf);
+		argument1 = tac_new_identifier_float(expression->literal->f_value);
 		// argument1 = tac_new_identifier((char
 		// *)&expression->literal->f_value);
 		tac_type = MCC_TAC_TYPE_FLOAT;
 		break;
-	}
 	case MCC_AST_DATA_TYPE_BOOL:
-		argument1 = tac_new_identifier((char *)&expression->literal->b_value);
+		argument1 = tac_new_identifier_bool(expression->literal->b_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
 	case MCC_AST_DATA_TYPE_STRING:
-		argument1 = tac_new_identifier((char *)&expression->literal->s_value);
+		argument1 = tac_new_identifier(expression->literal->s_value);
 		tac_type = MCC_TAC_TYPE_STRING;
 		break;
 	default:
@@ -154,9 +150,11 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	struct mCc_tac_element *tac_rhs =
 	    helper_get_tac_of_expression(expression->rhs, tac_lhs);
 
-	struct mCc_tac_element *tac = tac_new_element(
-	    operation, NULL, tac_new_identifier(tac_lhs->tac_result->name),
-	    tac_new_identifier(tac_rhs->tac_result->name), MCC_TAC_TYPE_NO_TYPE, 0);
+	struct mCc_tac_element *tac =
+	    tac_new_element(operation, NULL,
+	                    mCc_tac_create_from_tac_identifier(tac_lhs->tac_result),
+	                    mCc_tac_create_from_tac_identifier(tac_rhs->tac_result),
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_rhs, tac);
 	return tac;
 }
