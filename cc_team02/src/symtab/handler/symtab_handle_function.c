@@ -524,6 +524,8 @@ array_primitive_missmatch(struct mCc_symtab_parameter_ref *next_param,
 		return param_type != expr_identifier_type;
 	} else if (expr_type == MCC_AST_EXPRESSION_TYPE_LITERAL) {
 		return param_type == MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY;
+	} else if (expr_type == MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY) {
+		return param_type != MCC_SYM_TAB_IDENTIFIER_VARIABLE_PRIMITIVE;
 	}
 
 	return false;
@@ -607,7 +609,8 @@ void mCc_symtab_handle_function_call_pre_order(
 static enum mCc_symtab_identifier_type
 get_identifier_type(struct mCc_ast_expression *expr)
 {
-	if (expr->type == MCC_AST_EXPRESSION_TYPE_LITERAL) {
+	if (expr->type == MCC_AST_EXPRESSION_TYPE_LITERAL ||
+	    expr->type == MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY) {
 		return MCC_SYM_TAB_IDENTIFIER_VARIABLE_PRIMITIVE;
 	}
 	return expr->identifier->symtab_info->entry_type;

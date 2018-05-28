@@ -989,6 +989,34 @@ TEST(SemanticChecks, InvalidFunctionCallPrimitiveArrayMissmatch)
 	mCc_ast_delete_program(simple_prog);
 }
 
+TEST(SemanticChecks, InvalidFunctionCallArrayPrimitiveArrayMissmatch)
+{
+	const char *simple_main = "string bo(int[2] a){return \"1\";} void "
+	                          "main(){string a; int[2] b; a=bo(b[0]);}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_EQ(1, mCc_symtab_perform_semantic_checks(simple_prog));
+	mCc_ast_delete_program(simple_prog);
+}
+
+TEST(SemanticChecks, ValidFunctionCallArrayPrimitiveArrayMissmatch)
+{
+	const char *simple_main = "string bo(int a){return \"1\";} void "
+	                          "main(){string a; int[2] b; a=bo(b[0]);}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	ASSERT_EQ(0, mCc_symtab_perform_semantic_checks(simple_prog));
+	mCc_ast_delete_program(simple_prog);
+}
+
 TEST(SemanticChecks, ValidFunctionCallPrimitiveArray)
 {
 	const char *simple_main = "string bo(int[2] a){return \"1\";} void "
