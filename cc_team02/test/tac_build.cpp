@@ -89,7 +89,7 @@ TEST(TAC, TACIntLiteralExpression)
 	    mCc_tac_expression_literal(expression, previous_tac);
 
 	ASSERT_EQ(tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
-	ASSERT_STREQ(tac->tac_result->name, (char *)&expression->literal->i_value);
+	ASSERT_EQ(tac->tac_result->i_val, expression->literal->i_value);
 
 	//mCc_ast_delete_literal(literal);
 	mCc_ast_delete_expression(expression);

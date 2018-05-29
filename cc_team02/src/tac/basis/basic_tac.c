@@ -1,6 +1,7 @@
 #include "basic_tac.h"
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +18,7 @@ struct mCc_tac_element *tac_new_element(enum mCc_tac_operation operation,
                                         enum mCc_tac_type tac_type,
                                         int tac_scope)
 {
-	//assert(result);
+	// assert(result);
 
 	struct mCc_tac_element *tac_element = malloc(sizeof(*tac_element));
 	if (!tac_element) {
@@ -52,6 +53,43 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 		return NULL;
 	}
 	tac_identifier->name = strndup(name, strlen(name));
+	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_STRING;
+	// tac_identifier->stack_offset;
+	return tac_identifier;
+}
+
+struct mCc_tac_identifier *tac_new_identifier_float(double value)
+{
+	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	if (!tac_identifier) {
+		return NULL;
+	}
+	tac_identifier->f_val = value;
+	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_FLOAT;
+	// tac_identifier->stack_offset;
+	return tac_identifier;
+}
+
+struct mCc_tac_identifier *tac_new_identifier_int(long value)
+{
+	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	if (!tac_identifier) {
+		return NULL;
+	}
+	tac_identifier->i_val = value;
+	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_INTEGER;
+	// tac_identifier->stack_offset;
+	return tac_identifier;
+}
+
+struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
+{
+	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	if (!tac_identifier) {
+		return NULL;
+	}
+	tac_identifier->b_val = value;
+	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_BOOL;
 	// tac_identifier->stack_offset;
 	return tac_identifier;
 }
@@ -88,8 +126,26 @@ void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier)
 {
 	assert(identifier);
 
-	if (identifier->name != NULL) {
+	if (identifier->type == MCC_IDENTIFIER_TAC_TYPE_STRING &&
+	    identifier->name != NULL) {
 		free(identifier->name);
 	}
 	free(identifier);
+}
+
+struct mCc_tac_identifier *
+mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier)
+{
+	switch (identifier->type) {
+	case MCC_IDENTIFIER_TAC_TYPE_INTEGER:
+		return tac_new_identifier_int(identifier->i_val);
+	case MCC_IDENTIFIER_TAC_TYPE_FLOAT:
+		return tac_new_identifier_float(identifier->f_val);
+	case MCC_IDENTIFIER_TAC_TYPE_BOOL:
+		return tac_new_identifier_bool(identifier->b_val);
+	case MCC_IDENTIFIER_TAC_TYPE_STRING:
+		// default
+		break;
+	}
+	return tac_new_identifier(identifier->name);
 }

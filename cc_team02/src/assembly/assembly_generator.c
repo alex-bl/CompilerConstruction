@@ -16,6 +16,7 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 {
 	enum mCc_tac_operation tac_op = tac_elem->tac_operation;
 
+	//TODO: function_def + function_param handler
 	switch (tac_op) {
 	case MCC_TAC_OPARATION_EMPTY: gen_cb.empty(gen_cb.out, tac_elem); break;
 	case MCC_TAC_OPARATION_BINARY_OP_ADD:
