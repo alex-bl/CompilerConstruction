@@ -94,6 +94,34 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 	return tac_identifier;
 }
 
+// helper function for getting the size of an int
+int mCc_tac_helper_intlen(int var)
+{
+	int length;
+	if (var < 10) {
+		length = 1;
+	} else if (var < 100) {
+		length = 2;
+	} else if (var < 1000) {
+		length = 3;
+	} else if (var < 10000) {
+		length = 4;
+	} else if (var < 100000) {
+		length = 5;
+	}
+	return length;
+}
+
+//TODO: maybe here the the char has to be freed
+// function for concatenate a name of a variable with the scope
+char *mCc_helper_concat_name_and_scope(char *name, int scope)
+{
+	// puts scope level behind the variable name
+	char new_name[strlen(name) + mCc_tac_helper_intlen(scope)];
+	sprintf(name, "%s%d", name, scope);
+	return new_name;
+}
+
 void mCc_tac_element_delete(struct mCc_tac_element *tac_element)
 {
 	assert(tac_element);

@@ -2,8 +2,8 @@
 #define MCC_AST_BASIC_TAC_H
 
 #include "ast_data_type.h"
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define LABEL_SIZE 64
 
@@ -95,6 +95,10 @@ struct mCc_tac_identifier {
 	};
 	int stack_offset;
 };
+
+int mCc_tac_helper_intlen(int var);
+
+char *mCc_helper_concat_name_and_scope(char *name, int scope);
 
 struct mCc_tac_identifier *tac_new_identifier(char *name);
 
