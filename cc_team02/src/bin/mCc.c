@@ -279,6 +279,7 @@ int main(int argc, char *argv[])
 	if (arguments.print_tac) {
 		// TAC print
 		mCc_tac_print_start_program(tac, out_put);
+		log_debug("TAC print finished\t\t[ok]");
 	}
 
 	/* backend-compiler invocation*/

@@ -114,12 +114,21 @@ int mCc_tac_helper_intlen(int var)
 
 //TODO: maybe here the the char has to be freed
 // function for concatenate a name of a variable with the scope
-char *mCc_helper_concat_name_and_scope(char *name, int scope)
+struct mCc_tac_identifier *mCc_helper_concat_name_and_scope(char *name,
+                                                            int scope)
 {
+	assert(name);
+
+	if (scope!=NULL) {
 	// puts scope level behind the variable name
 	char new_name[strlen(name) + mCc_tac_helper_intlen(scope)];
-	sprintf(name, "%s%d", name, scope);
-	return new_name;
+	sprintf(new_name, "%s%d", name, scope);
+	struct mCc_tac_identifier *tac_identifier=tac_new_identifier(new_name);
+	//free(new_name);
+	return tac_identifier;
+	} else {
+		return tac_new_identifier(name);
+	}
 }
 
 void mCc_tac_element_delete(struct mCc_tac_element *tac_element)

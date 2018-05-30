@@ -98,7 +98,8 @@ struct mCc_tac_identifier {
 
 int mCc_tac_helper_intlen(int var);
 
-char *mCc_helper_concat_name_and_scope(char *name, int scope);
+struct mCc_tac_identifier *mCc_helper_concat_name_and_scope(char *name,
+                                                            int scope);
 
 struct mCc_tac_identifier *tac_new_identifier(char *name);
 
