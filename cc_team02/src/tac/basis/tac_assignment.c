@@ -18,10 +18,10 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	    helper_get_tac_of_expression(assignment->assigned_expression,
 	                                 previous_tac);
 
-	//TODO: add scope right
-
-	char *name;// = assignment->identifier->identifier_name + assignment->identifier->symtab_info->;
-	sprintf(name, "%s%d", assignment->identifier->identifier_name, assignment->identifier->symtab_info->scope_level);
+	// puts scope level behind the variable name
+	char *name = mCc_helper_concat_name_and_scope(
+	    assignment->identifier->identifier_name,
+	    assignment->identifier->symtab_info->scope_level);
 
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_COPY,
@@ -54,14 +54,16 @@ mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
 	struct mCc_tac_element *tac_index_expression = helper_get_tac_of_expression(
 	    assignment->array_index_expression, tac_assigned_expression);
 
-	//TODO: add the scope to the variable name
+	// puts scope level behind the variable name
+	char *name = mCc_helper_concat_name_and_scope(
+	    assignment->identifier->identifier_name,
+	    assignment->identifier->symtab_info->scope_level);
 
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_INDEXING,
 	    tac_new_identifier(tac_assigned_expression->tac_result->name),
 	    tac_new_identifier(tac_index_expression->tac_result->name),
-	    tac_new_identifier(assignment->identifier->identifier_name),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
+	    tac_new_identifier(name), MCC_TAC_TYPE_NO_TYPE, 0);
 
 	mCc_tac_connect_tac_entry(tac_index_expression, tac);
 
