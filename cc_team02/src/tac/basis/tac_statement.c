@@ -53,7 +53,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	struct mCc_tac_element *tac_else_statement = helper_get_tac_of_statement(
 	    statement->else_statement, tac_if_statement);
 	struct mCc_tac_element *tac_if_condition = tac_new_element(
-	    MCC_TAC_OPARATION_CONDITIONAL_JUMP,
+	    MCC_TAC_OPARATION_JUMP_FALSE,
 	    mCc_tac_create_from_tac_identifier(tac_statement->tac_result),
 	    mCc_tac_create_from_tac_identifier(tac_else_statement->tac_result),
 	    mCc_tac_create_from_tac_identifier(tac_if_statement->tac_result),
@@ -88,7 +88,7 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	//    MCC_TAC_OPARATION_LABLE, NULL, NULL, NULL /*add label*/);
 
 	struct mCc_tac_element *tac_while_condition = tac_new_element(
-	    MCC_TAC_OPARATION_CONDITIONAL_JUMP,
+	    MCC_TAC_OPARATION_JUMP_FALSE,
 	    mCc_tac_create_from_tac_identifier(tac_while_statement->tac_result),
 	    NULL,
 	    mCc_tac_create_from_tac_identifier(tac_while_statement->tac_result),

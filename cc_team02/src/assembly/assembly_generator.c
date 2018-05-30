@@ -62,10 +62,10 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 		gen_cb.negation(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_COPY: gen_cb.copy(gen_cb.out, tac_elem); break;
-	case MCC_TAC_OPARATION_UNCONDITIONAL_JUMP:
+	case MCC_TAC_OPARATION_JUMP:
 		gen_cb.unconditional_jump(gen_cb.out, tac_elem);
 		break;
-	case MCC_TAC_OPARATION_CONDITIONAL_JUMP:
+	case MCC_TAC_OPARATION_JUMP_FALSE:
 		gen_cb.conditional_jump(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_PROCEDURAL_CALL:

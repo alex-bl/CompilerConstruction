@@ -18,11 +18,13 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	    helper_get_tac_of_expression(assignment->assigned_expression,
 	                                 previous_tac);
 
+	//TODO: add scope right
+	char *name = assignment->identifier->identifier_name + assignment->identifier->symtab_info;
+
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_COPY,
 	    tac_new_identifier(tac_assigned_expression->tac_result->name), NULL,
-	    tac_new_identifier(assignment->identifier->identifier_name),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
+	    tac_new_identifier(name), MCC_TAC_TYPE_NO_TYPE, 0);
 
 	mCc_tac_connect_tac_entry(tac_assigned_expression, tac);
 
