@@ -34,6 +34,8 @@ void mCc_symtab_insert_node(struct mCc_symbol_table *symbol_table,
 	assert(symbol_table);
 	assert(key);
 	assert(value);
+	// set scope-level
+	value->scope_level=symbol_table->scope_level;
 
 	map_set(&(symbol_table->table), key->identifier_name, value);
 	log_debug("Inserted identifier '%s' at symbol table with scope %d",
