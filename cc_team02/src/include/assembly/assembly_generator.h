@@ -14,10 +14,14 @@ typedef void (*mCc_generate_assembly_cb)(FILE *, struct mCc_tac_element *);
 struct mCc_assembly_generator {
 	FILE *out;
 	mCc_generate_assembly_cb empty;
-	mCc_generate_assembly_cb add;
-	mCc_generate_assembly_cb sub;
-	mCc_generate_assembly_cb mul;
-	mCc_generate_assembly_cb div;
+	mCc_generate_assembly_cb add_int;
+	mCc_generate_assembly_cb add_float;
+	mCc_generate_assembly_cb sub_int;
+	mCc_generate_assembly_cb sub_float;
+	mCc_generate_assembly_cb mul_int;
+	mCc_generate_assembly_cb mul_float;
+	mCc_generate_assembly_cb div_int;
+	mCc_generate_assembly_cb div_float;
 	mCc_generate_assembly_cb less_than;
 	mCc_generate_assembly_cb greater_than;
 	mCc_generate_assembly_cb less_or_equals_than;
