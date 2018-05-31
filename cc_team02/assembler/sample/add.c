@@ -6,6 +6,12 @@ long add(long a, long b)
 	return c;
 }
 
+long div(long a, long b)
+{
+	int c=a/b;
+	return c;
+}
+
 int addthree( int a, int b, int c )
 {
 //	printf("hoiladriaho");
@@ -60,11 +66,12 @@ void test_if(){
 	int a=0;
 	int b=32;
 
-	if(a==4){
+	if(a>4 && b==3){
 		b=12;
 	}else{
 		b=3;
 	}
+	a=10;
 }
 
 int main( int argc, char *argv[] )

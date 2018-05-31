@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-//TODO: Überprüfe, ob %eax auch richtig verwendet wurde!!!
+// TODO: Überprüfe, ob %eax auch richtig verwendet wurde!!!
 
 void handle_tac_identifier(FILE *out, struct mCc_tac_identifier *identifier,
                            const char *target_reg)
@@ -16,43 +16,58 @@ void handle_tac_identifier(FILE *out, struct mCc_tac_identifier *identifier,
 	}
 }
 
-void mCc_assembly_generate_add(FILE *out, struct mCc_tac_element *tac_elem)
+static handle_assembly_op_add_sub_mul(FILE *out,
+                                      struct mCc_tac_element *tac_elem,
+                                      const char *op)
 {
 	assert(out);
 	assert(tac_elem);
 
-	handle_tac_identifier(out,tac_elem->tac_argument1,"%eax");
-	handle_tac_identifier(out,tac_elem->tac_argument2,"%ecx");
-	fprintf(out,"\taddl %%ecx,%%eax");
-	fprintf(out,"\tmovl %%eax,-%d(%%ebp)",tac_elem->tac_result->stack_offset);
+	handle_tac_identifier(out, tac_elem->tac_argument1, "%eax");
+	handle_tac_identifier(out, tac_elem->tac_argument2, "%ecx");
+	fprintf(out, "\t%sl %%ecx,%%eax", op);
+	fprintf(out, "\tmovl %%eax,-%d(%%ebp)", tac_elem->tac_result->stack_offset);
 }
 
-void mCc_assembly_generate_sub(FILE *out, struct mCc_tac_element *tac_elem)
+void mCc_assembly_generate_add_int(FILE *out, struct mCc_tac_element *tac_elem)
 {
-	assert(out);
-	assert(tac_elem);
-	const char *operant_1 = tac_elem->tac_argument1->name;
-	const char *operant_2 = tac_elem->tac_argument2->name;
-
-	assembly_sub_integers(out, operant_1, operant_2);
+	handle_assembly_op_add_sub_mul(out, tac_elem, "add");
 }
 
-void mCc_assembly_generate_mul(FILE *out, struct mCc_tac_element *tac_elem)
+void mCc_assembly_generate_add_float(FILE *out, struct mCc_tac_element *tac_elem)
 {
-	assert(out);
-	assert(tac_elem);
-	const char *operant_1 = tac_elem->tac_argument1->name;
-	const char *operant_2 = tac_elem->tac_argument2->name;
-
-	assembly_mul_integers(out, operant_1, operant_2);
+	handle_assembly_op_add_sub_mul(out, tac_elem, "add");
 }
 
-void mCc_assembly_generate_div(FILE *out, struct mCc_tac_element *tac_elem)
-{
-	assert(out);
-	assert(tac_elem);
-	const char *operant_1 = tac_elem->tac_argument1->name;
-	const char *operant_2 = tac_elem->tac_argument2->name;
 
-	assembly_div_integers(out, operant_1, operant_2);
+void mCc_assembly_generate_sub_int(FILE *out, struct mCc_tac_element *tac_elem)
+{
+	handle_assembly_op_add_sub_mul(out, tac_elem, "sub");
+}
+
+void mCc_assembly_generate_sub_float(FILE *out, struct mCc_tac_element *tac_elem)
+{
+	handle_assembly_op_add_sub_mul(out, tac_elem, "sub");
+}
+
+
+void mCc_assembly_generate_mul_int(FILE *out, struct mCc_tac_element *tac_elem)
+{
+	handle_assembly_op_add_sub_mul(out, tac_elem, "mul");
+}
+
+void mCc_assembly_generate_mul_float(FILE *out, struct mCc_tac_element *tac_elem)
+{
+	handle_assembly_op_add_sub_mul(out, tac_elem, "mul");
+}
+
+
+void mCc_assembly_generate_div_int(FILE *out, struct mCc_tac_element *tac_elem)
+{
+
+}
+
+void mCc_assembly_generate_div_float(FILE *out, struct mCc_tac_element *tac_elem)
+{
+
 }
