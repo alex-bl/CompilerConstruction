@@ -56,10 +56,10 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 		gen_cb.greater_or_equals_than(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_BINARY_OP_AND:
-		gen_cb.and (gen_cb.out, tac_elem);
+		gen_cb.and_cmp(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_BINARY_OP_OR:
-		gen_cb.or (gen_cb.out, tac_elem);
+		gen_cb.or_cmp(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_BINARY_OP_EQUALS:
 		gen_cb.equals(gen_cb.out, tac_elem);
@@ -128,8 +128,8 @@ struct mCc_assembly_generator gen_setup(FILE *out)
 		.greater_than = mCc_assembly_generate_greater_than,
 		.less_or_equals_than = mCc_assembly_generate_less_or_equals_than,
 		.greater_or_equals_than = mCc_assembly_generate_greater_or_equals_than,
-		.and = mCc_assembly_generate_and,
-		.or = mCc_assembly_generate_or,
+		.and_cmp = mCc_assembly_generate_and,
+		.or_cmp = mCc_assembly_generate_or,
 		.equals = mCc_assembly_generate_equals,
 		.not_equals = mCc_assembly_generate_not_equals,
 		.minus = mCc_assembly_generate_minus,

@@ -18,9 +18,13 @@ extern "C" {
  * @param file_name
  * 			The file-name
  */
-void build_file_name(char buffer[], size_t size, const char *file_name);
+void build_file_name(char buffer[], size_t size, const char *dir,
+                     const char *prefix, const char *file_name,
+                     const char *suffix);
 
-FILE *open_file(const char *file_name);
+FILE *open_file(const char *dir, const char *prefix, const char *file_name,
+                const char *suffix);
+
 void test_print_and_free_ast_literal(struct mCc_ast_literal *lit,
                                      const char *file_name);
 

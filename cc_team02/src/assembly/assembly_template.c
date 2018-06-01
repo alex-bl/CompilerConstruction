@@ -59,35 +59,9 @@ void assembly_main_function_leave(FILE *out)
 void assembly_new_string(FILE *out, int string_index, const char *str_value,
                          const char *next_function_label)
 {
-	fprintf(out, "LC%d\n", string_index);
+	fprintf(out, ".LC%d\n", string_index);
 	fprintf(out, "\t.string\t\"%s\"\n", str_value);
 	fprintf(out, "\t.text\n");
 	fprintf(out, "\t.global\t%s\n", next_function_label);
 	fprintf(out, "\t.type\t%s, @function\n", next_function_label);
-}
-
-void assembly_add_integers(FILE *out, const char *operant_1,
-                           const char *operant_2)
-{
-	fprintf(out, "\taddl\t%s, %s\n", operant_1, operant_2);
-}
-
-void assembly_sub_integers(FILE *out, const char *operant_1,
-                           const char *operant_2)
-{
-	fprintf(out, "\tsubl\t%s, %s\n", operant_1, operant_2);
-}
-
-void assembly_mul_integers(FILE *out, const char *operant_1,
-                           const char *operant_2)
-{
-	fprintf(out, "\tmull\t%s, %s\n", operant_1, operant_2);
-}
-
-// TODO: check this
-void assembly_div_integers(FILE *out, const char *operant_1,
-                           const char *operant_2)
-{
-	//divide edx:eax (-1) by ebx (1)
-	//fprintf(out, "\tidivl\t%%edx\n", operant_1, operant_2);
 }

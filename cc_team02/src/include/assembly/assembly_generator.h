@@ -26,8 +26,8 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb greater_than;
 	mCc_generate_assembly_cb less_or_equals_than;
 	mCc_generate_assembly_cb greater_or_equals_than;
-	mCc_generate_assembly_cb and;
-	mCc_generate_assembly_cb or ;
+	mCc_generate_assembly_cb and_cmp;
+	mCc_generate_assembly_cb or_cmp;
 	mCc_generate_assembly_cb equals;
 	mCc_generate_assembly_cb not_equals;
 	mCc_generate_assembly_cb minus;

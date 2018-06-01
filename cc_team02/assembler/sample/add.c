@@ -77,6 +77,9 @@ void test_if(){
 int main( int argc, char *argv[] )
 {
         long hoi = add(1,1);
+        float a = test_float_add(2.2232,132.13244);
+
         printf("%ld\n", hoi);
+        printf("%f\n",a);
         return 0;
 }

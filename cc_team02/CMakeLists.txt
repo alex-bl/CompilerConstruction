@@ -40,6 +40,9 @@ set(SUB_PROJECTS_BASE_DIR "${CMAKE_BINARY_DIR}/subprojects")
 set(GTEST_DOWNLOAD_DESTINATION "${SUB_PROJECTS_BASE_DIR}/googletest-release1.8.0")
 set(GBENCHMARK_DOWNLOAD_DESTINATION "${SUB_PROJECTS_BASE_DIR}/googlebenchmark-release-1.3.0")
 
+#============================================================ test config (output-folders)
+set(DOT_TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}/test/output/dot")
+set(ASSEMBLY_TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}/test/output/assembly")
 #============================================================ doxygen config
 set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/doc")
 # for other supported types see https://www.stack.nl/~dimitri/doxygen/manual/output.html
@@ -88,11 +91,6 @@ configure_file(
 	"${CMAKE_BINARY_DIR}/data/buildins.c"
 )
 
-configure_file(
-	"${PROJECT_SOURCE_DIR}/config/README.md.in"
-	"${CMAKE_BINARY_DIR}/test/output/README.md"
-)
-   
 #=================================================================== headers
 include_directories(${CMAKE_CURRENT_BINARY_DIR}) 
 # config
@@ -209,6 +207,9 @@ add_custom_target(integration_test
 add_dependencies(integration_test mCc)
 
 #=============================================================== gtest-execution
+# build output-folders
+add_dependencies(gtest build_test_dot_output_dir)	
+add_dependencies(gtest build_test_assembly_output_dir)		
 
 foreach(entry_name ${unit_test_list})
 	
@@ -231,7 +232,7 @@ foreach(entry_name ${unit_test_list})
 							
 	# force a rebuild
 	add_dependencies(build_and_test ${entry_name}_test_exec)
-	add_dependencies(build_and_test_memcheck ${entry_name}_test_exec)	
+	add_dependencies(build_and_test_memcheck ${entry_name}_test_exec)
 endforeach(entry_name)
 
 #================================================================= benchmark
@@ -272,4 +273,7 @@ doxygen_add_docs(doxygen "${PROJECT_SOURCE_DIR}/include" "${PROJECT_SOURCE_DIR}/
 #================================================================ assembler
 add_custom_target(object_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${OBJECT_OUTPUT_DIR})
 add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSEMBLY_OUTPUT_DIR})
+
+add_custom_target(build_test_dot_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${DOT_TEST_OUTPUT_DIR})
+add_custom_target(build_test_assembly_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSEMBLY_TEST_OUTPUT_DIR})
 

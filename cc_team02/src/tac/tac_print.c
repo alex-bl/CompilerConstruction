@@ -8,10 +8,14 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 {
 	switch (tac_operation) {
 	case MCC_TAC_OPARATION_EMPTY: return "EMPTY";
-	case MCC_TAC_OPARATION_BINARY_OP_ADD: return "ADD";
-	case MCC_TAC_OPARATION_BINARY_OP_SUB: return "SUB";
-	case MCC_TAC_OPARATION_BINARY_OP_MUL: return "MUL";
-	case MCC_TAC_OPARATION_BINARY_OP_DIV: return "DIV";
+	case MCC_TAC_OPARATION_BINARY_OP_ADD_INT: return "ADD_I";
+	case MCC_TAC_OPARATION_BINARY_OP_ADD_FLOAT: return "ADD_F";
+	case MCC_TAC_OPARATION_BINARY_OP_SUB_INT: return "SUB_I";
+	case MCC_TAC_OPARATION_BINARY_OP_SUB_FLOAT: return "SUB_F";
+	case MCC_TAC_OPARATION_BINARY_OP_MUL_INT: return "MUL_I";
+	case MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT: return "MUL_F";
+	case MCC_TAC_OPARATION_BINARY_OP_DIV_INT: return "DIV_I";
+	case MCC_TAC_OPARATION_BINARY_OP_DIV_FLOAT: return "DIV_F";
 	case MCC_TAC_OPARATION_BINARY_OP_LESS_THAN: return "LT\t";
 	case MCC_TAC_OPARATION_BINARY_OP_GREATER_THAN: return "GT\t";
 	case MCC_TAC_OPARATION_BINARY_OP_LESS_OR_EQUALS_THAN: return "LTE";

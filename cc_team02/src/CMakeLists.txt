@@ -86,8 +86,9 @@ add_library(mCc_assembly SHARED assembly/assembly_generator.c
 								assembly/generator/assembly_binary_op_logical.c
 								assembly/generator/assembly_jump.c
 								assembly/generator/assembly_special.c
-								assembly/generator/assembly_unary_op.c)								
-												
+								assembly/generator/assembly_unary_op.c
+								assembly/generator/assembly_general.c)
+																												
 # to use strdup => global compile-flag?
 set_property(TARGET mCc_symtab PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
 set_property(TARGET mCc_tac PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
