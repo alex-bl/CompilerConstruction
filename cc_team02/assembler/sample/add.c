@@ -113,6 +113,7 @@ int main( int argc, char *argv[] )
         long hoi = add(1,1);
         float a = test_float_add(2.2232,132.13244);
         float b=3.121;
+        const char *booo="hoi, wia tuats?";
 
         printf("%ld\n", hoi);
         int d;

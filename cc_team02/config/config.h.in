@@ -22,8 +22,17 @@
 #define FILE_NAME_BUF_SIZE 128
 #define GCC_CMD_BUF_SIZE 512
 #define LOG_QUIET ${STDOUT_LOGGING_DISABLED}
+
+//assembly-related stuff
+
 #define INT_SIZE 4
 #define FLOAT_SIZE 4
+#define DEFAULT_OPERAND_1 "%ecx"
+#define DEFAULT_OPERAND_2 "%edx"
+#define DEFAULT_STACK_POINTER "%ebp"
+#define DEFAULT_RETURN_REG "%eax"
+#define DEFAULT_UNARY_OP_REG "%ecx"
+
 
 #ifdef __cplusplus
 extern "C" {
