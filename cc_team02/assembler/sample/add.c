@@ -24,8 +24,8 @@ long unary_minus_float(){
 }
 
 long unary_negation(){
-	int a=true;
-	int b=!a;
+	bool a=false;
+	bool b=!a;
 }
 
 
@@ -90,6 +90,22 @@ void test_if(){
 		b=3;
 	}
 	a=10;
+}
+
+void test_if_without_else(){
+	int a=0;
+
+	if(a==0){
+		int b;
+		b=3;
+	}
+}
+
+void test_array(int arr[]){
+	int arr2[100];
+	int b=2;
+	int c=b*3;
+	arr[b+c]=4;
 }
 
 int main( int argc, char *argv[] )
