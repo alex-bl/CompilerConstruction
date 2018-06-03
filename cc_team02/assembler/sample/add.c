@@ -28,6 +28,26 @@ long unary_negation(){
 	bool b=!a;
 }
 
+void float_compare(){
+	float a=21231.12;
+	float b=323.122;
+	float c=0.0;
+	if(a>b){
+		c=232.323;
+	}
+}
+
+void compare_bools(){
+	bool a=true;
+	bool b=false;
+
+	if(a&&b){
+		bool c=true;
+	}
+	if(a||b){
+		bool c=true;
+	}
+}
 
 int addthree( int a, int b, int c )
 {

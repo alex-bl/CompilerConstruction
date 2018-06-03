@@ -63,7 +63,7 @@ void assembly_main_function_leave(FILE *out)
 
 void assembly_new_string_enter(FILE *out, const char *label, const char *str_value)
 {
-	fprintf(out, ".LC%d\n", label);
+	fprintf(out, ".%s\n", label);
 	fprintf(out, "\t.string\t\"%s\"\n", str_value);
 }
 
@@ -74,8 +74,9 @@ void assembly_new_string_leave_with_function(FILE *out, const char *next_functio
 	fprintf(out, "\t.type\t%s, @function\n", next_function_label);
 }
 
-void assembly_new_float(FILE *out, float float_val){
-	fprintf(out,".%s:\n");
-	fprintf(out,"\t.float\t%f",float_val);
-	//fprintf(out,"\t.align 4"); => really required?
+void assembly_new_float(FILE *out, float float_val, const char *label)
+{
+	fprintf(out, ".%s:\n", label);
+	fprintf(out, "\t.float\t%f", float_val);
+	// fprintf(out,"\t.align 4"); => really required?
 }

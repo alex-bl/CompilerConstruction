@@ -80,14 +80,15 @@ add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 add_library(mCc_semantic_error_print SHARED symtab/symtab_error_print.c
 							symtab/print/error_printer.c)
 
-add_library(mCc_assembly SHARED assembly/assembly_generator.c
-								assembly/assembly_template.c
-								assembly/generator/assembly_arithmetic_op.c
+add_library(mCc_assembly SHARED assembly/generator/assembly_arithmetic_op.c
 								assembly/generator/assembly_binary_op_logical.c
 								assembly/generator/assembly_jump.c
 								assembly/generator/assembly_special.c
 								assembly/generator/assembly_unary_op.c
-								assembly/generator/assembly_general.c)
+								assembly/utils/assembly_general.c
+								assembly/utils/assembly_utils.c
+								assembly/utils/assembly_formatter.c
+								assembly/utils/assembly_template.c)
 																												
 # to use strdup => global compile-flag?
 set_property(TARGET mCc_symtab PROPERTY COMPILE_FLAGS "-D_POSIX_C_SOURCE=200809L")
