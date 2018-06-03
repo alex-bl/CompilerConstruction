@@ -12,6 +12,8 @@ struct mCc_tac_element *
 helper_get_tac_of_statement(struct mCc_ast_statement *statement,
                             struct mCc_tac_element *previous_tac)
 {
+	assert(statement);
+
 	struct mCc_tac_element *statement_tac;
 	switch (statement->statement_type) {
 	case MCC_AST_STATEMENT_IF:
@@ -43,6 +45,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 {
 	assert(statement);
 	assert(statement->condition_expression);
+	assert(statement->if_statement);
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac_statement = helper_get_tac_of_expression(
@@ -50,21 +53,36 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 
 	struct mCc_tac_element *tac_if_statement =
 	    helper_get_tac_of_statement(statement->if_statement, tac_statement);
-	struct mCc_tac_element *tac_else_statement = helper_get_tac_of_statement(
-	    statement->else_statement, tac_if_statement);
-	struct mCc_tac_element *tac_if_condition = tac_new_element(
-	    MCC_TAC_OPARATION_JUMP_FALSE,
-	    mCc_tac_create_from_tac_identifier(tac_statement->tac_result),
-	    mCc_tac_create_from_tac_identifier(tac_else_statement->tac_result),
-	    mCc_tac_create_from_tac_identifier(tac_if_statement->tac_result),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
+
+	struct mCc_tac_element *tac_if_condition;
+	if (statement->else_statement != NULL) {
+		struct mCc_tac_element *tac_else_statement =
+		    helper_get_tac_of_statement(statement->else_statement,
+		                                tac_if_statement);
+
+		tac_if_condition = tac_new_element(
+		    MCC_TAC_OPARATION_JUMP_FALSE,
+		    mCc_tac_create_from_tac_identifier(tac_statement->tac_result),
+		    mCc_tac_create_from_tac_identifier(tac_else_statement->tac_result),
+		    mCc_tac_create_from_tac_identifier(tac_if_statement->tac_result),
+		    MCC_TAC_TYPE_NO_TYPE, 0);
+
+		mCc_tac_connect_tac_entry(tac_else_statement, tac_if_condition);
+	} else {
+		tac_if_condition = tac_new_element(
+		    MCC_TAC_OPARATION_JUMP_FALSE,
+		    mCc_tac_create_from_tac_identifier(tac_statement->tac_result), NULL,
+		    mCc_tac_create_from_tac_identifier(tac_if_statement->tac_result),
+		    MCC_TAC_TYPE_NO_TYPE, 0);
+
+		mCc_tac_connect_tac_entry(tac_statement, tac_if_condition);
+	}
 	// mCc_tac_connect_tac_entry(tac_statement, tac_if_condition);
 	// mCc_tac_connect_tac_entry(tac_if_condition, tac_if_statement);
 	// mCc_tac_connect_tac_entry(tac_if_statement, tac_else_statement);
 	// return tac_else_statement;
 
 	// TODO: forms loop? -> don't know if it is correct:
-	mCc_tac_connect_tac_entry(tac_else_statement, tac_if_condition);
 
 	return tac_if_condition;
 }

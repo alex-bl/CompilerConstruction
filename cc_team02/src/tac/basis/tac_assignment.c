@@ -26,8 +26,8 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_COPY,
-	    tac_new_identifier(tac_assigned_expression->tac_result->name), NULL,
-	    tac_new_identifier(name_identifier), MCC_TAC_TYPE_NO_TYPE, 0);
+	    mCc_tac_create_from_tac_identifier(tac_assigned_expression->tac_result),
+	    NULL, name_identifier, MCC_TAC_TYPE_NO_TYPE, 0);
 
 	mCc_tac_connect_tac_entry(tac_assigned_expression, tac);
 
