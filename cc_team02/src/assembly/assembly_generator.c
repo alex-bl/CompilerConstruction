@@ -16,20 +16,32 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 {
 	enum mCc_tac_operation tac_op = tac_elem->tac_operation;
 
-	//TODO: function_def + function_param handler
+	// TODO: function_def + function_param handler
 	switch (tac_op) {
 	case MCC_TAC_OPARATION_EMPTY: gen_cb.empty(gen_cb.out, tac_elem); break;
-	case MCC_TAC_OPARATION_BINARY_OP_ADD:
-		gen_cb.add(gen_cb.out, tac_elem);
+	case MCC_TAC_OPARATION_BINARY_OP_ADD_INT:
+		gen_cb.add_int(gen_cb.out, tac_elem);
 		break;
-	case MCC_TAC_OPARATION_BINARY_OP_SUB:
-		gen_cb.sub(gen_cb.out, tac_elem);
+	case MCC_TAC_OPARATION_BINARY_OP_ADD_FLOAT:
+		gen_cb.add_float(gen_cb.out, tac_elem);
 		break;
-	case MCC_TAC_OPARATION_BINARY_OP_MUL:
-		gen_cb.mul(gen_cb.out, tac_elem);
+	case MCC_TAC_OPARATION_BINARY_OP_SUB_INT:
+		gen_cb.sub_int(gen_cb.out, tac_elem);
 		break;
-	case MCC_TAC_OPARATION_BINARY_OP_DIV:
-		gen_cb.div(gen_cb.out, tac_elem);
+	case MCC_TAC_OPARATION_BINARY_OP_SUB_FLOAT:
+		gen_cb.sub_float(gen_cb.out, tac_elem);
+		break;
+	case MCC_TAC_OPARATION_BINARY_OP_MUL_INT:
+		gen_cb.mul_int(gen_cb.out, tac_elem);
+		break;
+	case MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT:
+		gen_cb.mul_float(gen_cb.out, tac_elem);
+		break;
+	case MCC_TAC_OPARATION_BINARY_OP_DIV_INT:
+		gen_cb.div_int(gen_cb.out, tac_elem);
+		break;
+	case MCC_TAC_OPARATION_BINARY_OP_DIV_FLOAT:
+		gen_cb.div_float(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_BINARY_OP_LESS_THAN:
 		gen_cb.less_than(gen_cb.out, tac_elem);
@@ -44,10 +56,10 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 		gen_cb.greater_or_equals_than(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_BINARY_OP_AND:
-		gen_cb.and (gen_cb.out, tac_elem);
+		gen_cb.and_cmp(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_BINARY_OP_OR:
-		gen_cb.or (gen_cb.out, tac_elem);
+		gen_cb.or_cmp(gen_cb.out, tac_elem);
 		break;
 	case MCC_TAC_OPARATION_BINARY_OP_EQUALS:
 		gen_cb.equals(gen_cb.out, tac_elem);
@@ -100,16 +112,24 @@ struct mCc_assembly_generator gen_setup(FILE *out)
 	return (struct mCc_assembly_generator){
 		.out = out,
 		.empty = mCc_assembly_generate_empty,
-		.add = mCc_assembly_generate_add,
-		.sub = mCc_assembly_generate_sub,
-		.mul = mCc_assembly_generate_mul,
-		.div = mCc_assembly_generate_div,
+		.add_int = mCc_assembly_generate_add_int,
+		.add_float = mCc_assembly_generate_add_float,
+
+		.sub_int = mCc_assembly_generate_sub_int,
+		.sub_float = mCc_assembly_generate_sub_float,
+
+		.mul_int = mCc_assembly_generate_mul_int,
+		.mul_float = mCc_assembly_generate_mul_float,
+
+		.div_int = mCc_assembly_generate_div_int,
+		.div_float = mCc_assembly_generate_div_float,
+
 		.less_than = mCc_assembly_generate_less_than,
 		.greater_than = mCc_assembly_generate_greater_than,
 		.less_or_equals_than = mCc_assembly_generate_less_or_equals_than,
 		.greater_or_equals_than = mCc_assembly_generate_greater_or_equals_than,
-		.and = mCc_assembly_generate_and,
-		.or = mCc_assembly_generate_or,
+		.and_cmp = mCc_assembly_generate_and,
+		.or_cmp = mCc_assembly_generate_or,
 		.equals = mCc_assembly_generate_equals,
 		.not_equals = mCc_assembly_generate_not_equals,
 		.minus = mCc_assembly_generate_minus,

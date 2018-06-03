@@ -1,9 +1,52 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 long add(long a, long b)
 {
 	int c=a+b;
 	return c;
+}
+
+long div(long a, long b)
+{
+	int c=a/b;
+	return c;
+}
+
+long unary_minus(){
+	int a=12;
+	int b=-a;
+}
+
+long unary_minus_float(){
+	float a=12.23;
+	float b=-a;
+}
+
+long unary_negation(){
+	bool a=false;
+	bool b=!a;
+}
+
+void float_compare(){
+	float a=21231.12;
+	float b=323.122;
+	float c=0.0;
+	if(a>b){
+		c=232.323;
+	}
+}
+
+void compare_bools(){
+	bool a=true;
+	bool b=false;
+
+	if(a&&b){
+		bool c=true;
+	}
+	if(a||b){
+		bool c=true;
+	}
 }
 
 int addthree( int a, int b, int c )
@@ -38,6 +81,7 @@ long test(int a, int b){
 
 float test_float_add(float a, float b){
 	float c=a+b;
+	int d=3;
 	return c;
 }
 
@@ -60,16 +104,40 @@ void test_if(){
 	int a=0;
 	int b=32;
 
-	if(a==4){
+	if(a>4 && b==3){
 		b=12;
 	}else{
 		b=3;
 	}
+	a=10;
+}
+
+void test_if_without_else(){
+	int a=0;
+
+	if(a==0){
+		int b;
+		b=3;
+	}
+}
+
+void test_array(int arr[]){
+	int arr2[100];
+	int b=2;
+	int c=b*3;
+	arr[b+c]=4;
 }
 
 int main( int argc, char *argv[] )
 {
         long hoi = add(1,1);
+        float a = test_float_add(2.2232,132.13244);
+        float b=3.121;
+        const char *booo="hoi, wia tuats?";
+
         printf("%ld\n", hoi);
+        int d;
+        int f;
+        printf("%f\n",a);
         return 0;
 }

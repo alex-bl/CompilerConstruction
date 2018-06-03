@@ -95,6 +95,17 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	return tac;
 }
 
+static enum mCc_tac_operation
+get_arithmetic_operation(struct mCc_ast_expression *expression,
+                         enum mCc_tac_operation int_op,
+                         enum mCc_tac_operation float_op)
+{
+	if (expression->data_type == MCC_AST_DATA_TYPE_INT) {
+		return int_op;
+	}
+	return float_op;
+}
+
 struct mCc_tac_element *
 mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
                              struct mCc_tac_element *previous_tac)
@@ -106,16 +117,24 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 
 	switch (expression->op) {
 	case MCC_AST_BINARY_OP_ADD:
-		operation = MCC_TAC_OPARATION_BINARY_OP_ADD;
+		operation = get_arithmetic_operation(
+		    expression, MCC_TAC_OPARATION_BINARY_OP_ADD_INT,
+		    MCC_TAC_OPARATION_BINARY_OP_ADD_FLOAT);
 		break;
 	case MCC_AST_BINARY_OP_SUB:
-		operation = MCC_TAC_OPARATION_BINARY_OP_SUB;
+		operation = get_arithmetic_operation(
+		    expression, MCC_TAC_OPARATION_BINARY_OP_SUB_INT,
+		    MCC_TAC_OPARATION_BINARY_OP_SUB_FLOAT);
 		break;
 	case MCC_AST_BINARY_OP_MUL:
-		operation = MCC_TAC_OPARATION_BINARY_OP_MUL;
+		operation = get_arithmetic_operation(
+		    expression, MCC_TAC_OPARATION_BINARY_OP_MUL_INT,
+		    MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT);
 		break;
 	case MCC_AST_BINARY_OP_DIV:
-		operation = MCC_TAC_OPARATION_BINARY_OP_DIV;
+		operation = get_arithmetic_operation(
+		    expression, MCC_TAC_OPARATION_BINARY_OP_DIV_INT,
+		    MCC_TAC_OPARATION_BINARY_OP_DIV_FLOAT);
 		break;
 	case MCC_AST_BINARY_OP_LESS_THAN:
 		operation = MCC_TAC_OPARATION_BINARY_OP_LESS_THAN;

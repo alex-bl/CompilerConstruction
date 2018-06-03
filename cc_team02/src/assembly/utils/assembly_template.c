@@ -1,10 +1,15 @@
+/**
+ * Contains all the needed templates for assembly-generation (non functions,
+ * e.g. a new file-header, etc...)
+ */
+
 #include "assembly_template.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/*=== baisics */
+/*=== basics */
 void assembly_new_header(FILE *out, const char *file_name,
                          const char *next_function_label)
 {
@@ -56,38 +61,22 @@ void assembly_main_function_leave(FILE *out)
 	fprintf(out, "\t.section\t.note.GNU-stack,\"\",@progbits\n");
 }
 
-void assembly_new_string(FILE *out, int string_index, const char *str_value,
-                         const char *next_function_label)
+void assembly_new_string_enter(FILE *out, const char *label, const char *str_value)
 {
-	fprintf(out, "LC%d\n", string_index);
+	fprintf(out, ".%s\n", label);
 	fprintf(out, "\t.string\t\"%s\"\n", str_value);
+}
+
+void assembly_new_string_leave_with_function(FILE *out, const char *next_function_label)
+{
 	fprintf(out, "\t.text\n");
 	fprintf(out, "\t.global\t%s\n", next_function_label);
 	fprintf(out, "\t.type\t%s, @function\n", next_function_label);
 }
 
-void assembly_add_integers(FILE *out, const char *operant_1,
-                           const char *operant_2)
+void assembly_new_float(FILE *out, float float_val, const char *label)
 {
-	fprintf(out, "\taddl\t%s, %s\n", operant_1, operant_2);
-}
-
-void assembly_sub_integers(FILE *out, const char *operant_1,
-                           const char *operant_2)
-{
-	fprintf(out, "\tsubl\t%s, %s\n", operant_1, operant_2);
-}
-
-void assembly_mul_integers(FILE *out, const char *operant_1,
-                           const char *operant_2)
-{
-	fprintf(out, "\tmull\t%s, %s\n", operant_1, operant_2);
-}
-
-// TODO: check this
-void assembly_div_integers(FILE *out, const char *operant_1,
-                           const char *operant_2)
-{
-	//divide edx:eax (-1) by ebx (1)
-	//fprintf(out, "\tidivl\t%%edx\n", operant_1, operant_2);
+	fprintf(out, ".%s:\n", label);
+	fprintf(out, "\t.float\t%f", float_val);
+	// fprintf(out,"\t.align 4"); => really required?
 }

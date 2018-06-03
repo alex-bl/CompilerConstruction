@@ -1,9 +1,13 @@
 #ifndef MCC_CONFIG_H
 #define MCC_CONFIG_H
 
-#define DOT_OUTPUT_DIR "test/output/"
+#define NAME_SIZE 64
+#define DOT_OUTPUT_DIR "${DOT_TEST_OUTPUT_DIR}"
+#define ASSEMBLY_TEST_OUTPUT_DIR "${ASSEMBLY_TEST_OUTPUT_DIR}"
 #define DOT_PREFIX "DOT_"
+#define ASSEMBLY_PREFIX "ASSEMBLY_"
 #define DOT_FILE_SUFFIX ".dot"
+#define ASSEMBLY_FILE_SUFFIX ".s"
 #define PATH_BUILDINS "${CMAKE_BINARY_DIR}/data/buildins.mC"
 #define PATH_BUILDINS_IMPL "${CMAKE_BINARY_DIR}/data"
 #define BUILDIN_FILE_NAME "buildins.c"
@@ -18,6 +22,17 @@
 #define FILE_NAME_BUF_SIZE 128
 #define GCC_CMD_BUF_SIZE 512
 #define LOG_QUIET ${STDOUT_LOGGING_DISABLED}
+
+//assembly-related stuff
+
+#define INT_SIZE 4
+#define FLOAT_SIZE 4
+#define DEFAULT_ACCUMULATOR_OPERAND "%eax"
+#define DEFAULT_DATA_STACK_POINTER "%ebp"
+#define DEFAULT_STACK_POINTER "%esp"
+#define DEFAULT_RETURN_REG "%eax"
+#define DEFAULT_UNARY_OP_REG "%eax"
+
 
 #ifdef __cplusplus
 extern "C" {
