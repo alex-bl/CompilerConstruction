@@ -60,6 +60,8 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 
 struct mCc_tac_identifier *tac_new_identifier_float(double value)
 {
+	//assert(value);
+
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
 		return NULL;
@@ -72,6 +74,8 @@ struct mCc_tac_identifier *tac_new_identifier_float(double value)
 
 struct mCc_tac_identifier *tac_new_identifier_int(long value)
 {
+	//assert(value);
+
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
 		return NULL;
@@ -84,6 +88,8 @@ struct mCc_tac_identifier *tac_new_identifier_int(long value)
 
 struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 {
+	//assert(value);
+
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
 		return NULL;

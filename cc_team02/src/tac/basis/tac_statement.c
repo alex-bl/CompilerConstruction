@@ -85,6 +85,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	// TODO: forms loop? -> don't know if it is correct:
 
 	return tac_if_condition;
+	// return tac_if_statement;
 }
 
 struct mCc_tac_element *
@@ -121,6 +122,7 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	mCc_tac_connect_tac_entry(tac_while_statement, tac_while_condition);
 
 	return tac_while_condition;
+	// return tac_while_statement;
 }
 
 struct mCc_tac_element *
