@@ -7,8 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
 #include "basic_tac.h"
+#include "config.h"
+#include "assembly_data.h"
 
 size_t mCc_assembly_calc_int_space(int nr_of)
 {
@@ -66,4 +67,10 @@ mCc_assembly_get_next_function_label(struct mCc_tac_identifier *identifier)
 	 * => requires changes on tac!
 	 */
 	return "";
+}
+
+void mCc_assembly_adjust_stack_pointer(int offset,
+                                       struct mCc_assembly_data *data)
+{
+	data->current_stack_pos -= offset;
 }

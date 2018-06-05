@@ -1,9 +1,12 @@
 #ifndef MCC_ASSEMBLY_UTILS_H
 #define MCC_ASSEMBLY_UTILS_H
 
-#include <stdio.h>
-#include <stddef.h>
 #include "basic_tac.h"
+
+#include <stddef.h>
+#include <stdio.h>
+
+#include "assembly_data.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,6 +27,9 @@ int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
 
 const char *
 mCc_assembly_get_next_function_label(struct mCc_tac_identifier *identifier);
+
+void mCc_assembly_adjust_stack_pointer(int offset,
+                                       struct mCc_assembly_data *data);
 
 #ifdef __cplusplus
 }

@@ -1,88 +1,32 @@
 #include "assembly_arithmetic_op.h"
-#include "assembly_general.h"
-#include "assembly_template.h"
 
 #include <assert.h>
 
-// TODO: Überprüfe, ob %eax auch richtig verwendet wurde!!!
+#include "assembly_general.h"
+#include "assembly_template.h"
+#include "assembly_utils.h"
+#include "config.h"
 
-void load_from_int_tac_identifier(FILE *out,
-                                  struct mCc_tac_identifier *identifier,
-                                  const char *target_reg)
+void mCc_assembly_generate_add_int(FILE *out, struct mCc_assembly_data *data,
+                                   struct mCc_tac_element *tac_elem)
 {
-	//	if (identifier->type == MCC_IDENTIFIER_TAC_TYPE_INTEGER) {
-	//		mCc_assembly_load_int_val_to_register(out, identifier->i_val,
-	//		                                      target_reg);
-	//	} else {
-	//		mCc_assembly_load_int_from_stack(out, identifier->stack_offset,
-	//		                                 target_reg);
-	//	}
-	/*
-	 * TODO: redo that thing
-	 */
+	// Allocate space for the result
+	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	// Current stack-position
+	int arg_1 = mCc_assembly_calc_stack_position(tac_elem->tac_argument1,
+	                                             data->current_stack_pos);
+	int arg_2 = mCc_assembly_calc_stack_position(tac_elem->tac_argument2,
+	                                             data->current_stack_pos);
+	// Load the 2nd operant into %eax
+	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
+	// Do addition
+	mCc_assembly_add_int(out, arg_1);
+	// Push the result
+	mCc_assembly_push_int(out, data->current_stack_pos,
+	                      DEFAULT_ACCUMULATOR_OPERAND);
 }
 
-// TODO: REVIEW!!
-void load_from_float_tac_identifier(FILE *out,
-                                    struct mCc_tac_identifier *identifier,
-                                    int float_counter)
-{
-	//	if (identifier->type == MCC_IDENTIFIER_TAC_TYPE_FLOAT) {
-	//		mCc_assembly_store_float_val(out, identifier->f_val, float_counter);
-	//		mCc_assembly_push_float_on_stack(out, identifier->stack_offset);
-	//	} else {
-	//		mCc_assembly_load_float_from_stack(out, identifier->stack_offset);
-	//	}
-	/*
-	 * TODO: redo that thing
-	 */
-}
-
-static void handle_assembly_int_op_add_sub_mul(FILE *out,
-                                               struct mCc_tac_element *tac_elem,
-                                               const char *op)
-{
-	//	assert(out);
-	//	assert(tac_elem);
-	//
-	//	load_from_int_tac_identifier(out, tac_elem->tac_argument1, "%ecx");
-	//	load_from_int_tac_identifier(out, tac_elem->tac_argument2, "%edx");
-	//	fprintf(out, "\t%sl %%ecx,%%edx\n", op);
-	//	mCc_assembly_push_int_on_stack(out, tac_elem->tac_result->stack_offset,
-	//	                               "%edx");
-	/*
-	 * TODO: redo that thing
-	 */
-}
-
-// TODO: float-var-counter required?
-static void
-handle_assembly_float_arithmetic_op(FILE *out, struct mCc_tac_element *tac_elem,
-                                    const char *op)
-{
-	//	assert(out);
-	//	assert(tac_elem);
-	//
-	//	load_from_float_tac_identifier(out, tac_elem->tac_argument1,0);
-	//	load_from_float_tac_identifier(out, tac_elem->tac_argument2,1);
-	//	fprintf(out, "\tf%ss -%d(%%edp)\n", op,
-	//	        tac_elem->tac_argument2->stack_offset);
-	//	mCc_assembly_push_float_on_stack(out,
-	//tac_elem->tac_result->stack_offset);
-	/*
-	 * TODO: redo that thing
-	 */
-}
-
-void mCc_assembly_generate_add_int(FILE *out, struct mCc_tac_element *tac_elem)
-{
-	//	handle_assembly_int_op_add_sub_mul(out, tac_elem, "add");
-	/*
-	 * TODO: redo that thing
-	 */
-}
-
-void mCc_assembly_generate_add_float(FILE *out,
+void mCc_assembly_generate_add_float(FILE *out, struct mCc_assembly_data *data,
                                      struct mCc_tac_element *tac_elem)
 {
 	//	handle_assembly_float_arithmetic_op(out, tac_elem, "add");
@@ -91,7 +35,8 @@ void mCc_assembly_generate_add_float(FILE *out,
 	 */
 }
 
-void mCc_assembly_generate_sub_int(FILE *out, struct mCc_tac_element *tac_elem)
+void mCc_assembly_generate_sub_int(FILE *out, struct mCc_assembly_data *data,
+                                   struct mCc_tac_element *tac_elem)
 {
 	// handle_assembly_int_op_add_sub_mul(out, tac_elem, "sub");
 	/*
@@ -99,7 +44,7 @@ void mCc_assembly_generate_sub_int(FILE *out, struct mCc_tac_element *tac_elem)
 	 */
 }
 
-void mCc_assembly_generate_sub_float(FILE *out,
+void mCc_assembly_generate_sub_float(FILE *out, struct mCc_assembly_data *data,
                                      struct mCc_tac_element *tac_elem)
 {
 	// handle_assembly_float_arithmetic_op(out, tac_elem, "sub");
@@ -108,7 +53,8 @@ void mCc_assembly_generate_sub_float(FILE *out,
 	 */
 }
 
-void mCc_assembly_generate_mul_int(FILE *out, struct mCc_tac_element *tac_elem)
+void mCc_assembly_generate_mul_int(FILE *out, struct mCc_assembly_data *data,
+                                   struct mCc_tac_element *tac_elem)
 {
 	// handle_assembly_int_op_add_sub_mul(out, tac_elem, "mul");
 	/*
@@ -116,7 +62,7 @@ void mCc_assembly_generate_mul_int(FILE *out, struct mCc_tac_element *tac_elem)
 	 */
 }
 
-void mCc_assembly_generate_mul_float(FILE *out,
+void mCc_assembly_generate_mul_float(FILE *out, struct mCc_assembly_data *data,
                                      struct mCc_tac_element *tac_elem)
 {
 	// handle_assembly_float_arithmetic_op(out, tac_elem, "mul");
@@ -125,7 +71,8 @@ void mCc_assembly_generate_mul_float(FILE *out,
 	 */
 }
 
-void mCc_assembly_generate_div_int(FILE *out, struct mCc_tac_element *tac_elem)
+void mCc_assembly_generate_div_int(FILE *out, struct mCc_assembly_data *data,
+                                   struct mCc_tac_element *tac_elem)
 {
 	//	assert(out);
 	//	assert(tac_elem);
@@ -143,7 +90,7 @@ void mCc_assembly_generate_div_int(FILE *out, struct mCc_tac_element *tac_elem)
 	 */
 }
 
-void mCc_assembly_generate_div_float(FILE *out,
+void mCc_assembly_generate_div_float(FILE *out, struct mCc_assembly_data *data,
                                      struct mCc_tac_element *tac_elem)
 {
 	// handle_assembly_float_arithmetic_op(out, tac_elem, "div");

@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "assembly_data.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,14 +23,19 @@ void mCc_assembly_push_int(FILE *out, int calculated_offset,
 // pushes float on floating-point-stack
 void mCc_assembly_push_float(FILE *out, int calculated_offset);
 /*============================================================= allocation */
-void mCc_assembly_allocate_int_on_stack(FILE *out, int nr_of);
+void mCc_assembly_allocate_int_on_stack(FILE *out,
+                                        struct mCc_assembly_data *data,
+                                        int nr_of);
+void mCc_assembly_allocate_float_on_stack(FILE *out,
+                                          struct mCc_assembly_data *data,
+                                          int nr_of);
+void mCc_assembly_allocate_bool_on_stack(FILE *out,
+                                         struct mCc_assembly_data *data,
+                                         int nr_of);
 
-void mCc_assembly_allocate_float_on_stack(FILE *out, int nr_of);
-
-void mCc_assembly_allocate_bool_on_stack(FILE *out, int nr_of);
-
-void mCc_assembly_allocate_string_on_stack(FILE *out, const char *str);
-
+void mCc_assembly_allocate_string_on_stack(FILE *out,
+                                           struct mCc_assembly_data *data,
+                                           const char *str);
 /*============================================================= return */
 
 void mCc_assembly_prepare_return(FILE *out, int calculated_offset);
