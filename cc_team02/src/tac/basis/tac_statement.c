@@ -100,7 +100,7 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	    statement->loop_condition_expression, previous_tac);
 
 	struct mCc_tac_element *tac_while_statement =
-	    helper_get_tac_of_statement(statement, tac_while_expression);
+	    helper_get_tac_of_statement(statement->while_statement, tac_while_expression);
 
 	// TODO add label where to jump, if while is false
 	// struct mCc_tac_element *tac_while_false_statement = tac_new_element(

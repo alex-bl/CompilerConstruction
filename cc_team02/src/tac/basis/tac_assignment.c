@@ -63,8 +63,8 @@ mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
 
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_INDEXING,
-	    tac_new_identifier(tac_assigned_expression->tac_result->name),
-	    tac_new_identifier(tac_index_expression->tac_result->name),
+	    mCc_tac_create_from_tac_identifier(tac_assigned_expression->tac_result),
+	    mCc_tac_create_from_tac_identifier(tac_index_expression->tac_result),
 	    name_identifier, MCC_TAC_TYPE_NO_TYPE, 0);
 
 	mCc_tac_connect_tac_entry(tac_index_expression, tac);
