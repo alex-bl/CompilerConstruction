@@ -22,6 +22,11 @@ void mCc_assembly_push_int(FILE *out, int calculated_offset,
                            const char *ret_to_push);
 // pushes float on floating-point-stack
 void mCc_assembly_push_float(FILE *out, int calculated_offset);
+
+void mCc_assembly_push_int_reg_on_stack(FILE *out, const char *reg);
+
+void mCc_assembly_push_bool_reg_on_stack(FILE *out, const char *reg);
+
 /*============================================================= allocation */
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,

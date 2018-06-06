@@ -52,7 +52,7 @@ int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
                                      int current_stack_ptr_pos)
 {
 	assert(identifier);
-	return identifier->stack_offset - current_stack_ptr_pos;
+	return current_stack_ptr_pos - identifier->stack_offset;
 }
 
 const char *
@@ -72,5 +72,6 @@ mCc_assembly_get_next_function_label(struct mCc_tac_identifier *identifier)
 void mCc_assembly_adjust_stack_pointer(int offset,
                                        struct mCc_assembly_data *data)
 {
-	data->current_stack_pos -= offset;
+	//TODO: check this
+	data->current_stack_pos += offset;
 }

@@ -49,6 +49,17 @@ void mCc_assembly_push_float(FILE *out, int tac_offset)
 	mCc_assembly_print_nl(out);
 }
 
+void mCc_assembly_push_int_reg_on_stack(FILE *out, const char *reg){
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out,"pushl");
+	fprintf(out,"%s", reg);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_push_bool_reg_on_stack(FILE *out, const char *reg){
+	mCc_assembly_push_int_reg_on_stack(out,reg);
+}
+
 /*============================================================= allocation */
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,
