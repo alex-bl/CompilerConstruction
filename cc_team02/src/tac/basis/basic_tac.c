@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int label_count = 0;
+
 //#include "ast_data_type.h"
 
 // add another parameter for defining the next tac element?
@@ -60,7 +62,7 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 
 struct mCc_tac_identifier *tac_new_identifier_float(double value)
 {
-	//assert(value);
+	// assert(value);
 
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
@@ -74,7 +76,7 @@ struct mCc_tac_identifier *tac_new_identifier_float(double value)
 
 struct mCc_tac_identifier *tac_new_identifier_int(long value)
 {
-	//assert(value);
+	// assert(value);
 
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
@@ -88,7 +90,7 @@ struct mCc_tac_identifier *tac_new_identifier_int(long value)
 
 struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 {
-	//assert(value);
+	// assert(value);
 
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
@@ -194,4 +196,28 @@ mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier)
 		break;
 	}
 	return tac_new_identifier(identifier->name);
+}
+
+struct mCc_tac_element *
+mCc_tac_create_new_lable(struct mCc_tac_identifier *identifier,
+                         struct mCc_tac_element *previous_tac)
+{
+	// assert(identifier);
+	assert(previous_tac);
+
+	char label_name[1] = "l";
+	struct mCc_tac_identifier *label =
+	    mCc_helper_concat_name_and_scope(label_name, label_count);
+	label_count++;
+	struct mCc_tac_element *tac;
+	if (identifier != NULL) {
+		tac = tac_new_element(MCC_TAC_OPARATION_LABLE, identifier, NULL, label,
+		                      MCC_TAC_TYPE_NO_TYPE, 0);
+
+	} else {
+		tac = tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, label,
+		                      MCC_TAC_TYPE_NO_TYPE, 0);
+	}
+	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
 }
