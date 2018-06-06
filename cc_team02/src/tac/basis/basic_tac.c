@@ -199,16 +199,13 @@ mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier)
 }
 
 struct mCc_tac_element *
-mCc_tac_create_new_lable(struct mCc_tac_identifier *identifier,
-                         struct mCc_tac_element *previous_tac)
+mCc_tac_create_new_lable_tac_element(struct mCc_tac_identifier *identifier,
+                                     struct mCc_tac_element *previous_tac)
 {
-	// assert(identifier);
 	assert(previous_tac);
 
-	char label_name[1] = "l";
-	struct mCc_tac_identifier *label =
-	    mCc_helper_concat_name_and_scope(label_name, label_count);
-	label_count++;
+	struct mCc_tac_identifier *label =mCc_tac_create_new_lable_identifier();
+
 	struct mCc_tac_element *tac;
 	if (identifier != NULL) {
 		tac = tac_new_element(MCC_TAC_OPARATION_LABLE, identifier, NULL, label,
@@ -220,4 +217,13 @@ mCc_tac_create_new_lable(struct mCc_tac_identifier *identifier,
 	}
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
+}
+
+struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier()
+{
+	char label_name[1] = "l";
+	struct mCc_tac_identifier *label =
+	    mCc_helper_concat_name_and_scope(label_name, label_count);
+	label_count++;
+	return label;
 }
