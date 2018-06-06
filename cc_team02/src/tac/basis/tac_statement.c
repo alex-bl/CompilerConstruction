@@ -169,34 +169,6 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	mCc_tac_connect_tac_entry(tac_while_jump_condition2, tac_lable_after_while);
 
 	return tac_lable_after_while;
-
-	/*struct mCc_tac_element *tac_while_expression = helper_get_tac_of_expression(
-	    statement->loop_condition_expression, previous_tac);
-
-	struct mCc_tac_element *tac_while_statement = helper_get_tac_of_statement(
-	    statement->while_statement, tac_while_expression);*/
-
-	// TODO add label where to jump, if while is false
-	// struct mCc_tac_element *tac_while_false_statement = tac_new_element(
-	//    MCC_TAC_OPARATION_LABLE, NULL, NULL, NULL );
-
-	/*struct mCc_tac_element *tac_while_condition = tac_new_element(
-	    MCC_TAC_OPARATION_JUMP_FALSE,
-	    mCc_tac_create_from_tac_identifier(tac_while_statement->tac_result),
-	    NULL,
-	    mCc_tac_create_from_tac_identifier(tac_while_statement->tac_result),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
-
-	// mCc_tac_connect_tac_entry(previous_tac, tac_while_expression);
-	// mCc_tac_connect_tac_entry(tac_while_expression, tac_while_condition);
-	// mCc_tac_connect_tac_entry(tac_while_condition, tac_while_statement);
-	//	return tac_while_statement;
-
-	// TODO: maybe not working -> wrong order of tac_elements?
-	mCc_tac_connect_tac_entry(tac_while_statement, tac_while_condition);
-
-	return tac_while_condition;*/
-	// return tac_while_statement;
 }
 
 struct mCc_tac_element *
