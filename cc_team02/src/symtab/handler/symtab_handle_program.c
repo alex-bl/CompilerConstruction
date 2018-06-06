@@ -116,7 +116,6 @@ void mCc_symtab_handle_program_pre_order(struct mCc_ast_program *program,
 	    program->first_function_def;
 
 	while (next_function_def) {
-		struct mCc_ast_identifier *identifier = next_function_def->identifier;
 		// make sure that function-identifiers are in symtab at this stage
 		handle_function_def(next_function_def, info_holder);
 
