@@ -48,6 +48,70 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	assert(statement->if_statement);
 	assert(previous_tac);
 
+	// defining lables to jump to
+	struct mCc_tac_identifier *lable_before_if =
+	    mCc_tac_create_new_lable_identifier();
+
+	struct mCc_tac_identifier *lable_before_else =
+	    mCc_tac_create_new_lable_identifier();
+
+	struct mCc_tac_identifier *lable_after_else =
+	    mCc_tac_create_new_lable_identifier();
+
+	// setting lable as tac element
+	struct mCc_tac_element *tac_lable_before_if =
+	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, lable_before_if,
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(previous_tac, tac_lable_before_if);
+
+	struct mCc_tac_element *tac_condition = helper_get_tac_of_expression(
+	    statement->condition_expression, tac_lable_before_if);
+
+	// jump to else, if condition is false
+	struct mCc_tac_element *tac_if_condition = tac_new_element(
+	    MCC_TAC_OPARATION_JUMP_FALSE,
+	    mCc_tac_create_from_tac_identifier(tac_condition->tac_result), NULL,
+	    mCc_tac_create_from_tac_identifier(lable_before_else),
+	    MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(previous_tac, tac_if_condition);
+
+	struct mCc_tac_element *tac_if_statement;
+	if (statement->if_statement != NULL) {
+		tac_if_statement = helper_get_tac_of_statement(statement->if_statement,
+		                                               tac_if_condition);
+	} else {
+		// take condition as previous tac element
+		tac_if_statement = tac_if_condition;
+	}
+
+	// jump after else -> if the if is executed the else is skipped
+	struct mCc_tac_element *tac_if_condition2 = tac_new_element(
+	    MCC_TAC_OPARATION_JUMP_FALSE,
+	    mCc_tac_create_from_tac_identifier(tac_condition->tac_result), NULL,
+	    mCc_tac_create_from_tac_identifier(lable_after_else),
+	    MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(tac_if_statement, tac_if_condition2);
+
+	struct mCc_tac_element *tac_lable_before_else =
+	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, lable_before_else,
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(tac_if_condition2, tac_lable_before_else);
+
+	struct mCc_tac_element *tac_else_statement;
+	if (statement->else_statement != NULL) {
+		tac_else_statement = helper_get_tac_of_statement(
+		    statement->else_statement, tac_lable_before_else);
+	} else {
+		tac_else_statement = tac_lable_before_else;
+	}
+
+	struct mCc_tac_element *tac_lable_after_else =
+	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, lable_after_else,
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(tac_else_statement, tac_lable_after_else);
+
+	return tac_lable_after_else;
+
 	/*previous_tac = helper_get_tac_of_expression(
 	    statement->condition_expression, previous_tac);
 
@@ -108,7 +172,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	tac_if_condition);
 	}*/
 
-	struct mCc_tac_element *tac_statement = helper_get_tac_of_expression(
+	/*struct mCc_tac_element *tac_statement = helper_get_tac_of_expression(
 	    statement->condition_expression, previous_tac);
 
 	if (statement->if_statement != NULL) {
@@ -145,7 +209,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 		return tac_if_condition;
 	} else {
 		return tac_statement;
-	}
+	}*/
 	// mCc_tac_connect_tac_entry(tac_statement, tac_if_condition);
 	// mCc_tac_connect_tac_entry(tac_if_condition, tac_if_statement);
 	// mCc_tac_connect_tac_entry(tac_if_statement, tac_else_statement);

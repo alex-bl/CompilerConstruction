@@ -72,8 +72,8 @@ mCc_tac_declaration_array(struct mCc_ast_declaration *declaration,
 	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_LABLE,
 	    tac_new_identifier(helper_data_type_to_char(declaration->data_type)),
-	    tac_new_identifier_int(&declaration->size), name_identifier,
-	    MCC_TAC_TYPE_NO_TYPE, 0);
+	    tac_new_identifier_int((unsigned int)(declaration->size)),
+	    name_identifier, MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }

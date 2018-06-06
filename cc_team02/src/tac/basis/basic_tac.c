@@ -126,18 +126,17 @@ struct mCc_tac_identifier *mCc_helper_concat_name_and_scope(char *name,
                                                             int scope)
 {
 	assert(name);
-	assert(scope);
 
-	// if (scope != NULL) {
+	 if (scope != NULL) {
 	// puts scope level behind the variable name
 	char new_name[strlen(name) + mCc_tac_helper_intlen(scope)];
 	sprintf(new_name, "%s%d", name, scope);
 	struct mCc_tac_identifier *tac_identifier = tac_new_identifier(new_name);
 	// free(new_name);
 	return tac_identifier;
-	/*} else {
+	} else {
 	    return tac_new_identifier(name);
-	}*/
+	}
 }
 
 void mCc_tac_element_delete(struct mCc_tac_element *tac_element)
