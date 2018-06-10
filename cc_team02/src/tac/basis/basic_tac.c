@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int label_count = 0;
+
 //#include "ast_data_type.h"
 
 // add another parameter for defining the next tac element?
@@ -60,6 +62,8 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 
 struct mCc_tac_identifier *tac_new_identifier_float(double value)
 {
+	// assert(value);
+
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
 		return NULL;
@@ -72,6 +76,8 @@ struct mCc_tac_identifier *tac_new_identifier_float(double value)
 
 struct mCc_tac_identifier *tac_new_identifier_int(long value)
 {
+	// assert(value);
+
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
 		return NULL;
@@ -84,6 +90,8 @@ struct mCc_tac_identifier *tac_new_identifier_int(long value)
 
 struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 {
+	// assert(value);
+
 	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
 	if (!tac_identifier) {
 		return NULL;
@@ -92,6 +100,43 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_BOOL;
 	// tac_identifier->stack_offset;
 	return tac_identifier;
+}
+
+// helper function for getting the size of an int
+int mCc_tac_helper_intlen(int var)
+{
+	int length;
+	if (var < 10) {
+		length = 1;
+	} else if (var < 100) {
+		length = 2;
+	} else if (var < 1000) {
+		length = 3;
+	} else if (var < 10000) {
+		length = 4;
+	} else if (var < 100000) {
+		length = 5;
+	}
+	return length;
+}
+
+// TODO: maybe here the the char has to be freed
+// function for concatenate a name of a variable with the scope
+struct mCc_tac_identifier *mCc_helper_concat_name_and_scope(char *name,
+                                                            int scope)
+{
+	assert(name);
+
+	 if (scope != NULL) {
+	// puts scope level behind the variable name
+	char new_name[strlen(name) + mCc_tac_helper_intlen(scope)];
+	sprintf(new_name, "%s%d", name, scope);
+	struct mCc_tac_identifier *tac_identifier = tac_new_identifier(new_name);
+	// free(new_name);
+	return tac_identifier;
+	} else {
+	    return tac_new_identifier(name);
+	}
 }
 
 void mCc_tac_element_delete(struct mCc_tac_element *tac_element)
@@ -136,6 +181,8 @@ void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier)
 struct mCc_tac_identifier *
 mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier)
 {
+	assert(identifier);
+
 	switch (identifier->type) {
 	case MCC_IDENTIFIER_TAC_TYPE_INTEGER:
 		return tac_new_identifier_int(identifier->i_val);
@@ -148,4 +195,34 @@ mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier)
 		break;
 	}
 	return tac_new_identifier(identifier->name);
+}
+
+struct mCc_tac_element *
+mCc_tac_create_new_lable_tac_element(struct mCc_tac_identifier *identifier,
+                                     struct mCc_tac_element *previous_tac)
+{
+	assert(previous_tac);
+
+	struct mCc_tac_identifier *label =mCc_tac_create_new_lable_identifier();
+
+	struct mCc_tac_element *tac;
+	if (identifier != NULL) {
+		tac = tac_new_element(MCC_TAC_OPARATION_LABLE, identifier, NULL, label,
+		                      MCC_TAC_TYPE_NO_TYPE, 0);
+
+	} else {
+		tac = tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, label,
+		                      MCC_TAC_TYPE_NO_TYPE, 0);
+	}
+	mCc_tac_connect_tac_entry(previous_tac, tac);
+	return tac;
+}
+
+struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier()
+{
+	char label_name[1] = "l";
+	struct mCc_tac_identifier *label =
+	    mCc_helper_concat_name_and_scope(label_name, label_count);
+	label_count++;
+	return label;
 }

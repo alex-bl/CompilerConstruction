@@ -2,8 +2,8 @@
 #define MCC_AST_BASIC_TAC_H
 
 #include "ast_data_type.h"
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define LABEL_SIZE 64
 
@@ -49,8 +49,8 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_UNARY_OP_MINUS,
 	MCC_TAC_OPARATION_UNARY_OP_NEGATION,
 	MCC_TAC_OPARATION_COPY,
-	MCC_TAC_OPARATION_UNCONDITIONAL_JUMP,
-	MCC_TAC_OPARATION_CONDITIONAL_JUMP,
+	MCC_TAC_OPARATION_JUMP,
+	MCC_TAC_OPARATION_JUMP_FALSE,
 	MCC_TAC_OPARATION_PROCEDURAL_CALL,
 	MCC_TAC_OPARATION_RETURN,
 	MCC_TAC_OPARATION_INDEXING,
@@ -105,6 +105,11 @@ struct mCc_tac_identifier {
 	int stack_offset;
 };
 
+int mCc_tac_helper_intlen(int var);
+
+struct mCc_tac_identifier *mCc_helper_concat_name_and_scope(char *name,
+                                                            int scope);
+
 struct mCc_tac_identifier *tac_new_identifier(char *name);
 
 struct mCc_tac_identifier *tac_new_identifier_float(double value);
@@ -121,6 +126,12 @@ void mCc_tac_delete(struct mCc_tac_element *tac_element);
 
 struct mCc_tac_identifier *
 mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier);
+
+struct mCc_tac_element *
+mCc_tac_create_new_lable_tac_element(struct mCc_tac_identifier *identifier,
+                                     struct mCc_tac_element *previous_tac);
+
+struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier();
 
 #ifdef __cplusplus
 }

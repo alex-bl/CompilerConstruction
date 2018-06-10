@@ -27,8 +27,8 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 	case MCC_TAC_OPARATION_UNARY_OP_MINUS: return "MINUS";
 	case MCC_TAC_OPARATION_UNARY_OP_NEGATION: return "NEG\t";
 	case MCC_TAC_OPARATION_COPY: return "COPY";
-	case MCC_TAC_OPARATION_UNCONDITIONAL_JUMP: return "JUMP UNCOND";
-	case MCC_TAC_OPARATION_CONDITIONAL_JUMP: return "JUMP COND";
+	case MCC_TAC_OPARATION_JUMP: return "JUMP";
+	case MCC_TAC_OPARATION_JUMP_FALSE: return "JUMP FALSE";
 	case MCC_TAC_OPARATION_PROCEDURAL_CALL: return "CALL";
 	case MCC_TAC_OPARATION_RETURN: return "RETURN";
 	case MCC_TAC_OPARATION_INDEXING: return "INDEX";

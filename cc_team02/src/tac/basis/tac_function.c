@@ -32,15 +32,15 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		} else if (parameter->declaration_type == MCC_AST_DECLARATION_ARRAY) {
 			parameter_tac = mCc_tac_declaration_array(parameter, previous_tac);
 		}
-		// mCc_tac_connect_tac_entry(previous_tac, parameter_tac);
 
-		struct mCc_tac_element *tac = tac_new_element(
+		/*struct mCc_tac_element *tac = tac_new_element(
 		    MCC_TAC_OPARATION_FUNCTION_PARAMETER,
 		    mCc_tac_create_from_tac_identifier(parameter_tac->tac_result), NULL,
 		    tac_new_identifier(def->identifier->identifier_name),
 		    MCC_TAC_TYPE_NO_TYPE, 0);
 		mCc_tac_connect_tac_entry(parameter_tac, tac);
-		previous_tac = tac;
+		previous_tac = tac;*/
+		previous_tac = parameter_tac;
 		parameter = parameter->next_declaration;
 	}
 
@@ -50,13 +50,14 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		struct mCc_tac_element *statement_tac =
 		    helper_get_tac_of_statement(statement, previous_tac);
 		// Has a statement to be in the tac table?
-		struct mCc_tac_element *tac = tac_new_element(
+		/*struct mCc_tac_element *tac = tac_new_element(
 		    MCC_TAC_OPARATION_LABLE,
 		    mCc_tac_create_from_tac_identifier(statement_tac->tac_result), NULL,
 		    tac_new_identifier(def->identifier->identifier_name),
 		    MCC_TAC_TYPE_NO_TYPE, 0);
 		mCc_tac_connect_tac_entry(statement_tac, tac);
-		previous_tac = tac;
+		previous_tac = tac;*/
+		previous_tac = statement_tac;
 		statement = statement->next_statement;
 	}
 
