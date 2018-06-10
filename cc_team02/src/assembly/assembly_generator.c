@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../include/assembly/generator/assembly_function.h"
 #include "assembly_arithmetic_op.h"
 #include "assembly_binary_op_logical.h"
 #include "assembly_jump.h"
-#include "assembly_special.h"
 #include "assembly_unary_op.h"
 
 void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
