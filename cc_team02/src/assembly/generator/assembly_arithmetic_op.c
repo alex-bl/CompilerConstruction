@@ -22,8 +22,6 @@ void mCc_assembly_generate_add_int(FILE *out, struct mCc_assembly_data *data,
 	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
 	mCc_assembly_add_int(out, arg_1);
-	// Allocate
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
 	// Push
 	mCc_assembly_push_int(out, result_pos, DEFAULT_ACCUMULATOR_OPERAND);
 }
@@ -58,8 +56,6 @@ void mCc_assembly_generate_sub_int(FILE *out, struct mCc_assembly_data *data,
 	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
 	mCc_assembly_sub_int(out, arg_1);
-	// Allocate
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
 	// Push
 	mCc_assembly_push_int(out, result_pos, DEFAULT_ACCUMULATOR_OPERAND);
 }
@@ -94,8 +90,6 @@ void mCc_assembly_generate_mul_int(FILE *out, struct mCc_assembly_data *data,
 	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
 	mCc_assembly_mul_int(out, arg_1);
-	// Allocate
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
 	// Push
 	mCc_assembly_push_int(out, result_pos, DEFAULT_ACCUMULATOR_OPERAND);
 }
@@ -131,8 +125,6 @@ void mCc_assembly_generate_div_int(FILE *out, struct mCc_assembly_data *data,
 	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
 	mCc_assembly_div_int(out, arg_1);
-	// Allocate
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
 	// Push
 	mCc_assembly_push_int(out, result_pos, DEFAULT_ACCUMULATOR_OPERAND);
 }

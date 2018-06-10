@@ -89,6 +89,7 @@ add_library(mCc_assembly SHARED assembly/generator/assembly_arithmetic_op.c
 								assembly/generator/assembly_return.c
 								assembly/generator/assembly_param.c
 								assembly/generator/assembly_label.c
+								assembly/generator/assembly_declaration.c								
 								assembly/utils/assembly_general.c
 								assembly/utils/assembly_utils.c
 								assembly/utils/assembly_formatter.c
