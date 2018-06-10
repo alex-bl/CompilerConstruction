@@ -115,9 +115,8 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 
 	// jump after else -> if the if is executed the else is skipped
 	struct mCc_tac_element *tac_if_condition2 = tac_new_element(
-	    MCC_TAC_OPARATION_JUMP_FALSE,
-	    mCc_tac_create_from_tac_identifier(tac_condition->tac_result), NULL,
-	    mCc_tac_create_from_tac_identifier(lable_after_else),
+	    if_jump, mCc_tac_create_from_tac_identifier(tac_condition->tac_result),
+	    NULL, mCc_tac_create_from_tac_identifier(lable_after_else),
 	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_if_statement, tac_if_condition2);
 
@@ -135,8 +134,8 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	}
 
 	struct mCc_tac_element *tac_lable_after_else =
-	    tac_new_element(MCC_TAC_OPARATION_LABEL_IF, NULL, NULL,
-	                    lable_after_else, MCC_TAC_TYPE_NO_TYPE, 0);
+	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, lable_after_else,
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_else_statement, tac_lable_after_else);
 
 	return tac_lable_after_else;
