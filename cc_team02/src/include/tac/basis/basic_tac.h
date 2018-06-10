@@ -126,6 +126,12 @@ void mCc_tac_delete(struct mCc_tac_element *tac_element);
 struct mCc_tac_identifier *
 mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier);
 
+struct mCc_tac_element *
+mCc_tac_create_new_lable_tac_element(struct mCc_tac_identifier *identifier,
+                                     struct mCc_tac_element *previous_tac);
+
+struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier();
+
 #ifdef __cplusplus
 }
 #endif
