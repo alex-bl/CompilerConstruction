@@ -81,6 +81,7 @@ add_library(mCc_semantic_error_print SHARED symtab/symtab_error_print.c
 							symtab/print/error_printer.c)
 
 add_library(mCc_assembly SHARED assembly/generator/assembly_arithmetic_op.c
+								assembly/generator/assembly_assignment.c
 								assembly/generator/assembly_binary_op_logical.c
 								assembly/generator/assembly_jump.c
 								assembly/generator/assembly_special.c

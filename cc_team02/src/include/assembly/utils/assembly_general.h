@@ -66,12 +66,14 @@ void mCc_assembly_div_float(FILE *out, int calculated_offset);
 void mCc_assembly_assign_int(FILE *out, int int_val, int calculated_offset);
 
 // TODO: really required?
-void mCc_assembly_assign_float(FILE *out, float float_val);
+void mCc_assembly_assign_float(FILE *out, float float_val,
+                               int calculated_offset);
 
 void mCc_assembly_assign_bool(FILE *out, bool bool_val, int calculated_offset);
 
-// TODO: really required?
-void mCc_assembly_assign_string(FILE *out, const char *string_val);
+void mCc_assembly_assign_string(FILE *out, const char *label,
+                                int calculated_offset);
+
 // TODO: what about arrays?
 
 /*=============================================================
@@ -88,9 +90,9 @@ void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
 // Maybe the same?
 void mCc_assembly_compare_float(FILE *out, int calculated_offset_op);
 
-void mCc_assembly_and(FILE *out, int calculated_offset);
+void mCc_assembly_and_op(FILE *out, int calculated_offset);
 
-void mCc_assembly_or(FILE *out, int calculated_offset);
+void mCc_assembly_or_op(FILE *out, int calculated_offset);
 /*============================================================= unary-ops */
 
 /*TODO:

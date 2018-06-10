@@ -22,6 +22,8 @@ size_t mCc_assembly_calc_string_space(const char *string);
 
 size_t mCc_assembly_calc_param_space(struct mCc_tac_element *function_def);
 
+int mCc_assembly_calc_stack_pos_param(struct mCc_tac_identifier *identifier);
+
 int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
                                      int current_stack_ptr_pos);
 

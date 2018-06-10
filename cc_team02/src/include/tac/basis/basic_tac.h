@@ -95,6 +95,7 @@ void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
 
 struct mCc_tac_identifier {
 	enum mCc_tac_identifier_type type;
+	bool is_param;
 	union {
 		char *name;
 		double f_val;

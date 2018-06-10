@@ -7,9 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "assembly_data.h"
 #include "basic_tac.h"
 #include "config.h"
-#include "assembly_data.h"
 
 size_t mCc_assembly_calc_int_space(int nr_of)
 {
@@ -29,8 +29,8 @@ size_t mCc_assembly_calc_float_space(int nr_of)
 
 size_t mCc_assembly_calc_string_space(const char *string)
 {
-	// TODO: required?
-	return strlen(string);
+	// TODO: required? => always 8?
+	return STRING_SIZE;
 }
 
 size_t mCc_assembly_calc_param_space(struct mCc_tac_element *function_def)
@@ -48,10 +48,19 @@ size_t mCc_assembly_calc_param_space(struct mCc_tac_element *function_def)
 	return 0;
 }
 
+int mCc_assembly_calc_stack_pos_param(struct mCc_tac_identifier *identifier)
+{
+	//+4 is return address
+	return identifier->stack_offset + BASE_OFFSET_PARAMS;
+}
+
 int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
                                      int current_stack_ptr_pos)
 {
 	assert(identifier);
+	if (identifier->is_param) {
+		return mCc_assembly_calc_stack_pos_param(identifier);
+	}
 	return current_stack_ptr_pos - identifier->stack_offset;
 }
 
@@ -72,6 +81,6 @@ mCc_assembly_get_next_function_label(struct mCc_tac_identifier *identifier)
 void mCc_assembly_adjust_stack_pointer(int offset,
                                        struct mCc_assembly_data *data)
 {
-	//TODO: check this
+	// TODO: check this
 	data->current_stack_pos += offset;
 }

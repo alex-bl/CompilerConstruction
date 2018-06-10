@@ -27,12 +27,13 @@
 
 #define INT_SIZE 4
 #define FLOAT_SIZE 4
+#define STRING_SIZE 8
 #define DEFAULT_ACCUMULATOR_OPERAND "%eax"
 #define DEFAULT_DATA_STACK_POINTER "%ebp"
 #define DEFAULT_STACK_POINTER "%esp"
 #define DEFAULT_RETURN_REG "%eax"
 #define DEFAULT_UNARY_OP_REG "%eax"
-
+#define BASE_OFFSET_PARAMS 4
 
 #ifdef __cplusplus
 extern "C" {
