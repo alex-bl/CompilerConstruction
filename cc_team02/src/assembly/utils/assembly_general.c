@@ -136,6 +136,15 @@ void mCc_assembly_prepare_return(FILE *out, int calculated_offset)
 	mCc_assembly_print_nl(out);
 }
 
+void mCc_assembly_prepare_return_string(FILE *out, const char *label)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, ".%s, (%s)", label, DEFAULT_DATA_STACK_POINTER,
+	        DEFAULT_RETURN_REG);
+	mCc_assembly_print_nl(out);
+}
+
 /*============================================================= arithmetics */
 /*
  * TODO:
@@ -218,7 +227,8 @@ void mCc_assembly_assign_int(FILE *out, int int_val, int calculated_offset)
 	mCc_assembly_print_nl(out);
 }
 
-void mCc_assembly_assign_float(FILE *out, float float_val, int calculated_offset)
+void mCc_assembly_assign_float(FILE *out, float float_val,
+                               int calculated_offset)
 {
 	mCc_assembly_print_shift(out);
 	// TODO: is there anything required?
@@ -240,8 +250,8 @@ void mCc_assembly_assign_string(FILE *out, const char *label,
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_push_string(out, label, calculated_offset);
-	    // TODO: is there anything required?
-	    mCc_assembly_print_nl(out);
+	// TODO: is there anything required?
+	mCc_assembly_print_nl(out);
 }
 
 // TODO: what about arrays?

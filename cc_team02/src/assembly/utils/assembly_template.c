@@ -10,7 +10,7 @@
 #include <string.h>
 
 /*=== basics */
-void assembly_new_header(FILE *out, const char *file_name,
+void mCc_assembly_new_header(FILE *out, const char *file_name,
                          const char *next_function_label)
 {
 	fprintf(out, "\t.file\t%s\n", file_name);
@@ -19,7 +19,7 @@ void assembly_new_header(FILE *out, const char *file_name,
 	fprintf(out, "\t.type\t%s,@function\n", next_function_label);
 }
 
-void assembly_new_function_def_enter(FILE *out, const char *function_label)
+void mCc_assembly_new_function_def_enter(FILE *out, const char *function_label)
 {
 	fprintf(out, "%s:\n", function_label);
 	fprintf(out, "\tpushl\t%%ebp\n");
@@ -27,7 +27,7 @@ void assembly_new_function_def_enter(FILE *out, const char *function_label)
 }
 
 // TODO: what is correct?
-void assembly_new_function_def_leave(FILE *out, const char *function_label,
+void mCc_assembly_new_function_def_leave(FILE *out, const char *function_label,
                                      const char *next_function_label)
 {
 	//	fprintf(out, "\tpopl\t%%edp\n");
@@ -40,7 +40,7 @@ void assembly_new_function_def_leave(FILE *out, const char *function_label,
 	fprintf(out, "\t.type\t%s, @function\n", next_function_label);
 }
 
-void assembly_main_function_enter(FILE *out)
+void mCc_assembly_main_function_enter(FILE *out)
 {
 	fprintf(out, "\tleal\t4(%%esp), %%ecx\n");
 	fprintf(out, "\tandl\t$-16, %%esp\n");
@@ -50,7 +50,7 @@ void assembly_main_function_enter(FILE *out)
 	fprintf(out, "\tpushl\t%%ecx\n");
 }
 
-void assembly_main_function_leave(FILE *out)
+void mCc_assembly_main_function_leave(FILE *out)
 {
 	fprintf(out, "\tmovl\t-4(%%ebp), %%ecx\n");
 	fprintf(out, "\tleave\n");
@@ -61,20 +61,20 @@ void assembly_main_function_leave(FILE *out)
 	fprintf(out, "\t.section\t.note.GNU-stack,\"\",@progbits\n");
 }
 
-void assembly_new_string_enter(FILE *out, const char *label, const char *str_value)
+void mCc_assembly_new_string_enter(FILE *out, const char *label, const char *str_value)
 {
 	fprintf(out, ".%s\n", label);
 	fprintf(out, "\t.string\t\"%s\"\n", str_value);
 }
 
-void assembly_new_string_leave_with_function(FILE *out, const char *next_function_label)
+void mCc_assembly_new_string_leave_with_function(FILE *out, const char *next_function_label)
 {
 	fprintf(out, "\t.text\n");
 	fprintf(out, "\t.global\t%s\n", next_function_label);
 	fprintf(out, "\t.type\t%s, @function\n", next_function_label);
 }
 
-void assembly_new_float(FILE *out, float float_val, const char *label)
+void mCc_assembly_new_float(FILE *out, float float_val, const char *label)
 {
 	fprintf(out, ".%s:\n", label);
 	fprintf(out, "\t.float\t%f", float_val);

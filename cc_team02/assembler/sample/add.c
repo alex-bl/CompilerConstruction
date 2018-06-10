@@ -5,6 +5,14 @@ void assignString(){
 	const char *bla="hoikoiakalassssssssssssssssssssssssss";
 }
 
+const char* return_string(){
+	return "hoikalaalalla";
+}
+
+void assignCompare(int a){
+	bool ab=(1!=4 && a>3);
+}
+
 long add(long a, long b)
 {
 	int c=a+b;

@@ -1,10 +1,17 @@
 #include "assembly_binary_op_logical.h"
+#include "assembly_utils.h"
 
 /*==================================== equals*/
 
 void mCc_assembly_equals_int(FILE *out, struct mCc_assembly_data *data,
                              struct mCc_tac_element *tac_elem)
 {
+	int pos_operand_1 = mCc_assembly_calc_stack_position(
+	    tac_elem->tac_argument1, data->current_stack_pos);
+	int pos_operand_2 = mCc_assembly_calc_stack_position(
+	    tac_elem->tac_argument2, data->current_stack_pos);
+	mCc_assembly_compare_int(out, pos_operand_1, pos_operand_2);
+	//TODO: compare-flag auslesen + result reinspeichern?
 }
 
 void mCc_assembly_equals_float(FILE *out, struct mCc_assembly_data *data,

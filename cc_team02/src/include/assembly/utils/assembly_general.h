@@ -44,6 +44,8 @@ void mCc_assembly_allocate_string_on_stack(FILE *out,
 /*============================================================= return */
 
 void mCc_assembly_prepare_return(FILE *out, int calculated_offset);
+
+void mCc_assembly_prepare_return_string(FILE *out, const char *label);
 /*============================================================= arithmetics */
 
 void mCc_assembly_add_int(FILE *out, int calculated_offset);
