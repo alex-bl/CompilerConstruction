@@ -7,6 +7,8 @@
 static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 {
 	switch (tac_operation) {
+	case MCC_TAC_OPARATION_EMPTY:
+		return "EMPTY";
 	// BINARY_OP
 	case MCC_TAC_OPARATION_BINARY_OP_ADD_INT: return "ADD_INT";
 	case MCC_TAC_OPARATION_BINARY_OP_ADD_FLOAT: return "ADD_FLOAT";
@@ -20,6 +22,12 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 	case MCC_TAC_OPARATION_BINARY_OP_DIV_INT: return "DIV_INT";
 	case MCC_TAC_OPARATION_BINARY_OP_DIV_FLOAT:
 		return "DIV_FLOAT";
+
+		// UNARY
+	case MCC_TAC_UNARY_MINUS_INT: return "UNARY_MINUS_INT";
+	case MCC_TAC_UNARY_MINUS_FLOAT: return "UNARY_MINUS_FLOAT";
+	case MCC_TAC_UNARY_NEGATION:
+		return "UNARY_NEGATION";
 
 	// ASSIGN
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_INT: return "ASSIGN_INT";
@@ -98,8 +106,9 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 	case MCC_TAC_OPARATION_LABEL_IF: return "LABEL_IF";
 	case MCC_TAC_OPARATION_LABEL_ELSE: return "LABEL_ELSE";
 	case MCC_TAC_OPARATION_LABEL_WHILE: return "LABEL_WHILE";
-	case MCC_TAC_OPARATION_LABEL_STRING:
-		return "LABEL_STRING";
+	case MCC_TAC_OPARATION_LABEL_STRING: return "LABEL_STRING";
+	case MCC_TAC_OPARATION_LABEL_ARGUMENT:
+		return "LABEL_ARGUMENT";
 
 	// FUNCTION DEF
 	case MCC_TAC_OPARATION_FUNCTION_CALL: return "FUNCTION_CALL";
