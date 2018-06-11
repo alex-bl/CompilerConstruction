@@ -11,6 +11,8 @@ void mCc_assembly_print_shift(FILE *out);
 
 void mCc_assembly_print_nl(FILE *out);
 
+void mCc_assembly_print_op(FILE *out, const char *op);
+
 #ifdef __cplusplus
 }
 #endif

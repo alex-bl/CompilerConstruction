@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "assembly_data.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -20,18 +22,30 @@ void mCc_assembly_push_int(FILE *out, int calculated_offset,
                            const char *ret_to_push);
 // pushes float on floating-point-stack
 void mCc_assembly_push_float(FILE *out, int calculated_offset);
+
+void mCc_assembly_push_int_reg_on_stack(FILE *out, const char *reg);
+
+void mCc_assembly_push_bool_reg_on_stack(FILE *out, const char *reg);
+
 /*============================================================= allocation */
-void mCc_assembly_allocate_int_on_stack(FILE *out, int nr_of);
+void mCc_assembly_allocate_int_on_stack(FILE *out,
+                                        struct mCc_assembly_data *data,
+                                        int nr_of);
+void mCc_assembly_allocate_float_on_stack(FILE *out,
+                                          struct mCc_assembly_data *data,
+                                          int nr_of);
+void mCc_assembly_allocate_bool_on_stack(FILE *out,
+                                         struct mCc_assembly_data *data,
+                                         int nr_of);
 
-void mCc_assembly_allocate_float_on_stack(FILE *out, int nr_of);
-
-void mCc_assembly_allocate_bool_on_stack(FILE *out, int nr_of);
-
-void mCc_assembly_allocate_string_on_stack(FILE *out, const char *str);
-
+void mCc_assembly_allocate_string_on_stack(FILE *out,
+                                           struct mCc_assembly_data *data,
+                                           const char *str);
 /*============================================================= return */
 
 void mCc_assembly_prepare_return(FILE *out, int calculated_offset);
+
+void mCc_assembly_prepare_return_string(FILE *out, const char *label);
 /*============================================================= arithmetics */
 
 void mCc_assembly_add_int(FILE *out, int calculated_offset);
@@ -54,12 +68,14 @@ void mCc_assembly_div_float(FILE *out, int calculated_offset);
 void mCc_assembly_assign_int(FILE *out, int int_val, int calculated_offset);
 
 // TODO: really required?
-void mCc_assembly_assign_float(FILE *out, float float_val);
+void mCc_assembly_assign_float(FILE *out, float float_val,
+                               int calculated_offset);
 
 void mCc_assembly_assign_bool(FILE *out, bool bool_val, int calculated_offset);
 
-// TODO: really required?
-void mCc_assembly_assign_string(FILE *out, const char *string_val);
+void mCc_assembly_assign_string(FILE *out, const char *label,
+                                int calculated_offset);
+
 // TODO: what about arrays?
 
 /*=============================================================
@@ -76,9 +92,9 @@ void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
 // Maybe the same?
 void mCc_assembly_compare_float(FILE *out, int calculated_offset_op);
 
-void mCc_assembly_and(FILE *out, int calculated_offset);
+void mCc_assembly_and_op(FILE *out, int calculated_offset);
 
-void mCc_assembly_or(FILE *out, int calculated_offset);
+void mCc_assembly_or_op(FILE *out, int calculated_offset);
 /*============================================================= unary-ops */
 
 /*TODO:
@@ -118,6 +134,22 @@ void mCc_assembly_add_param_string(FILE *out, const char *string_label);
 /*============================================================= call */
 
 void mCc_assembly_call_function(FILE *out, const char *function_label);
+
+/*============================================================= special */
+
+void mCc_assembly_set_equals(FILE *out);
+
+void mCc_assembly_set_not_equals(FILE *out);
+
+void mCc_assembly_set_greater(FILE *out);
+
+void mCc_assembly_set_less(FILE *out);
+
+void mCc_assembly_set_greater_equals(FILE *out);
+
+void mCc_assembly_set_less_equals(FILE *out);
+
+void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest);
 
 #ifdef __cplusplus
 }
