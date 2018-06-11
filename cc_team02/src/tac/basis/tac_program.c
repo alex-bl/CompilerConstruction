@@ -18,7 +18,7 @@ struct mCc_tac_element *mCc_tac_program(struct mCc_ast_program *program,
 		/* Skip all build-ins */
 		if (!function_def_list->build_in_stub) {
 			struct mCc_tac_element *tac_element = tac_new_element(
-			    MCC_TAC_OPARATION_FUNCTION_DEF, NULL, NULL,
+			    MCC_TAC_OPARATION_LABEL_FUNCTION, NULL, NULL,
 			    tac_new_identifier(
 			        function_def_list->identifier->identifier_name),
 			    MCC_TAC_TYPE_NO_TYPE, 0);

@@ -235,7 +235,6 @@ mCc_tac_statement_return(struct mCc_ast_statement *statement,
 		struct mCc_tac_element *tac_return_expression =
 		    helper_get_tac_of_expression(statement->return_expression,
 		                                 previous_tac);
-
 		struct mCc_tac_element *tac =
 		    tac_new_element(MCC_TAC_OPARATION_RETURN, NULL, NULL,
 		                    mCc_tac_create_from_tac_identifier(
