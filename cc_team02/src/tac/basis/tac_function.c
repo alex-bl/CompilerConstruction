@@ -49,10 +49,16 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 
 	// adds label for the start of the function
 	// next function as first argument in tac element
+	struct tac_new_identifier *next_function_def;
+	if (def->next_function_def != NULL) {
+		next_function_def = tac_new_identifier(
+		    def->next_function_def->identifier->identifier_name);
+	} else {
+		next_function_def = NULL;
+	}
 	struct mCc_tac_element *tac_function_label = tac_new_element(
-	    MCC_TAC_OPARATION_LABEL_FUNCTION,
-	    tac_new_identifier(def->next_function_def->identifier->identifier_name),
-	    NULL, tac_new_identifier(def->identifier->identifier_name),
+	    MCC_TAC_OPARATION_LABEL_FUNCTION, next_function_def, NULL,
+	    tac_new_identifier(def->identifier->identifier_name),
 	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_function_label);
 	previous_tac = tac_function_label;
