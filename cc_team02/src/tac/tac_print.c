@@ -24,9 +24,9 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 		return "DIV_FLOAT";
 
 		// UNARY
-	case MCC_TAC_UNARY_MINUS_INT: return "UNARY_MINUS_INT";
-	case MCC_TAC_UNARY_MINUS_FLOAT: return "UNARY_MINUS_FLOAT";
-	case MCC_TAC_UNARY_NEGATION:
+	case MCC_TAC_OPARATION_UNARY_MINUS_INT: return "UNARY_MINUS_INT";
+	case MCC_TAC_OPARATION_UNARY_MINUS_FLOAT: return "UNARY_MINUS_FLOAT";
+	case MCC_TAC_OPARATION_UNARY_NEGATION:
 		return "UNARY_NEGATION";
 
 	// ASSIGN

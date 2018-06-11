@@ -253,15 +253,24 @@ mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
 
 	switch (expression->unary_op) {
 	case MCC_AST_UNARY_OP_MINUS:
-		operation = MCC_TAC_OPARATION_UNARY_OP_MINUS;
+		if (expression->data_type == MCC_AST_DATA_TYPE_INT) {
+			operation = MCC_TAC_OPARATION_UNARY_MINUS_INT;
+		} else if (expression->data_type == MCC_AST_DATA_TYPE_FLOAT) {
+			operation = MCC_TAC_OPARATION_UNARY_MINUS_FLOAT;
+		}
 		break;
-	case MCC_AST_UNARY_OP_NEGATION:
+	case MCC_TAC_OPARATION_UNARY_NEGATION:
 		operation = MCC_TAC_OPARATION_UNARY_OP_NEGATION;
 		break;
 	}
 
-	struct mCc_tac_element *tac_unary_rhs_expression =
-	    helper_get_tac_of_expression(expression->unary_rhs, previous_tac);
+	struct mCc_tac_element *tac_unary_rhs_expression;
+	if (expression->unary_op != NULL) {
+		tac_unary_rhs_expression =
+		    helper_get_tac_of_expression(expression->unary_rhs, previous_tac);
+	} else {
+		tac_unary_rhs_expression = previous_tac;
+	}
 
 	struct mCc_tac_element *tac =
 	    tac_new_element(operation, NULL, NULL,
