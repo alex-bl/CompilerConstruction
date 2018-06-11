@@ -1,6 +1,18 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+void assignString(){
+	const char *bla="hoikoiakalassssssssssssssssssssssssss";
+}
+
+const char* return_string(){
+	return "hoikalaalalla";
+}
+
+void assignCompare(int a){
+	long ab=(1!=4 && a>3);
+}
+
 long add(long a, long b)
 {
 	int c=a+b;
@@ -130,7 +142,7 @@ void test_array(int arr[]){
 
 int main( int argc, char *argv[] )
 {
-        long hoi = add(1,1);
+        long hoi = add(3,1);
         float a = test_float_add(2.2232,132.13244);
         float b=3.121;
         const char *booo="hoi, wia tuats?";

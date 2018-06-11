@@ -3,34 +3,68 @@
 
 #include <stdio.h>
 
+#include "assembly_data.h"
 #include "basic_tac.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void mCc_assembly_generate_less_than(FILE *out,
+void mCc_assembly_equals_int(FILE *out, struct mCc_assembly_data *data,
+                             struct mCc_tac_element *tac_elem);
+
+void mCc_assembly_equals_float(FILE *out, struct mCc_assembly_data *data,
+                               struct mCc_tac_element *tac_elem);
+
+void mCc_assembly_equals_bool(FILE *out, struct mCc_assembly_data *data,
+                              struct mCc_tac_element *tac_elem);
+/*==================================== not equals*/
+
+void mCc_assembly_not_equals_int(FILE *out, struct mCc_assembly_data *data,
+                                 struct mCc_tac_element *tac_elem);
+
+void mCc_assembly_not_equals_float(FILE *out, struct mCc_assembly_data *data,
+                                   struct mCc_tac_element *tac_elem);
+
+void mCc_assembly_not_equals_bool(FILE *out, struct mCc_assembly_data *data,
+                                  struct mCc_tac_element *tac_elem);
+
+/*==================================== greater*/
+
+void mCc_assembly_greater_int(FILE *out, struct mCc_assembly_data *data,
+                              struct mCc_tac_element *tac_elem);
+
+void mCc_assembly_greater_float(FILE *out, struct mCc_assembly_data *data,
+                                struct mCc_tac_element *tac_elem);
+
+/*==================================== less*/
+
+void mCc_assembly_less_int(FILE *out, struct mCc_assembly_data *data,
+                           struct mCc_tac_element *tac_elem);
+
+void mCc_assembly_less_float(FILE *out, struct mCc_assembly_data *data,
+                             struct mCc_tac_element *tac_elem);
+
+/*==================================== greater equals*/
+void mCc_assembly_greater_equals_int(FILE *out, struct mCc_assembly_data *data,
                                      struct mCc_tac_element *tac_elem);
 
-void mCc_assembly_generate_greater_than(FILE *out,
-                                        struct mCc_tac_element *tac_elem);
-
-void mCc_assembly_generate_less_or_equals_than(
-    FILE *out, struct mCc_tac_element *tac_elem);
-
-void mCc_assembly_generate_greater_or_equals_than(
-    FILE *out, struct mCc_tac_element *tac_elem);
-
-void mCc_assembly_generate_and(FILE *out,
-                                    struct mCc_tac_element *tac_elem);
-
-void mCc_assembly_generate_or(FILE *out, struct mCc_tac_element *tac_elem);
-
-void mCc_assembly_generate_equals(FILE *out,
+void mCc_assembly_greater_equals_float(FILE *out,
+                                       struct mCc_assembly_data *data,
                                        struct mCc_tac_element *tac_elem);
 
-void mCc_assembly_generate_not_equals(FILE *out,
-                                           struct mCc_tac_element *tac_elem);
+/*==================================== less equals*/
+void mCc_assembly_less_equals_int(FILE *out, struct mCc_assembly_data *data,
+                                  struct mCc_tac_element *tac_elem);
+
+void mCc_assembly_less_equals_float(FILE *out, struct mCc_assembly_data *data,
+                                    struct mCc_tac_element *tac_elem);
+/*==================================== and/or */
+void mCc_assembly_and(FILE *out, struct mCc_assembly_data *data,
+                      struct mCc_tac_element *tac_elem);
+
+void mCc_assembly_or(FILE *out, struct mCc_assembly_data *data,
+                     struct mCc_tac_element *tac_elem);
 
 #ifdef __cplusplus
 }
