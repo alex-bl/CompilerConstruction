@@ -135,6 +135,22 @@ void mCc_assembly_add_param_string(FILE *out, const char *string_label);
 
 void mCc_assembly_call_function(FILE *out, const char *function_label);
 
+/*============================================================= special */
+
+void mCc_assembly_set_equals(FILE *out);
+
+void mCc_assembly_set_not_equals(FILE *out);
+
+void mCc_assembly_set_greater(FILE *out);
+
+void mCc_assembly_set_less(FILE *out);
+
+void mCc_assembly_set_greater_equals(FILE *out);
+
+void mCc_assembly_set_less_equals(FILE *out);
+
+void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest);
+
 #ifdef __cplusplus
 }
 #endif

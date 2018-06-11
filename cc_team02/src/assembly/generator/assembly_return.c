@@ -1,5 +1,7 @@
 #include "assembly_return.h"
+
 #include "assembly_utils.h"
+#include "assembly_general.h"
 
 static struct mCc_tac_identifier *
 get_return_identifier(struct mCc_tac_element *tac_elem)
@@ -13,7 +15,7 @@ void mCc_assembly_return_primitive_int(FILE *out,
 {
 	struct mCc_tac_identifier *identifier = get_return_identifier(tac_elem);
 	int result_offset =
-	    mCc_assembly_calc_stack_position(identifier, identifier);
+	    mCc_assembly_calc_stack_position(identifier, data->current_stack_pos);
 	mCc_assembly_prepare_return(out, result_offset);
 }
 

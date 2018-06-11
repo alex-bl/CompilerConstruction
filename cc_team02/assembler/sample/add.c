@@ -10,7 +10,7 @@ const char* return_string(){
 }
 
 void assignCompare(int a){
-	bool ab=(1!=4 && a>3);
+	long ab=(1!=4 && a>3);
 }
 
 long add(long a, long b)

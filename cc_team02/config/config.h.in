@@ -34,6 +34,9 @@
 #define DEFAULT_RETURN_REG "%eax"
 #define DEFAULT_UNARY_OP_REG "%eax"
 #define BASE_OFFSET_PARAMS 4
+#define EDX_REG "%edx"
+#define ECX_REG "%ecx"
+#define CONDITION_FLAG_REG "%al"
 
 #ifdef __cplusplus
 extern "C" {

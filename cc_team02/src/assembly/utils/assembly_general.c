@@ -140,8 +140,7 @@ void mCc_assembly_prepare_return_string(FILE *out, const char *label)
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "movl");
-	fprintf(out, ".%s, (%s)", label, DEFAULT_DATA_STACK_POINTER,
-	        DEFAULT_RETURN_REG);
+	fprintf(out, ".%s, (%s)", label, DEFAULT_RETURN_REG);
 	mCc_assembly_print_nl(out);
 }
 
@@ -417,6 +416,54 @@ void mCc_assembly_call_function(FILE *out, const char *function_label)
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "call");
 	fprintf(out, "%s", function_label);
+	mCc_assembly_print_nl(out);
+}
+
+/*============================================================= special */
+
+static void do_set_cc_op(FILE *out, const char *op)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, op);
+	fprintf(out, "%s", CONDITION_FLAG_REG);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_set_equals(FILE *out)
+{
+	do_set_cc_op(out, "sete");
+}
+
+void mCc_assembly_set_not_equals(FILE *out)
+{
+	do_set_cc_op(out, "setne");
+}
+
+void mCc_assembly_set_greater(FILE *out)
+{
+	do_set_cc_op(out, "setg");
+}
+
+void mCc_assembly_set_less(FILE *out)
+{
+	do_set_cc_op(out, "setl");
+}
+
+void mCc_assembly_set_greater_equals(FILE *out)
+{
+	do_set_cc_op(out, "setge");
+}
+
+void mCc_assembly_set_less_equals(FILE *out)
+{
+	do_set_cc_op(out, "setle");
+}
+
+void mCc_assembly_extract_condition_flag(FILE *out, const char* reg_dest)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "movzbl");
+	fprintf(out, "%s, %s", CONDITION_FLAG_REG, reg_dest);
 	mCc_assembly_print_nl(out);
 }
 
