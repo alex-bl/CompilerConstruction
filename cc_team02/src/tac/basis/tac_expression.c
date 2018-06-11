@@ -58,38 +58,41 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	MCC_AST_DATA_TYPE_BOOL,
 	MCC_AST_DATA_TYPE_STRING,*/
 
+	enum mCc_tac_operation operation;
 	struct mCc_tac_identifier *argument1;
 	enum mCc_tac_type tac_type;
 
 	switch (expression->literal->type) {
 	case MCC_AST_DATA_TYPE_INT:
+		operation = MCC_TAC_OPARATION_LABEL_INT;
 		argument1 = tac_new_identifier_int(expression->literal->i_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
 	case MCC_AST_DATA_TYPE_FLOAT:
-		// convert float to char array
-		// not sure if that is alright:
+		operation = MCC_TAC_OPARATION_LABEL_FLOAT;
 		argument1 = tac_new_identifier_float(expression->literal->f_value);
-		// argument1 = tac_new_identifier((char
-		// *)&expression->literal->f_value);
 		tac_type = MCC_TAC_TYPE_FLOAT;
 		break;
 	case MCC_AST_DATA_TYPE_BOOL:
+		operation = MCC_TAC_OPARATION_LABEL_BOOL;
 		argument1 = tac_new_identifier_bool(expression->literal->b_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
 	case MCC_AST_DATA_TYPE_STRING:
+		operation = MCC_TAC_OPARATION_LABEL_STRING;
 		argument1 = tac_new_identifier(expression->literal->s_value);
 		tac_type = MCC_TAC_TYPE_STRING;
 		break;
 	default:
+		operation = MCC_TAC_OPARATION_EMPTY;
 		argument1 = NULL;
 		tac_type = MCC_TAC_TYPE_NO_TYPE;
 		break;
 	}
 
-	struct mCc_tac_element *tac = tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL,
-	                                              NULL, argument1, tac_type, 0);
+	// using operation? or MCC_TAC_OPARATION_EMPTY?
+	struct mCc_tac_element *tac = tac_new_element(
+	    MCC_TAC_OPARATION_LITERAL, NULL, NULL, argument1, tac_type, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }

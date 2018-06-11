@@ -197,21 +197,23 @@ mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier)
 	return tac_new_identifier(identifier->name);
 }
 
+// is this function needed?
 struct mCc_tac_element *
-mCc_tac_create_new_lable_tac_element(struct mCc_tac_identifier *identifier,
+mCc_tac_create_new_lable_tac_element(enum mCc_tac_operation label_type,
+                                     struct mCc_tac_identifier *identifier,
                                      struct mCc_tac_element *previous_tac)
 {
 	assert(previous_tac);
 
-	struct mCc_tac_identifier *label =mCc_tac_create_new_lable_identifier();
+	struct mCc_tac_identifier *label = mCc_tac_create_new_lable_identifier();
 
 	struct mCc_tac_element *tac;
 	if (identifier != NULL) {
-		tac = tac_new_element(MCC_TAC_OPARATION_LABLE, identifier, NULL, label,
+		tac = tac_new_element(label_type, identifier, NULL, label,
 		                      MCC_TAC_TYPE_NO_TYPE, 0);
 
 	} else {
-		tac = tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, label,
+		tac = tac_new_element(label_type, NULL, NULL, label,
 		                      MCC_TAC_TYPE_NO_TYPE, 0);
 	}
 	mCc_tac_connect_tac_entry(previous_tac, tac);

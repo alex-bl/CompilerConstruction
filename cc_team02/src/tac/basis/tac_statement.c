@@ -199,6 +199,31 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	return tac_lable_after_while;
 }
 
+// TODO fix it!
+/*enum mCc_tac_operation
+tac_helper_get_return_tac_operation(struct mCc_ast_expression return_expression)
+{
+    switch (return_expression->data_type) {
+    case MCC_AST_DATA_TYPE_INT:
+        return MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT;
+        break;
+    case MCC_AST_DATA_TYPE_FLOAT:
+        return MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT;
+        break;
+    case MCC_AST_DATA_TYPE_BOOL:
+        return MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL;
+        break;
+    case MCC_AST_DATA_TYPE_STRING:
+        return MCC_TAC_OPARATION_RETURN_PREMITIVE_STRING;
+        break;
+    case: return MCC_TAC_OPARATION_RETURN_ARRAY_INT; break;
+    case: return MCC_TAC_OPARATION_RETURN_ARRAY_FLOAT; break;
+    case: return MCC_TAC_OPARATION_RETURN_ARRAY_BOOL; break;
+    case: return MCC_TAC_OPARATION_RETURN_ARRAY_STRING; break;
+    default: return MCC_TAC_OPARATION_EMPTY; break;
+    }
+}*/
+
 struct mCc_tac_element *
 mCc_tac_statement_return(struct mCc_ast_statement *statement,
                          struct mCc_tac_element *previous_tac)
@@ -228,6 +253,7 @@ mCc_tac_statement_declaration(struct mCc_ast_statement *statement,
                               struct mCc_tac_element *previous_tac)
 {
 	assert(statement);
+	assert(statement->declaration);
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac_declaration;
@@ -248,6 +274,7 @@ mCc_tac_statement_assignment(struct mCc_ast_statement *statement,
                              struct mCc_tac_element *previous_tac)
 {
 	assert(statement);
+	assert(statement->assignment);
 	assert(previous_tac);
 
 	struct mCc_tac_element *tac_assignment;
