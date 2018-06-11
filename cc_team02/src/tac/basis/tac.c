@@ -91,8 +91,9 @@ struct mCc_tac_element *mCc_tac_start_program(struct mCc_ast_program *program)
 	// mCc_ast_visit_program(program, &visitor);
 	struct mCc_tac_element *first_tac = tac_new_element(
 	    MCC_TAC_OPARATION_EMPTY, NULL, NULL, NULL, MCC_TAC_TYPE_NO_TYPE, 0);
-	struct mCc_tac_element *last_tac = mCc_tac_program(program, first_tac);
+	// struct mCc_tac_element *last_tac =
+	mCc_tac_program(program, first_tac);
 
-	//return tac;
+	// return first tac element;
 	return first_tac;
 }
