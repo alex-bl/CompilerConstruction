@@ -32,10 +32,10 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_FLOAT,
 	MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_BOOL,
 	MCC_TAC_OPARATION_ASSIGN_STRING,
-	MCC_TAC_OPARATION_ASSIGN_ARRAY_INT,
+	/*MCC_TAC_OPARATION_ASSIGN_ARRAY_INT,
 	MCC_TAC_OPARATION_ASSIGN_ARRAY_FLOAT,
 	MCC_TAC_OPARATION_ASSIGN_ARRAY_BOOL,
-	MCC_TAC_OPARATION_ASSIGN_ARRAY_STRING,
+	MCC_TAC_OPARATION_ASSIGN_ARRAY_STRING,*/
 
 	// COMPARE: (only one compair needed (result internally stored into cmp?
 	// reg))
@@ -58,6 +58,11 @@ enum mCc_tac_operation {
 
 	MCC_TAC_OPARATION_LESS_EQUALS_INT,
 	MCC_TAC_OPARATION_LESS_EQUALS_FLOAT,
+
+	// UNARY
+	MCC_TAC_OPARATION_UNARY_MINUS_INT,
+	MCC_TAC_OPARATION_UNARY_MINUS_FLOAT,
+	MCC_TAC_OPARATION_UNARY_NEGATION,
 
 	// JUMP
 	MCC_TAC_OPARATION_JUMP_EQUALS,
@@ -99,6 +104,9 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_LABEL_ELSE,
 	MCC_TAC_OPARATION_LABEL_WHILE,
 	MCC_TAC_OPARATION_LABEL_STRING,
+	MCC_TAC_OPARATION_LABEL_INT,
+	MCC_TAC_OPARATION_LABEL_BOOL,
+	MCC_TAC_OPARATION_LABEL_ARGUMENT,
 
 	// FUNCTION DEF
 	MCC_TAC_OPARATION_FUNCTION_CALL,
@@ -115,9 +123,11 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_DECLARE_ARRAY_BOOL,
 	MCC_TAC_OPARATION_DECLARE_ARRAY_STRING,
 
+	// LITERAL
+	MCC_TAC_OPARATION_LITERAL,
+
 	/*
 	/only one compair needed (result internally stored into cmp? reg)
-
 	- and	=> todo
 	- or	=> todo*/
 
@@ -212,7 +222,8 @@ struct mCc_tac_identifier *
 mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier);
 
 struct mCc_tac_element *
-mCc_tac_create_new_lable_tac_element(struct mCc_tac_identifier *identifier,
+mCc_tac_create_new_lable_tac_element(enum mCc_tac_operation label_type,
+                                     struct mCc_tac_identifier *identifier,
                                      struct mCc_tac_element *previous_tac);
 
 struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier();
