@@ -169,8 +169,8 @@ void mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out)
 	fprintf(out, "Printing TAC-table:\n");
 
 	while (tac != NULL) {
-		fprintf(out, "op: %s", print_tac_op(tac->tac_operation));
-		fprintf(out, "\t| ");
+		fprintf(out, "op: %25s", print_tac_op(tac->tac_operation));
+		fprintf(out, " | ");
 		print_tac_arg(tac->tac_argument1, out);
 		fprintf(out, " | ");
 		print_tac_arg(tac->tac_argument2, out);
