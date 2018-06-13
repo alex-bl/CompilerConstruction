@@ -10,6 +10,12 @@
 extern "C" {
 #endif
 
+enum mCc_tac_operation tac_helper_data_type_to_tac_declaration_primitive(
+    enum mCc_ast_data_type data_type);
+
+enum mCc_tac_operation
+tac_helper_data_type_to_tac_declaration_array(enum mCc_ast_data_type data_type);
+
 struct mCc_tac_element *
 mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
                               struct mCc_tac_element *previous_tac);

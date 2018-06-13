@@ -32,10 +32,10 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_FLOAT,
 	MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_BOOL,
 	MCC_TAC_OPARATION_ASSIGN_STRING,
-	MCC_TAC_OPARATION_ASSIGN_ARRAY_INT,
+	/*MCC_TAC_OPARATION_ASSIGN_ARRAY_INT,
 	MCC_TAC_OPARATION_ASSIGN_ARRAY_FLOAT,
 	MCC_TAC_OPARATION_ASSIGN_ARRAY_BOOL,
-	MCC_TAC_OPARATION_ASSIGN_ARRAY_STRING,
+	MCC_TAC_OPARATION_ASSIGN_ARRAY_STRING,*/
 
 	// COMPARE: (only one compair needed (result internally stored into cmp?
 	// reg))
@@ -59,7 +59,16 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_LESS_EQUALS_INT,
 	MCC_TAC_OPARATION_LESS_EQUALS_FLOAT,
 
-	// JUMP
+	// AND/OR
+	MCC_TAC_OPARATION_BINARY_AND,
+	MCC_TAC_OPARATION_BINARY_OR,
+
+	// UNARY
+	MCC_TAC_OPARATION_UNARY_MINUS_INT,
+	MCC_TAC_OPARATION_UNARY_MINUS_FLOAT,
+	MCC_TAC_OPARATION_UNARY_NEGATION,
+
+	// JUMP - not using?
 	MCC_TAC_OPARATION_JUMP_EQUALS,
 	MCC_TAC_OPARATION_JUMP_NOT_EQUALS,
 	MCC_TAC_OPARATION_JUMP_GREATER,
@@ -69,7 +78,12 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_JUMP_AND,
 	MCC_TAC_OPARATION_JUMP_OR,
 
+	// JUMP - using jump and jump_false instead
+	MCC_TAC_OPARATION_JUMP,
+	MCC_TAC_OPARATION_JUMP_FALSE,
+
 	// RETURN
+	MCC_TAC_OPARATION_RETURN_PRIMITIVE_VOID,
 	MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT,
 	MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT,
 	MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL,
@@ -97,8 +111,12 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_LABEL_FLOAT,
 	MCC_TAC_OPARATION_LABEL_IF,
 	MCC_TAC_OPARATION_LABEL_ELSE,
+	MCC_TAC_OPARATION_LABEL_AFTER_ELSE,
 	MCC_TAC_OPARATION_LABEL_WHILE,
 	MCC_TAC_OPARATION_LABEL_STRING,
+	MCC_TAC_OPARATION_LABEL_INT,
+	MCC_TAC_OPARATION_LABEL_BOOL,
+	MCC_TAC_OPARATION_LABEL_ARGUMENT,
 
 	// FUNCTION DEF
 	MCC_TAC_OPARATION_FUNCTION_CALL,
@@ -115,9 +133,11 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_DECLARE_ARRAY_BOOL,
 	MCC_TAC_OPARATION_DECLARE_ARRAY_STRING,
 
+	// LITERAL
+	MCC_TAC_OPARATION_LITERAL,
+
 	/*
 	/only one compair needed (result internally stored into cmp? reg)
-
 	- and	=> todo
 	- or	=> todo*/
 
@@ -133,8 +153,6 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_UNARY_OP_MINUS,
 	MCC_TAC_OPARATION_UNARY_OP_NEGATION,
 	MCC_TAC_OPARATION_COPY,
-	MCC_TAC_OPARATION_JUMP,
-	MCC_TAC_OPARATION_JUMP_FALSE,
 	MCC_TAC_OPARATION_PROCEDURAL_CALL,
 	MCC_TAC_OPARATION_RETURN,
 	MCC_TAC_OPARATION_INDEXING,
@@ -212,7 +230,8 @@ struct mCc_tac_identifier *
 mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier);
 
 struct mCc_tac_element *
-mCc_tac_create_new_lable_tac_element(struct mCc_tac_identifier *identifier,
+mCc_tac_create_new_lable_tac_element(enum mCc_tac_operation label_type,
+                                     struct mCc_tac_identifier *identifier,
                                      struct mCc_tac_element *previous_tac);
 
 struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier();
