@@ -134,8 +134,8 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	}
 
 	struct mCc_tac_element *tac_lable_after_else =
-	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, lable_after_else,
-	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	    tac_new_element(MCC_TAC_OPARATION_LABEL_AFTER_ELSE, NULL, NULL,
+	                    lable_after_else, MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_else_statement, tac_lable_after_else);
 
 	return tac_lable_after_else;
@@ -158,8 +158,8 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 
 	// setting lable as tac element
 	struct mCc_tac_element *tac_lable_before_while =
-	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, lable_before_while,
-	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	    tac_new_element(MCC_TAC_OPARATION_LABEL_WHILE, NULL, NULL,
+	                    lable_before_while, MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_lable_before_while);
 
 	struct mCc_tac_element *tac_while_condition = helper_get_tac_of_expression(
@@ -192,8 +192,8 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 
 	// setting lable as tac element
 	struct mCc_tac_element *tac_lable_after_while =
-	    tac_new_element(MCC_TAC_OPARATION_LABLE, NULL, NULL, lable_after_while,
-	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	    tac_new_element(MCC_TAC_OPARATION_LABEL_WHILE, NULL, NULL,
+	                    lable_after_while, MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_while_jump_condition2, tac_lable_after_while);
 
 	return tac_lable_after_while;
