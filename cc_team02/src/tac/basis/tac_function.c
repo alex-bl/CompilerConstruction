@@ -128,7 +128,7 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 
 	// introduces arguments of a function:
 	struct mCc_tac_element *tac_starting_arguments =
-	    tac_new_element(MCC_TAC_OPARATION_LABEL_ARGUMENT, NULL, NULL,
+	    tac_new_element(MCC_TAC_OPARATION_ARGUMENT_LIST_START, NULL, NULL,
 	                    tac_new_identifier(call->identifier->identifier_name),
 	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_starting_arguments);
@@ -142,8 +142,7 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 		    helper_get_tac_of_expression(argument, previous_tac);
 
 		struct mCc_tac_element *tac = tac_new_element(
-		    tac_helper_get_tac_oparation_for_parameter_type(
-		        tac_argument->tac_operation),
+		    MCC_TAC_OPARATION_LABEL_ARGUMENT,
 		    mCc_tac_create_from_tac_identifier(tac_argument->tac_result), NULL,
 		    tac_new_identifier(call->identifier->identifier_name),
 		    MCC_TAC_TYPE_NO_TYPE, 0);

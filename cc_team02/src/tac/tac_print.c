@@ -33,7 +33,7 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_INT: return "ASSIGN_INT";
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_FLOAT: return "ASSIGN_FLOAT";
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_BOOL: return "ASSIGN_BOOL";
-	case MCC_TAC_OPARATION_ASSIGN_STRING:
+	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_STRING:
 		return "ASSIGN_STRING";
 
 	// COMPARE: (only one compair needed (result internally stored into cmp?
