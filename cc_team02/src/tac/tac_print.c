@@ -149,6 +149,9 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 	case MCC_TAC_OPARATION_DECLARE_ARRAY_BOOL: return "DECLARATION_BOOL_ARRAY";
 	case MCC_TAC_OPARATION_DECLARE_ARRAY_STRING:
 		return "DECLARATION_STRING_ARRAY";
+
+		//LITERAL
+	case MCC_TAC_OPARATION_LITERAL: return "LITERAL";
 	}
 	return "unknown";
 }
