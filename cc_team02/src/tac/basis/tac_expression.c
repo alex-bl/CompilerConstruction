@@ -41,6 +41,10 @@ helper_get_tac_of_expression(struct mCc_ast_expression *expression,
 		break;
 	default: tac_expression = NULL; break;
 	}
+	//checking if the returned tac expression is the same as the previous_tac!!!
+	if (tac_expression->tac_result->name==previous_tac->tac_result->name) {
+		tac_expression=NULL;
+	}
 	// mCc_tac_connect_tac_entry(previous_tac, tac_expression);
 	return tac_expression;
 }
