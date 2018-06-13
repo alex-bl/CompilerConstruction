@@ -90,9 +90,11 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 		break;
 	}
 
-	// using operation? or MCC_TAC_OPARATION_EMPTY?
-	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_LITERAL, NULL, NULL, argument1, tac_type, 0);
+	struct mCc_tac_identifier *literal_label =
+	    mCc_tac_create_new_lable_identifier();
+
+	struct mCc_tac_element *tac =
+	    tac_new_element(operation, argument1, NULL, literal_label, tac_type, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
