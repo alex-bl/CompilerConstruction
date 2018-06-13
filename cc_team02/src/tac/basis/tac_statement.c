@@ -199,7 +199,6 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	return tac_lable_after_while;
 }
 
-// TODO fix it!
 enum mCc_tac_operation tac_helper_get_return_tac_operation(
     enum mCc_tac_operation return_expression_operation)
 {
@@ -225,7 +224,6 @@ enum mCc_tac_operation tac_helper_get_return_tac_operation(
 	case MCC_TAC_OPARATION_BINARY_OP_ADD_FLOAT:
 	case MCC_TAC_OPARATION_BINARY_OP_SUB_FLOAT:
 	case MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT:
-	case MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT:
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_FLOAT:
 	case MCC_TAC_OPARATION_EQUALS_FLOAT:
 	case MCC_TAC_OPARATION_NOT_EQUALS_FLOAT:
@@ -247,7 +245,6 @@ enum mCc_tac_operation tac_helper_get_return_tac_operation(
 	case MCC_TAC_OPARATION_BINARY_OR:
 	case MCC_TAC_OPARATION_UNARY_NEGATION:
 	case MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL:
-	case MCC_TAC_OPARATION_RETURN_ARRAY_BOOL:
 	case MCC_TAC_OPARATION_PARAM_BOOL_PRIMITIVE:
 	case MCC_TAC_OPARATION_LABEL_BOOL:
 	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_BOOL:
