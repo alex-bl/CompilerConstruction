@@ -108,11 +108,26 @@ get_arithmetic_operation(struct mCc_ast_expression *expression,
 	return float_op;
 }
 
+static enum mCc_tac_operation get_arithmetic_operation_with_bool(
+    struct mCc_ast_expression *expression, enum mCc_tac_operation int_op,
+    enum mCc_tac_operation float_op, enum mCc_tac_operation bool_op)
+{
+	if (expression->data_type == MCC_AST_DATA_TYPE_INT) {
+		return int_op;
+	} else if (expression->data_type == MCC_AST_DATA_TYPE_BOOL) {
+		return bool_op;
+	} else {
+		return float_op;
+	}
+}
+
 struct mCc_tac_element *
 mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
                              struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
+	assert(expression->lhs);
+	assert(expression->rhs);
 	assert(previous_tac);
 
 	enum mCc_tac_operation operation;
@@ -138,29 +153,44 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 		    expression, MCC_TAC_OPARATION_BINARY_OP_DIV_INT,
 		    MCC_TAC_OPARATION_BINARY_OP_DIV_FLOAT);
 		break;
-	case MCC_AST_BINARY_OP_LESS_THAN:
-		operation = MCC_TAC_OPARATION_BINARY_OP_LESS_THAN;
-		break;
 	case MCC_AST_BINARY_OP_GREATER_THAN:
-		operation = MCC_TAC_OPARATION_BINARY_OP_GREATER_THAN;
+		// operation = MCC_TAC_OPARATION_BINARY_OP_GREATER_THAN;
+		operation =
+		    get_arithmetic_operation(expression, MCC_TAC_OPARATION_GREATER_INT,
+		                             MCC_TAC_OPARATION_GREATER_FLOAT);
 		break;
-	case MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN:
-		operation = MCC_TAC_OPARATION_BINARY_OP_LESS_OR_EQUALS_THAN;
+	case MCC_AST_BINARY_OP_LESS_THAN:
+		// operation = MCC_TAC_OPARATION_BINARY_OP_LESS_THAN;
+		operation =
+		    get_arithmetic_operation(expression, MCC_TAC_OPARATION_LESS_INT,
+		                             MCC_TAC_OPARATION_LESS_FLOAT);
 		break;
 	case MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN:
-		operation = MCC_TAC_OPARATION_BINARY_OP_GREATER_OR_EQUALS_THAN;
+		// operation = MCC_TAC_OPARATION_BINARY_OP_GREATER_OR_EQUALS_THAN;
+		operation = get_arithmetic_operation(
+		    expression, MCC_TAC_OPARATION_GREATER_EQUALS_INT,
+		    MCC_TAC_OPARATION_GREATER_EQUALS_FLOAT);
 		break;
-	case MCC_AST_BINARY_OP_AND:
-		operation = MCC_TAC_OPARATION_BINARY_OP_AND;
+	case MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN:
+		// operation = MCC_TAC_OPARATION_BINARY_OP_LESS_OR_EQUALS_THAN;
+		operation = get_arithmetic_operation(
+		    expression, MCC_TAC_OPARATION_LESS_EQUALS_INT,
+		    MCC_TAC_OPARATION_LESS_EQUALS_FLOAT);
 		break;
-	case MCC_AST_BINARY_OP_OR:
-		operation = MCC_TAC_OPARATION_BINARY_OP_OR;
-		break;
+	case MCC_AST_BINARY_OP_AND: operation = MCC_TAC_OPARATION_BINARY_AND; break;
+	case MCC_AST_BINARY_OP_OR: operation = MCC_TAC_OPARATION_BINARY_OR; break;
 	case MCC_AST_BINARY_OP_EQUALS:
-		operation = MCC_TAC_OPARATION_BINARY_OP_EQUALS;
+		// operation = MCC_TAC_OPARATION_BINARY_OP_EQUALS;
+		operation = get_arithmetic_operation_with_bool(
+		    expression, MCC_TAC_OPARATION_EQUALS_INT,
+		    MCC_TAC_OPARATION_EQUALS_FLOAT, MCC_TAC_OPARATION_EQUALS_BOOL);
 		break;
 	case MCC_AST_BINARY_OP_NOT_EQUALS:
-		operation = MCC_TAC_OPARATION_BINARY_OP_NOT_EQUALS;
+		// operation = MCC_TAC_OPARATION_BINARY_OP_NOT_EQUALS;
+		operation = get_arithmetic_operation_with_bool(
+		    expression, MCC_TAC_OPARATION_NOT_EQUALS_INT,
+		    MCC_TAC_OPARATION_NOT_EQUALS_FLOAT,
+		    MCC_TAC_OPARATION_NOT_EQUALS_BOOL);
 		break;
 	default: operation = MCC_TAC_OPARATION_EMPTY; break;
 	}
@@ -171,11 +201,13 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	struct mCc_tac_element *tac_rhs =
 	    helper_get_tac_of_expression(expression->rhs, tac_lhs);
 
-	struct mCc_tac_element *tac =
-	    tac_new_element(operation, NULL,
-	                    mCc_tac_create_from_tac_identifier(tac_lhs->tac_result),
-	                    mCc_tac_create_from_tac_identifier(tac_rhs->tac_result),
-	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	struct mCc_tac_identifier *operationlabel =
+	    mCc_tac_create_new_lable_identifier();
+
+	struct mCc_tac_element *tac = tac_new_element(
+	    operation, mCc_tac_create_from_tac_identifier(tac_lhs->tac_result),
+	    mCc_tac_create_from_tac_identifier(tac_rhs->tac_result), operationlabel,
+	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_rhs, tac);
 	return tac;
 }
