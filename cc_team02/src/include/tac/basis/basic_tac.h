@@ -116,7 +116,10 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_LABEL_STRING,
 	MCC_TAC_OPARATION_LABEL_INT,
 	MCC_TAC_OPARATION_LABEL_BOOL,
+
+	//ARGUMENT (LABELS)
 	MCC_TAC_OPARATION_LABEL_ARGUMENT,
+	MCC_TAC_OPARATION_ARGUMENT_LIST_START,
 
 	// FUNCTION DEF
 	MCC_TAC_OPARATION_FUNCTION_CALL,
@@ -198,8 +201,9 @@ void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
 struct mCc_tac_identifier {
 	enum mCc_tac_identifier_type type;
 	bool is_param;
+	char *name;
 	union {
-		char *name;
+		char *s_val;
 		double f_val;
 		long i_val;
 		bool b_val;
