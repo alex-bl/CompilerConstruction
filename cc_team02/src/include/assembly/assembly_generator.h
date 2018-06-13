@@ -114,7 +114,7 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 void mCc_assembly_generate(struct mCc_assembly_generator gen_cb,
                            struct mCc_tac_element *first_tac_elem,
                            const char *file_name);
-struct mCc_assembly_generator gen_setup(FILE *out);
+struct mCc_assembly_generator mcc_assembly_gen_setup(FILE *out);
 
 #ifdef __cplusplus
 }

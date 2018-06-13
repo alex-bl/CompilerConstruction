@@ -263,7 +263,7 @@ void mCc_assembly_generate(struct mCc_assembly_generator gen_cb,
 	}
 }
 
-struct mCc_assembly_generator gen_setup(FILE *out, struct assembly_data *data)
+struct mCc_assembly_generator mcc_assembly_gen_setup(FILE *out, struct assembly_data *data)
 {
 	return (struct mCc_assembly_generator){
 		.out = out,
