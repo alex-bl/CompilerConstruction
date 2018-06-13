@@ -259,10 +259,10 @@ mCc_tac_expression_parenth(struct mCc_ast_expression *expression,
 	assert(previous_tac);
 
 	// TODO check if it is right
-	// struct mCc_tac_element *tac =NULL;
-	//    helper_get_tac_of_expression(expression->expression, previous_tac);
+	struct mCc_tac_element *tac =
+	    helper_get_tac_of_expression(expression->expression, previous_tac);
 
-	return previous_tac;
+	return tac;
 }
 
 struct mCc_tac_element *
