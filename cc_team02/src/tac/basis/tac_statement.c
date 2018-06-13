@@ -200,29 +200,89 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 }
 
 // TODO fix it!
-/*enum mCc_tac_operation
-tac_helper_get_return_tac_operation(struct mCc_ast_expression return_expression)
+enum mCc_tac_operation tac_helper_get_return_tac_operation(
+    enum mCc_tac_operation return_expression_operation)
 {
-    switch (return_expression->data_type) {
-    case MCC_AST_DATA_TYPE_INT:
-        return MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT;
-        break;
-    case MCC_AST_DATA_TYPE_FLOAT:
-        return MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT;
-        break;
-    case MCC_AST_DATA_TYPE_BOOL:
-        return MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL;
-        break;
-    case MCC_AST_DATA_TYPE_STRING:
-        return MCC_TAC_OPARATION_RETURN_PREMITIVE_STRING;
-        break;
-    case: return MCC_TAC_OPARATION_RETURN_ARRAY_INT; break;
-    case: return MCC_TAC_OPARATION_RETURN_ARRAY_FLOAT; break;
-    case: return MCC_TAC_OPARATION_RETURN_ARRAY_BOOL; break;
-    case: return MCC_TAC_OPARATION_RETURN_ARRAY_STRING; break;
-    default: return MCC_TAC_OPARATION_EMPTY; break;
-    }
-}*/
+	switch (return_expression_operation) {
+	case MCC_TAC_OPARATION_BINARY_OP_ADD_INT:
+	case MCC_TAC_OPARATION_BINARY_OP_SUB_INT:
+	case MCC_TAC_OPARATION_BINARY_OP_MUL_INT:
+	case MCC_TAC_OPARATION_BINARY_OP_DIV_INT:
+	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_INT:
+	case MCC_TAC_OPARATION_EQUALS_INT:
+	case MCC_TAC_OPARATION_NOT_EQUALS_INT:
+	case MCC_TAC_OPARATION_GREATER_INT:
+	case MCC_TAC_OPARATION_LESS_INT:
+	case MCC_TAC_OPARATION_GREATER_EQUALS_INT:
+	case MCC_TAC_OPARATION_LESS_EQUALS_INT:
+	case MCC_TAC_OPARATION_UNARY_MINUS_INT:
+	case MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT:
+	case MCC_TAC_OPARATION_PARAM_INT_PRIMITIVE:
+	case MCC_TAC_OPARATION_LABEL_INT:
+	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_INT:
+		return MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT;
+		break;
+	case MCC_TAC_OPARATION_BINARY_OP_ADD_FLOAT:
+	case MCC_TAC_OPARATION_BINARY_OP_SUB_FLOAT:
+	case MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT:
+	case MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT:
+	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_FLOAT:
+	case MCC_TAC_OPARATION_EQUALS_FLOAT:
+	case MCC_TAC_OPARATION_NOT_EQUALS_FLOAT:
+	case MCC_TAC_OPARATION_GREATER_FLOAT:
+	case MCC_TAC_OPARATION_LESS_FLOAT:
+	case MCC_TAC_OPARATION_GREATER_EQUALS_FLOAT:
+	case MCC_TAC_OPARATION_LESS_EQUALS_FLOAT:
+	case MCC_TAC_OPARATION_UNARY_MINUS_FLOAT:
+	case MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT:
+	case MCC_TAC_OPARATION_PARAM_FLOAT_PRIMITIVE:
+	case MCC_TAC_OPARATION_LABEL_FLOAT:
+	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_FLOAT:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT;
+		break;
+	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_BOOL:
+	case MCC_TAC_OPARATION_EQUALS_BOOL:
+	case MCC_TAC_OPARATION_NOT_EQUALS_BOOL:
+	case MCC_TAC_OPARATION_BINARY_AND:
+	case MCC_TAC_OPARATION_BINARY_OR:
+	case MCC_TAC_OPARATION_UNARY_NEGATION:
+	case MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL:
+	case MCC_TAC_OPARATION_RETURN_ARRAY_BOOL:
+	case MCC_TAC_OPARATION_PARAM_BOOL_PRIMITIVE:
+	case MCC_TAC_OPARATION_LABEL_BOOL:
+	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_BOOL:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL;
+		break;
+	case MCC_TAC_OPARATION_ASSIGN_STRING:
+	case MCC_TAC_OPARATION_RETURN_PREMITIVE_STRING:
+	case MCC_TAC_OPARATION_PARAM_STRING_PRIMITIVE:
+	case MCC_TAC_OPARATION_LABEL_STRING:
+	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_STRING:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_STRING;
+		break;
+	case MCC_TAC_OPARATION_RETURN_ARRAY_INT:
+	case MCC_TAC_OPARATION_PARAM_INT_ARRAY:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_INT:
+		return MCC_TAC_OPARATION_RETURN_ARRAY_INT;
+		break;
+	case MCC_TAC_OPARATION_RETURN_ARRAY_FLOAT:
+	case MCC_TAC_OPARATION_PARAM_FLOAT_ARRAY:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_FLOAT:
+		return MCC_TAC_OPARATION_RETURN_ARRAY_FLOAT;
+		break;
+	case MCC_TAC_OPARATION_RETURN_ARRAY_BOOL:
+	case MCC_TAC_OPARATION_PARAM_BOOL_ARRAY:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_BOOL:
+		return MCC_TAC_OPARATION_RETURN_ARRAY_BOOL;
+		break;
+	case MCC_TAC_OPARATION_RETURN_ARRAY_STRING:
+	case MCC_TAC_OPARATION_PARAM_STRING_ARRAY:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_STRING:
+		return MCC_TAC_OPARATION_RETURN_ARRAY_STRING;
+		break;
+	default: return MCC_TAC_OPARATION_EMPTY; break;
+	}
+}
 
 struct mCc_tac_element *
 mCc_tac_statement_return(struct mCc_ast_statement *statement,
@@ -235,8 +295,11 @@ mCc_tac_statement_return(struct mCc_ast_statement *statement,
 		struct mCc_tac_element *tac_return_expression =
 		    helper_get_tac_of_expression(statement->return_expression,
 		                                 previous_tac);
+		enum mCc_tac_operation return_operation =
+		    tac_helper_get_return_tac_operation(
+		        tac_return_expression->tac_operation);
 		struct mCc_tac_element *tac =
-		    tac_new_element(MCC_TAC_OPARATION_RETURN, NULL, NULL,
+		    tac_new_element(return_operation, NULL, NULL,
 		                    mCc_tac_create_from_tac_identifier(
 		                        tac_return_expression->tac_result),
 		                    MCC_TAC_TYPE_NO_TYPE, 0);
