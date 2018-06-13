@@ -21,17 +21,22 @@ helper_get_tac_of_expression(struct mCc_ast_expression *expression,
 	case MCC_AST_EXPRESSION_TYPE_BINARY_OP:
 		tac_expression = mCc_tac_expression_binary_op(expression, previous_tac);
 		break;
+
+		// returns the previous_tac -> can be removed?
 	case MCC_AST_EXPRESSION_TYPE_PARENTH:
 		tac_expression = mCc_tac_expression_parenth(expression, previous_tac);
 		break;
+		// returns the previous_tac -> can be removed?
 	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER:
 		tac_expression =
 		    mCc_tac_expression_identifier(expression, previous_tac);
 		break;
+		// returns the previous_tac -> can be removed?
 	case MCC_AST_EXPRESSION_TYPE_IDENTIFIER_ARRAY:
 		tac_expression =
 		    mCc_tac_expression_identifier_array(expression, previous_tac);
 		break;
+
 	case MCC_AST_EXPRESSION_TYPE_CALL_EXPR:
 		tac_expression =
 		    mCc_tac_expression_function_call(expression, previous_tac);
@@ -41,9 +46,11 @@ helper_get_tac_of_expression(struct mCc_ast_expression *expression,
 		break;
 	default: tac_expression = NULL; break;
 	}
-	//checking if the returned tac expression is the same as the previous_tac!!!
-	if (tac_expression->tac_result->name==previous_tac->tac_result->name) {
-		tac_expression=NULL;
+
+	// checking if the returned tac expression is the same as the
+	// previous_tac!!!
+	if (tac_expression == previous_tac) {
+		tac_expression = NULL;
 	}
 	// mCc_tac_connect_tac_entry(previous_tac, tac_expression);
 	return tac_expression;
@@ -216,6 +223,32 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_rhs, tac);
 	return tac;
+
+	// trying to fix bug, with wrong previous tac statement
+	/*struct mCc_tac_identifier lhs;
+	struct mCc_tac_identifier rhs;
+
+	    struct mCc_tac_element *tac_lhs =
+	        helper_get_tac_of_expression(expression->lhs, previous_tac);
+	// if it is a complex statement - otherwise just take the bare expression
+	if (tac_lhs != NULL) {
+	    lhs = mCc_tac_create_from_tac_identifier(tac_lhs->tac_result);
+	    previous_tac = tac_lhs;
+	} else {
+	    lhs = expression->lhs;
+	}
+
+	struct mCc_tac_element *tac_rhs =
+	    helper_get_tac_of_expression(expression->rhs, previous_tac);
+
+	struct mCc_tac_identifier *operationlabel =
+	    mCc_tac_create_new_lable_identifier();
+
+	struct mCc_tac_element *tac = tac_new_element(
+	    operation, lhs, mCc_tac_create_from_tac_identifier(tac_rhs->tac_result),
+	    operationlabel, MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(tac_rhs, tac);
+	return tac;*/
 }
 
 struct mCc_tac_element *
@@ -237,19 +270,19 @@ mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
                               struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
-	assert(previous_tac);
 	assert(expression->identifier->identifier_name);
+	assert(previous_tac);
 
-	// TODO if an identifier should get a label:
-	/*struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY,
-	    tac_new_identifier(expression->identifier->identifier_name), NULL,
-	    mCc_tac_create_new_lable_identifier(
-	        expression->identifier->identifier_name),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
+	// creates tac element just for and identifier concatenated with its scope
+	struct mCc_tac_element *tac =
+	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL,
+	                    mCc_helper_concat_name_and_scope(
+	                        expression->identifier->identifier_name,
+	                        expression->identifier->symtab_info->scope_level),
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
-	return tac;*/
-	return previous_tac;
+	return tac;
+	// return previous_tac;
 }
 
 struct mCc_tac_element *
@@ -257,17 +290,24 @@ mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
                                     struct mCc_tac_element *previous_tac)
 {
 	assert(expression);
+	assert(expression->array_identifier);
+	assert(expression->array_index_expression);
 	assert(previous_tac);
 
-	// TODO if an array identifier should get a label:
-	/*struct mCc_tac_element *tac = tac_new_element(
+	struct mCc_tac_element *array_expression_tac = helper_get_tac_of_expression(
+	    expression->array_index_expression, previous_tac);
+
+	// creates a new labels for the array with its index expression
+	struct mCc_tac_element *tac = tac_new_element(
 	    MCC_TAC_OPARATION_EMPTY,
-	    tac_new_identifier(expression->array_identifier->identifier_name), NULL,
-	    tac_new_identifier(expression->identifier->identifier_name),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(previous_tac, tac);
-	return tac;*/
-	return previous_tac;
+	    mCc_helper_concat_name_and_scope(
+	        expression->array_identifier->identifier_name,
+	        expression->array_identifier->symtab_info->scope_level),
+	    mCc_tac_create_from_tac_identifier(array_expression_tac->tac_result),
+	    mCc_tac_create_new_lable_identifier(), MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(array_expression_tac, tac);
+	return tac;
+	// return previous_tac;
 }
 
 struct mCc_tac_element *
