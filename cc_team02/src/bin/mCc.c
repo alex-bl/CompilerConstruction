@@ -273,9 +273,13 @@ int main(int argc, char *argv[])
 	{
 		// TAC
 		tac = mCc_tac_start_program(prog);
+		log_debug("Building TAC...\t\t[OK]");
+		mCc_assembly_calculate_stack_offsets(tac);
+		log_debug("Calculating offsets...\t\t[OK]");
+
 		log_debug("Freeing AST-elements...");
 		cleanup_ast(prog, buildins);
-		log_debug("Freeing AST-elements\t\t[ok]");
+		log_debug("Freeing AST-elements\t\t[OK]");
 	}
 
 	/*    TODO

@@ -3,6 +3,7 @@
 
 //Place all assembly-headers here
 #include "assembly_generator.h"
+#include "assembly_offset.h"
 
 #ifdef __cplusplus
 extern "C" {

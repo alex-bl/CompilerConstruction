@@ -55,6 +55,21 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 		return NULL;
 	}
 	tac_identifier->name = strndup(name, strlen(name));
+	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_VAR;
+	// tac_identifier->stack_offset;
+	return tac_identifier;
+}
+
+struct mCc_tac_identifier *tac_new_identifier_string(char *string)
+{
+	// assert(value);
+
+	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	if (!tac_identifier) {
+		return NULL;
+	}
+	tac_identifier->s_val = string;
+	tac_identifier->name=NULL;
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_STRING;
 	// tac_identifier->stack_offset;
 	return tac_identifier;
@@ -69,6 +84,7 @@ struct mCc_tac_identifier *tac_new_identifier_float(double value)
 		return NULL;
 	}
 	tac_identifier->f_val = value;
+	tac_identifier->name=NULL;
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_FLOAT;
 	// tac_identifier->stack_offset;
 	return tac_identifier;
@@ -83,6 +99,7 @@ struct mCc_tac_identifier *tac_new_identifier_int(long value)
 		return NULL;
 	}
 	tac_identifier->i_val = value;
+	tac_identifier->name=NULL;
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_INTEGER;
 	// tac_identifier->stack_offset;
 	return tac_identifier;
@@ -97,6 +114,7 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 		return NULL;
 	}
 	tac_identifier->b_val = value;
+	tac_identifier->name=NULL;
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_BOOL;
 	// tac_identifier->stack_offset;
 	return tac_identifier;
