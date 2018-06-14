@@ -113,7 +113,7 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 
 	// LABEL
 	case MCC_TAC_OPARATION_LABEL_FUNCTION: return "LABEL_FUNCTION";
-	case MCC_TAC_OPARATION_LABEL_INT: return "LABEL_INT";
+	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT: return "PSEUDO_ASSIGN_INT";
 	case MCC_TAC_OPARATION_LABEL_BOOL: return "LABEL BOOL";
 	case MCC_TAC_OPARATION_LABEL_FLOAT: return "LABEL_FLOAT";
 	case MCC_TAC_OPARATION_LABEL_IF: return "LABEL_IF";

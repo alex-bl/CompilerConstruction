@@ -13,10 +13,14 @@ static char *get_label(struct mCc_tac_element *tac_elem)
 	return tac_elem->tac_argument1->name;
 }
 
+static char *get_label_function(struct mCc_tac_element *tac_elem){
+	return tac_elem->tac_result->name;
+}
+
 void mCc_assembly_label_function(FILE *out, struct mCc_assembly_data *data,
                                  struct mCc_tac_element *tac_elem)
 {
-	/*TODO: is this function really required?*/
+	print_label(out, get_label_function(tac_elem));
 }
 
 void mCc_assembly_label_float(FILE *out, struct mCc_assembly_data *data,

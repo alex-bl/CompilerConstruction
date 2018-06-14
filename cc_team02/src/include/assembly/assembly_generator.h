@@ -15,8 +15,8 @@ typedef void (*mCc_generate_assembly_cb)(FILE *, struct mCc_assembly_data *data,
 
 struct mCc_assembly_generator {
 	FILE *out;
-	struct assembly_data *data;
-	//Arithmetics
+	struct mCc_assembly_data *data;
+	// Arithmetics
 	mCc_generate_assembly_cb add_int;
 	mCc_generate_assembly_cb add_float;
 	mCc_generate_assembly_cb sub_int;
@@ -26,18 +26,18 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb div_int;
 	mCc_generate_assembly_cb div_float;
 
-	//Assignment
+	// Assignment
 	mCc_generate_assembly_cb assign_primitive_int;
 	mCc_generate_assembly_cb assign_primitive_float;
 	mCc_generate_assembly_cb assign_primitive_bool;
 	mCc_generate_assembly_cb assign_primitive_string;
 
-	//Unary-op
+	// Unary-op
 	mCc_generate_assembly_cb unary_op_minus_int;
 	mCc_generate_assembly_cb unary_op_minus_float;
 	mCc_generate_assembly_cb unary_op_negation;
 
-	//Return
+	// Return
 	mCc_generate_assembly_cb return_primitive_int;
 	mCc_generate_assembly_cb return_primitive_float;
 	mCc_generate_assembly_cb return_primitive_bool;
@@ -47,7 +47,7 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb return_array_bool;
 	mCc_generate_assembly_cb return_array_string;
 
-	//Param
+	// Param
 	mCc_generate_assembly_cb param_int_primitive;
 	mCc_generate_assembly_cb param_float_primitive;
 	mCc_generate_assembly_cb param_bool_primitive;
@@ -57,7 +57,7 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb param_bool_array;
 	mCc_generate_assembly_cb param_string_array;
 
-	//Label
+	// Label
 	mCc_generate_assembly_cb label_function;
 	mCc_generate_assembly_cb label_float;
 	mCc_generate_assembly_cb label_string;
@@ -65,7 +65,10 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb label_else;
 	mCc_generate_assembly_cb label_while;
 
-	//Jump
+	// "Pseudo-labels" aka literal-assignment
+	mCc_generate_assembly_cb convert_int_lit;
+
+	// Jump
 	mCc_generate_assembly_cb jump_equals;
 	mCc_generate_assembly_cb jump_not_equals;
 	mCc_generate_assembly_cb jump_greater;
@@ -75,12 +78,12 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb jump_and;
 	mCc_generate_assembly_cb jump_or;
 
-	//Function
+	// Function
 	mCc_generate_assembly_cb start_function_def;
 	mCc_generate_assembly_cb end_function_def;
 	mCc_generate_assembly_cb function_call;
 
-	//Declaration
+	// Declaration
 	mCc_generate_assembly_cb declare_primitive_int;
 	mCc_generate_assembly_cb declare_primitive_float;
 	mCc_generate_assembly_cb declare_primitive_bool;
@@ -90,7 +93,7 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb declare_array_bool;
 	mCc_generate_assembly_cb declare_array_string;
 
-	//Binary logical ops
+	// Binary logical ops
 	mCc_generate_assembly_cb equals_int;
 	mCc_generate_assembly_cb equals_float;
 	mCc_generate_assembly_cb equals_bool;
@@ -111,10 +114,9 @@ struct mCc_assembly_generator {
 
 void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
                                     struct mCc_tac_element *tac_elem);
-void mCc_assembly_generate(struct mCc_assembly_generator gen_cb,
-                           struct mCc_tac_element *first_tac_elem,
-                           const char *file_name);
-struct mCc_assembly_generator mcc_assembly_gen_setup(FILE *out);
+void mCc_assembly_generate(FILE *out, struct mCc_tac_element *first_tac_elem);
+struct mCc_assembly_generator
+mcc_assembly_gen_setup(FILE *out, struct mCc_assembly_data *data);
 
 #ifdef __cplusplus
 }

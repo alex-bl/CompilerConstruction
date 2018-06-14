@@ -75,7 +75,7 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 
 	switch (expression->literal->type) {
 	case MCC_AST_DATA_TYPE_INT:
-		operation = MCC_TAC_OPARATION_LABEL_INT;
+		operation = MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT;
 		argument1 = tac_new_identifier_int(expression->literal->i_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;

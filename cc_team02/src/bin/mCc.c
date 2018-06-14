@@ -13,6 +13,7 @@
 #include "mCc/semantic_check.h"
 #include "mCc/tac.h"
 #include "mCc/tac_print.h"
+#include "mCc/assembly.h"
 
 /*Argp: Inspired by
  * https://www.gnu.org/software/libc/manual/html_node/Argp-Example-4.html#Argp-Example-4*/
@@ -160,6 +161,10 @@ void cleanup_ast(struct mCc_ast_program *prog, struct mCc_ast_program *buildins)
 	mCc_ast_delete_program(buildins);
 }
 
+static void print_separation_line(FILE *out){
+	fprintf(out,"\n\n========================================================\n\n");
+}
+
 int main(int argc, char *argv[])
 {
 	struct arguments arguments;
@@ -194,6 +199,9 @@ int main(int argc, char *argv[])
 
 	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
 	FILE *out_put = stdout;
+//	FILE *assembly_output_dir = fopen(DEFAULT_OUTPUT_PATH_ASSEMBLY,"w");
+	//just for testing
+	FILE *assembly_output_dir = stdout;
 
 	/* Deal with build-ins */
 	{
@@ -280,6 +288,14 @@ int main(int argc, char *argv[])
 		// TAC print
 		mCc_tac_print_start_program(tac, out_put);
 		log_debug("TAC print finished\t\t[ok]");
+	}
+
+	/* assembly-generation*/
+	{
+		//just for testing
+		print_separation_line(assembly_output_dir);
+
+		mCc_assembly_generate(assembly_output_dir, tac);
 	}
 
 	/* backend-compiler invocation*/

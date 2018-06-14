@@ -71,6 +71,34 @@ void mCc_assembly_push_bool_reg_on_stack(FILE *out, const char *reg)
 	mCc_assembly_push_int_reg_on_stack(out, reg);
 }
 
+void mCc_assembly_move_int(FILE *out, int tac_offset_src, int tac_offset_dest)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, "%d(%s), %d(%s)", tac_offset_src, DEFAULT_DATA_STACK_POINTER,
+	        tac_offset_dest, DEFAULT_DATA_STACK_POINTER);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_move_bool(FILE *out, int tac_offset_src, int tac_offset_dest)
+{
+	// TODO: separate handling?
+	mCc_assembly_move_int(out, tac_offset_src, tac_offset_dest);
+}
+
+void mCc_assembly_move_float(FILE *out, int tac_offset_src, int tac_offset_dest)
+{
+	// TODO: separate handling?
+	mCc_assembly_move_int(out, tac_offset_src, tac_offset_dest);
+}
+
+void mCc_assembly_move_string(FILE *out, int tac_offset_src,
+                              int tac_offset_dest)
+{
+	// TODO: separate handling?
+	mCc_assembly_move_int(out, tac_offset_src, tac_offset_dest);
+}
+
 /*============================================================= allocation */
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,
@@ -459,7 +487,7 @@ void mCc_assembly_set_less_equals(FILE *out)
 	do_set_cc_op(out, "setle");
 }
 
-void mCc_assembly_extract_condition_flag(FILE *out, const char* reg_dest)
+void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "movzbl");

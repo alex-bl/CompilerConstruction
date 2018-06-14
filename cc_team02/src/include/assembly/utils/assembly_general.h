@@ -27,6 +27,15 @@ void mCc_assembly_push_int_reg_on_stack(FILE *out, const char *reg);
 
 void mCc_assembly_push_bool_reg_on_stack(FILE *out, const char *reg);
 
+void mCc_assembly_move_int(FILE *out, int tac_offset_src, int tac_offset_dest);
+
+void mCc_assembly_move_bool(FILE *out, int tac_offset_src, int tac_offset_dest);
+
+void mCc_assembly_move_float(FILE *out, int tac_offset_src,
+                             int tac_offset_dest);
+void mCc_assembly_move_string(FILE *out, int tac_offset_src,
+                              int tac_offset_dest);
+
 /*============================================================= allocation */
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,

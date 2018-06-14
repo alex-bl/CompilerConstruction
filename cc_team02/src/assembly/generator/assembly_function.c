@@ -9,8 +9,7 @@
 static struct mCc_tac_identifier *
 get_function_def_identifier(struct mCc_tac_element *tac_elem)
 {
-	// TODO: correct???
-	return tac_elem->tac_argument1;
+	return tac_elem->tac_result;
 }
 
 static bool is_main(char *function_def_label)
