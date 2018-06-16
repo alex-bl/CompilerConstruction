@@ -409,31 +409,54 @@ void mCc_assembly_jump_less_equals(FILE *out, const char *dest_label)
 
 void mCc_assembly_add_param_int(FILE *out, int calculated_offset)
 {
+	/*TODO*/
+}
+
+void mCc_assembly_add_param_float(FILE *out, int calculated_offset)
+{
+	/*TODO*/
+}
+
+void mCc_assembly_add_param_bool(FILE *out, int calculated_offset)
+{
+	/*TODO*/
+}
+
+void mCc_assembly_add_param_string(FILE *out, const char *string_label)
+{
+	/*TODO*/
+}
+
+/*============================================================= arguments */
+
+void mCc_assembly_add_argument_int(FILE *out, int calculated_offset)
+{
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "pushl");
 	fprintf(out, "%d(%s)", calculated_offset, DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);
 }
 
-void mCc_assembly_add_param_float(FILE *out, int calculated_offset)
+void mCc_assembly_add_argument_float(FILE *out, int calculated_offset)
 {
 	// same treatment as int?
-	mCc_assembly_add_param_int(out, calculated_offset);
+	mCc_assembly_add_argument_int(out, calculated_offset);
 }
 
-void mCc_assembly_add_param_bool(FILE *out, int calculated_offset)
+void mCc_assembly_add_argument_bool(FILE *out, int calculated_offset)
 {
 	// same treatment as int
-	mCc_assembly_add_param_int(out, calculated_offset);
+	mCc_assembly_add_argument_int(out, calculated_offset);
 }
 
-void mCc_assembly_add_param_string(FILE *out, const char *string_label)
+void mCc_assembly_add_argument_string(FILE *out, const char *string_label)
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "pushl");
 	fprintf(out, ".%s", string_label);
 	mCc_assembly_print_nl(out);
 }
+
 
 /*============================================================= call */
 

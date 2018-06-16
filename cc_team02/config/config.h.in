@@ -22,6 +22,7 @@
 #define FILE_NAME_BUF_SIZE 128
 #define GCC_CMD_BUF_SIZE 512
 #define LOG_QUIET ${STDOUT_LOGGING_DISABLED}
+#define COMPILE_STATUS_OUTPUT_LINE_SIZE 1024
 
 //assembly-related stuff
 

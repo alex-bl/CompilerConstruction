@@ -35,13 +35,16 @@ void mCc_assembly_new_header(FILE *out, const char *file_name,
 
 void mCc_assembly_new_function_def_enter(FILE *out, const char *function_label)
 {
-	fprintf(out, "%s:", function_label);
-	mCc_assembly_print_nl(out);
+	//TODO: already handled by label?
+//	fprintf(out, "%s:", function_label);
+//	mCc_assembly_print_nl(out);
 
+	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "pushl");
 	fprintf(out, "%s", DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);
 
+	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "movl");
 	fprintf(out, "%s, %s", DEFAULT_STACK_POINTER, DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);

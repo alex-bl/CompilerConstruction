@@ -57,6 +57,17 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb param_bool_array;
 	mCc_generate_assembly_cb param_string_array;
 
+	// Argument
+	mCc_generate_assembly_cb argument_int_primitive;
+	mCc_generate_assembly_cb argument_float_primitive;
+	mCc_generate_assembly_cb argument_bool_primitive;
+	mCc_generate_assembly_cb argument_string_primitive;
+	mCc_generate_assembly_cb argument_int_array;
+	mCc_generate_assembly_cb argument_float_array;
+	mCc_generate_assembly_cb argument_bool_array;
+	mCc_generate_assembly_cb argument_string_array;
+
+
 	// Label
 	mCc_generate_assembly_cb label_function;
 	mCc_generate_assembly_cb label_float;

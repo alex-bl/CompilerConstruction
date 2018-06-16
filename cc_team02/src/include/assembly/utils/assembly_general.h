@@ -140,6 +140,17 @@ void mCc_assembly_add_param_float(FILE *out, int calculated_offset);
 void mCc_assembly_add_param_bool(FILE *out, int calculated_offset);
 
 void mCc_assembly_add_param_string(FILE *out, const char *string_label);
+
+/*============================================================= arguments */
+
+void mCc_assembly_add_argument_int(FILE *out, int calculated_offset);
+
+void mCc_assembly_add_argument_float(FILE *out, int calculated_offset);
+
+void mCc_assembly_add_argument_bool(FILE *out, int calculated_offset);
+
+void mCc_assembly_add_argument_string(FILE *out, const char *string_label);
+
 /*============================================================= call */
 
 void mCc_assembly_call_function(FILE *out, const char *function_label);

@@ -6,7 +6,8 @@ void main()
 	int b;
 	int c;	
 	a=12;
-	c=3;
+	c=a;
+	print_int(c);
 /*	
 	int b;
 	b = a + 13;

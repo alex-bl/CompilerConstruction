@@ -12,6 +12,7 @@
 #include "assembly_jump.h"
 #include "assembly_label.h"
 #include "assembly_param.h"
+#include "assembly_argument.h"
 #include "assembly_return.h"
 #include "assembly_template.h"
 #include "assembly_unary_op.h"
@@ -212,6 +213,10 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 	case MCC_TAC_OPARATION_LABEL_STRING:
 		gen_cb.label_string(gen_cb.out, gen_cb.data, tac_elem);
 		/*print_nl_debug(gen_cb.out); */ break;
+	//TODO: push remains the same?
+	case MCC_TAC_OPARATION_LABEL_ARGUMENT:
+		gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
+		/*print_nl_debug(gen_cb.out); */ break;
 
 		// "pseudo" labels => assign value to tmp-vars
 	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT:
@@ -320,6 +325,16 @@ mcc_assembly_gen_setup(FILE *out, struct mCc_assembly_data *data)
 		.param_float_array = mCc_assembly_param_float_array,
 		.param_bool_array = mCc_assembly_param_bool_array,
 		.param_string_array = mCc_assembly_param_string_array,
+
+		// Param
+		.argument_int_primitive = mCc_assembly_argument_int_primitive,
+		.argument_float_primitive = mCc_assembly_argument_float_primitive,
+		.argument_bool_primitive = mCc_assembly_argument_bool_primitive,
+		.argument_string_primitive = mCc_assembly_argument_string_primitive,
+		.argument_int_array = mCc_assembly_argument_int_array,
+		.argument_float_array = mCc_assembly_argument_float_array,
+		.argument_bool_array = mCc_assembly_argument_bool_array,
+		.argument_string_array = mCc_assembly_argument_string_array,
 
 		// Label
 		.label_function = mCc_assembly_label_function,

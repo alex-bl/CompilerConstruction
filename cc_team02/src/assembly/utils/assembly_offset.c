@@ -123,6 +123,7 @@ static bool tac_elem_contains_stack_vars(struct mCc_tac_element *element)
 	switch (element->tac_operation) {
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_INT:
 	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_INT:
+	case MCC_TAC_OPARATION_LABEL_ARGUMENT:
 	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT: return true;
 	default: return false;
 	}
@@ -162,5 +163,5 @@ void mCc_assembly_calculate_stack_offsets(
 		next_tac_element = next_tac_element->tac_next_element;
 	}
 
-	map_deinit_(&info.offset_table);
+	map_deinit(&info.offset_table);
 }

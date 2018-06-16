@@ -12,6 +12,12 @@ get_function_def_identifier(struct mCc_tac_element *tac_elem)
 	return tac_elem->tac_result;
 }
 
+static struct mCc_tac_identifier *
+get_function_call_identifier(struct mCc_tac_element *tac_elem)
+{
+	return tac_elem->tac_result;
+}
+
 static bool is_main(char *function_def_label)
 {
 	return strcmp(function_def_label, "main") == 0;
@@ -49,6 +55,6 @@ void mCc_assembly_end_function_def(FILE *out, struct mCc_assembly_data *data,
 void mCc_assembly_function_call(FILE *out, struct mCc_assembly_data *data,
                                 struct mCc_tac_element *tac_elem)
 {
-	char *function_def_label = tac_elem->tac_argument1->name;
+	char *function_def_label = get_function_call_identifier(tac_elem)->name;
 	mCc_assembly_call_function(out, function_def_label);
 }
