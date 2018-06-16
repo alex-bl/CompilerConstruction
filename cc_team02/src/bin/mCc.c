@@ -7,13 +7,13 @@
 
 #include "config.h"
 #include "log.h"
+#include "mCc/assembly.h"
 #include "mCc/ast.h"
 #include "mCc/ast_print.h"
 #include "mCc/parser.h"
 #include "mCc/semantic_check.h"
 #include "mCc/tac.h"
 #include "mCc/tac_print.h"
-#include "mCc/assembly.h"
 
 /*Argp: Inspired by
  * https://www.gnu.org/software/libc/manual/html_node/Argp-Example-4.html#Argp-Example-4*/
@@ -161,8 +161,13 @@ void cleanup_ast(struct mCc_ast_program *prog, struct mCc_ast_program *buildins)
 	mCc_ast_delete_program(buildins);
 }
 
-static void print_separation_line(FILE *out){
-	fprintf(out,"\n\n========================================================\n\n");
+static void print_separation_line(FILE *out)
+{
+	if (out == stdout) {
+		fprintf(
+		    out,
+		    "\n\n========================================================\n\n");
+	}
 }
 
 int main(int argc, char *argv[])
@@ -199,9 +204,14 @@ int main(int argc, char *argv[])
 
 	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
 	FILE *out_put = stdout;
-//	FILE *assembly_output_dir = fopen(DEFAULT_OUTPUT_PATH_ASSEMBLY,"w");
-	//just for testing
-	FILE *assembly_output_dir = stdout;
+
+	char assembly_output_dest[FILE_NAME_BUF_SIZE];
+	snprintf(assembly_output_dest, FILE_NAME_BUF_SIZE, "%s/%s",
+	         DEFAULT_OUTPUT_PATH_ASSEMBLY, GENERATED_ASSEMBLY_FILE_NAME);
+	FILE *assembly_output_dir = fopen(assembly_output_dest, "w");
+
+	// just for testing
+	// FILE *assembly_output_dir = stdout;
 
 	/* Deal with build-ins */
 	{
@@ -296,10 +306,10 @@ int main(int argc, char *argv[])
 
 	/* assembly-generation*/
 	{
-		//just for testing
+		// just for testing
 		print_separation_line(assembly_output_dir);
-
 		mCc_assembly_generate(assembly_output_dir, tac);
+		fclose(assembly_output_dir);
 	}
 
 	/* backend-compiler invocation*/

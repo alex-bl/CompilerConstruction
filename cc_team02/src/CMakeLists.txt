@@ -53,6 +53,7 @@ add_library(mCc_print SHARED ast/print/ast_basic_printing.c
 # tac
 add_library(mCc_tac SHARED tac/basis/basic_tac.c
 							tac/basis/tac.c 
+							tac/tac_utils.c
 							tac/basis/tac_assignment.c
 							tac/basis/tac_declaration.c 
 							tac/basis/tac_expression.c

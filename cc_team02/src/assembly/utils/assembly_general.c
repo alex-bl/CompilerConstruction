@@ -73,11 +73,9 @@ void mCc_assembly_push_bool_reg_on_stack(FILE *out, const char *reg)
 
 void mCc_assembly_move_int(FILE *out, int tac_offset_src, int tac_offset_dest)
 {
-	mCc_assembly_print_shift(out);
-	mCc_assembly_print_op(out, "movl");
-	fprintf(out, "%d(%s), %d(%s)", tac_offset_src, DEFAULT_DATA_STACK_POINTER,
-	        tac_offset_dest, DEFAULT_DATA_STACK_POINTER);
-	mCc_assembly_print_nl(out);
+	/*movl with addresses on both operands not allowed => do intermediate step*/
+	mCc_assembly_load_int(out, tac_offset_src, DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_push_int(out, tac_offset_dest, DEFAULT_ACCUMULATOR_OPERAND);
 }
 
 void mCc_assembly_move_bool(FILE *out, int tac_offset_src, int tac_offset_dest)

@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "basic_tac.h"
+#include "tac_utils.h"
 
 // TODO put helper function on an higher base -> better reachable from other
 // functions  or not!
@@ -60,10 +61,12 @@ mCc_tac_declaration_primitive(struct mCc_ast_declaration *declaration,
 	        declaration->identifier->identifier_name,
 	        declaration->identifier->symtab_info->scope_level);
 
-	struct mCc_tac_element *tac =
-	    tac_new_element(tac_helper_data_type_to_tac_declaration_primitive(
-	                        declaration->data_type),
-	                    NULL, NULL, name_identifier, MCC_TAC_TYPE_NO_TYPE, 0);
+	enum mCc_ast_data_type ast_data_type = declaration->data_type;
+
+	struct mCc_tac_element *tac = tac_new_element(
+	    tac_helper_data_type_to_tac_declaration_primitive(ast_data_type), NULL,
+	    NULL, name_identifier, mCc_tac_map_from_ast_data_type(ast_data_type),
+	    0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }
@@ -82,10 +85,12 @@ mCc_tac_declaration_array(struct mCc_ast_declaration *declaration,
 	        declaration->identifier->identifier_name,
 	        declaration->identifier->symtab_info->scope_level);
 
+	enum mCc_ast_data_type ast_data_type = declaration->data_type;
+
 	struct mCc_tac_element *tac = tac_new_element(
-	    tac_helper_data_type_to_tac_declaration_array(declaration->data_type),
+	    tac_helper_data_type_to_tac_declaration_array(ast_data_type),
 	    NULL, tac_new_identifier_int((unsigned int)(declaration->size)),
-	    name_identifier, MCC_TAC_TYPE_NO_TYPE, 0);
+	    name_identifier, mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac);
 	return tac;
 }

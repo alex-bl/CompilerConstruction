@@ -37,7 +37,7 @@ void mCc_assembly_end_function_def(FILE *out, struct mCc_assembly_data *data,
 	char *function_def_label = function_def_identifier->name;
 
 	const char *next_function_label =
-	    mCc_assembly_get_next_function_label(function_def_identifier);
+	    mCc_assembly_get_next_function_label(tac_elem);
 	if (is_main(function_def_label)) {
 		mCc_assembly_main_function_leave(out);
 	} else {
