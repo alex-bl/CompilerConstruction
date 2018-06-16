@@ -72,7 +72,8 @@ int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
 		return mCc_assembly_calc_stack_pos_param(identifier);
 	}
 	// stack-positions for local variables are always <0?
-	return (current_stack_ptr_pos - identifier->stack_offset) * -1;
+	//TODO: current_stack_ptr_pos useless????
+	return (identifier->stack_offset) * -1;
 }
 
 const char *

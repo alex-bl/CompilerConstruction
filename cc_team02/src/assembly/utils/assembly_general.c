@@ -107,6 +107,7 @@ void mCc_assembly_allocate_int_on_stack(FILE *out,
 	mCc_assembly_print_op(out, "subl");
 	fprintf(out, "$%zu, %s", required_space, DEFAULT_STACK_POINTER);
 	mCc_assembly_print_nl(out);
+	//TODO: seems to be useless ;)
 	mCc_assembly_adjust_stack_pointer(required_space, data);
 }
 
@@ -213,7 +214,7 @@ void mCc_assembly_sub_float(FILE *out, int calculated_offset)
 
 void mCc_assembly_mul_int(FILE *out, int calculated_offset)
 {
-	add_sub_mul_int_op(out, calculated_offset, "mull");
+	add_sub_mul_int_op(out, calculated_offset, "imull");
 }
 
 void mCc_assembly_mul_float(FILE *out, int calculated_offset)

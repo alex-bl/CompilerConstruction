@@ -1,8 +1,9 @@
 
 
 void main(){
-	int a;
-	int b;
 	int c;
-	a=12;
+	c=2+3;
+
+
+
 }
