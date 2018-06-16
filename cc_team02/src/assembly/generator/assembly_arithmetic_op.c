@@ -129,10 +129,10 @@ void mCc_assembly_generate_div_int(FILE *out, struct mCc_assembly_data *data,
 	// allocate result
 	mCc_assembly_allocate_int_on_stack(out, data, 1);
 
-	// Load the 2nd operant into %eax
-	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
+	// Load the 1st operant into %eax
+	mCc_assembly_load_int(out, arg_1, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
-	mCc_assembly_div_int(out, arg_1);
+	mCc_assembly_div_int(out, arg_2);
 	// Push
 	mCc_assembly_push_int(out, result_pos, DEFAULT_ACCUMULATOR_OPERAND);
 }

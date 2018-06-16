@@ -228,6 +228,9 @@ void mCc_assembly_mul_float(FILE *out, int calculated_offset)
 void mCc_assembly_div_int(FILE *out, int calculated_offset)
 {
 	mCc_assembly_print_shift(out);
+	fprintf(out,"cltd");
+	mCc_assembly_print_nl(out);
+	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "idivl");
 	fprintf(out, "%d(%s)", calculated_offset, DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);

@@ -1,20 +1,30 @@
 void main()
 {
+/*
 	int a;
 	int b;
-	int c;	
-		
-	a=2;
-	b=4;
-	c=a+b;
+	int c;
+
+	a=3+9*10;
+	b=10-7-2-1;
+	c=30/10;
 	
-	print_int(c+8+2+1);
+	print_int(a);
 	print_nl();
-/*	
-	int b;
-	b = a + 13;
 
 	print_int(b);
+	print_nl();
+
+	print_int(c);
+	print_nl();
+
 */
+
+	int c;
+	c=40/20/2;
+	print_int(c);
+	print_nl();
+
+	
 
 }
