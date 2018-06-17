@@ -115,6 +115,10 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_LABEL_WHILE,
 	MCC_TAC_OPARATION_LABEL_STRING,
 	MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT,
+	MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_FLOAT,
+	MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_BOOL,
+	MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_STRING,
+
 	MCC_TAC_OPARATION_LABEL_BOOL,
 
 	// ARGUMENT (LABELS)
@@ -180,6 +184,7 @@ enum mCc_tac_identifier_type {
 	/*required for identifying tac-identifier denoting a variable*/
 	// TODO: distinguish between variable and other labels!!
 	MCC_IDENTIFIER_TAC_TYPE_VAR,
+	MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL
 };
 
 struct mCc_tac_element {

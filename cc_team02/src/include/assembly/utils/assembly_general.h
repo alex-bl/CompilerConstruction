@@ -77,7 +77,7 @@ void mCc_assembly_div_float(FILE *out, int calculated_offset);
 void mCc_assembly_assign_int(FILE *out, int int_val, int calculated_offset);
 
 // TODO: really required?
-void mCc_assembly_assign_float(FILE *out, float float_val,
+void mCc_assembly_assign_float(FILE *out, char *float_label,
                                int calculated_offset);
 
 void mCc_assembly_assign_bool(FILE *out, bool bool_val, int calculated_offset);

@@ -107,7 +107,7 @@ void mCc_assembly_allocate_int_on_stack(FILE *out,
 	mCc_assembly_print_op(out, "subl");
 	fprintf(out, "$%zu, %s", required_space, DEFAULT_STACK_POINTER);
 	mCc_assembly_print_nl(out);
-	//TODO: seems to be useless ;)
+	// TODO: seems to be useless ;)
 	mCc_assembly_adjust_stack_pointer(required_space, data);
 }
 
@@ -228,7 +228,7 @@ void mCc_assembly_mul_float(FILE *out, int calculated_offset)
 void mCc_assembly_div_int(FILE *out, int calculated_offset)
 {
 	mCc_assembly_print_shift(out);
-	fprintf(out,"cltd");
+	fprintf(out, "cltd");
 	mCc_assembly_print_nl(out);
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "idivl");
@@ -256,11 +256,17 @@ void mCc_assembly_assign_int(FILE *out, int int_val, int calculated_offset)
 	mCc_assembly_print_nl(out);
 }
 
-void mCc_assembly_assign_float(FILE *out, float float_val,
+void mCc_assembly_assign_float(FILE *out, char *float_label,
                                int calculated_offset)
 {
 	mCc_assembly_print_shift(out);
-	// TODO: is there anything required?
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, ".%s, %s", float_label, DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_print_nl(out);
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, "%s, %d(%s)", DEFAULT_ACCUMULATOR_OPERAND, calculated_offset,
+	        DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);
 }
 
@@ -278,8 +284,9 @@ void mCc_assembly_assign_string(FILE *out, const char *label,
                                 int calculated_offset)
 {
 	mCc_assembly_print_shift(out);
-	mCc_assembly_push_string(out, label, calculated_offset);
-	// TODO: is there anything required?
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, "$.%s, %d(%s)", label, calculated_offset,
+	        DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);
 }
 
@@ -460,7 +467,6 @@ void mCc_assembly_add_argument_string(FILE *out, const char *string_label)
 	fprintf(out, ".%s", string_label);
 	mCc_assembly_print_nl(out);
 }
-
 
 /*============================================================= call */
 

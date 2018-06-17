@@ -23,21 +23,23 @@ void main()
 	print_int(c);
 	print_nl();
 */
+	string b;	
+	float c;
+	int a;
+	b="huhuhuhuhuhuhuhuhuhu";
+	c=342.2342;
+	a=12;
 
-	float a;
-	a=34.2342;
-	
-	string c;
-	string d;
-	c="hshshskshshs";
-
-	float b;
-	b=0.343111;	
-	
-	d="abc";	
-
-	print_float(a);
+	print("String: ");
+	print(b);	
 	print_nl();
-	
+
+	print("Float: ");	
+	print_float(c);
+	print_nl();
+
+	print("Int: ");
+	print_int(a*4);
+	print_nl();
 
 }

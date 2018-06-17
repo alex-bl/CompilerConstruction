@@ -76,20 +76,21 @@ void mCc_assembly_assign_primitive_float(FILE *out,
 	mCc_assembly_move_float(out, pseudo_var_offset, dest_var_offset);
 }
 
+//TODO: needed?
 void mCc_assembly_pseudo_assign_float_literal(FILE *out,
                                               struct mCc_assembly_data *data,
                                               struct mCc_tac_element *tac_elem)
 {
 	assert(tac_elem);
 	struct mCc_tac_identifier *var = get_assign_dest(tac_elem);
-	struct mCc_tac_identifier *float_val = get_literal_val(tac_elem);
+	//no float-val-loading required => is already when converting floats + strings
 
 	//space for the tmp-variable
 	mCc_assembly_allocate_float_on_stack(out, data, 1);
 
 	int calculated_offset =
 	    mCc_assembly_calc_stack_position(var, data->current_stack_pos);
-	mCc_assembly_assign_int(out, float_val->f_val, calculated_offset);
+	mCc_assembly_assign_float(out, var->name, calculated_offset);
 }
 
 void mCc_assembly_assign_primitive_bool(FILE *out,
@@ -131,9 +132,9 @@ void mCc_assembly_pseudo_assign_string_literal(FILE *out,
 	struct mCc_tac_identifier *string_val = get_literal_val(tac_elem);
 
 	//space for the tmp-variable
-	mCc_assembly_allocate_string_on_stack(out, data, string_val->s_val);
+	mCc_assembly_allocate_string_on_stack(out, data, string_val->name);
 
 	int calculated_offset =
 	    mCc_assembly_calc_stack_position(var, data->current_stack_pos);
-	mCc_assembly_assign_string(out, string_val->s_val, calculated_offset);
+	mCc_assembly_assign_string(out, var->name, calculated_offset);
 }

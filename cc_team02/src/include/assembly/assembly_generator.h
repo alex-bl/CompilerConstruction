@@ -78,6 +78,9 @@ struct mCc_assembly_generator {
 
 	// "Pseudo-labels" aka literal-assignment
 	mCc_generate_assembly_cb convert_int_lit;
+	mCc_generate_assembly_cb convert_float_lit;
+	mCc_generate_assembly_cb convert_bool_lit;
+	mCc_generate_assembly_cb convert_string_lit;
 
 	// Jump
 	mCc_generate_assembly_cb jump_equals;

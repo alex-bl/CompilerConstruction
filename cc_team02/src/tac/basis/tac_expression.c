@@ -81,18 +81,19 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
 	case MCC_AST_DATA_TYPE_FLOAT:
-		operation = MCC_TAC_OPARATION_LABEL_FLOAT;
+		operation = MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_FLOAT;
 		argument1 = tac_new_identifier_float(expression->literal->f_value);
 		tac_type = MCC_TAC_TYPE_FLOAT;
 		break;
 	case MCC_AST_DATA_TYPE_BOOL:
-		operation = MCC_TAC_OPARATION_LABEL_BOOL;
+		operation = MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_BOOL;
 		argument1 = tac_new_identifier_bool(expression->literal->b_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
 	case MCC_AST_DATA_TYPE_STRING:
-		operation = MCC_TAC_OPARATION_LABEL_STRING;
+		operation = MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_STRING;
 		argument1 = tac_new_identifier(expression->literal->s_value);
+		argument1->type=MCC_IDENTIFIER_TAC_TYPE_STRING;
 		tac_type = MCC_TAC_TYPE_STRING;
 		break;
 	default:

@@ -146,10 +146,13 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 		enum mCc_ast_data_type ast_data_type =
 				argument->data_type;
 
+		struct mCc_tac_identifier *call_identifier = tac_new_identifier(call->identifier->identifier_name);
+		call_identifier->type=MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
+
 		struct mCc_tac_element *tac = tac_new_element(
 		    MCC_TAC_OPARATION_LABEL_ARGUMENT,
 		    mCc_tac_create_from_tac_identifier(tac_argument->tac_result), NULL,
-		    tac_new_identifier(call->identifier->identifier_name),
+			call_identifier,
 			mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 		mCc_tac_connect_tac_entry(tac_argument, tac);
 		previous_tac = tac;
