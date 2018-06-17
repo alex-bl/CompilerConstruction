@@ -13,8 +13,8 @@
 #include "mCc/parser.h"
 #include "mCc/semantic_check.h"
 #include "mCc/tac.h"
-#include "mCc/tac_print.h"
 #include "mCc/tac_cfg.h"
+#include "mCc/tac_print.h"
 
 /*Argp: Inspired by
  * https://www.gnu.org/software/libc/manual/html_node/Argp-Example-4.html#Argp-Example-4*/
@@ -39,6 +39,11 @@ static struct argp_option options[] = {
 	  .flags = 0,
 	  .group = 0,
 	  .doc = "Print the Three-adress-code\t(default=false)" },
+	{ .name = "tac-cfg",
+	  .key = 'c',
+	  .flags = 0,
+	  .group = 0,
+	  .doc = "Generate tac control flow graph (cfg)\t\t\t(default=false)" },
 	{ .name = "stdoutLog",
 	  .key = 'l',
 	  .flags = 0,

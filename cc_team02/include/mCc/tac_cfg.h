@@ -1,6 +1,7 @@
 #ifndef MCC_TAC_CFG_H
 #define MCC_TAC_CFG_H
 
+#include "basic_tac.h"
 #include <stdbool.h>
 #include <stdio.h>
 
