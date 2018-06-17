@@ -1,3 +1,5 @@
+#include "assembly_utils.h"
+
 /**
  * Contains basic utils needed for assembly-generation
  */
@@ -10,6 +12,14 @@
 #include "assembly_data.h"
 #include "basic_tac.h"
 #include "config.h"
+#include "log.h"
+
+// TODO: correct?
+static struct mCc_tac_identifier *
+get_function_label_identifier(struct mCc_tac_element *tac_elem)
+{
+	return tac_elem->tac_result;
+}
 
 size_t mCc_assembly_calc_int_space(int nr_of)
 {
@@ -61,20 +71,24 @@ int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
 	if (identifier->is_param) {
 		return mCc_assembly_calc_stack_pos_param(identifier);
 	}
-	return current_stack_ptr_pos - identifier->stack_offset;
+	// stack-positions for local variables are always <0?
+	//TODO: current_stack_ptr_pos useless????
+	return (identifier->stack_offset) * -1;
 }
 
 const char *
-mCc_assembly_get_next_function_label(struct mCc_tac_identifier *identifier)
+mCc_assembly_get_next_function_label(struct mCc_tac_element *tac_elem)
 {
-	assert(identifier);
-	/*
-	 * TODO:
-	 * - Store next-function-label somewhere in tac-elem
-	 * - Iterate through it
-	 *
-	 * => requires changes on tac!
-	 */
+	assert(tac_elem);
+	struct mCc_tac_element *next_tac_elem = tac_elem;
+	while (next_tac_elem) {
+		if (next_tac_elem->tac_operation == MCC_TAC_OPARATION_LABEL_FUNCTION) {
+			return get_function_label_identifier(next_tac_elem)->name;
+		}
+		next_tac_elem = next_tac_elem->tac_next_element;
+	}
+
+	log_warn("No next function?");
 	return "";
 }
 

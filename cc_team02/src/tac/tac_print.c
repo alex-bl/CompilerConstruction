@@ -81,7 +81,8 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 		return "JUMP_FALSE";
 
 	// RETURN
-	case MCC_TAC_OPARATION_RETURN_PRIMITIVE_VOID: return "RETURN_PRIMITIVE_VOID";
+	case MCC_TAC_OPARATION_RETURN_PRIMITIVE_VOID:
+		return "RETURN_PRIMITIVE_VOID";
 	case MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT: return "RETURN_PRIMITIVE_INT";
 	case MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT:
 		return "RETURN_PRIMITIVE_FLOAT";
@@ -113,7 +114,7 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 
 	// LABEL
 	case MCC_TAC_OPARATION_LABEL_FUNCTION: return "LABEL_FUNCTION";
-	case MCC_TAC_OPARATION_LABEL_INT: return "LABEL_INT";
+	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT: return "PSEUDO_ASSIGN_INT";
 	case MCC_TAC_OPARATION_LABEL_BOOL: return "LABEL BOOL";
 	case MCC_TAC_OPARATION_LABEL_FLOAT: return "LABEL_FLOAT";
 	case MCC_TAC_OPARATION_LABEL_IF: return "LABEL_IF";
@@ -150,7 +151,7 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 	case MCC_TAC_OPARATION_DECLARE_ARRAY_STRING:
 		return "DECLARATION_STRING_ARRAY";
 
-		//LITERAL
+		// LITERAL
 	case MCC_TAC_OPARATION_LITERAL: return "LITERAL";
 	}
 	return "unknown";
@@ -169,6 +170,7 @@ static void print_tac_arg(struct mCc_tac_identifier *tac_identifier, FILE *out)
 		case MCC_IDENTIFIER_TAC_TYPE_BOOL:
 			fprintf(out, "%20s", (tac_identifier->b_val) ? "true" : "false");
 			break;
+		case MCC_IDENTIFIER_TAC_TYPE_VAR:
 		case MCC_IDENTIFIER_TAC_TYPE_STRING:
 			fprintf(out, "%20s", tac_identifier->name);
 			break;
@@ -176,6 +178,23 @@ static void print_tac_arg(struct mCc_tac_identifier *tac_identifier, FILE *out)
 	} else {
 		fprintf(out, "%20s", "-");
 	}
+}
+
+static const char *get_element_type_as_string(enum mCc_tac_type element_type)
+{
+	switch (element_type) {
+	case MCC_TAC_TYPE_NO_TYPE: return "NO_TYPE";
+	case MCC_TAC_TYPE_INTEGER: return "INTEGER";
+	case MCC_TAC_TYPE_BOOL: return "BOOL";
+	case MCC_TAC_TYPE_FLOAT: return "FLOAT";
+	case MCC_TAC_TYPE_STRING: return "STRING";
+	}
+	return "UNKNOWN";
+}
+
+static void print_element_type(enum mCc_tac_type element_type, FILE *out)
+{
+	fprintf(out, "%10s", get_element_type_as_string(element_type));
 }
 
 /*
@@ -190,13 +209,15 @@ void mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out)
 	fprintf(out, "Printing TAC-table:\n");
 
 	while (tac != NULL) {
-		fprintf(out, "op: %s", print_tac_op(tac->tac_operation));
-		fprintf(out, "\t| ");
+		fprintf(out, "op: %25s", print_tac_op(tac->tac_operation));
+		fprintf(out, " | ");
 		print_tac_arg(tac->tac_argument1, out);
 		fprintf(out, " | ");
 		print_tac_arg(tac->tac_argument2, out);
 		fprintf(out, " | ");
 		print_tac_arg(tac->tac_result, out);
+		fprintf(out, " | ");
+		print_element_type(tac->tac_type, out);
 		fprintf(out, " |\n");
 
 		tac = tac->tac_next_element;

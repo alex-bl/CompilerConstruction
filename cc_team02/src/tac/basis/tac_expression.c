@@ -4,6 +4,7 @@
 
 #include "basic_tac.h"
 #include "tac_function.h"
+#include "tac_utils.h"
 
 struct mCc_tac_element *
 helper_get_tac_of_expression(struct mCc_ast_expression *expression,
@@ -75,7 +76,7 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 
 	switch (expression->literal->type) {
 	case MCC_AST_DATA_TYPE_INT:
-		operation = MCC_TAC_OPARATION_LABEL_INT;
+		operation = MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT;
 		argument1 = tac_new_identifier_int(expression->literal->i_value);
 		tac_type = MCC_TAC_TYPE_INTEGER;
 		break;
@@ -217,10 +218,13 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	struct mCc_tac_identifier *operationlabel =
 	    mCc_tac_create_new_lable_identifier();
 
+	enum mCc_ast_data_type ast_data_type =
+	    expression->data_type;
+
 	struct mCc_tac_element *tac = tac_new_element(
 	    operation, mCc_tac_create_from_tac_identifier(tac_lhs->tac_result),
 	    mCc_tac_create_from_tac_identifier(tac_rhs->tac_result), operationlabel,
-	    MCC_TAC_TYPE_NO_TYPE, 0);
+		mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 	mCc_tac_connect_tac_entry(tac_rhs, tac);
 	return tac;
 

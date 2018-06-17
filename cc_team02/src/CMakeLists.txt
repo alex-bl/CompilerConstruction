@@ -53,6 +53,7 @@ add_library(mCc_print SHARED ast/print/ast_basic_printing.c
 # tac
 add_library(mCc_tac SHARED tac/basis/basic_tac.c
 							tac/basis/tac.c 
+							tac/tac_utils.c
 							tac/basis/tac_assignment.c
 							tac/basis/tac_declaration.c 
 							tac/basis/tac_expression.c
@@ -80,7 +81,9 @@ add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c
 add_library(mCc_semantic_error_print SHARED symtab/symtab_error_print.c
 							symtab/print/error_printer.c)
 
-add_library(mCc_assembly SHARED assembly/generator/assembly_arithmetic_op.c
+add_library(mCc_assembly SHARED assembly/assembly_generator.c
+								assembly/generator/assembly_argument.c
+								assembly/generator/assembly_arithmetic_op.c
 								assembly/generator/assembly_assignment.c
 								assembly/generator/assembly_binary_op_logical.c
 								assembly/generator/assembly_jump.c
@@ -89,7 +92,8 @@ add_library(mCc_assembly SHARED assembly/generator/assembly_arithmetic_op.c
 								assembly/generator/assembly_return.c
 								assembly/generator/assembly_param.c
 								assembly/generator/assembly_label.c
-								assembly/generator/assembly_declaration.c								
+								assembly/generator/assembly_declaration.c
+								assembly/utils/assembly_offset.c								
 								assembly/utils/assembly_general.c
 								assembly/utils/assembly_utils.c
 								assembly/utils/assembly_formatter.c

@@ -27,6 +27,15 @@ void mCc_assembly_push_int_reg_on_stack(FILE *out, const char *reg);
 
 void mCc_assembly_push_bool_reg_on_stack(FILE *out, const char *reg);
 
+void mCc_assembly_move_int(FILE *out, int tac_offset_src, int tac_offset_dest);
+
+void mCc_assembly_move_bool(FILE *out, int tac_offset_src, int tac_offset_dest);
+
+void mCc_assembly_move_float(FILE *out, int tac_offset_src,
+                             int tac_offset_dest);
+void mCc_assembly_move_string(FILE *out, int tac_offset_src,
+                              int tac_offset_dest);
+
 /*============================================================= allocation */
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,
@@ -131,6 +140,17 @@ void mCc_assembly_add_param_float(FILE *out, int calculated_offset);
 void mCc_assembly_add_param_bool(FILE *out, int calculated_offset);
 
 void mCc_assembly_add_param_string(FILE *out, const char *string_label);
+
+/*============================================================= arguments */
+
+void mCc_assembly_add_argument_int(FILE *out, int calculated_offset);
+
+void mCc_assembly_add_argument_float(FILE *out, int calculated_offset);
+
+void mCc_assembly_add_argument_bool(FILE *out, int calculated_offset);
+
+void mCc_assembly_add_argument_string(FILE *out, const char *string_label);
+
 /*============================================================= call */
 
 void mCc_assembly_call_function(FILE *out, const char *function_label);

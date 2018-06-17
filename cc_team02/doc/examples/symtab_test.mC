@@ -1,31 +1,30 @@
-
-int power(int base, int powerRaised)
-{
-    if (powerRaised != 0)
-        return (base*power(base, powerRaised-1));
-    else
-        return 1;
-}
-
 void main()
 {
-    int base;
-    int powerRaised;
-    int result;
+/*
+	int a;
+	int b;
+	int c;
 
-    print("Enter base number: ");
-    base = read_int();
-
-    print("Enter power number(positive integer): ");
-    powerRaised = read_int();
-
-    result = power(base, powerRaised);
-
-	print_int(base);
-	print("^");
-	print_int(powerRaised);
-	print(" = ");
-	print_int(result);
+	a=3+9*10;
+	b=10-7-2-1;
+	c=30/10;
 	
-	return;
+	print_int(a);
+	print_nl();
+
+	print_int(b);
+	print_nl();
+
+	print_int(c);
+	print_nl();
+
+*/
+
+	int c;
+	c=40/20/2;
+	print_int(c);
+	print_nl();
+
+	
+
 }

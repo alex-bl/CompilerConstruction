@@ -8,6 +8,13 @@ static char *get_jump_dest(struct mCc_tac_element *tac_elem)
 	return tac_elem->tac_argument1->name;
 }
 
+
+/*
+ * TODO:
+ * Wirds nicht zu kompliziert, immer rauszufinden, welche op gerade gemacht wurde?
+ * => jump true oder jump false einfacher?
+ * => "condition" sowieso in einem "single-boolean"?
+ */
 void mCc_assembly_generate_jump_equals(FILE *out,
                                        struct mCc_assembly_data *data,
                                        struct mCc_tac_element *tac_elem)

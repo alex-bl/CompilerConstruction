@@ -7,6 +7,7 @@
 
 #include "config.h"
 #include "log.h"
+#include "mCc/assembly.h"
 #include "mCc/ast.h"
 #include "mCc/ast_print.h"
 #include "mCc/parser.h"
@@ -160,6 +161,15 @@ void cleanup_ast(struct mCc_ast_program *prog, struct mCc_ast_program *buildins)
 	mCc_ast_delete_program(buildins);
 }
 
+static void print_separation_line(FILE *out)
+{
+	if (out == stdout) {
+		fprintf(
+		    out,
+		    "\n\n========================================================\n\n");
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	struct arguments arguments;
@@ -194,6 +204,14 @@ int main(int argc, char *argv[])
 
 	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
 	FILE *out_put = stdout;
+
+	char assembly_output_dest[FILE_NAME_BUF_SIZE];
+	snprintf(assembly_output_dest, FILE_NAME_BUF_SIZE, "%s/%s",
+	         DEFAULT_OUTPUT_PATH_ASSEMBLY, GENERATED_ASSEMBLY_FILE_NAME);
+	FILE *assembly_output_dir = fopen(assembly_output_dest, "w");
+
+	// just for testing
+	// FILE *assembly_output_dir = stdout;
 
 	/* Deal with build-ins */
 	{
@@ -265,9 +283,13 @@ int main(int argc, char *argv[])
 	{
 		// TAC
 		tac = mCc_tac_start_program(prog);
+		log_debug("Building TAC...\t\t[OK]");
+		mCc_assembly_calculate_stack_offsets(tac);
+		log_debug("Calculating offsets...\t\t[OK]");
+
 		log_debug("Freeing AST-elements...");
 		cleanup_ast(prog, buildins);
-		log_debug("Freeing AST-elements\t\t[ok]");
+		log_debug("Freeing AST-elements\t\t[OK]");
 	}
 
 	/*    TODO
@@ -280,6 +302,14 @@ int main(int argc, char *argv[])
 		// TAC print
 		mCc_tac_print_start_program(tac, out_put);
 		log_debug("TAC print finished\t\t[ok]");
+	}
+
+	/* assembly-generation*/
+	{
+		// just for testing
+		print_separation_line(assembly_output_dir);
+		mCc_assembly_generate(assembly_output_dir, tac);
+		fclose(assembly_output_dir);
 	}
 
 	/* backend-compiler invocation*/

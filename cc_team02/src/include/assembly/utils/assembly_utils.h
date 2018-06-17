@@ -28,7 +28,7 @@ int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
                                      int current_stack_ptr_pos);
 
 const char *
-mCc_assembly_get_next_function_label(struct mCc_tac_identifier *identifier);
+mCc_assembly_get_next_function_label(struct mCc_tac_element *identifier);
 
 void mCc_assembly_adjust_stack_pointer(int offset,
                                        struct mCc_assembly_data *data);
