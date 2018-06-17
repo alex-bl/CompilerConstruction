@@ -44,9 +44,13 @@ void float_compare(){
 	float a=21231.12;
 	float b=323.122;
 	float c=0.0;
-	if(a>b){
-		c=232.323;
-	}
+	bool d;
+
+	d=a>b;
+
+//	if(a>b){
+//		c=232.323;
+//	}
 }
 
 void compare_bools(){

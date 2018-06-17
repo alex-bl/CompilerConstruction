@@ -99,7 +99,7 @@ void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
                               int calculated_offset_op_2);
 
 // Maybe the same?
-void mCc_assembly_compare_float(FILE *out, int calculated_offset_op);
+void mCc_assembly_compare_float(FILE *out);
 
 void mCc_assembly_and_op(FILE *out, int calculated_offset_op_1,
                          int calculated_offset_op_2);
@@ -160,16 +160,19 @@ void mCc_assembly_call_function(FILE *out, const char *function_label);
 /*============================================================= special */
 
 void mCc_assembly_set_equals(FILE *out);
-
+void mCc_assembly_set_equals_float(FILE *out);
 void mCc_assembly_set_not_equals(FILE *out);
-
+void mCc_assembly_set_not_equals_float(FILE *out);
 void mCc_assembly_set_greater(FILE *out);
-
+void mCc_assembly_set_greater_float(FILE *out);
 void mCc_assembly_set_less(FILE *out);
+void mCc_assembly_set_less_float(FILE *out);
 
 void mCc_assembly_set_greater_equals(FILE *out);
+void mCc_assembly_set_greater_equals_float(FILE *out);
 
 void mCc_assembly_set_less_equals(FILE *out);
+void mCc_assembly_set_less_equals_float(FILE *out);
 
 void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest);
 

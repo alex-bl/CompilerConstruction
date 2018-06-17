@@ -315,7 +315,7 @@ void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
 }
 
 // Maybe the same?
-void mCc_assembly_compare_float(FILE *out, int calculated_offset_op)
+void mCc_assembly_compare_float(FILE *out)
 {
 	/*
 	 * TODO:
@@ -324,8 +324,8 @@ void mCc_assembly_compare_float(FILE *out, int calculated_offset_op)
 	 * - is this correct???
 	 */
 	mCc_assembly_print_shift(out);
-	mCc_assembly_print_op(out, "fcom");
-	fprintf(out, "%d(%s)", calculated_offset_op, DEFAULT_DATA_STACK_POINTER);
+	mCc_assembly_print_op(out, "fcomip");
+	fprintf(out, "%s, %s", FLOAT_STACK_SEC_REG, FLOAT_STACK_TOP_REG);
 	mCc_assembly_print_nl(out);
 }
 
@@ -502,7 +502,17 @@ void mCc_assembly_set_equals(FILE *out)
 	do_set_cc_op(out, "sete");
 }
 
+void mCc_assembly_set_equals_float(FILE *out)
+{
+	do_set_cc_op(out, "sete");
+}
+
 void mCc_assembly_set_not_equals(FILE *out)
+{
+	do_set_cc_op(out, "setne");
+}
+
+void mCc_assembly_set_not_equals_float(FILE *out)
 {
 	do_set_cc_op(out, "setne");
 }
@@ -512,19 +522,42 @@ void mCc_assembly_set_greater(FILE *out)
 	do_set_cc_op(out, "setg");
 }
 
+void mCc_assembly_set_greater_float(FILE *out)
+{
+	//???
+	do_set_cc_op(out, "seta");
+}
+
 void mCc_assembly_set_less(FILE *out)
 {
 	do_set_cc_op(out, "setl");
 }
+
+void mCc_assembly_set_less_float(FILE *out)
+{
+	do_set_cc_op(out, "setb");
+}
+
 
 void mCc_assembly_set_greater_equals(FILE *out)
 {
 	do_set_cc_op(out, "setge");
 }
 
+void mCc_assembly_set_greater_equals_float(FILE *out)
+{
+	do_set_cc_op(out, "setae");
+}
+
+
 void mCc_assembly_set_less_equals(FILE *out)
 {
 	do_set_cc_op(out, "setle");
+}
+
+void mCc_assembly_set_less_equals_float(FILE *out)
+{
+	do_set_cc_op(out, "setbe");
 }
 
 void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)

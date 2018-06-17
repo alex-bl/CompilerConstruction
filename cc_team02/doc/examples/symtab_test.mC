@@ -42,10 +42,13 @@ void main()
 	print_int(a*4);
 	print_nl();
 */
-	bool a;
-	bool b;
+	float a;
+	float b;
 	bool c;
-	a=2<3;
+	a=32.222;
+	b=32.222;
+	
+	c=a!=b;
 	
 
 }
