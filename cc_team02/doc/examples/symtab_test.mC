@@ -45,9 +45,7 @@ void main()
 	bool a;
 	bool b;
 	bool c;
-	a=true;
-	b=false;
+	a=2<3;
 	
-	c=a!=b;
 
 }
