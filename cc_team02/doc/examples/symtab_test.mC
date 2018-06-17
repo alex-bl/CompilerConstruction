@@ -22,7 +22,7 @@ void main()
 	c=40/20/2;
 	print_int(c);
 	print_nl();
-*/
+
 	string b;	
 	float c;
 	int a;
@@ -40,6 +40,13 @@ void main()
 
 	print("Int: ");
 	print_int(a*4);
+	print_nl();
+*/
+
+	float a;
+	a=10.12/10.12;
+	
+	print_float(a);
 	print_nl();
 
 }
