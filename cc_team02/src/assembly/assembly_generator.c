@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "assembly_argument.h"
 #include "assembly_arithmetic_op.h"
 #include "assembly_assignment.h"
 #include "assembly_binary_op_logical.h"
@@ -12,7 +13,6 @@
 #include "assembly_jump.h"
 #include "assembly_label.h"
 #include "assembly_param.h"
-#include "assembly_argument.h"
 #include "assembly_return.h"
 #include "assembly_template.h"
 #include "assembly_unary_op.h"
@@ -24,245 +24,287 @@ static void print_nl_debug(FILE *out)
 	fprintf(out, "\n");
 }
 
+static bool skip_generation(enum mCc_tac_operation tac_op)
+{
+
+	switch (tac_op) {
+	case MCC_TAC_OPARATION_LABEL_STRING:
+	case MCC_TAC_OPARATION_LABEL_FLOAT: return true;
+	}
+
+	return false;
+}
+
 void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
                                     struct mCc_tac_element *tac_elem)
 {
 	enum mCc_tac_operation tac_op = tac_elem->tac_operation;
 
-	// TODO: function_def + function_param handler
-	switch (tac_op) {
+	// e.g. float/string labels are handled at the beginning
+	if (!skip_generation(tac_op)) {
 
-	// arithmetics
-	case MCC_TAC_OPARATION_BINARY_OP_ADD_INT:
-		gen_cb.add_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_BINARY_OP_ADD_FLOAT:
-		gen_cb.add_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_BINARY_OP_SUB_INT:
-		gen_cb.sub_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_BINARY_OP_SUB_FLOAT:
-		gen_cb.sub_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_BINARY_OP_MUL_INT:
-		gen_cb.mul_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT:
-		gen_cb.mul_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_BINARY_OP_DIV_INT:
-		gen_cb.div_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_BINARY_OP_DIV_FLOAT:
-		gen_cb.div_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
+		// TODO: function_def + function_param handler
+		switch (tac_op) {
 
-	// assignment
-	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_INT:
-		gen_cb.assign_primitive_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_FLOAT:
-		gen_cb.assign_primitive_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_BOOL:
-		gen_cb.assign_primitive_bool(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_STRING:
-		gen_cb.assign_primitive_string(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
+		// arithmetics
+		case MCC_TAC_OPARATION_BINARY_OP_ADD_INT:
+			gen_cb.add_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_OP_ADD_FLOAT:
+			gen_cb.add_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_OP_SUB_INT:
+			gen_cb.sub_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_OP_SUB_FLOAT:
+			gen_cb.sub_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_OP_MUL_INT:
+			gen_cb.mul_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_OP_MUL_FLOAT:
+			gen_cb.mul_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_OP_DIV_INT:
+			gen_cb.div_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_OP_DIV_FLOAT:
+			gen_cb.div_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
-	// binary logical ops
-	case MCC_TAC_OPARATION_EQUALS_INT:
-		gen_cb.equals_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_EQUALS_FLOAT:
-		gen_cb.equals_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_EQUALS_BOOL:
-		gen_cb.equals_bool(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_NOT_EQUALS_INT:
-		gen_cb.not_equals_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_NOT_EQUALS_FLOAT:
-		gen_cb.not_equals_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_NOT_EQUALS_BOOL:
-		gen_cb.not_equals_bool(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_GREATER_INT:
-		gen_cb.greater_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_GREATER_FLOAT:
-		gen_cb.greater_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LESS_INT:
-		gen_cb.less_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LESS_FLOAT:
-		gen_cb.less_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_GREATER_EQUALS_INT:
-		gen_cb.greater_equals_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_GREATER_EQUALS_FLOAT:
-		gen_cb.greater_equals_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LESS_EQUALS_INT:
-		gen_cb.less_equals_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LESS_EQUALS_FLOAT:
-		gen_cb.less_equals_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
+		// assignment
+		case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_INT:
+			gen_cb.assign_primitive_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_FLOAT:
+			gen_cb.assign_primitive_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_BOOL:
+			gen_cb.assign_primitive_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_STRING:
+			gen_cb.assign_primitive_string(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
-	// jump
-	case MCC_TAC_OPARATION_JUMP_EQUALS:
-		gen_cb.jump_equals(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_JUMP_NOT_EQUALS:
-		gen_cb.jump_not_equals(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_JUMP_GREATER:
-		gen_cb.jump_greater(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_JUMP_LESS:
-		gen_cb.jump_less(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_JUMP_GRATER_EQUALS:
-		gen_cb.jump_greater_equals(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_JUMP_LESS_EQUALS:
-		gen_cb.jump_less_equals(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_JUMP_AND:
-		gen_cb.jump_and(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_JUMP_OR:
-		gen_cb.jump_or(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
+		// binary logical ops
+		case MCC_TAC_OPARATION_EQUALS_INT:
+			gen_cb.equals_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_EQUALS_FLOAT:
+			gen_cb.equals_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_EQUALS_BOOL:
+			gen_cb.equals_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_NOT_EQUALS_INT:
+			gen_cb.not_equals_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_NOT_EQUALS_FLOAT:
+			gen_cb.not_equals_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_NOT_EQUALS_BOOL:
+			gen_cb.not_equals_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_GREATER_INT:
+			gen_cb.greater_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_GREATER_FLOAT:
+			gen_cb.greater_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LESS_INT:
+			gen_cb.less_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LESS_FLOAT:
+			gen_cb.less_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_GREATER_EQUALS_INT:
+			gen_cb.greater_equals_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_GREATER_EQUALS_FLOAT:
+			gen_cb.greater_equals_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LESS_EQUALS_INT:
+			gen_cb.less_equals_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LESS_EQUALS_FLOAT:
+			gen_cb.less_equals_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
-	// return
-	case MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT:
-		gen_cb.return_primitive_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT:
-		gen_cb.return_primitive_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL:
-		gen_cb.return_primitive_bool(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_RETURN_PREMITIVE_STRING:
-		gen_cb.return_primitive_string(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_RETURN_ARRAY_INT:
-		gen_cb.return_array_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_RETURN_ARRAY_FLOAT:
-		gen_cb.return_array_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_RETURN_ARRAY_BOOL:
-		gen_cb.return_array_bool(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_RETURN_ARRAY_STRING:
-		gen_cb.return_array_string(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
+		// jump
+		case MCC_TAC_OPARATION_JUMP_EQUALS:
+			gen_cb.jump_equals(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_JUMP_NOT_EQUALS:
+			gen_cb.jump_not_equals(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_JUMP_GREATER:
+			gen_cb.jump_greater(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_JUMP_LESS:
+			gen_cb.jump_less(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_JUMP_GRATER_EQUALS:
+			gen_cb.jump_greater_equals(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_JUMP_LESS_EQUALS:
+			gen_cb.jump_less_equals(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_JUMP_AND:
+			gen_cb.jump_and(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_JUMP_OR:
+			gen_cb.jump_or(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
-	// parameter
-	case MCC_TAC_OPARATION_PARAM_INT_PRIMITIVE:
-		gen_cb.param_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_PARAM_FLOAT_PRIMITIVE:
-		gen_cb.param_float_primitive(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_PARAM_BOOL_PRIMITIVE:
-		gen_cb.param_bool_primitive(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_PARAM_STRING_PRIMITIVE:
-		gen_cb.param_string_primitive(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_PARAM_INT_ARRAY:
-		gen_cb.param_int_array(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_PARAM_FLOAT_ARRAY:
-		gen_cb.param_float_array(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_PARAM_BOOL_ARRAY:
-		gen_cb.param_bool_array(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_PARAM_STRING_ARRAY:
-		gen_cb.param_string_array(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
+		// return
+		case MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT:
+			gen_cb.return_primitive_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT:
+			gen_cb.return_primitive_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL:
+			gen_cb.return_primitive_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_RETURN_PREMITIVE_STRING:
+			gen_cb.return_primitive_string(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_RETURN_ARRAY_INT:
+			gen_cb.return_array_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_RETURN_ARRAY_FLOAT:
+			gen_cb.return_array_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_RETURN_ARRAY_BOOL:
+			gen_cb.return_array_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_RETURN_ARRAY_STRING:
+			gen_cb.return_array_string(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
-	// label
-	case MCC_TAC_OPARATION_LABEL_FUNCTION:
-		gen_cb.label_function(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LABEL_FLOAT:
-		gen_cb.label_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LABEL_IF:
-		gen_cb.label_if(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LABEL_ELSE:
-		gen_cb.label_else(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LABEL_WHILE:
-		gen_cb.label_while(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_LABEL_STRING:
-		gen_cb.label_string(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	//TODO: push remains the same?
-	case MCC_TAC_OPARATION_LABEL_ARGUMENT:
-		gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
+		// parameter
+		case MCC_TAC_OPARATION_PARAM_INT_PRIMITIVE:
+			gen_cb.param_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_PARAM_FLOAT_PRIMITIVE:
+			gen_cb.param_float_primitive(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_PARAM_BOOL_PRIMITIVE:
+			gen_cb.param_bool_primitive(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_PARAM_STRING_PRIMITIVE:
+			gen_cb.param_string_primitive(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_PARAM_INT_ARRAY:
+			gen_cb.param_int_array(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_PARAM_FLOAT_ARRAY:
+			gen_cb.param_float_array(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_PARAM_BOOL_ARRAY:
+			gen_cb.param_bool_array(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_PARAM_STRING_ARRAY:
+			gen_cb.param_string_array(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
-		// "pseudo" labels => assign value to tmp-vars
-	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT:
-		gen_cb.convert_int_lit(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	// TODO: what about bools, floats, strings?
+		// label
+		case MCC_TAC_OPARATION_LABEL_FUNCTION:
+			gen_cb.label_function(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LABEL_FLOAT:
+			gen_cb.label_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LABEL_IF:
+			gen_cb.label_if(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LABEL_ELSE:
+			gen_cb.label_else(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LABEL_WHILE:
+			gen_cb.label_while(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LABEL_STRING:
+			gen_cb.label_string(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		// TODO: push remains the same?
+		case MCC_TAC_OPARATION_LABEL_ARGUMENT:
+			gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
-		// function
-	case MCC_TAC_OPARATION_START_FUNCTION_DEF:
-		gen_cb.start_function_def(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_END_FUNCTION_DEF:
-		gen_cb.end_function_def(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_FUNCTION_CALL:
-		gen_cb.function_call(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
+			// "pseudo" labels => assign value to tmp-vars
+		case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT:
+			gen_cb.convert_int_lit(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		// TODO: what about bools, floats, strings?
 
-	// declaration
-	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_INT:
-		gen_cb.declare_primitive_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_BOOL:
-		gen_cb.declare_primitive_bool(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-		// TODO: doppel-label string + float? => anderen namen dafür?
+			// function
+		case MCC_TAC_OPARATION_START_FUNCTION_DEF:
+			gen_cb.start_function_def(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_END_FUNCTION_DEF:
+			gen_cb.end_function_def(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_FUNCTION_CALL:
+			gen_cb.function_call(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
-	case MCC_TAC_OPARATION_DECLARE_ARRAY_INT:
-		gen_cb.declare_array_int(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_DECLARE_ARRAY_FLOAT:
-		gen_cb.declare_array_float(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_DECLARE_ARRAY_BOOL:
-		gen_cb.declare_array_bool(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-	case MCC_TAC_OPARATION_DECLARE_ARRAY_STRING:
-		gen_cb.declare_array_string(gen_cb.out, gen_cb.data, tac_elem);
-		/*print_nl_debug(gen_cb.out); */ break;
-		// TODO: complete => raise warning until completed
-		// default: log_error("Not handled"); /*print_nl_debug(gen_cb.out);
-		// */break;
+		// declaration
+		case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_INT:
+			gen_cb.declare_primitive_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_BOOL:
+			gen_cb.declare_primitive_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+			// TODO: doppel-label string + float? => anderen namen dafür?
+
+		case MCC_TAC_OPARATION_DECLARE_ARRAY_INT:
+			gen_cb.declare_array_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_DECLARE_ARRAY_FLOAT:
+			gen_cb.declare_array_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_DECLARE_ARRAY_BOOL:
+			gen_cb.declare_array_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_DECLARE_ARRAY_STRING:
+			gen_cb.declare_array_string(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+			// TODO: complete => raise warning until completed
+			// default: log_error("Not handled"); /*print_nl_debug(gen_cb.out);
+			// */break;
+		}
 	}
 }
 
-static void
+void mCc_assembly_handle_floats(struct mCc_tac_element *tac_elem,
+                                       struct mCc_assembly_generator gen_cb)
+{
+	enum mCc_tac_operation tac_op = tac_elem->tac_operation;
+
+	// TODO: function_def + function_param handler
+	switch (tac_op) {
+	// label
+	case MCC_TAC_OPARATION_LABEL_FLOAT:
+		gen_cb.label_float(gen_cb.out, gen_cb.data, tac_elem);
+		/*print_nl_debug(gen_cb.out); */ break;
+	}
+}
+
+void mCc_assembly_handle_strings(struct mCc_tac_element *tac_elem,
+                                       struct mCc_assembly_generator gen_cb)
+{
+	enum mCc_tac_operation tac_op = tac_elem->tac_operation;
+
+	// TODO: function_def + function_param handler
+	switch (tac_op) {
+	case MCC_TAC_OPARATION_LABEL_STRING:
+		gen_cb.label_string(gen_cb.out, gen_cb.data, tac_elem);
+		/*print_nl_debug(gen_cb.out); */ break;
+	}
+}
+
+void
 mCc_assembly_generate_from_tac(struct mCc_assembly_generator gen_cb,
                                struct mCc_tac_element *first_tac_elem)
 {
@@ -272,6 +314,25 @@ mCc_assembly_generate_from_tac(struct mCc_assembly_generator gen_cb,
 	    mCc_assembly_get_next_function_label(next_tac_elem);
 	mCc_assembly_new_header(gen_cb.out, GENERATED_ASSEMBLY_FILE_NAME,
 	                        first_function_label);
+
+	// first handle all floats
+	while (next_tac_elem) {
+		mCc_assembly_handle_floats(next_tac_elem, gen_cb);
+		next_tac_elem = next_tac_elem->tac_next_element;
+	}
+
+	next_tac_elem = first_tac_elem;
+
+	//then handle all strings
+	while (next_tac_elem) {
+		mCc_assembly_handle_strings(next_tac_elem, gen_cb);
+		next_tac_elem = next_tac_elem->tac_next_element;
+	}
+	//before first function-def
+	mCc_assembly_new_string_leave_with_function(gen_cb.out, first_function_label);
+
+	// handle the rest
+	next_tac_elem = first_tac_elem;
 
 	while (next_tac_elem) {
 		mCc_assembly_generate_tac_elem(gen_cb, next_tac_elem);

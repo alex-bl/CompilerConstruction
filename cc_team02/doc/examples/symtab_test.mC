@@ -18,13 +18,26 @@ void main()
 	print_int(c);
 	print_nl();
 
-*/
-
 	int c;
 	c=40/20/2;
 	print_int(c);
 	print_nl();
+*/
 
+	float a;
+	a=34.2342;
+	
+	string c;
+	string d;
+	c="hshshskshshs";
+
+	float b;
+	b=0.343111;	
+	
+	d="abc";	
+
+	print_float(a);
+	print_nl();
 	
 
 }

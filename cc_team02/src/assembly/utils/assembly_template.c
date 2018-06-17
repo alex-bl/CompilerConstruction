@@ -177,8 +177,7 @@ void mCc_assembly_main_function_leave(FILE *out)
 void mCc_assembly_new_string_enter(FILE *out, const char *label,
                                    const char *str_value)
 {
-
-	fprintf(out, ".%s", label);
+	fprintf(out, ".%s:", label);
 	mCc_assembly_print_nl(out);
 
 	mCc_assembly_print_shift(out);
