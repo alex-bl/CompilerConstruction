@@ -123,6 +123,17 @@ get_arithmetic_operation(struct mCc_ast_expression *expression,
 	return float_op;
 }
 
+static enum mCc_tac_operation
+get_arithmetic_operation_logical(struct mCc_ast_expression *expression,
+                         enum mCc_tac_operation int_op,
+                         enum mCc_tac_operation float_op)
+{
+	if (expression->lhs->data_type == MCC_AST_DATA_TYPE_INT) {
+		return int_op;
+	}
+	return float_op;
+}
+
 static enum mCc_tac_operation get_arithmetic_operation_with_bool(
     struct mCc_ast_expression *expression, enum mCc_tac_operation int_op,
     enum mCc_tac_operation float_op, enum mCc_tac_operation bool_op)
@@ -171,24 +182,24 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	case MCC_AST_BINARY_OP_GREATER_THAN:
 		// operation = MCC_TAC_OPARATION_BINARY_OP_GREATER_THAN;
 		operation =
-		    get_arithmetic_operation(expression, MCC_TAC_OPARATION_GREATER_INT,
+				get_arithmetic_operation_logical(expression, MCC_TAC_OPARATION_GREATER_INT,
 		                             MCC_TAC_OPARATION_GREATER_FLOAT);
 		break;
 	case MCC_AST_BINARY_OP_LESS_THAN:
 		// operation = MCC_TAC_OPARATION_BINARY_OP_LESS_THAN;
 		operation =
-		    get_arithmetic_operation(expression, MCC_TAC_OPARATION_LESS_INT,
+				get_arithmetic_operation_logical(expression, MCC_TAC_OPARATION_LESS_INT,
 		                             MCC_TAC_OPARATION_LESS_FLOAT);
 		break;
 	case MCC_AST_BINARY_OP_GREATER_OR_EQUALS_THAN:
 		// operation = MCC_TAC_OPARATION_BINARY_OP_GREATER_OR_EQUALS_THAN;
-		operation = get_arithmetic_operation(
+		operation = get_arithmetic_operation_logical(
 		    expression, MCC_TAC_OPARATION_GREATER_EQUALS_INT,
 		    MCC_TAC_OPARATION_GREATER_EQUALS_FLOAT);
 		break;
 	case MCC_AST_BINARY_OP_LESS_OR_EQUALS_THAN:
 		// operation = MCC_TAC_OPARATION_BINARY_OP_LESS_OR_EQUALS_THAN;
-		operation = get_arithmetic_operation(
+		operation = get_arithmetic_operation_logical(
 		    expression, MCC_TAC_OPARATION_LESS_EQUALS_INT,
 		    MCC_TAC_OPARATION_LESS_EQUALS_FLOAT);
 		break;

@@ -42,11 +42,12 @@ void main()
 	print_int(a*4);
 	print_nl();
 */
-
-	float a;
-	a=10.12/10.12;
+	bool a;
+	bool b;
+	bool c;
+	a=true;
+	b=false;
 	
-	print_float(a);
-	print_nl();
+	c=a!=b;
 
 }

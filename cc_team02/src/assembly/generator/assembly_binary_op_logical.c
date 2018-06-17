@@ -171,9 +171,31 @@ void mCc_assembly_less_equals_float(FILE *out, struct mCc_assembly_data *data,
 void mCc_assembly_and(FILE *out, struct mCc_assembly_data *data,
                       struct mCc_tac_element *tac_elem)
 {
+	int pos_operand_1 = mCc_assembly_calc_stack_position(
+	    tac_elem->tac_argument1, data->current_stack_pos);
+	int pos_operand_2 = mCc_assembly_calc_stack_position(
+	    tac_elem->tac_argument2, data->current_stack_pos);
+	int pos_result = mCc_assembly_calc_stack_position(tac_elem->tac_result,
+	                                                  data->current_stack_pos);
+
+	mCc_assembly_and_op(out, pos_operand_1, pos_operand_2);
+	mCc_assembly_allocate_bool_on_stack(out, data, 1);
+
+	mCc_assembly_push_int(out, pos_result, DEFAULT_ACCUMULATOR_OPERAND);
 }
 
 void mCc_assembly_or(FILE *out, struct mCc_assembly_data *data,
                      struct mCc_tac_element *tac_elem)
 {
+	int pos_operand_1 = mCc_assembly_calc_stack_position(
+	    tac_elem->tac_argument1, data->current_stack_pos);
+	int pos_operand_2 = mCc_assembly_calc_stack_position(
+	    tac_elem->tac_argument2, data->current_stack_pos);
+	int pos_result = mCc_assembly_calc_stack_position(tac_elem->tac_result,
+	                                                  data->current_stack_pos);
+
+	mCc_assembly_or_op(out, pos_operand_1, pos_operand_2);
+	mCc_assembly_allocate_bool_on_stack(out, data, 1);
+
+	mCc_assembly_push_int(out, pos_result, DEFAULT_ACCUMULATOR_OPERAND);
 }

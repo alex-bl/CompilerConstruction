@@ -303,11 +303,14 @@ void mCc_assembly_assign_string(FILE *out, const char *label,
 void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
                               int calculated_offset_op_2)
 {
+	mCc_assembly_load_int(out, calculated_offset_op_1,
+	                      DEFAULT_ACCUMULATOR_OPERAND);
+
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "cmpl");
-	fprintf(out, "%d(%s),%d(%s)", calculated_offset_op_1,
-	        DEFAULT_DATA_STACK_POINTER, calculated_offset_op_2,
-	        DEFAULT_DATA_STACK_POINTER);
+
+	fprintf(out, "%d(%s), %s ", calculated_offset_op_2,
+	        DEFAULT_DATA_STACK_POINTER, DEFAULT_ACCUMULATOR_OPERAND);
 	mCc_assembly_print_nl(out);
 }
 
@@ -327,21 +330,27 @@ void mCc_assembly_compare_float(FILE *out, int calculated_offset_op)
 }
 
 // TODO: andl and orl enough or just simply use cmpl?
-void mCc_assembly_and_op(FILE *out, int calculated_offset)
+void mCc_assembly_and_op(FILE *out, int calculated_offset_op_1,
+                         int calculated_offset_op_2)
 {
+	mCc_assembly_load_int(out, calculated_offset_op_1,
+	                      DEFAULT_ACCUMULATOR_OPERAND);
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "andl");
-	fprintf(out, "%d(%s),%s", calculated_offset, DEFAULT_DATA_STACK_POINTER,
-	        DEFAULT_ACCUMULATOR_OPERAND);
+	fprintf(out, "%d(%s),%s", calculated_offset_op_2,
+	        DEFAULT_DATA_STACK_POINTER, DEFAULT_ACCUMULATOR_OPERAND);
 	mCc_assembly_print_nl(out);
 }
 
-void mCc_assembly_or_op(FILE *out, int calculated_offset)
+void mCc_assembly_or_op(FILE *out, int calculated_offset_op_1,
+                        int calculated_offset_op_2)
 {
+	mCc_assembly_load_int(out, calculated_offset_op_1,
+	                      DEFAULT_ACCUMULATOR_OPERAND);
 	mCc_assembly_print_shift(out);
-	mCc_assembly_print_op(out, "andl");
-	fprintf(out, "%d(%s),%s", calculated_offset, DEFAULT_DATA_STACK_POINTER,
-	        DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_print_op(out, "orl");
+	fprintf(out, "%d(%s),%s", calculated_offset_op_2,
+	        DEFAULT_DATA_STACK_POINTER, DEFAULT_ACCUMULATOR_OPERAND);
 	mCc_assembly_print_nl(out);
 }
 

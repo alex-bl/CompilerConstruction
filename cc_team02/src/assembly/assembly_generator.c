@@ -129,6 +129,12 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 		case MCC_TAC_OPARATION_LESS_EQUALS_FLOAT:
 			gen_cb.less_equals_float(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_AND:
+			gen_cb.and_op(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_BINARY_OR:
+			gen_cb.or_op(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
 		// jump
 		case MCC_TAC_OPARATION_JUMP_EQUALS:
@@ -293,6 +299,7 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			// TODO: complete => raise warning until completed
 			// default: log_error("Not handled"); /*print_nl_debug(gen_cb.out);
 			// */break;
+
 		}
 	}
 }

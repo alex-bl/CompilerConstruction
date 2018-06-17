@@ -101,9 +101,11 @@ void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
 // Maybe the same?
 void mCc_assembly_compare_float(FILE *out, int calculated_offset_op);
 
-void mCc_assembly_and_op(FILE *out, int calculated_offset);
+void mCc_assembly_and_op(FILE *out, int calculated_offset_op_1,
+                         int calculated_offset_op_2);
 
-void mCc_assembly_or_op(FILE *out, int calculated_offset);
+void mCc_assembly_or_op(FILE *out, int calculated_offset_op_1,
+                        int calculated_offset_op_2);
 /*============================================================= unary-ops */
 
 /*TODO:
