@@ -136,6 +136,17 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			gen_cb.or_op(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
 
+		// unary ops
+		case MCC_TAC_OPARATION_UNARY_MINUS_INT:
+			gen_cb.unary_op_minus_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_UNARY_MINUS_FLOAT:
+			gen_cb.unary_op_minus_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_UNARY_NEGATION:
+			gen_cb.unary_op_negation(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+
 		// jump
 		case MCC_TAC_OPARATION_JUMP_EQUALS:
 			gen_cb.jump_equals(gen_cb.out, gen_cb.data, tac_elem);
@@ -299,7 +310,6 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			// TODO: complete => raise warning until completed
 			// default: log_error("Not handled"); /*print_nl_debug(gen_cb.out);
 			// */break;
-
 		}
 	}
 }
@@ -320,7 +330,7 @@ static bool mCc_assembly_handle_floats(struct mCc_tac_element *tac_elem,
 }
 
 static bool mCc_assembly_handle_strings(struct mCc_tac_element *tac_elem,
-                                       struct mCc_assembly_generator gen_cb)
+                                        struct mCc_assembly_generator gen_cb)
 {
 	enum mCc_tac_operation tac_op = tac_elem->tac_operation;
 
@@ -333,9 +343,8 @@ static bool mCc_assembly_handle_strings(struct mCc_tac_element *tac_elem,
 	return false;
 }
 
-void
-mCc_assembly_generate_from_tac(struct mCc_assembly_generator gen_cb,
-                               struct mCc_tac_element *first_tac_elem)
+void mCc_assembly_generate_from_tac(struct mCc_assembly_generator gen_cb,
+                                    struct mCc_tac_element *first_tac_elem)
 {
 	struct mCc_tac_element *next_tac_elem = first_tac_elem;
 
@@ -351,18 +360,19 @@ mCc_assembly_generate_from_tac(struct mCc_assembly_generator gen_cb,
 	}
 
 	next_tac_elem = first_tac_elem;
-	bool strings_available=false;
+	bool strings_available = false;
 
-	//then handle all strings
+	// then handle all strings
 	while (next_tac_elem) {
-		if(mCc_assembly_handle_strings(next_tac_elem, gen_cb)){
-			strings_available=true;
+		if (mCc_assembly_handle_strings(next_tac_elem, gen_cb)) {
+			strings_available = true;
 		}
 		next_tac_elem = next_tac_elem->tac_next_element;
 	}
-	if(strings_available){
-	//before first function-def
-		mCc_assembly_new_string_leave_with_function(gen_cb.out, first_function_label);
+	if (strings_available) {
+		// before first function-def
+		mCc_assembly_new_string_leave_with_function(gen_cb.out,
+		                                            first_function_label);
 	}
 	// handle the rest
 	next_tac_elem = first_tac_elem;
