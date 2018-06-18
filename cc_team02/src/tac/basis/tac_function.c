@@ -9,7 +9,6 @@
 #include "tac_statement.h"
 #include "tac_utils.h"
 
-
 enum mCc_tac_operation tac_helper_get_tac_oparation_for_parameter_type(
     enum mCc_tac_operation operation)
 {
@@ -68,6 +67,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	// stores parameter into tac table
 	struct mCc_ast_declaration *parameter = def->first_parameter;
 	while (parameter != NULL) {
+
 		struct mCc_tac_element *parameter_tac;
 		if (parameter->declaration_type == MCC_AST_DECLARATION_PRIMITIVE) {
 			parameter_tac =
@@ -76,13 +76,23 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 			parameter_tac = mCc_tac_declaration_array(parameter, previous_tac);
 		}
 
+		//hacky -.-
+		parameter_tac->tac_result->is_param=true;
+		struct mCc_tac_identifier *param_identifier =
+		    mCc_tac_create_from_tac_identifier(parameter_tac->tac_result);
+
 		struct mCc_tac_element *tac = tac_new_element(
 		    tac_helper_get_tac_oparation_for_parameter_type(
 		        parameter_tac->tac_operation),
-		    mCc_tac_create_from_tac_identifier(parameter_tac->tac_result), NULL,
+		    param_identifier, NULL,
 		    tac_new_identifier(def->identifier->identifier_name),
 		    MCC_TAC_TYPE_NO_TYPE, 0);
-		mCc_tac_connect_tac_entry(parameter_tac, tac);
+
+		//TODO: not needed here => param already available
+		mCc_tac_delete(parameter_tac);
+
+
+		mCc_tac_connect_tac_entry(previous_tac, tac);
 		previous_tac = tac;
 		parameter = parameter->next_declaration;
 	}
@@ -143,27 +153,29 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 		struct mCc_tac_element *tac_argument =
 		    helper_get_tac_of_expression(argument, previous_tac);
 
-		enum mCc_ast_data_type ast_data_type =
-				argument->data_type;
+		enum mCc_ast_data_type ast_data_type = argument->data_type;
 
-		struct mCc_tac_identifier *call_identifier = tac_new_identifier(call->identifier->identifier_name);
-		call_identifier->type=MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
+		struct mCc_tac_identifier *call_identifier =
+		    tac_new_identifier(call->identifier->identifier_name);
+		call_identifier->type = MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
 
 		struct mCc_tac_element *tac = tac_new_element(
 		    MCC_TAC_OPARATION_LABEL_ARGUMENT,
 		    mCc_tac_create_from_tac_identifier(tac_argument->tac_result), NULL,
-			call_identifier,
-			mCc_tac_map_from_ast_data_type(ast_data_type), 0);
+		    call_identifier, mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 		mCc_tac_connect_tac_entry(tac_argument, tac);
 		previous_tac = tac;
 		argument = argument->next_expr;
 	}
 
+	enum mCc_ast_data_type ast_data_type =
+	    call->identifier->symtab_info->data_type;
+
 	// stores call into tac table
 	struct mCc_tac_element *tac_function_call =
 	    tac_new_element(MCC_TAC_OPARATION_FUNCTION_CALL, NULL, NULL,
 	                    tac_new_identifier(call->identifier->identifier_name),
-	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	                    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_function_call);
 	return tac_function_call;
 }

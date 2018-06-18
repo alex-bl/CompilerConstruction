@@ -61,6 +61,17 @@ void mCc_assembly_pseudo_assign_int_literal(FILE *out,
 	mCc_assembly_assign_int(out, int_val->i_val, calculated_offset);
 }
 
+void mCc_assembly_assign_function_call_int(FILE *out,
+                                           struct mCc_assembly_data *data,
+                                           struct mCc_tac_element *tac_elem)
+{
+	assert(tac_elem);
+	struct mCc_tac_identifier *dest_var = get_assign_dest_var(tac_elem);
+	int dest_var_offset =
+	    mCc_assembly_calc_stack_position(dest_var, data->current_stack_pos);
+	mCc_assembly_push_int(out, dest_var_offset, DEFAULT_RETURN_REG);
+}
+
 // TODO
 void mCc_assembly_assign_primitive_float(FILE *out,
                                          struct mCc_assembly_data *data,
@@ -94,6 +105,14 @@ void mCc_assembly_pseudo_assign_float_literal(FILE *out,
 	mCc_assembly_assign_float(out, var->name, calculated_offset);
 }
 
+void mCc_assembly_assign_function_call_float(FILE *out,
+                                             struct mCc_assembly_data *data,
+                                             struct mCc_tac_element *tac_elem)
+{
+	assert(tac_elem);
+	mCc_assembly_assign_function_call_int(out, data, tac_elem);
+}
+
 void mCc_assembly_assign_primitive_bool(FILE *out,
                                         struct mCc_assembly_data *data,
                                         struct mCc_tac_element *tac_elem)
@@ -124,6 +143,14 @@ void mCc_assembly_pseudo_assign_bool_literal(FILE *out,
 	mCc_assembly_assign_bool(out, bool_val->b_val, calculated_offset);
 }
 
+void mCc_assembly_assign_function_call_bool(FILE *out,
+                                            struct mCc_assembly_data *data,
+                                            struct mCc_tac_element *tac_elem)
+{
+	assert(tac_elem);
+	mCc_assembly_assign_function_call_int(out, data, tac_elem);
+}
+
 void mCc_assembly_assign_primitive_string(FILE *out,
                                           struct mCc_assembly_data *data,
                                           struct mCc_tac_element *tac_elem)
@@ -152,4 +179,12 @@ void mCc_assembly_pseudo_assign_string_literal(FILE *out,
 	int calculated_offset =
 	    mCc_assembly_calc_stack_position(var, data->current_stack_pos);
 	mCc_assembly_assign_string(out, var->name, calculated_offset);
+}
+
+void mCc_assembly_assign_function_call_string(FILE *out,
+                                              struct mCc_assembly_data *data,
+                                              struct mCc_tac_element *tac_elem)
+{
+	assert(tac_elem);
+	mCc_assembly_assign_function_call_int(out, data, tac_elem);
 }

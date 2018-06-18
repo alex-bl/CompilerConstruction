@@ -158,7 +158,7 @@ void mCc_assembly_prepare_return(FILE *out, int calculated_offset)
 	 * - use movl	<offset>(%ebp), (%eax)
 	 */
 	mCc_assembly_print_op(out, "movl");
-	fprintf(out, "%d(%s), (%s)", calculated_offset, DEFAULT_DATA_STACK_POINTER,
+	fprintf(out, "%d(%s), %s", calculated_offset, DEFAULT_DATA_STACK_POINTER,
 	        DEFAULT_RETURN_REG);
 	mCc_assembly_print_nl(out);
 }

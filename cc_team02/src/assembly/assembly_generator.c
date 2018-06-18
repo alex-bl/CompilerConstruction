@@ -85,6 +85,20 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 		case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_STRING:
 			gen_cb.assign_primitive_string(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_FUNCTION_CALL_INT:
+			gen_cb.assign_function_call_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_FUNCTION_CALL_FLOAT:
+			gen_cb.assign_function_call_float(gen_cb.out, gen_cb.data,
+			                                  tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_FUNCTION_CALL_BOOL:
+			gen_cb.assign_function_call_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_FUNCTION_CALL_STRING:
+			gen_cb.assign_function_call_string(gen_cb.out, gen_cb.data,
+			                                   tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
 
 		// binary logical ops
 		case MCC_TAC_OPARATION_EQUALS_INT:
@@ -157,7 +171,6 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 		case MCC_TAC_OPARATION_JUMP:
 			gen_cb.jump(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
-
 
 		// return
 		case MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT:
@@ -393,6 +406,10 @@ mcc_assembly_gen_setup(FILE *out, struct mCc_assembly_data *data)
 		.assign_primitive_float = mCc_assembly_assign_primitive_float,
 		.assign_primitive_bool = mCc_assembly_assign_primitive_bool,
 		.assign_primitive_string = mCc_assembly_assign_primitive_string,
+		.assign_function_call_int = mCc_assembly_assign_function_call_int,
+		.assign_function_call_float = mCc_assembly_assign_function_call_float,
+		.assign_function_call_bool = mCc_assembly_assign_function_call_bool,
+		.assign_function_call_string = mCc_assembly_assign_function_call_string,
 
 		// Unary-op
 		.unary_op_minus_int = mCc_assembly_generate_unary_minus_int,

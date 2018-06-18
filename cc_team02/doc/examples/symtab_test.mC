@@ -1,3 +1,13 @@
+int test_func(int p){
+	int b;
+	int c;
+	
+	c=2;
+	b=3;
+	
+	return c*b*p;
+}
+
 void main()
 {
 /*
@@ -53,8 +63,9 @@ void main()
 	} 	
 */
 
-	while(true){
-		int a;
-	}
+	int a;
+	a=test_func(8);
+	print_int(a);
+	print_nl();
 	
 }

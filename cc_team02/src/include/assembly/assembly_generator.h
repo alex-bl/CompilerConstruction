@@ -31,7 +31,10 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb assign_primitive_float;
 	mCc_generate_assembly_cb assign_primitive_bool;
 	mCc_generate_assembly_cb assign_primitive_string;
-
+	mCc_generate_assembly_cb assign_function_call_int;
+	mCc_generate_assembly_cb assign_function_call_float;
+	mCc_generate_assembly_cb assign_function_call_bool;
+	mCc_generate_assembly_cb assign_function_call_string;
 	// Unary-op
 	mCc_generate_assembly_cb unary_op_minus_int;
 	mCc_generate_assembly_cb unary_op_minus_float;
@@ -66,7 +69,6 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb argument_float_array;
 	mCc_generate_assembly_cb argument_bool_array;
 	mCc_generate_assembly_cb argument_string_array;
-
 
 	// Label
 	mCc_generate_assembly_cb label_function;
