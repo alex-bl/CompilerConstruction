@@ -76,21 +76,25 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 			parameter_tac = mCc_tac_declaration_array(parameter, previous_tac);
 		}
 
-		//hacky -.-
-		parameter_tac->tac_result->is_param=true;
+		// hacky -.-
+		parameter_tac->tac_result->is_param = true;
 		struct mCc_tac_identifier *param_identifier =
 		    mCc_tac_create_from_tac_identifier(parameter_tac->tac_result);
+
+		enum mCc_ast_data_type ast_data_type = parameter->data_type;
+
+		struct mCc_tac_identifier *def_identifier = tac_new_identifier(def->identifier->identifier_name);
+		def_identifier->type=MCC_IDENTIFIER_TAC_TYPE_FUNCTION_DEF;
 
 		struct mCc_tac_element *tac = tac_new_element(
 		    tac_helper_get_tac_oparation_for_parameter_type(
 		        parameter_tac->tac_operation),
 		    param_identifier, NULL,
-		    tac_new_identifier(def->identifier->identifier_name),
-		    MCC_TAC_TYPE_NO_TYPE, 0);
+			def_identifier,
+		    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 
-		//TODO: not needed here => param already available
+		// TODO: not needed here => param already available
 		mCc_tac_delete(parameter_tac);
-
 
 		mCc_tac_connect_tac_entry(previous_tac, tac);
 		previous_tac = tac;

@@ -21,6 +21,8 @@ static struct mCc_assembly_offset_holder init_offset_info()
 	struct mCc_assembly_offset_holder info;
 	map_init(&info.offset_table);
 	map_init(&info.param_table);
+	map_init(&info.function_table);
+
 	info.actual_offset = 0;
 	return info;
 }
@@ -30,16 +32,33 @@ static struct mCc_tac_identifier *get_param(struct mCc_tac_element *elem)
 	return elem->tac_argument1;
 }
 
+static struct mCc_tac_identifier *get_function_def(struct mCc_tac_element *elem)
+{
+	return elem->tac_result;
+}
+
 static bool param_contained(struct mCc_tac_identifier *identifier,
                             struct mCc_assembly_offset_holder *info)
 {
 	return map_get(&info->param_table, identifier->name) != NULL;
 }
 
+static bool function_def_contained(struct mCc_tac_identifier *identifier,
+                                   struct mCc_assembly_offset_holder *info)
+{
+	return map_get(&info->function_table, identifier->name) != NULL;
+}
+
 static void param_add_new_entry(struct mCc_tac_identifier *identifier,
                                 struct mCc_assembly_offset_holder *info)
 {
 	map_set(&info->param_table, identifier->name, 0);
+}
+
+static void function_def_add_new_entry(struct mCc_tac_identifier *identifier,
+                                struct mCc_assembly_offset_holder *info)
+{
+	map_set(&info->function_table, identifier->name, 0);
 }
 
 static size_t get_tac_elem_size(enum mCc_tac_type type)
@@ -130,7 +149,11 @@ static void handle_identifier(struct mCc_tac_identifier *identifier,
                               struct mCc_assembly_offset_holder *info)
 {
 	if (identifier_requires_offset_calculation(identifier)) {
-		process_identifier_offset_calculation(identifier, type, info);
+		if (function_def_contained(identifier, info)) {
+			identifier->type = MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
+		}else{
+			process_identifier_offset_calculation(identifier, type, info);
+		}
 
 		if (param_contained(identifier, info)) {
 			identifier->is_param = true;
@@ -239,6 +262,11 @@ static bool tac_elem_is_param(struct mCc_tac_element *element)
 	return false;
 }
 
+static bool tac_elem_is_function_def(struct mCc_tac_element *element)
+{
+	return element->tac_operation == MCC_TAC_OPARATION_LABEL_FUNCTION;
+}
+
 static void handle_tac_elem(struct mCc_tac_element *tac_element,
                             struct mCc_assembly_offset_holder *info)
 {
@@ -246,6 +274,12 @@ static void handle_tac_elem(struct mCc_tac_element *tac_element,
 	if (tac_elem_is_param(tac_element)) {
 		struct mCc_tac_identifier *identifier_param = get_param(tac_element);
 		param_add_new_entry(identifier_param, info);
+	}
+
+	if (tac_elem_is_function_def(tac_element)) {
+		struct mCc_tac_identifier *identifier_param =
+		    get_function_def(tac_element);
+		function_def_add_new_entry(identifier_param, info);
 	}
 
 	if (tac_elem_contains_stack_vars(tac_element)) {
@@ -283,4 +317,5 @@ void mCc_assembly_calculate_stack_offsets(
 
 	map_deinit(&info.offset_table);
 	map_deinit(&info.param_table);
+	map_deinit(&info.function_table);
 }

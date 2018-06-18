@@ -177,6 +177,7 @@ static void print_tac_arg(struct mCc_tac_identifier *tac_identifier, FILE *out)
 		case MCC_IDENTIFIER_TAC_TYPE_VAR:
 		case MCC_IDENTIFIER_TAC_TYPE_STRING:
 		case MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL:
+		case MCC_IDENTIFIER_TAC_TYPE_FUNCTION_DEF:
 			fprintf(out, "%20s", tac_identifier->name);
 			break;
 		default: fprintf(out, "%20s", "unknown?"); break;

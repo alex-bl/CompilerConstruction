@@ -182,7 +182,8 @@ enum mCc_tac_identifier_type {
 	/*required for identifying tac-identifier denoting a variable*/
 	// TODO: distinguish between variable and other labels!!
 	MCC_IDENTIFIER_TAC_TYPE_VAR,
-	MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL
+	MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL,
+	MCC_IDENTIFIER_TAC_TYPE_FUNCTION_DEF,
 };
 
 struct mCc_tac_element {
