@@ -34,10 +34,12 @@
 #define DEFAULT_STACK_POINTER "%esp"
 #define DEFAULT_RETURN_REG "%eax"
 #define DEFAULT_UNARY_OP_REG "%eax"
-#define BASE_OFFSET_PARAMS 4
+#define BASE_OFFSET_PARAMS 8
 #define EDX_REG "%edx"
 #define ECX_REG "%ecx"
 #define CONDITION_FLAG_REG "%al"
+#define FLOAT_STACK_TOP_REG "%st"
+#define FLOAT_STACK_SEC_REG "%st(1)"
 
 #ifdef __cplusplus
 extern "C" {

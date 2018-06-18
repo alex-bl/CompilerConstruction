@@ -77,7 +77,7 @@ void mCc_assembly_div_float(FILE *out, int calculated_offset);
 void mCc_assembly_assign_int(FILE *out, int int_val, int calculated_offset);
 
 // TODO: really required?
-void mCc_assembly_assign_float(FILE *out, float float_val,
+void mCc_assembly_assign_float(FILE *out, char *float_label,
                                int calculated_offset);
 
 void mCc_assembly_assign_bool(FILE *out, bool bool_val, int calculated_offset);
@@ -98,12 +98,17 @@ void mCc_assembly_assign_string(FILE *out, const char *label,
 void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
                               int calculated_offset_op_2);
 
+void mCc_assembly_compare_bool(FILE *out, int calculated_offset_op_1,
+                               bool to_compare);
+
 // Maybe the same?
-void mCc_assembly_compare_float(FILE *out, int calculated_offset_op);
+void mCc_assembly_compare_float(FILE *out);
 
-void mCc_assembly_and_op(FILE *out, int calculated_offset);
+void mCc_assembly_and_op(FILE *out, int calculated_offset_op_1,
+                         int calculated_offset_op_2);
 
-void mCc_assembly_or_op(FILE *out, int calculated_offset);
+void mCc_assembly_or_op(FILE *out, int calculated_offset_op_1,
+                        int calculated_offset_op_2);
 /*============================================================= unary-ops */
 
 /*TODO:
@@ -123,6 +128,8 @@ void mCc_assembly_unary_negation(FILE *out);
 void mCc_assembly_jump_equals(FILE *out, const char *dest_label);
 
 void mCc_assembly_jump_not_equals(FILE *out, const char *dest_label);
+
+void mCc_assembly_jump(FILE *out, const char *dest_label);
 
 void mCc_assembly_jump_greater(FILE *out, const char *dest_label);
 
@@ -158,16 +165,19 @@ void mCc_assembly_call_function(FILE *out, const char *function_label);
 /*============================================================= special */
 
 void mCc_assembly_set_equals(FILE *out);
-
+void mCc_assembly_set_equals_float(FILE *out);
 void mCc_assembly_set_not_equals(FILE *out);
-
+void mCc_assembly_set_not_equals_float(FILE *out);
 void mCc_assembly_set_greater(FILE *out);
-
+void mCc_assembly_set_greater_float(FILE *out);
 void mCc_assembly_set_less(FILE *out);
+void mCc_assembly_set_less_float(FILE *out);
 
 void mCc_assembly_set_greater_equals(FILE *out);
+void mCc_assembly_set_greater_equals_float(FILE *out);
 
 void mCc_assembly_set_less_equals(FILE *out);
+void mCc_assembly_set_less_equals_float(FILE *out);
 
 void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest);
 

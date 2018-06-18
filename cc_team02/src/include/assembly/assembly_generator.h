@@ -31,7 +31,10 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb assign_primitive_float;
 	mCc_generate_assembly_cb assign_primitive_bool;
 	mCc_generate_assembly_cb assign_primitive_string;
-
+	mCc_generate_assembly_cb assign_function_call_int;
+	mCc_generate_assembly_cb assign_function_call_float;
+	mCc_generate_assembly_cb assign_function_call_bool;
+	mCc_generate_assembly_cb assign_function_call_string;
 	// Unary-op
 	mCc_generate_assembly_cb unary_op_minus_int;
 	mCc_generate_assembly_cb unary_op_minus_float;
@@ -67,27 +70,25 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb argument_bool_array;
 	mCc_generate_assembly_cb argument_string_array;
 
-
 	// Label
 	mCc_generate_assembly_cb label_function;
 	mCc_generate_assembly_cb label_float;
 	mCc_generate_assembly_cb label_string;
 	mCc_generate_assembly_cb label_if;
 	mCc_generate_assembly_cb label_else;
+	mCc_generate_assembly_cb label_after_else;
 	mCc_generate_assembly_cb label_while;
 
 	// "Pseudo-labels" aka literal-assignment
 	mCc_generate_assembly_cb convert_int_lit;
+	mCc_generate_assembly_cb convert_float_lit;
+	mCc_generate_assembly_cb convert_bool_lit;
+	mCc_generate_assembly_cb convert_string_lit;
 
 	// Jump
-	mCc_generate_assembly_cb jump_equals;
 	mCc_generate_assembly_cb jump_not_equals;
-	mCc_generate_assembly_cb jump_greater;
-	mCc_generate_assembly_cb jump_less;
-	mCc_generate_assembly_cb jump_greater_equals;
-	mCc_generate_assembly_cb jump_less_equals;
-	mCc_generate_assembly_cb jump_and;
-	mCc_generate_assembly_cb jump_or;
+	mCc_generate_assembly_cb jump_equals;
+	mCc_generate_assembly_cb jump;
 
 	// Function
 	mCc_generate_assembly_cb start_function_def;

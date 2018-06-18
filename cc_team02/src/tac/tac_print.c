@@ -38,6 +38,11 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_BOOL: return "ASSIGN_BOOL";
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_STRING: return "ASSIGN_STRING";
 
+	case MCC_TAC_OPARATION_ASSIGN_FUNCTION_CALL_INT: return "CALL_INT";
+	case MCC_TAC_OPARATION_ASSIGN_FUNCTION_CALL_FLOAT: return "CALL_FLOAT";
+	case MCC_TAC_OPARATION_ASSIGN_FUNCTION_CALL_BOOL: return "CALL_BOOL";
+	case MCC_TAC_OPARATION_ASSIGN_FUNCTION_CALL_STRING: return "CALL_STRING";
+
 	case MCC_TAC_OPARATION_ASSIGN_ARRAY_INT: return "ASSIGN_INT_ARRAY";
 	case MCC_TAC_OPARATION_ASSIGN_ARRAY_FLOAT: return "ASSIGN_FLOAT_ARRAY";
 	case MCC_TAC_OPARATION_ASSIGN_ARRAY_BOOL: return "ASSIGN_BOOL_ARRAY";
@@ -68,17 +73,10 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 		return "LESS_EQUALS_FLOAT";
 
 	// JUMP
-	case MCC_TAC_OPARATION_JUMP_EQUALS: return "JUMP_EQUALS";
 	case MCC_TAC_OPARATION_JUMP_NOT_EQUALS: return "JUMP_NOT_EQUALS";
-	case MCC_TAC_OPARATION_JUMP_GREATER: return "JUMP_GREATER";
-	case MCC_TAC_OPARATION_JUMP_LESS: return "JUMP_LESS";
-	case MCC_TAC_OPARATION_JUMP_GRATER_EQUALS: return "JUMP_GREATER_EQUALS";
-	case MCC_TAC_OPARATION_JUMP_LESS_EQUALS: return "JUMP_LESS_EQUALS";
-	case MCC_TAC_OPARATION_JUMP_AND: return "JUMP_AND";
-	case MCC_TAC_OPARATION_JUMP_OR: return "JUMP_OR";
 	case MCC_TAC_OPARATION_JUMP: return "JUMP";
-	case MCC_TAC_OPARATION_JUMP_FALSE:
-		return "JUMP_FALSE";
+	case MCC_TAC_OPARATION_JUMP_EQUALS:
+		return "JUMP_EQUALS";
 
 	// RETURN
 	case MCC_TAC_OPARATION_RETURN_PRIMITIVE_VOID:
@@ -115,6 +113,12 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 	// LABEL
 	case MCC_TAC_OPARATION_LABEL_FUNCTION: return "LABEL_FUNCTION";
 	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT: return "PSEUDO_ASSIGN_INT";
+	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_FLOAT:
+		return "PSEUDO_ASSIGN_FLOAT";
+	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_BOOL: return "PSEUDO_ASSIGN_BOOL";
+	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_STRING:
+		return "PSEUDO_ASSIGN_STRING";
+
 	case MCC_TAC_OPARATION_LABEL_BOOL: return "LABEL BOOL";
 	case MCC_TAC_OPARATION_LABEL_FLOAT: return "LABEL_FLOAT";
 	case MCC_TAC_OPARATION_LABEL_IF: return "LABEL_IF";
@@ -172,8 +176,10 @@ static void print_tac_arg(struct mCc_tac_identifier *tac_identifier, FILE *out)
 			break;
 		case MCC_IDENTIFIER_TAC_TYPE_VAR:
 		case MCC_IDENTIFIER_TAC_TYPE_STRING:
+		case MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL:
 			fprintf(out, "%20s", tac_identifier->name);
 			break;
+		default: fprintf(out, "%20s", "unknown?"); break;
 		}
 	} else {
 		fprintf(out, "%20s", "-");
