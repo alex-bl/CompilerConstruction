@@ -314,6 +314,19 @@ void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
 	mCc_assembly_print_nl(out);
 }
 
+void mCc_assembly_compare_bool(FILE *out, int calculated_offset_op_1,
+                               bool to_compare)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "cmpl");
+
+	int bool_val = (to_compare ? 1 : 0);
+
+	fprintf(out, "$%d, %d(%s)", bool_val, calculated_offset_op_1,
+	        DEFAULT_DATA_STACK_POINTER);
+	mCc_assembly_print_nl(out);
+}
+
 // Maybe the same?
 void mCc_assembly_compare_float(FILE *out)
 {
@@ -390,7 +403,6 @@ void mCc_assembly_unary_negation(FILE *out)
 
 static void jump_to(FILE *out, const char *dest_label, const char *jump_op)
 {
-	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "");
 	fprintf(out, "%s .%s", jump_op, dest_label);
 	mCc_assembly_print_nl(out);
@@ -405,6 +417,12 @@ void mCc_assembly_jump_not_equals(FILE *out, const char *dest_label)
 {
 	jump_to(out, dest_label, "jne");
 }
+
+void mCc_assembly_jump(FILE *out, const char *dest_label)
+{
+	jump_to(out, dest_label, "jmp");
+}
+
 
 void mCc_assembly_jump_greater(FILE *out, const char *dest_label)
 {
@@ -538,7 +556,6 @@ void mCc_assembly_set_less_float(FILE *out)
 	do_set_cc_op(out, "setb");
 }
 
-
 void mCc_assembly_set_greater_equals(FILE *out)
 {
 	do_set_cc_op(out, "setge");
@@ -548,7 +565,6 @@ void mCc_assembly_set_greater_equals_float(FILE *out)
 {
 	do_set_cc_op(out, "setae");
 }
-
 
 void mCc_assembly_set_less_equals(FILE *out)
 {

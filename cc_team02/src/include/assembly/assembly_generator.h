@@ -74,6 +74,7 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb label_string;
 	mCc_generate_assembly_cb label_if;
 	mCc_generate_assembly_cb label_else;
+	mCc_generate_assembly_cb label_after_else;
 	mCc_generate_assembly_cb label_while;
 
 	// "Pseudo-labels" aka literal-assignment
@@ -83,14 +84,9 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb convert_string_lit;
 
 	// Jump
-	mCc_generate_assembly_cb jump_equals;
 	mCc_generate_assembly_cb jump_not_equals;
-	mCc_generate_assembly_cb jump_greater;
-	mCc_generate_assembly_cb jump_less;
-	mCc_generate_assembly_cb jump_greater_equals;
-	mCc_generate_assembly_cb jump_less_equals;
-	mCc_generate_assembly_cb jump_and;
-	mCc_generate_assembly_cb jump_or;
+	mCc_generate_assembly_cb jump_equals;
+	mCc_generate_assembly_cb jump;
 
 	// Function
 	mCc_generate_assembly_cb start_function_def;

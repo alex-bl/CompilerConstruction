@@ -1,7 +1,9 @@
 #include "assembly_label.h"
+
 #include "assembly_formatter.h"
 #include "assembly_template.h"
 #include "basic_tac.h"
+#include "assembly_general.h"
 
 static void print_label_without_dot(FILE *out, const char *label)
 {
@@ -18,7 +20,7 @@ static void print_label(FILE *out, const char *label)
 static char *get_label(struct mCc_tac_element *tac_elem)
 {
 	// TODO: at argument_1?
-	return tac_elem->tac_argument1->name;
+	return tac_elem->tac_result->name;
 }
 
 static char *get_label_function(struct mCc_tac_element *tac_elem)
@@ -81,6 +83,13 @@ void mCc_assembly_label_else(FILE *out, struct mCc_assembly_data *data,
                              struct mCc_tac_element *tac_elem)
 {
 	// maybe some special treatment for else-labels
+	print_label(out, get_label(tac_elem));
+}
+
+// is a jump... maybe move to assembly_jump?
+void mCc_assembly_label_after_else(FILE *out, struct mCc_assembly_data *data,
+                             struct mCc_tac_element *tac_elem)
+{
 	print_label(out, get_label(tac_elem));
 }
 

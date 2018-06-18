@@ -46,6 +46,9 @@ void main()
 	bool d;
 	d=false;
 	
-	c=!d;
+	if(d){
+		print("This is false");
+	}else{
 	
+	} 	
 }

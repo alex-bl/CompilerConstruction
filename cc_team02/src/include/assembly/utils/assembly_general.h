@@ -98,6 +98,9 @@ void mCc_assembly_assign_string(FILE *out, const char *label,
 void mCc_assembly_compare_int(FILE *out, int calculated_offset_op_1,
                               int calculated_offset_op_2);
 
+void mCc_assembly_compare_bool(FILE *out, int calculated_offset_op_1,
+                               bool to_compare);
+
 // Maybe the same?
 void mCc_assembly_compare_float(FILE *out);
 
@@ -125,6 +128,8 @@ void mCc_assembly_unary_negation(FILE *out);
 void mCc_assembly_jump_equals(FILE *out, const char *dest_label);
 
 void mCc_assembly_jump_not_equals(FILE *out, const char *dest_label);
+
+void mCc_assembly_jump(FILE *out, const char *dest_label);
 
 void mCc_assembly_jump_greater(FILE *out, const char *dest_label);
 

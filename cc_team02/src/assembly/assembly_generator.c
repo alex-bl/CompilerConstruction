@@ -148,30 +148,16 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			/*print_nl_debug(gen_cb.out); */ break;
 
 		// jump
-		case MCC_TAC_OPARATION_JUMP_EQUALS:
-			gen_cb.jump_equals(gen_cb.out, gen_cb.data, tac_elem);
-			/*print_nl_debug(gen_cb.out); */ break;
 		case MCC_TAC_OPARATION_JUMP_NOT_EQUALS:
 			gen_cb.jump_not_equals(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
-		case MCC_TAC_OPARATION_JUMP_GREATER:
-			gen_cb.jump_greater(gen_cb.out, gen_cb.data, tac_elem);
+		case MCC_TAC_OPARATION_JUMP_EQUALS:
+			gen_cb.jump_equals(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
-		case MCC_TAC_OPARATION_JUMP_LESS:
-			gen_cb.jump_less(gen_cb.out, gen_cb.data, tac_elem);
+		case MCC_TAC_OPARATION_JUMP:
+			gen_cb.jump(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
-		case MCC_TAC_OPARATION_JUMP_GRATER_EQUALS:
-			gen_cb.jump_greater_equals(gen_cb.out, gen_cb.data, tac_elem);
-			/*print_nl_debug(gen_cb.out); */ break;
-		case MCC_TAC_OPARATION_JUMP_LESS_EQUALS:
-			gen_cb.jump_less_equals(gen_cb.out, gen_cb.data, tac_elem);
-			/*print_nl_debug(gen_cb.out); */ break;
-		case MCC_TAC_OPARATION_JUMP_AND:
-			gen_cb.jump_and(gen_cb.out, gen_cb.data, tac_elem);
-			/*print_nl_debug(gen_cb.out); */ break;
-		case MCC_TAC_OPARATION_JUMP_OR:
-			gen_cb.jump_or(gen_cb.out, gen_cb.data, tac_elem);
-			/*print_nl_debug(gen_cb.out); */ break;
+
 
 		// return
 		case MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT:
@@ -237,6 +223,9 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			/*print_nl_debug(gen_cb.out); */ break;
 		case MCC_TAC_OPARATION_LABEL_ELSE:
 			gen_cb.label_else(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_LABEL_AFTER_ELSE:
+			gen_cb.label_after_else(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
 		case MCC_TAC_OPARATION_LABEL_WHILE:
 			gen_cb.label_while(gen_cb.out, gen_cb.data, tac_elem);
@@ -446,6 +435,7 @@ mcc_assembly_gen_setup(FILE *out, struct mCc_assembly_data *data)
 		.label_string = mCc_assembly_label_string,
 		.label_if = mCc_assembly_label_if,
 		.label_else = mCc_assembly_label_else,
+		.label_after_else = mCc_assembly_label_after_else,
 		.label_while = mCc_assembly_label_while,
 
 		//"Pseudo"-label aka literal-handling
@@ -455,14 +445,9 @@ mcc_assembly_gen_setup(FILE *out, struct mCc_assembly_data *data)
 		.convert_string_lit = mCc_assembly_pseudo_assign_string_literal,
 
 		// Jump
-		.jump_equals = mCc_assembly_generate_jump_equals,
 		.jump_not_equals = mCc_assembly_generate_jump_not_equals,
-		.jump_greater = mCc_assembly_generate_jump_greater,
-		.jump_less = mCc_assembly_generate_jump_less,
-		.jump_greater_equals = mCc_assembly_generate_jump_greater_equals,
-		.jump_less_equals = mCc_assembly_generate_jump_less_equals,
-		.jump_and = mCc_assembly_generate_jump_and,
-		.jump_or = mCc_assembly_generate_jump_or,
+		.jump_equals = mCc_assembly_generate_jump_equals,
+		.jump = mCc_assembly_generate_jump,
 
 		// Function
 		.start_function_def = mCc_assembly_start_function_def,
