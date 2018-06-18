@@ -41,7 +41,7 @@ void main()
 	print("Int: ");
 	print_int(a*4);
 	print_nl();
-*/
+
 	bool c;
 	bool d;
 	d=false;
@@ -51,4 +51,10 @@ void main()
 	}else{
 	
 	} 	
+*/
+
+	while(true){
+		int a;
+	}
+	
 }

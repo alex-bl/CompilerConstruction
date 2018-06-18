@@ -168,7 +168,8 @@ static bool tac_elem_contains_stack_vars(struct mCc_tac_element *element)
 	case MCC_TAC_OPARATION_UNARY_MINUS_INT:
 	case MCC_TAC_OPARATION_UNARY_MINUS_FLOAT:
 	case MCC_TAC_OPARATION_UNARY_NEGATION:
-	case MCC_TAC_OPARATION_JUMP_NOT_EQUALS: return true;
+	case MCC_TAC_OPARATION_JUMP_NOT_EQUALS:
+	case MCC_TAC_OPARATION_JUMP_EQUALS: return true;
 	default: return false;
 	}
 

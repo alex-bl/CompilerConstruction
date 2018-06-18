@@ -142,8 +142,10 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	    MCC_TAC_OPARATION_JUMP_NOT_EQUALS,
 	    mCc_tac_create_from_tac_identifier(tac_while_condition->tac_result),
 	    NULL, mCc_tac_create_from_tac_identifier(lable_after_while),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(tac_while_condition, tac_while_jump_condition);
+	    MCC_TAC_TYPE_BOOL, 0);
+
+	mCc_tac_connect_tac_entry(tac_lable_before_while, tac_while_jump_condition);
+	mCc_tac_connect_tac_entry(tac_while_jump_condition,tac_while_condition);
 
 	struct mCc_tac_element *tac_while_statement;
 	if (statement->while_statement != NULL) {
@@ -156,10 +158,12 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 
 	// jump to the start of the loop, if condition is false
 	struct mCc_tac_element *tac_while_jump_condition2 = tac_new_element(
-	    MCC_TAC_OPARATION_JUMP_NOT_EQUALS,
+	    MCC_TAC_OPARATION_JUMP_EQUALS,
 	    mCc_tac_create_from_tac_identifier(tac_while_condition->tac_result),
-	    NULL, mCc_tac_create_from_tac_identifier(lable_after_while),
-	    MCC_TAC_TYPE_NO_TYPE, 0);
+	    NULL, mCc_tac_create_from_tac_identifier(lable_before_while),
+		MCC_TAC_TYPE_BOOL, 0);
+
+	mCc_tac_connect_tac_entry(tac_while_condition,tac_while_statement);
 	mCc_tac_connect_tac_entry(tac_while_statement, tac_while_jump_condition2);
 
 	// setting lable as tac element
