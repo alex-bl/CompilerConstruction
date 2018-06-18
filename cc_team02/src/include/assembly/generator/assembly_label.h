@@ -25,6 +25,9 @@ void mCc_assembly_label_if(FILE *out, struct mCc_assembly_data *data,
 void mCc_assembly_label_else(FILE *out, struct mCc_assembly_data *data,
                              struct mCc_tac_element *tac_elem);
 
+void mCc_assembly_label_after_else(FILE *out, struct mCc_assembly_data *data,
+                                   struct mCc_tac_element *tac_elem);
+
 void mCc_assembly_label_while(FILE *out, struct mCc_assembly_data *data,
                               struct mCc_tac_element *tac_elem);
 

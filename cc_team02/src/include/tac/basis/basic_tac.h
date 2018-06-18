@@ -69,18 +69,10 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_UNARY_NEGATION,
 
 	// JUMP - not using?
-	MCC_TAC_OPARATION_JUMP_EQUALS,
 	MCC_TAC_OPARATION_JUMP_NOT_EQUALS,
-	MCC_TAC_OPARATION_JUMP_GREATER,
-	MCC_TAC_OPARATION_JUMP_LESS,
-	MCC_TAC_OPARATION_JUMP_GRATER_EQUALS,
-	MCC_TAC_OPARATION_JUMP_LESS_EQUALS,
-	MCC_TAC_OPARATION_JUMP_AND,
-	MCC_TAC_OPARATION_JUMP_OR,
-
 	// JUMP - using jump and jump_false instead
 	MCC_TAC_OPARATION_JUMP,
-	MCC_TAC_OPARATION_JUMP_FALSE,
+	MCC_TAC_OPARATION_JUMP_EQUALS,
 
 	// RETURN
 	MCC_TAC_OPARATION_RETURN_PRIMITIVE_VOID,
@@ -114,10 +106,14 @@ enum mCc_tac_operation {
 	MCC_TAC_OPARATION_LABEL_AFTER_ELSE,
 	MCC_TAC_OPARATION_LABEL_WHILE,
 	MCC_TAC_OPARATION_LABEL_STRING,
-	MCC_TAC_OPARATION_LABEL_INT,
+	MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT,
+	MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_FLOAT,
+	MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_BOOL,
+	MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_STRING,
+
 	MCC_TAC_OPARATION_LABEL_BOOL,
 
-	//ARGUMENT (LABELS)
+	// ARGUMENT (LABELS)
 	MCC_TAC_OPARATION_LABEL_ARGUMENT,
 	MCC_TAC_OPARATION_ARGUMENT_LIST_START,
 
@@ -167,6 +163,7 @@ enum mCc_tac_operation {
 enum mCc_tac_type {
 	MCC_TAC_TYPE_NO_TYPE,
 	MCC_TAC_TYPE_INTEGER,
+	MCC_TAC_TYPE_BOOL,
 	MCC_TAC_TYPE_FLOAT,
 	MCC_TAC_TYPE_STRING
 };
@@ -175,7 +172,11 @@ enum mCc_tac_identifier_type {
 	MCC_IDENTIFIER_TAC_TYPE_INTEGER,
 	MCC_IDENTIFIER_TAC_TYPE_FLOAT,
 	MCC_IDENTIFIER_TAC_TYPE_BOOL,
-	MCC_IDENTIFIER_TAC_TYPE_STRING
+	MCC_IDENTIFIER_TAC_TYPE_STRING,
+	/*required for identifying tac-identifier denoting a variable*/
+	// TODO: distinguish between variable and other labels!!
+	MCC_IDENTIFIER_TAC_TYPE_VAR,
+	MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL
 };
 
 struct mCc_tac_element {
@@ -217,6 +218,8 @@ struct mCc_tac_identifier *mCc_helper_concat_name_and_scope(char *name,
                                                             int scope);
 
 struct mCc_tac_identifier *tac_new_identifier(char *name);
+
+struct mCc_tac_identifier *tac_new_identifier_string(char *string);
 
 struct mCc_tac_identifier *tac_new_identifier_float(double value);
 

@@ -1,9 +1,8 @@
-#include "tac_assignment.h"
-
 #include <assert.h>
 
 #include "basic_tac.h"
 #include "tac_expression.h"
+#include "tac_utils.h"
 
 enum mCc_tac_operation tac_helper_get_primitive_assignment_tac_operation(
     enum mCc_ast_data_type return_expression_operation)
@@ -44,6 +43,9 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	        assignment->identifier->identifier_name,
 	        assignment->identifier->symtab_info->scope_level);
 
+	enum mCc_ast_data_type ast_data_type =
+	    assignment->identifier->symtab_info->data_type;
+
 	enum mCc_tac_operation assignment_operation =
 	    tac_helper_get_primitive_assignment_tac_operation(
 	        assignment->assigned_expression->data_type);
@@ -51,7 +53,8 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 	struct mCc_tac_element *tac = tac_new_element(
 	    assignment_operation,
 	    mCc_tac_create_from_tac_identifier(tac_assigned_expression->tac_result),
-	    NULL, name_identifier, MCC_TAC_TYPE_NO_TYPE, 0);
+	    NULL, name_identifier, mCc_tac_map_from_ast_data_type(ast_data_type),
+	    0);
 
 	mCc_tac_connect_tac_entry(tac_assigned_expression, tac);
 
@@ -102,6 +105,9 @@ mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
 	        assignment->identifier->identifier_name,
 	        assignment->identifier->symtab_info->scope_level);
 
+	enum mCc_ast_data_type ast_data_type =
+	    assignment->identifier->symtab_info->data_type;
+
 	enum mCc_tac_operation assignment_operation =
 	    tac_helper_get_array_assignment_tac_operation(
 	        assignment->array_assigned_expression->data_type);
@@ -110,7 +116,7 @@ mCc_tac_assignment_array(struct mCc_ast_assignment *assignment,
 	    assignment_operation,
 	    mCc_tac_create_from_tac_identifier(tac_assigned_expression->tac_result),
 	    mCc_tac_create_from_tac_identifier(tac_index_expression->tac_result),
-	    name_identifier, MCC_TAC_TYPE_NO_TYPE, 0);
+	    name_identifier, mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 
 	mCc_tac_connect_tac_entry(tac_index_expression, tac);
 
