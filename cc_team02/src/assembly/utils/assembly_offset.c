@@ -56,7 +56,7 @@ static void param_add_new_entry(struct mCc_tac_identifier *identifier,
 }
 
 static void function_def_add_new_entry(struct mCc_tac_identifier *identifier,
-                                struct mCc_assembly_offset_holder *info)
+                                       struct mCc_assembly_offset_holder *info)
 {
 	map_set(&info->function_table, identifier->name, 0);
 }
@@ -151,7 +151,7 @@ static void handle_identifier(struct mCc_tac_identifier *identifier,
 	if (identifier_requires_offset_calculation(identifier)) {
 		if (function_def_contained(identifier, info)) {
 			identifier->type = MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
-		}else{
+		} else {
 			process_identifier_offset_calculation(identifier, type, info);
 		}
 
@@ -228,6 +228,11 @@ static bool tac_elem_contains_stack_vars(struct mCc_tac_element *element)
 	case MCC_TAC_OPARATION_RETURN_ARRAY_FLOAT:
 	case MCC_TAC_OPARATION_RETURN_ARRAY_BOOL:
 	case MCC_TAC_OPARATION_RETURN_ARRAY_STRING:
+
+	case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_INT:
+	case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_FLOAT:
+	case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_BOOL:
+	case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_STRING:
 
 	case MCC_TAC_OPARATION_PARAM_INT_PRIMITIVE:
 	case MCC_TAC_OPARATION_PARAM_FLOAT_PRIMITIVE:

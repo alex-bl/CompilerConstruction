@@ -1,4 +1,7 @@
 #include "assembly_param.h"
+
+#include "stddef.h"
+
 #include "assembly_general.h"
 #include "assembly_utils.h"
 
@@ -17,28 +20,28 @@ get_param_identifier(struct mCc_tac_element *tac_elem)
 void mCc_assembly_param_int_primitive(FILE *out, struct mCc_assembly_data *data,
                                       struct mCc_tac_element *tac_elem)
 {
-	/*TODO*/
+	mCc_assembly_allocate_int_on_stack(out, data, 1);
 }
 
 void mCc_assembly_param_float_primitive(FILE *out,
                                         struct mCc_assembly_data *data,
                                         struct mCc_tac_element *tac_elem)
 {
-	/*TODO*/
+	mCc_assembly_allocate_float_on_stack(out, data, 1);
 }
 
 void mCc_assembly_param_bool_primitive(FILE *out,
                                        struct mCc_assembly_data *data,
                                        struct mCc_tac_element *tac_elem)
 {
-	/*TODO*/
+	mCc_assembly_allocate_bool_on_stack(out, data, 1);
 }
 
 void mCc_assembly_param_string_primitive(FILE *out,
                                          struct mCc_assembly_data *data,
                                          struct mCc_tac_element *tac_elem)
 {
-	/*TODO*/
+	mCc_assembly_allocate_string_on_stack(out, data, NULL);
 }
 
 void mCc_assembly_param_int_array(FILE *out, struct mCc_assembly_data *data,

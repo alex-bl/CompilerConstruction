@@ -64,6 +64,16 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	mCc_tac_connect_tac_entry(previous_tac, tac_function_label);
 	previous_tac = tac_function_label;
 
+
+	// started function def:
+	struct mCc_tac_element *tac_function_def_start =
+	    tac_new_element(MCC_TAC_OPARATION_START_FUNCTION_DEF, NULL, NULL,
+	                    tac_new_identifier(def->identifier->identifier_name),
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(previous_tac, tac_function_def_start);
+	previous_tac = tac_function_def_start;
+
+
 	// stores parameter into tac table
 	struct mCc_ast_declaration *parameter = def->first_parameter;
 	while (parameter != NULL) {
@@ -83,15 +93,15 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 
 		enum mCc_ast_data_type ast_data_type = parameter->data_type;
 
-		struct mCc_tac_identifier *def_identifier = tac_new_identifier(def->identifier->identifier_name);
-		def_identifier->type=MCC_IDENTIFIER_TAC_TYPE_FUNCTION_DEF;
+		struct mCc_tac_identifier *def_identifier =
+		    tac_new_identifier(def->identifier->identifier_name);
+		def_identifier->type = MCC_IDENTIFIER_TAC_TYPE_FUNCTION_DEF;
 
-		struct mCc_tac_element *tac = tac_new_element(
-		    tac_helper_get_tac_oparation_for_parameter_type(
-		        parameter_tac->tac_operation),
-		    param_identifier, NULL,
-			def_identifier,
-		    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
+		struct mCc_tac_element *tac =
+		    tac_new_element(tac_helper_get_tac_oparation_for_parameter_type(
+		                        parameter_tac->tac_operation),
+		                    param_identifier, NULL, def_identifier,
+		                    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 
 		// TODO: not needed here => param already available
 		mCc_tac_delete(parameter_tac);
@@ -100,14 +110,6 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		previous_tac = tac;
 		parameter = parameter->next_declaration;
 	}
-
-	// started function def:
-	struct mCc_tac_element *tac_function_def_start =
-	    tac_new_element(MCC_TAC_OPARATION_START_FUNCTION_DEF, NULL, NULL,
-	                    tac_new_identifier(def->identifier->identifier_name),
-	                    MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(previous_tac, tac_function_def_start);
-	previous_tac = tac_function_def_start;
 
 	// tac table creation for statements:
 	struct mCc_ast_statement *statement = def->first_statement;
@@ -181,5 +183,19 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 	                    tac_new_identifier(call->identifier->identifier_name),
 	                    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_function_call);
+
+	struct mCc_tac_identifier *tmp = mCc_tac_create_new_lable_identifier();
+	tmp->type = MCC_IDENTIFIER_TAC_TYPE_VAR;
+
+	if (ast_data_type != MCC_AST_DATA_TYPE_VOID) {
+		struct mCc_tac_element *tac_intermediate_return = tac_new_element(
+		    MCC_TAC_OPARATION_INTERMEDIATE_RETURN_INT, tmp,
+		    tac_new_identifier(call->identifier->identifier_name), tmp,
+		    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
+
+		mCc_tac_connect_tac_entry(tac_function_call, tac_intermediate_return);
+
+		return tac_intermediate_return;
+	}
 	return tac_function_call;
 }

@@ -229,6 +229,19 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			gen_cb.return_array_string(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
 
+		case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_INT:
+			gen_cb.intermediate_return_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_FLOAT:
+			gen_cb.intermediate_return_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_BOOL:
+			gen_cb.intermediate_return_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_STRING:
+			gen_cb.intermediate_return_string(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+
 		// parameter => just prepend, generate later
 		case MCC_TAC_OPARATION_PARAM_INT_PRIMITIVE:
 			gen_cb.param_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
@@ -462,6 +475,10 @@ mcc_assembly_gen_setup(FILE *out, struct mCc_assembly_data *data)
 		.return_array_float = mCc_assembly_return_array_float,
 		.return_array_bool = mCc_assembly_return_array_bool,
 		.return_array_string = mCc_assembly_return_array_string,
+		.intermediate_return_int = mCc_assembly_intermediate_return_int,
+		.intermediate_return_float = mCc_assembly_intermediate_return_float,
+		.intermediate_return_bool = mCc_assembly_intermediate_return_bool,
+		.intermediate_return_string = mCc_assembly_intermediate_return_string,
 
 		// Param
 		.param_int_primitive = mCc_assembly_param_int_primitive,

@@ -49,6 +49,10 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb return_array_float;
 	mCc_generate_assembly_cb return_array_bool;
 	mCc_generate_assembly_cb return_array_string;
+	mCc_generate_assembly_cb intermediate_return_int;
+	mCc_generate_assembly_cb intermediate_return_float;
+	mCc_generate_assembly_cb intermediate_return_bool;
+	mCc_generate_assembly_cb intermediate_return_string;
 
 	// Param
 	mCc_generate_assembly_cb param_int_primitive;
