@@ -65,7 +65,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 
 	struct mCc_tac_element *tac_condition = helper_get_tac_of_expression(
 	    statement->condition_expression, tac_lable_before_if);
-	previous_tac=tac_condition;
+	previous_tac = tac_condition;
 
 	// jump to else, if condition is false
 	struct mCc_tac_element *tac_if_condition = tac_new_element(
@@ -75,13 +75,14 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_if_condition);
 
-	struct mCc_tac_element *tac_if_statement;
-	if (statement->if_statement != NULL) {
-		tac_if_statement = helper_get_tac_of_statement(statement->if_statement,
-		                                               tac_if_condition);
-	} else {
-		// take condition as previous tac element
-		tac_if_statement = tac_if_condition;
+	struct mCc_ast_statement *ast_if_statement = statement->if_statement;
+	// take condition as previous tac element, if there is no if statement,
+	// otherwise it will be overwritten
+	previous_tac = tac_if_condition;
+	while (ast_if_statement != NULL) {
+		previous_tac =
+		    helper_get_tac_of_statement(ast_if_statement, previous_tac);
+		ast_if_statement = ast_if_statement->next_statement;
 	}
 
 	// jump after else -> if the if is executed the else is skipped
@@ -90,25 +91,25 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	    mCc_tac_create_from_tac_identifier(tac_condition->tac_result), NULL,
 	    mCc_tac_create_from_tac_identifier(lable_after_else),
 	    MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(tac_if_statement, tac_if_condition2);
+	mCc_tac_connect_tac_entry(previous_tac, tac_if_condition2);
 
 	struct mCc_tac_element *tac_lable_before_else =
 	    tac_new_element(MCC_TAC_OPARATION_LABEL_ELSE, NULL, NULL,
 	                    lable_before_else, MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(tac_if_condition2, tac_lable_before_else);
 
-	struct mCc_tac_element *tac_else_statement;
-	if (statement->else_statement != NULL) {
-		tac_else_statement = helper_get_tac_of_statement(
-		    statement->else_statement, tac_lable_before_else);
-	} else {
-		tac_else_statement = tac_lable_before_else;
+	previous_tac = tac_lable_before_else;
+	struct mCc_ast_statement *ast_else_statement = statement->else_statement;
+	while (ast_else_statement != NULL) {
+		previous_tac =
+		    helper_get_tac_of_statement(ast_else_statement, previous_tac);
+		ast_else_statement = ast_else_statement->next_statement;
 	}
 
 	struct mCc_tac_element *tac_lable_after_else =
 	    tac_new_element(MCC_TAC_OPARATION_LABEL_AFTER_ELSE, NULL, NULL,
 	                    lable_after_else, MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(tac_else_statement, tac_lable_after_else);
+	mCc_tac_connect_tac_entry(previous_tac, tac_lable_after_else);
 
 	return tac_lable_after_else;
 }
@@ -145,15 +146,16 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	    MCC_TAC_TYPE_BOOL, 0);
 
 	mCc_tac_connect_tac_entry(tac_lable_before_while, tac_while_jump_condition);
-	mCc_tac_connect_tac_entry(tac_while_jump_condition,tac_while_condition);
+	mCc_tac_connect_tac_entry(tac_while_jump_condition, tac_while_condition);
 
-	struct mCc_tac_element *tac_while_statement;
-	if (statement->while_statement != NULL) {
-		tac_while_statement = helper_get_tac_of_statement(
-		    statement->while_statement, tac_while_jump_condition);
-	} else {
-		// if while statement is empty use the tac element from before
-		tac_while_statement = tac_while_jump_condition;
+	// takes tac_while_jump_conditions as previous tac if no other tac gets
+	// defined in the while
+	previous_tac = tac_while_jump_condition;
+	struct mCc_ast_statement *ast_while_statement = statement->while_statement;
+	while (ast_while_statement != NULL) {
+		previous_tac = helper_get_tac_of_statement(statement->while_statement,
+		                                           previous_tac);
+		ast_while_statement = ast_while_statement->next_statement;
 	}
 
 	// jump to the start of the loop, if condition is false
@@ -161,10 +163,10 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	    MCC_TAC_OPARATION_JUMP_EQUALS,
 	    mCc_tac_create_from_tac_identifier(tac_while_condition->tac_result),
 	    NULL, mCc_tac_create_from_tac_identifier(lable_before_while),
-		MCC_TAC_TYPE_BOOL, 0);
+	    MCC_TAC_TYPE_BOOL, 0);
 
-	mCc_tac_connect_tac_entry(tac_while_condition,tac_while_statement);
-	mCc_tac_connect_tac_entry(tac_while_statement, tac_while_jump_condition2);
+	mCc_tac_connect_tac_entry(tac_while_condition, previous_tac);
+	mCc_tac_connect_tac_entry(previous_tac, tac_while_jump_condition2);
 
 	// setting lable as tac element
 	struct mCc_tac_element *tac_lable_after_while =
