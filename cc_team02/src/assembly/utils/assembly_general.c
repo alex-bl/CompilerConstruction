@@ -50,6 +50,7 @@ void mCc_assembly_push_float(FILE *out, int tac_offset)
 	mCc_assembly_print_nl(out);
 }
 
+//is not working
 void mCc_assembly_push_string(FILE *out, const char *label, int tac_offset)
 {
 	mCc_assembly_print_shift(out);

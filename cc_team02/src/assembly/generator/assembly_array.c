@@ -128,7 +128,7 @@ void mCc_assembly_index_acc_arr_string(FILE *out,
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
 	                           offset_array_index);
+
 	mCc_assembly_move_index_val_to_eax(out);
-	mCc_assembly_push_string(out, array_value->name,
-	                         DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_push_int(out, offset_array_value, DEFAULT_ACCUMULATOR_OPERAND);
 }
