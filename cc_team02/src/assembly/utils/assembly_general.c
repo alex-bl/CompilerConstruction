@@ -594,9 +594,9 @@ void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)
 void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
                                 int offset_array_index)
 {
-
 	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
 
+	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leal");
 	fprintf(out, "%d(%s), %s", offset_array_base, DEFAULT_DATA_STACK_POINTER,
 	        EDX_REG);
@@ -608,8 +608,48 @@ void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
 	        base_size, ECX_REG);
 	mCc_assembly_print_nl(out);
 
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "movl");
-//	fprintf(out, "0(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
-//	mCc_assembly_print_nl(out);
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "movl");
+	//	fprintf(out, "0(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+	//	mCc_assembly_print_nl(out);
 }
+
+void mCc_assembly_move_index_val_to_eax(FILE *out)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, "(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_print_nl(out);
+}
+
+static void move_to_ecx_reg(FILE *out){
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, "%s, (%s)", DEFAULT_ACCUMULATOR_OPERAND, ECX_REG);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_store_int_val_at_index(FILE *out, int calc_offset)
+{
+	mCc_assembly_load_int(out, calc_offset, DEFAULT_ACCUMULATOR_OPERAND);
+	move_to_ecx_reg(out);
+}
+
+void mCc_assembly_store_float_val_at_index(FILE *out, int calc_offset)
+{
+	mCc_assembly_load_float(out, calc_offset);
+	move_to_ecx_reg(out);
+}
+
+void mCc_assembly_store_bool_val_at_index(FILE *out, int calc_offset)
+{
+	mCc_assembly_load_int(out, calc_offset, DEFAULT_ACCUMULATOR_OPERAND);
+	move_to_ecx_reg(out);
+}
+
+void mCc_assembly_store_string_val_at_index(FILE *out, int calc_offset)
+{
+	mCc_assembly_load_int(out, calc_offset, DEFAULT_ACCUMULATOR_OPERAND);
+	move_to_ecx_reg(out);
+}
+

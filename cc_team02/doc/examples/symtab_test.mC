@@ -80,9 +80,16 @@ void main()
 	print_int(a);
 	print_nl();
 */	
-	int[10] a;
+	string[10] a;
 
-	a[0]=10;
-	print_int(a[0]);
-
+	a[0]=10.23;
+	a[1]=2.11;
+	
+	print_float(a[0]);
+	print_nl();
+	print_float(a[1]);
+	print_nl();
+	print_float(3.23+12.33);
+	print_nl();
+		
 }
