@@ -148,6 +148,18 @@ void mCc_assembly_allocate_string_on_stack(FILE *out,
 	mCc_assembly_adjust_stack_pointer(required_space, data);
 }
 
+void mCc_assembly_allocate_string_array_on_stack(FILE *out,
+                                           struct mCc_assembly_data *data,
+                                           int nr_of)
+{
+	mCc_assembly_print_shift(out);
+	size_t required_space = mCc_assembly_calc_string_space(NULL)*nr_of;
+	mCc_assembly_print_op(out, "subl");
+	fprintf(out, "$%zu, %s", required_space, DEFAULT_STACK_POINTER);
+	mCc_assembly_print_nl(out);
+	mCc_assembly_adjust_stack_pointer(required_space, data);
+}
+
 /*============================================================= return */
 
 void mCc_assembly_prepare_return(FILE *out, int calculated_offset)

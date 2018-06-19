@@ -50,6 +50,11 @@ void mCc_assembly_allocate_bool_on_stack(FILE *out,
 void mCc_assembly_allocate_string_on_stack(FILE *out,
                                            struct mCc_assembly_data *data,
                                            const char *str);
+
+void mCc_assembly_allocate_string_array_on_stack(FILE *out,
+                                           struct mCc_assembly_data *data,
+                                           int nr_of);
+
 /*============================================================= return */
 
 void mCc_assembly_prepare_return(FILE *out, int calculated_offset);

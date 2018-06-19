@@ -21,6 +21,16 @@ int test_func(int p, int u, int z){
 	return 2+2+2+ten_plus(19);
 }
 */
+
+void test(int[100] a){
+
+}
+
+void test_2(string[100] a){
+
+}
+
+
 void main()
 {
 /*
