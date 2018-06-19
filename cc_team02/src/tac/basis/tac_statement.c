@@ -76,12 +76,15 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 	mCc_tac_connect_tac_entry(previous_tac, tac_if_condition);
 
 	struct mCc_tac_element *tac_if_statement;
-	if (statement->if_statement != NULL) {
-		tac_if_statement = helper_get_tac_of_statement(statement->if_statement,
-		                                               tac_if_condition);
-	} else {
-		// take condition as previous tac element
-		tac_if_statement = tac_if_condition;
+	//TODO evaluate next statement if not NULL
+	while (statement->next_statement!=NULL) {
+		if (statement->if_statement != NULL) {
+			tac_if_statement = helper_get_tac_of_statement(statement->if_statement,
+														   tac_if_condition);
+		} else {
+			// take condition as previous tac element
+			tac_if_statement = tac_if_condition;
+		}
 	}
 
 	// jump after else -> if the if is executed the else is skipped
@@ -147,6 +150,7 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 	mCc_tac_connect_tac_entry(tac_lable_before_while, tac_while_jump_condition);
 	mCc_tac_connect_tac_entry(tac_while_jump_condition,tac_while_condition);
 
+	//TODO evaluate next statment if not NULL
 	struct mCc_tac_element *tac_while_statement;
 	if (statement->while_statement != NULL) {
 		tac_while_statement = helper_get_tac_of_statement(
