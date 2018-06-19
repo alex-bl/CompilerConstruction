@@ -45,7 +45,6 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 {
 	assert(statement);
 	assert(statement->condition_expression);
-	assert(statement->if_statement);
 	assert(previous_tac);
 
 	// defining lables to jump to
@@ -66,6 +65,7 @@ mCc_tac_statement_if(struct mCc_ast_statement *statement,
 
 	struct mCc_tac_element *tac_condition = helper_get_tac_of_expression(
 	    statement->condition_expression, tac_lable_before_if);
+	previous_tac=tac_condition;
 
 	// jump to else, if condition is false
 	struct mCc_tac_element *tac_if_condition = tac_new_element(

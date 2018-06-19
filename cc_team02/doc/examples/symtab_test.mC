@@ -1,3 +1,17 @@
+int test_func(int p){
+	int b;
+	int c;
+	
+	c=2;
+	b=3;
+	
+	if (c==b) {
+		p=8;
+	}
+	
+	return c*b*p;
+}
+
 /*
 
 int ten_plus(int p){

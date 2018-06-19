@@ -13,6 +13,7 @@
 #include "mCc/parser.h"
 #include "mCc/semantic_check.h"
 #include "mCc/tac.h"
+#include "mCc/tac_cfg.h"
 #include "mCc/tac_print.h"
 
 /*Argp: Inspired by
@@ -38,6 +39,11 @@ static struct argp_option options[] = {
 	  .flags = 0,
 	  .group = 0,
 	  .doc = "Print the Three-adress-code\t(default=false)" },
+	{ .name = "tac-cfg",
+	  .key = 'c',
+	  .flags = 0,
+	  .group = 0,
+	  .doc = "Generate tac control flow graph (cfg)\t\t\t(default=false)" },
 	{ .name = "stdoutLog",
 	  .key = 'l',
 	  .flags = 0,
@@ -62,6 +68,7 @@ struct arguments {
 	char *args[1];
 	bool to_dot;
 	bool print_tac;
+	bool tac_cfg;
 	bool log_on_stdout;
 	bool file_log;
 	char *output_file;
@@ -76,6 +83,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	switch (key) {
 	case 'd': arguments->to_dot = true; break;
 	case 't': arguments->print_tac = true; break;
+	case 'c': arguments->tac_cfg = true; break;
 	case 'l': arguments->log_on_stdout = true; break;
 	case 'f': arguments->file_log = true; break;
 	case 'o': arguments->output_file = arg; break;
@@ -302,6 +310,13 @@ int main(int argc, char *argv[])
 		// TAC print
 		mCc_tac_print_start_program(tac, out_put);
 		log_debug("TAC print finished\t\t[ok]");
+	}
+
+	if (arguments.tac_cfg) {
+		// TODO
+		// print control flow graph (cfg) of tac
+		mCc_tac_cfg_generate(tac);
+		log_debug("CFG of TAC finished\t\t[ok]");
 	}
 
 	/* assembly-generation*/

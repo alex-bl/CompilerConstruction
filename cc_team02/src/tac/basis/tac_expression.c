@@ -229,7 +229,7 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 
 	struct mCc_tac_identifier *operationlabel =
 	    mCc_tac_create_new_lable_identifier();
-
+	//assert(NULL);
 	enum mCc_ast_data_type ast_data_type = expression->data_type;
 
 	struct mCc_tac_element *tac = tac_new_element(
