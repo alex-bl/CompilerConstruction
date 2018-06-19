@@ -50,6 +50,11 @@ void mCc_assembly_allocate_bool_on_stack(FILE *out,
 void mCc_assembly_allocate_string_on_stack(FILE *out,
                                            struct mCc_assembly_data *data,
                                            const char *str);
+
+void mCc_assembly_allocate_string_array_on_stack(FILE *out,
+                                           struct mCc_assembly_data *data,
+                                           int nr_of);
+
 /*============================================================= return */
 
 void mCc_assembly_prepare_return(FILE *out, int calculated_offset);
@@ -183,6 +188,16 @@ void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest);
 
 void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
                                 int offset_array_index);
+
+void mCc_assembly_move_index_val_to_eax(FILE *out);
+
+void mCc_assembly_load_float_at_ecx(FILE *out);
+
+void mCc_assembly_store_int_val_at_index(FILE *out, int calc_offset);
+void mCc_assembly_store_float_val_at_index(FILE *out, int calc_offset);
+
+void mCc_assembly_store_bool_val_at_index(FILE *out, int calc_offset);
+void mCc_assembly_store_string_val_at_index(FILE *out, int calc_offset);
 
 #ifdef __cplusplus
 }

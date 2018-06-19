@@ -137,7 +137,6 @@
 		<buildTargets>
 			<target name="all" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
-				<buildArguments/>
 				<buildTarget>all</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
@@ -145,7 +144,6 @@
 			</target>
 			<target name="gtest" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
-				<buildArguments/>
 				<buildTarget>gtest</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
@@ -153,7 +151,6 @@
 			</target>
 			<target name="test" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
-				<buildArguments/>
 				<buildTarget>test</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
@@ -169,7 +166,6 @@
 			</target>
 			<target name="build_and_test_memcheck" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
-				<buildArguments/>
 				<buildTarget>build_and_test_memcheck</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
@@ -193,7 +189,6 @@
 			</target>
 			<target name="build_and_test" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
-				<buildArguments/>
 				<buildTarget>build_and_test</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
@@ -209,7 +204,6 @@
 			</target>
 			<target name="integration_test" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
-				<buildArguments/>
 				<buildTarget>integration_test</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
@@ -225,7 +219,6 @@
 			</target>
 			<target name="mCc_symtab" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
-				<buildArguments/>
 				<buildTarget>mCc_symtab</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
@@ -235,14 +228,6 @@
 				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
 				<buildArguments>-j</buildArguments>
 				<buildTarget>mC_to_dot</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>true</runAllBuilders>
-			</target>
-			<target name="mCc_assembly" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>CMAKE_BUILD_TOOL</buildCommand>
-				<buildArguments/>
-				<buildTarget>mCc_assembly</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
