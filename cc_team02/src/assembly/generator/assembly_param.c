@@ -44,26 +44,37 @@ void mCc_assembly_param_string_primitive(FILE *out,
 	mCc_assembly_allocate_string_on_stack(out, data, NULL);
 }
 
+static struct mCc_tac_identifier *
+get_size_identifier(struct mCc_tac_element *tac_elem)
+{
+	return tac_elem->tac_argument2;
+}
+
 void mCc_assembly_param_int_array(FILE *out, struct mCc_assembly_data *data,
                                   struct mCc_tac_element *tac_elem)
 {
-	/*TODO*/
+	struct mCc_tac_identifier *size_identifier = get_size_identifier(tac_elem);
+	mCc_assembly_allocate_int_on_stack(out, data, size_identifier->i_val);
 }
 
 void mCc_assembly_param_float_array(FILE *out, struct mCc_assembly_data *data,
                                     struct mCc_tac_element *tac_elem)
 {
-	/*TODO*/
+	struct mCc_tac_identifier *size_identifier = get_size_identifier(tac_elem);
+	mCc_assembly_allocate_float_on_stack(out, data, size_identifier->i_val);
 }
 
 void mCc_assembly_param_bool_array(FILE *out, struct mCc_assembly_data *data,
                                    struct mCc_tac_element *tac_elem)
 {
-	/*TODO*/
+	struct mCc_tac_identifier *size_identifier = get_size_identifier(tac_elem);
+	mCc_assembly_allocate_bool_on_stack(out, data, size_identifier->i_val);
 }
 
 void mCc_assembly_param_string_array(FILE *out, struct mCc_assembly_data *data,
                                      struct mCc_tac_element *tac_elem)
 {
-	/*TODO*/
+	struct mCc_tac_identifier *size_identifier = get_size_identifier(tac_elem);
+	mCc_assembly_allocate_string_array_on_stack(out, data,
+	                                            size_identifier->i_val);
 }

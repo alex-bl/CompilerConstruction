@@ -1,17 +1,3 @@
-int test_func(int p){
-	int b;
-	int c;
-	
-	c=2;
-	b=3;
-	
-	if (c==b) {
-		p=8;
-	}
-	
-	return c*b*p;
-}
-
 /*
 
 int ten_plus(int p){
@@ -35,6 +21,16 @@ int test_func(int p, int u, int z){
 	return 2+2+2+ten_plus(19);
 }
 */
+
+void test(int[100] a){
+
+}
+
+void test_2(string[100] a){
+
+}
+
+
 void main()
 {
 /*
@@ -94,9 +90,27 @@ void main()
 	print_int(a);
 	print_nl();
 */	
-	int[10] a;
+	string[10] a;
+	float[10] b;
 
-	a[0]=10;
-	print_int(a[0]);
+	a[0]="hoi";
+	a[1]="servus";
+	
+	print(a[0]);
+	print_nl();
+	print(a[1]);
+	print_nl();		
+	
+	print("======================");
+	print_nl();
 
+	b[0]=12.211;
+	b[1]=1.32;
+	
+	print_float(b[0]);
+	print_nl();
+	print_float(b[1]);
+	print_nl();		
+	print_float(b[0]+b[1]);
+	
 }

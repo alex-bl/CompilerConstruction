@@ -86,7 +86,6 @@ add_library(mCc_semantic_error_print SHARED symtab/symtab_error_print.c
 
 add_library(mCc_assembly SHARED assembly/assembly_generator.c
 								assembly/generator/assembly_argument.c
-								assembly/generator/assembly_array.c								
 								assembly/generator/assembly_arithmetic_op.c
 								assembly/generator/assembly_assignment.c
 								assembly/generator/assembly_binary_op_logical.c
@@ -97,7 +96,8 @@ add_library(mCc_assembly SHARED assembly/assembly_generator.c
 								assembly/generator/assembly_param.c
 								assembly/generator/assembly_label.c
 								assembly/generator/assembly_declaration.c
-								assembly/utils/assembly_offset.c								
+								assembly/utils/assembly_offset.c
+								assembly/generator/assembly_array.c																				
 								assembly/utils/assembly_general.c
 								assembly/utils/assembly_utils.c
 								assembly/utils/assembly_formatter.c

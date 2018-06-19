@@ -50,6 +50,7 @@ void mCc_assembly_push_float(FILE *out, int tac_offset)
 	mCc_assembly_print_nl(out);
 }
 
+//is not working
 void mCc_assembly_push_string(FILE *out, const char *label, int tac_offset)
 {
 	mCc_assembly_print_shift(out);
@@ -141,6 +142,18 @@ void mCc_assembly_allocate_string_on_stack(FILE *out,
 {
 	mCc_assembly_print_shift(out);
 	size_t required_space = mCc_assembly_calc_string_space(str);
+	mCc_assembly_print_op(out, "subl");
+	fprintf(out, "$%zu, %s", required_space, DEFAULT_STACK_POINTER);
+	mCc_assembly_print_nl(out);
+	mCc_assembly_adjust_stack_pointer(required_space, data);
+}
+
+void mCc_assembly_allocate_string_array_on_stack(FILE *out,
+                                           struct mCc_assembly_data *data,
+                                           int nr_of)
+{
+	mCc_assembly_print_shift(out);
+	size_t required_space = mCc_assembly_calc_string_space(NULL)*nr_of;
 	mCc_assembly_print_op(out, "subl");
 	fprintf(out, "$%zu, %s", required_space, DEFAULT_STACK_POINTER);
 	mCc_assembly_print_nl(out);
@@ -594,9 +607,9 @@ void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)
 void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
                                 int offset_array_index)
 {
-
 	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
 
+	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leal");
 	fprintf(out, "%d(%s), %s", offset_array_base, DEFAULT_DATA_STACK_POINTER,
 	        EDX_REG);
@@ -608,8 +621,69 @@ void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
 	        base_size, ECX_REG);
 	mCc_assembly_print_nl(out);
 
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "movl");
+	//	fprintf(out, "0(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+	//	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_move_index_val_to_eax(FILE *out)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, "(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_print_nl(out);
+}
+
+static void move_to_ecx_reg(FILE *out)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "movl");
+	fprintf(out, "%s, (%s)", DEFAULT_ACCUMULATOR_OPERAND, ECX_REG);
+	mCc_assembly_print_nl(out);
+}
+
+static void move_float_to_ecx_reg(FILE *out)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "fstps");
+	fprintf(out, "(%s)", ECX_REG);
+	mCc_assembly_print_nl(out);
+
 //	mCc_assembly_print_shift(out);
 //	mCc_assembly_print_op(out, "movl");
-//	fprintf(out, "0(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+//	fprintf(out, "%s, (%s)", FLOAT_STACK_TOP_REG, ECX_REG);
 //	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_load_float_at_ecx(FILE *out)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "flds");
+	fprintf(out, "(%s)", ECX_REG);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_store_int_val_at_index(FILE *out, int calc_offset)
+{
+	mCc_assembly_load_int(out, calc_offset, DEFAULT_ACCUMULATOR_OPERAND);
+	move_to_ecx_reg(out);
+}
+
+void mCc_assembly_store_float_val_at_index(FILE *out, int calc_offset)
+{
+	mCc_assembly_load_float(out, calc_offset);
+	move_float_to_ecx_reg(out);
+}
+
+void mCc_assembly_store_bool_val_at_index(FILE *out, int calc_offset)
+{
+	mCc_assembly_load_int(out, calc_offset, DEFAULT_ACCUMULATOR_OPERAND);
+	move_to_ecx_reg(out);
+}
+
+void mCc_assembly_store_string_val_at_index(FILE *out, int calc_offset)
+{
+	mCc_assembly_load_int(out, calc_offset, DEFAULT_ACCUMULATOR_OPERAND);
+	move_to_ecx_reg(out);
 }

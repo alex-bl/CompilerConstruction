@@ -94,11 +94,13 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	while (parameter != NULL) {
 
 		struct mCc_tac_element *parameter_tac;
+		struct mCc_tac_identifier *size_identifier = NULL;
 		if (parameter->declaration_type == MCC_AST_DECLARATION_PRIMITIVE) {
 			parameter_tac =
 			    mCc_tac_declaration_primitive(parameter, previous_tac);
 		} else if (parameter->declaration_type == MCC_AST_DECLARATION_ARRAY) {
 			parameter_tac = mCc_tac_declaration_array(parameter, previous_tac);
+			size_identifier = tac_new_identifier_int(parameter->size);
 		}
 
 		// hacky -.-
@@ -115,7 +117,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		struct mCc_tac_element *tac =
 		    tac_new_element(tac_helper_get_tac_oparation_for_parameter_type(
 		                        parameter_tac->tac_operation),
-		                    param_identifier, NULL, def_identifier,
+		                    param_identifier, size_identifier, def_identifier,
 		                    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 
 		// TODO: not needed here => param already available
