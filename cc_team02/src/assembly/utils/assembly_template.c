@@ -56,10 +56,10 @@ void mCc_assembly_new_function_def_leave(FILE *out, const char *function_label,
 {
 	//	fprintf(out, "popl\t%%edp");
 	//	fprintf(out, "ret");
-	mCc_assembly_print_shift(out);
-	mCc_assembly_print_op(out, "addl");
-	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
-	mCc_assembly_print_nl(out);
+//	mCc_assembly_print_shift(out);
+//	mCc_assembly_print_op(out, "addl");
+//	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+//	mCc_assembly_print_nl(out);
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leave");
@@ -143,10 +143,10 @@ void mCc_assembly_main_function_leave(FILE *out)
 //	mCc_assembly_print_nl(out);
 
 //TODO: copied from function-def-leave
-	mCc_assembly_print_shift(out);
-	mCc_assembly_print_op(out, "addl");
-	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
-	mCc_assembly_print_nl(out);
+//	mCc_assembly_print_shift(out);
+//	mCc_assembly_print_op(out, "addl");
+//	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+//	mCc_assembly_print_nl(out);
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leave");

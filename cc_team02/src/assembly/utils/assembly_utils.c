@@ -5,11 +5,11 @@
  */
 
 #include <assert.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "assembly_data.h"
 #include "basic_tac.h"
 #include "config.h"
 #include "log.h"
@@ -72,7 +72,7 @@ int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
 		return mCc_assembly_calc_stack_pos_param(identifier);
 	}
 	// stack-positions for local variables are always <0?
-	//TODO: current_stack_ptr_pos useless????
+	// TODO: current_stack_ptr_pos useless????
 	return (identifier->stack_offset) * -1;
 }
 
@@ -97,4 +97,36 @@ void mCc_assembly_adjust_stack_pointer(int offset,
 {
 	// TODO: check this
 	data->current_stack_pos += offset;
+}
+
+struct mCc_assembly_argument_list *mCc_assembly_create_new_arg_list_elem()
+{
+	struct mCc_assembly_argument_list *elem = malloc(sizeof(*elem));
+	if (!elem) {
+		log_error("Malloc failed");
+		return NULL;
+	}
+	return elem;
+}
+
+struct mCc_assembly_argument_list *
+mCc_assembly_prepend_arg_list_elem(struct mCc_assembly_argument_list *actual,
+                                   struct mCc_tac_element *to_prepend)
+{
+	struct mCc_assembly_argument_list *elem =
+	    mCc_assembly_create_new_arg_list_elem();
+	if (elem) {
+		elem->argument = to_prepend;
+		if (actual) {
+			elem->next = actual;
+		} else {
+			elem->next = NULL;
+		}
+	}
+	return elem;
+}
+
+void mCc_assembly_free_arg_list_elem(struct mCc_assembly_argument_list *to_free)
+{
+	free(to_free);
 }

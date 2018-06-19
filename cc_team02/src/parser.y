@@ -185,32 +185,32 @@ single_expr:  literal                      			    { $$ = mCc_ast_new_expression_
            ;											
 
 //or
-//single_expr_lev0:	single_expr_lev1 binary_op_lv0 single_expr_lev0	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
+//single_expr_lev0:	single_expr_lev0 binary_op_lv0 single_expr_lev1	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
 //   				|	single_expr_lev1								{ $$ = $1; loc($$, @1);}
 //   				;
 
 //and                      				
-single_expr_lev1:	single_expr_lev2 binary_op_lv1 single_expr_lev1	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
+single_expr_lev1:	single_expr_lev1 binary_op_lv1 single_expr_lev2	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
                      |	single_expr_lev2								{ $$ = $1; loc($$, @1);}
                      ;                      				
 
 //eq + neq
-single_expr_lev2:	single_expr_lev3 binary_op_lv2 single_expr_lev2	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
+single_expr_lev2:	single_expr_lev2 binary_op_lv2 single_expr_lev3	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
                     |	single_expr_lev3								{ $$ = $1; loc($$, @1);}
                     ;
 
 //gt usw...
-single_expr_lev3:	single_expr_lev4 binary_op_lv3 single_expr_lev3	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
+single_expr_lev3:	single_expr_lev3 binary_op_lv3 single_expr_lev4 	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
                     |	single_expr_lev4								{ $$ = $1; loc($$, @1);}
                     ;                      				           			           				
                       				           				
 //add/sub           
-single_expr_lev4:	single_expr_lev5 binary_op_add single_expr_lev4	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
+single_expr_lev4:	single_expr_lev4 binary_op_add single_expr_lev5	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
 				|	single_expr_lev5								{ $$ = $1; loc($$, @1);}
 				;
 
 //mul/div
-single_expr_lev5:	single_expr binary_op_mul single_expr_lev5 	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
+single_expr_lev5:	single_expr_lev5 binary_op_mul single_expr 	{ $$ = mCc_ast_new_expression_binary_op($2, $1, $3); loc($$, @1);}
 				|	single_expr									{ $$ = $1; loc($$, @1);}
 				;
 				

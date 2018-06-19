@@ -51,7 +51,7 @@ void mCc_assembly_generate_jump_not_equals(FILE *out,
 	    get_condition_identifier(tac_elem);
 	int condition_offset = mCc_assembly_calc_stack_position(
 	    condition_identifier, data->current_stack_pos);
-	;
+
 	mCc_assembly_compare_bool(out, condition_offset, true);
 
 	mCc_assembly_jump_not_equals(out, get_jump_dest(tac_elem));

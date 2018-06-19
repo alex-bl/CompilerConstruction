@@ -2,11 +2,60 @@
 
 #include "assembly_utils.h"
 #include "assembly_general.h"
+#include "config.h"
 
 static struct mCc_tac_identifier *
 get_return_identifier(struct mCc_tac_element *tac_elem)
 {
 	return tac_elem->tac_result;
+}
+
+void mCc_assembly_intermediate_return_int(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       struct mCc_tac_element *tac_elem)
+{
+	struct mCc_tac_identifier *identifier = get_return_identifier(tac_elem);
+	int result_offset =
+	    mCc_assembly_calc_stack_position(identifier, data->current_stack_pos);
+
+	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	mCc_assembly_push_int(out, result_offset, DEFAULT_RETURN_REG);
+}
+
+void mCc_assembly_intermediate_return_float(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       struct mCc_tac_element *tac_elem)
+{
+	struct mCc_tac_identifier *identifier = get_return_identifier(tac_elem);
+	int result_offset =
+	    mCc_assembly_calc_stack_position(identifier, data->current_stack_pos);
+
+	mCc_assembly_allocate_float_on_stack(out, data, 1);
+	mCc_assembly_push_int(out, result_offset, DEFAULT_RETURN_REG);
+}
+
+void mCc_assembly_intermediate_return_bool(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       struct mCc_tac_element *tac_elem)
+{
+	struct mCc_tac_identifier *identifier = get_return_identifier(tac_elem);
+	int result_offset =
+	    mCc_assembly_calc_stack_position(identifier, data->current_stack_pos);
+
+	mCc_assembly_allocate_bool_on_stack(out, data, 1);
+	mCc_assembly_push_int(out, result_offset, DEFAULT_RETURN_REG);
+}
+
+void mCc_assembly_intermediate_return_string(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       struct mCc_tac_element *tac_elem)
+{
+	struct mCc_tac_identifier *identifier = get_return_identifier(tac_elem);
+	int result_offset =
+	    mCc_assembly_calc_stack_position(identifier, data->current_stack_pos);
+
+	mCc_assembly_allocate_string_on_stack(out, data, NULL);
+	mCc_assembly_push_int(out, result_offset, DEFAULT_RETURN_REG);
 }
 
 void mCc_assembly_return_primitive_int(FILE *out,

@@ -121,6 +121,7 @@ include_directories("${PROJECT_SOURCE_DIR}/src/include/symtab/validator")
 
 include_directories("${PROJECT_SOURCE_DIR}/src/include/tac")
 include_directories("${PROJECT_SOURCE_DIR}/src/include/tac/basis")
+include_directories("${PROJECT_SOURCE_DIR}/src/include/tac/cfg")
 include_directories("${PROJECT_SOURCE_DIR}/src/include/assembly")
 include_directories("${PROJECT_SOURCE_DIR}/src/include/assembly/generator")
 include_directories("${PROJECT_SOURCE_DIR}/src/include/assembly/utils")
