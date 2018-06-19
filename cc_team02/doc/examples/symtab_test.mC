@@ -5,6 +5,10 @@ int test_func(int p){
 	c=2;
 	b=3;
 	
+	if (c==b) {
+		p=8;
+	}
+	
 	return c*b*p;
 }
 
