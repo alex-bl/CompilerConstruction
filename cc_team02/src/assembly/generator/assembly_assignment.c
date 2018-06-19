@@ -188,3 +188,38 @@ void mCc_assembly_assign_function_call_string(FILE *out,
 	assert(tac_elem);
 	mCc_assembly_assign_function_call_int(out, data, tac_elem);
 }
+
+
+//=========================================== arrays
+
+void mCc_assembly_assign_array_int(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       struct mCc_tac_element *tac_elem)
+{
+	assert(tac_elem);
+	//TODO: werte reinspeichern
+}
+
+void mCc_assembly_assign_array_float(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       struct mCc_tac_element *tac_elem)
+{
+	assert(tac_elem);
+
+}
+
+void mCc_assembly_assign_array_bool(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       struct mCc_tac_element *tac_elem)
+{
+	assert(tac_elem);
+
+}
+
+void mCc_assembly_assign_array_string(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       struct mCc_tac_element *tac_elem)
+{
+	assert(tac_elem);
+
+}

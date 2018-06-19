@@ -11,6 +11,7 @@ extern "C" {
 struct mCc_assembly_offset_holder {
 	map_int_t offset_table;
 	map_int_t param_table;
+	map_int_t function_table;
 	int actual_offset;
 };
 

@@ -10,6 +10,18 @@
 extern "C" {
 #endif
 
+void mCc_assembly_intermediate_return_int(FILE *out,
+                                          struct mCc_assembly_data *data,
+                                          struct mCc_tac_element *tac_elem);
+void mCc_assembly_intermediate_return_float(FILE *out,
+                                            struct mCc_assembly_data *data,
+                                            struct mCc_tac_element *tac_elem);
+void mCc_assembly_intermediate_return_bool(FILE *out,
+                                           struct mCc_assembly_data *data,
+                                           struct mCc_tac_element *tac_elem);
+void mCc_assembly_intermediate_return_string(FILE *out,
+                                             struct mCc_assembly_data *data,
+                                             struct mCc_tac_element *tac_elem);
 void mCc_assembly_return_primitive_int(FILE *out,
                                        struct mCc_assembly_data *data,
                                        struct mCc_tac_element *tac_elem);

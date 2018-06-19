@@ -141,7 +141,7 @@ void test_array(int arr[]){
 	int arr2[100];
 	int b=2;
 	int c=b*3;
-	arr[b+c]=4;
+	arr[b+c+12]=4;
 }
 
 int main( int argc, char *argv[] )

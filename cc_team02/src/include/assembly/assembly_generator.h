@@ -49,6 +49,10 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb return_array_float;
 	mCc_generate_assembly_cb return_array_bool;
 	mCc_generate_assembly_cb return_array_string;
+	mCc_generate_assembly_cb intermediate_return_int;
+	mCc_generate_assembly_cb intermediate_return_float;
+	mCc_generate_assembly_cb intermediate_return_bool;
+	mCc_generate_assembly_cb intermediate_return_string;
 
 	// Param
 	mCc_generate_assembly_cb param_int_primitive;
@@ -122,6 +126,18 @@ struct mCc_assembly_generator {
 	mCc_generate_assembly_cb less_equals_float;
 	mCc_generate_assembly_cb and_op;
 	mCc_generate_assembly_cb or_op;
+
+
+	// Arrays
+	mCc_generate_assembly_cb assign_array_int;
+	mCc_generate_assembly_cb assign_array_float;
+	mCc_generate_assembly_cb assign_array_bool;
+	mCc_generate_assembly_cb assign_array_string;
+
+	mCc_generate_assembly_cb index_acc_arr_int;
+	mCc_generate_assembly_cb index_acc_arr_float;
+	mCc_generate_assembly_cb index_acc_arr_bool;
+	mCc_generate_assembly_cb index_acc_arr_string;
 };
 
 void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,

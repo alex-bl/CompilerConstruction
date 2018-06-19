@@ -181,6 +181,9 @@ void mCc_assembly_set_less_equals_float(FILE *out);
 
 void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest);
 
+void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
+                                int offset_array_index);
+
 #ifdef __cplusplus
 }
 #endif
