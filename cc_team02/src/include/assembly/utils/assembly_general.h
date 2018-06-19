@@ -186,6 +186,8 @@ void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
 
 void mCc_assembly_move_index_val_to_eax(FILE *out);
 
+void mCc_assembly_load_float_at_ecx(FILE *out);
+
 void mCc_assembly_store_int_val_at_index(FILE *out, int calc_offset);
 void mCc_assembly_store_float_val_at_index(FILE *out, int calc_offset);
 

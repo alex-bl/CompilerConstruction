@@ -1,17 +1,3 @@
-int test_func(int p){
-	int b;
-	int c;
-	
-	c=2;
-	b=3;
-	
-	if (c==b) {
-		p=8;
-	}
-	
-	return c*b*p;
-}
-
 /*
 
 int ten_plus(int p){
@@ -94,7 +80,7 @@ void main()
 	print_int(a);
 	print_nl();
 */	
-	string[10] a;
+	float[10] a;
 
 	a[0]=10.23;
 	a[1]=2.11;
@@ -103,7 +89,7 @@ void main()
 	print_nl();
 	print_float(a[1]);
 	print_nl();
-	print_float(3.23+12.33);
+	print_float(a[0]+a[1]);
 	print_nl();
 		
 }

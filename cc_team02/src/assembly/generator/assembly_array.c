@@ -74,7 +74,8 @@ void mCc_assembly_index_acc_arr_float(FILE *out, struct mCc_assembly_data *data,
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
 	                           offset_array_index);
-	mCc_assembly_move_index_val_to_eax(out);
+
+	mCc_assembly_load_float_at_ecx(out);
 	mCc_assembly_push_float(out, offset_array_value);
 }
 
