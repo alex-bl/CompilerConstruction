@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "assembly_argument.h"
+#include "assembly_array.h"
 #include "assembly_arithmetic_op.h"
 #include "assembly_assignment.h"
 #include "assembly_binary_op_logical.h"
@@ -362,6 +363,34 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			// TODO: complete => raise warning until completed
 			// default: log_error("Not handled"); /*print_nl_debug(gen_cb.out);
 			// */break;
+
+		//arrays
+		case MCC_TAC_OPARATION_ASSIGN_ARRAY_INT:
+			gen_cb.assign_array_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_ARRAY_FLOAT:
+			gen_cb.assign_array_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_ARRAY_BOOL:
+			gen_cb.assign_array_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPARATION_ASSIGN_ARRAY_STRING:
+			gen_cb.assign_array_string(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+
+		case MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS:
+			gen_cb.index_acc_arr_int(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPERATION_FLOAT_ARR_INDEX_ACCESS:
+			gen_cb.index_acc_arr_float(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPERATION_BOOL_ARR_INDEX_ACCESS:
+			gen_cb.index_acc_arr_bool(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+		case MCC_TAC_OPERATION_STRING_ARR_INDEX_ACCESS:
+			gen_cb.index_acc_arr_string(gen_cb.out, gen_cb.data, tac_elem);
+			/*print_nl_debug(gen_cb.out); */ break;
+
 		}
 	}
 }
@@ -552,6 +581,17 @@ mcc_assembly_gen_setup(FILE *out, struct mCc_assembly_data *data)
 		.less_equals_float = mCc_assembly_less_equals_float,
 		.and_op = mCc_assembly_and,
 		.or_op = mCc_assembly_or,
+
+		//arrays
+		.assign_array_int=mCc_assembly_assign_array_int,
+		.assign_array_float=mCc_assembly_assign_array_float,
+		.assign_array_bool=mCc_assembly_assign_array_bool,
+		.assign_array_string=mCc_assembly_assign_array_string,
+
+		.index_acc_arr_int=mCc_assembly_index_acc_arr_int,
+		.index_acc_arr_float=mCc_assembly_index_acc_arr_float,
+		.index_acc_arr_bool=mCc_assembly_index_acc_arr_bool,
+		.index_acc_arr_string=mCc_assembly_index_acc_arr_string
 
 	};
 }

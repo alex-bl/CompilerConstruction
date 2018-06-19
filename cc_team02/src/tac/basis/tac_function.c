@@ -41,6 +41,23 @@ enum mCc_tac_operation tac_helper_get_tac_oparation_for_parameter_type(
 	}
 }
 
+static enum mCc_tac_operation
+map_return_type(enum mCc_ast_data_type ast_data_type)
+{
+	switch (ast_data_type) {
+	case MCC_AST_DATA_TYPE_INT:
+		return MCC_TAC_OPARATION_INTERMEDIATE_RETURN_INT;
+	case MCC_AST_DATA_TYPE_FLOAT:
+		return MCC_TAC_OPARATION_INTERMEDIATE_RETURN_FLOAT;
+	case MCC_AST_DATA_TYPE_BOOL:
+		return MCC_TAC_OPARATION_INTERMEDIATE_RETURN_BOOL;
+	case MCC_AST_DATA_TYPE_STRING:
+		return MCC_TAC_OPARATION_INTERMEDIATE_RETURN_STRING;
+	default: return MCC_TAC_OPARATION_INTERMEDIATE_RETURN_INT;
+	}
+	return MCC_TAC_OPARATION_INTERMEDIATE_RETURN_INT;
+}
+
 struct mCc_tac_element *
 mCc_tac_function_def(struct mCc_ast_function_def *def,
                      struct mCc_tac_element *previous_tac)
@@ -64,7 +81,6 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	mCc_tac_connect_tac_entry(previous_tac, tac_function_label);
 	previous_tac = tac_function_label;
 
-
 	// started function def:
 	struct mCc_tac_element *tac_function_def_start =
 	    tac_new_element(MCC_TAC_OPARATION_START_FUNCTION_DEF, NULL, NULL,
@@ -72,7 +88,6 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_function_def_start);
 	previous_tac = tac_function_def_start;
-
 
 	// stores parameter into tac table
 	struct mCc_ast_declaration *parameter = def->first_parameter;
@@ -119,8 +134,8 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		// Has a statement to be in the tac table?
 		/*struct mCc_tac_element *tac = tac_new_element(
 		    MCC_TAC_OPARATION_LABLE,
-		    mCc_tac_create_from_tac_identifier(statement_tac->tac_result), NULL,
-		    tac_new_identifier(def->identifier->identifier_name),
+		    mCc_tac_create_from_tac_identifier(statement_tac->tac_result),
+		NULL, tac_new_identifier(def->identifier->identifier_name),
 		    MCC_TAC_TYPE_NO_TYPE, 0);
 		mCc_tac_connect_tac_entry(statement_tac, tac);
 		previous_tac = tac;*/
@@ -189,7 +204,7 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 
 	if (ast_data_type != MCC_AST_DATA_TYPE_VOID) {
 		struct mCc_tac_element *tac_intermediate_return = tac_new_element(
-		    MCC_TAC_OPARATION_INTERMEDIATE_RETURN_INT, tmp,
+		    map_return_type(ast_data_type), tmp,
 		    tac_new_identifier(call->identifier->identifier_name), tmp,
 		    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 

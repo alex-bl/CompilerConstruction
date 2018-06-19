@@ -423,7 +423,6 @@ void mCc_assembly_jump(FILE *out, const char *dest_label)
 	jump_to(out, dest_label, "jmp");
 }
 
-
 void mCc_assembly_jump_greater(FILE *out, const char *dest_label)
 {
 	jump_to(out, dest_label, "jg");
@@ -589,3 +588,28 @@ void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)
  * TODO:
  * - is compound (cmp/jump-combo) => do at handler
  */
+
+/*============================================================= array */
+
+void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
+                                int offset_array_index)
+{
+
+	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
+
+	mCc_assembly_print_op(out, "leal");
+	fprintf(out, "%d(%s), %s", offset_array_base, DEFAULT_DATA_STACK_POINTER,
+	        EDX_REG);
+	mCc_assembly_print_nl(out);
+
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "leal");
+	fprintf(out, "%d(%s,%s,%d), %s", 0, EDX_REG, DEFAULT_ACCUMULATOR_OPERAND,
+	        base_size, ECX_REG);
+	mCc_assembly_print_nl(out);
+
+//	mCc_assembly_print_shift(out);
+//	mCc_assembly_print_op(out, "movl");
+//	fprintf(out, "0(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+//	mCc_assembly_print_nl(out);
+}

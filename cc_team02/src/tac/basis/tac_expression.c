@@ -300,6 +300,23 @@ mCc_tac_expression_identifier(struct mCc_ast_expression *expression,
 	// return previous_tac;
 }
 
+static enum mCc_tac_operation
+map_arr_index_type(enum mCc_ast_data_type ast_data_type)
+{
+	switch (ast_data_type) {
+	case MCC_AST_DATA_TYPE_INT:
+		return MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS;
+	case MCC_AST_DATA_TYPE_FLOAT:
+		return MCC_TAC_OPERATION_FLOAT_ARR_INDEX_ACCESS;
+	case MCC_AST_DATA_TYPE_BOOL:
+		return MCC_TAC_OPERATION_BOOL_ARR_INDEX_ACCESS;
+	case MCC_AST_DATA_TYPE_STRING:
+		return MCC_TAC_OPERATION_STRING_ARR_INDEX_ACCESS;
+	default: return MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS;
+	}
+	return MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS;
+}
+
 struct mCc_tac_element *
 mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
                                     struct mCc_tac_element *previous_tac)
@@ -312,14 +329,17 @@ mCc_tac_expression_identifier_array(struct mCc_ast_expression *expression,
 	struct mCc_tac_element *array_expression_tac = helper_get_tac_of_expression(
 	    expression->array_index_expression, previous_tac);
 
+	enum mCc_ast_data_type ast_data_type = expression->data_type;
+
 	// creates a new labels for the array with its index expression
 	struct mCc_tac_element *tac = tac_new_element(
-	    MCC_TAC_OPARATION_EMPTY,
+	    map_arr_index_type(ast_data_type),
 	    mCc_helper_concat_name_and_scope(
 	        expression->array_identifier->identifier_name,
 	        expression->array_identifier->symtab_info->scope_level),
 	    mCc_tac_create_from_tac_identifier(array_expression_tac->tac_result),
-	    mCc_tac_create_new_lable_identifier(), MCC_TAC_TYPE_NO_TYPE, 0);
+	    mCc_tac_create_new_lable_identifier(),
+	    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 	mCc_tac_connect_tac_entry(array_expression_tac, tac);
 	return tac;
 	// return previous_tac;

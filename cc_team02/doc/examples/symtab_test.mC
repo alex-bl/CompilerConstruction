@@ -1,3 +1,5 @@
+/*
+
 int ten_plus(int p){
 	return 10+10;
 }
@@ -18,7 +20,7 @@ int test_func(int p, int u, int z){
 	
 	return 2+2+2+ten_plus(19);
 }
-
+*/
 void main()
 {
 /*
@@ -72,11 +74,15 @@ void main()
 	}else{
 	
 	} 	
-*/
 
 	int a;
 	a=test_func(8,10,2);
 	print_int(a);
 	print_nl();
-	
+*/	
+	int[10] a;
+
+	a[0]=10;
+	print_int(a[0]);
+
 }
