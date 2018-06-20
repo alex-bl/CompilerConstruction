@@ -1,9 +1,8 @@
-/*
+
 
 int ten_plus(int p){
 	return 10+10;
 }
-
 int test_func(int p, int u, int z){
 	int c;
 	
@@ -16,11 +15,20 @@ int test_func(int p, int u, int z){
 
 	print_int(z);
 	print_nl();
+	if ((c+u)==z) {
+		print("you ");
+		print("are ");
+		print("good");
+	} else {
+		print("you ");
+		print("are ");
+		print("better");
+	}
 
 	
 	return 2+2+2+ten_plus(19);
 }
-*/
+
 
 void test(int[100] a){
 
