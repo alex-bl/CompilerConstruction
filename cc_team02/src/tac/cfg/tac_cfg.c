@@ -29,16 +29,29 @@ mCc_tac_cfg_new_element(struct mCc_tac_element *tac_element,
 
 struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac)
 {
+	struct mCc_tac_element *tac_next_element = tac;
 	// TODO iterate throw all function -> each function separate cfg
-	while (false) {
+	struct mCc_tac_cfg_element *cfg_function;
+	while (tac_next_element != NULL) {
+		if (tac_next_element->tac_operation ==
+		    MCC_TAC_OPARATION_START_FUNCTION_DEF) {
+			cfg_function = cfg_start_function(tac_next_element);
+		}
+		tac_next_element = tac_next_element->tac_next_element;
 	}
-	return NULL;
+	// TODO just returns the cfg of the last function
+	return cfg_function;
 }
 
 struct mCc_tac_cfg_element *
 cfg_start_function(struct mCc_tac_element *tac_function_element)
 {
+	struct mCc_tac_element *tac_next_element = tac_function_element;
 	// TODO build up cfg for each function here
+	while (tac_next_element != MCC_TAC_OPARATION_END_FUNCTION_DEF) {
+
+		tac_next_element = tac_next_element->tac_next_element;
+	}
 	return NULL;
 }
 
