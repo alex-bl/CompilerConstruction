@@ -27,6 +27,7 @@ void mCc_assembly_start_function_def(FILE *out, struct mCc_assembly_data *data,
                                      struct mCc_tac_element *tac_elem)
 {
 	char *function_def_label = get_function_def_identifier(tac_elem)->name;
+	data->func_scope_counter++;
 
 	if (is_main(function_def_label)) {
 		mCc_assembly_main_function_enter(out);
@@ -45,10 +46,10 @@ void mCc_assembly_end_function_def(FILE *out, struct mCc_assembly_data *data,
 	const char *next_function_label =
 	    mCc_assembly_get_next_function_label(tac_elem);
 	if (is_main(function_def_label)) {
-		mCc_assembly_main_function_leave(out);
+		mCc_assembly_main_function_leave(out, data->func_scope_counter);
 	} else {
 		mCc_assembly_new_function_def_leave(out, function_def_label,
-		                                    next_function_label);
+		                                    next_function_label,data->func_scope_counter);
 	}
 }
 

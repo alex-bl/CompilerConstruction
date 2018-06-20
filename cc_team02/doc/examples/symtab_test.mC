@@ -1,124 +1,48 @@
-
-
-int ten_plus(int p){
-	return 10+10;
-}
-int test_func(int p, int u, int z){
-	int c;
-	
-	c=p+u+z;
-	print_int(p);
-	print_nl();
-
-	print_int(u);
-	print_nl();
-
-	print_int(z);
-	print_nl();
-	if ((c+u)==z) {
-		print("you ");
-		print("are ");
-		print("good");
-	} else {
-		print("you ");
-		print("are ");
-		print("better");
+bool test_if(int a, int b){
+	if(a<b){
+		print("here");
+		print_nl();
+		return true;
 	}
-
-	
-	return 2+2+2+ten_plus(19);
+	print("or here");	
+	return false;
 }
-
-
-void test(int[100] a){
-
-}
-
-void test_2(string[100] a){
-
-}
-
 
 void main()
 {
-/*
 	int a;
 	int b;
 	int c;
-
-	a=3+9*10;
-	b=10-7-2-1;
-	c=30/10;
+	int d;
 	
-	print_int(a);
-	print_nl();
-
-	print_int(b);
-	print_nl();
-
-	print_int(c);
-	print_nl();
-
-	int c;
-	c=40/20/2;
-	print_int(c);
-	print_nl();
-
-	string b;	
-	float c;
-	int a;
-	b="huhuhuhuhuhuhuhuhuhu";
-	c=342.2342;
 	a=12;
-
-	print("String: ");
-	print(b);	
-	print_nl();
-
-	print("Float: ");	
-	print_float(c);
-	print_nl();
-
-	print("Int: ");
-	print_int(a*4);
-	print_nl();
-
-	bool c;
-	bool d;
-	d=false;
+	b=2;
+	c=2;
+	d=a-b-c;
 	
-	if(d){
-		print("This is false");
+	print_int(d);
+	print_nl();
+	
+	
+	float e;
+	float f;
+	float g;
+	
+	e=10.2;
+	f=2.0;
+	g=2.0;
+	
+	print_float(e/f/g);
+	print_nl();
+	
+	bool if_test;
+	if_test=test_if(1,2);
+	
+	if(if_test){
+		print("true");
 	}else{
-	
-	} 	
-
-	int a;
-	a=test_func(8,10,2);
-	print_int(a);
+		print("false");
+	}
 	print_nl();
-*/	
-	string[10] a;
-	float[10] b;
-
-	a[0]="hoi";
-	a[1]="servus";
-	
-	print(a[0]);
-	print_nl();
-	print(a[1]);
-	print_nl();		
-	
-	print("======================");
-	print_nl();
-
-	b[0]=12.211;
-	b[1]=1.32;
-	
-	print_float(b[0]);
-	print_nl();
-	print_float(b[1]);
-	print_nl();		
-	print_float(b[0]+b[1]);
 	
 }

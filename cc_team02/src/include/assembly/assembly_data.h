@@ -2,6 +2,7 @@
 #define MCC_ASSEMBLY_DATA_H
 
 #include "basic_tac.h"
+#include "config.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,6 +15,7 @@ struct mCc_assembly_argument_list {
 
 struct mCc_assembly_data {
 	int current_stack_pos;
+	int func_scope_counter;
 	struct mCc_assembly_argument_list *arg_list;
 };
 

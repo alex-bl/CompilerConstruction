@@ -6,8 +6,8 @@
 #include <stdlib.h>
 
 #include "assembly_argument.h"
-#include "assembly_array.h"
 #include "assembly_arithmetic_op.h"
+#include "assembly_array.h"
 #include "assembly_assignment.h"
 #include "assembly_binary_op_logical.h"
 #include "assembly_declaration.h"
@@ -240,7 +240,8 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			gen_cb.intermediate_return_bool(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
 		case MCC_TAC_OPARATION_INTERMEDIATE_RETURN_STRING:
-			gen_cb.intermediate_return_string(gen_cb.out, gen_cb.data, tac_elem);
+			gen_cb.intermediate_return_string(gen_cb.out, gen_cb.data,
+			                                  tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
 
 		// parameter => just prepend, generate later
@@ -292,13 +293,11 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			gen_cb.label_string(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
 
-
 		// TODO: push remains the same?
 		case MCC_TAC_OPARATION_LABEL_ARGUMENT:
 			// gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
 			prepend_arg(gen_cb, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
-
 
 			// "pseudo" labels => assign value to tmp-vars
 		case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT:
@@ -364,7 +363,7 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 			// default: log_error("Not handled"); /*print_nl_debug(gen_cb.out);
 			// */break;
 
-		//arrays
+		// arrays
 		case MCC_TAC_OPARATION_ASSIGN_ARRAY_INT:
 			gen_cb.assign_array_int(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
@@ -390,7 +389,6 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 		case MCC_TAC_OPERATION_STRING_ARR_INDEX_ACCESS:
 			gen_cb.index_acc_arr_string(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
-
 		}
 	}
 }
@@ -582,16 +580,16 @@ mcc_assembly_gen_setup(FILE *out, struct mCc_assembly_data *data)
 		.and_op = mCc_assembly_and,
 		.or_op = mCc_assembly_or,
 
-		//arrays
-		.assign_array_int=mCc_assembly_assign_array_int,
-		.assign_array_float=mCc_assembly_assign_array_float,
-		.assign_array_bool=mCc_assembly_assign_array_bool,
-		.assign_array_string=mCc_assembly_assign_array_string,
+		// arrays
+		.assign_array_int = mCc_assembly_assign_array_int,
+		.assign_array_float = mCc_assembly_assign_array_float,
+		.assign_array_bool = mCc_assembly_assign_array_bool,
+		.assign_array_string = mCc_assembly_assign_array_string,
 
-		.index_acc_arr_int=mCc_assembly_index_acc_arr_int,
-		.index_acc_arr_float=mCc_assembly_index_acc_arr_float,
-		.index_acc_arr_bool=mCc_assembly_index_acc_arr_bool,
-		.index_acc_arr_string=mCc_assembly_index_acc_arr_string
+		.index_acc_arr_int = mCc_assembly_index_acc_arr_int,
+		.index_acc_arr_float = mCc_assembly_index_acc_arr_float,
+		.index_acc_arr_bool = mCc_assembly_index_acc_arr_bool,
+		.index_acc_arr_string = mCc_assembly_index_acc_arr_string
 
 	};
 }
@@ -601,6 +599,7 @@ void mCc_assembly_generate(FILE *out, struct mCc_tac_element *first_tac_elem)
 	struct mCc_assembly_data data;
 
 	data.current_stack_pos = 0;
+	data.func_scope_counter = -1;
 	data.arg_list = NULL;
 
 	struct mCc_assembly_generator generator_functions =

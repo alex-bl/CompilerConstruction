@@ -50,7 +50,7 @@ void mCc_assembly_push_float(FILE *out, int tac_offset)
 	mCc_assembly_print_nl(out);
 }
 
-//is not working
+// is not working
 void mCc_assembly_push_string(FILE *out, const char *label, int tac_offset)
 {
 	mCc_assembly_print_shift(out);
@@ -149,11 +149,11 @@ void mCc_assembly_allocate_string_on_stack(FILE *out,
 }
 
 void mCc_assembly_allocate_string_array_on_stack(FILE *out,
-                                           struct mCc_assembly_data *data,
-                                           int nr_of)
+                                                 struct mCc_assembly_data *data,
+                                                 int nr_of)
 {
 	mCc_assembly_print_shift(out);
-	size_t required_space = mCc_assembly_calc_string_space(NULL)*nr_of;
+	size_t required_space = mCc_assembly_calc_string_space(NULL) * nr_of;
 	mCc_assembly_print_op(out, "subl");
 	fprintf(out, "$%zu, %s", required_space, DEFAULT_STACK_POINTER);
 	mCc_assembly_print_nl(out);
@@ -436,6 +436,13 @@ void mCc_assembly_jump(FILE *out, const char *dest_label)
 	jump_to(out, dest_label, "jmp");
 }
 
+void mCc_assembly_jump_to_return(FILE *out, int func_scope_counter)
+{
+	mCc_assembly_print_op(out, "");
+	fprintf(out, "%s .%s%d", "jmp", DEFAULT_RETURN_LABEL, func_scope_counter);
+	mCc_assembly_print_nl(out);
+}
+
 void mCc_assembly_jump_greater(FILE *out, const char *dest_label)
 {
 	jump_to(out, dest_label, "jg");
@@ -650,10 +657,10 @@ static void move_float_to_ecx_reg(FILE *out)
 	fprintf(out, "(%s)", ECX_REG);
 	mCc_assembly_print_nl(out);
 
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "movl");
-//	fprintf(out, "%s, (%s)", FLOAT_STACK_TOP_REG, ECX_REG);
-//	mCc_assembly_print_nl(out);
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "movl");
+	//	fprintf(out, "%s, (%s)", FLOAT_STACK_TOP_REG, ECX_REG);
+	//	mCc_assembly_print_nl(out);
 }
 
 void mCc_assembly_load_float_at_ecx(FILE *out)

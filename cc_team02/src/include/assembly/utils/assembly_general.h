@@ -52,8 +52,8 @@ void mCc_assembly_allocate_string_on_stack(FILE *out,
                                            const char *str);
 
 void mCc_assembly_allocate_string_array_on_stack(FILE *out,
-                                           struct mCc_assembly_data *data,
-                                           int nr_of);
+                                                 struct mCc_assembly_data *data,
+                                                 int nr_of);
 
 /*============================================================= return */
 
@@ -129,6 +129,8 @@ void mCc_assembly_unary_negation(FILE *out);
 /*
  * TODO: reads the value from the cmp-reg
  */
+
+void mCc_assembly_jump_to_return(FILE *out, int func_scope_counter);
 
 void mCc_assembly_jump_equals(FILE *out, const char *dest_label);
 
