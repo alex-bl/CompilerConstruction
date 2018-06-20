@@ -40,6 +40,7 @@
 #define CONDITION_FLAG_REG "%al"
 #define FLOAT_STACK_TOP_REG "%st"
 #define FLOAT_STACK_SEC_REG "%st(1)"
+#define DEFAULT_RETURN_LABEL "return"
 
 #ifdef __cplusplus
 extern "C" {
