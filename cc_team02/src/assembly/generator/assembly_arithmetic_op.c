@@ -21,9 +21,9 @@ void mCc_assembly_generate_add_int(FILE *out, struct mCc_assembly_data *data,
 	mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	// Load the 2nd operant into %eax
-	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_load_int(out, arg_1, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
-	mCc_assembly_add_int(out, arg_1);
+	mCc_assembly_add_int(out, arg_2);
 	// Push
 	mCc_assembly_push_int(out, result_pos, DEFAULT_ACCUMULATOR_OPERAND);
 }
@@ -56,10 +56,10 @@ void mCc_assembly_generate_sub_int(FILE *out, struct mCc_assembly_data *data,
 	// allocate result
 	mCc_assembly_allocate_int_on_stack(out, data, 1);
 
-	// Load the 2nd operant into %eax
-	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
+	// Load the 1st operant into %eax
+	mCc_assembly_load_int(out, arg_1, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
-	mCc_assembly_sub_int(out, arg_1);
+	mCc_assembly_sub_int(out, arg_2);
 	// Push
 	mCc_assembly_push_int(out, result_pos, DEFAULT_ACCUMULATOR_OPERAND);
 }
@@ -93,9 +93,9 @@ void mCc_assembly_generate_mul_int(FILE *out, struct mCc_assembly_data *data,
 	mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	// Load the 2nd operant into %eax
-	mCc_assembly_load_int(out, arg_2, DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_load_int(out, arg_1, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
-	mCc_assembly_mul_int(out, arg_1);
+	mCc_assembly_mul_int(out, arg_2);
 	// Push
 	mCc_assembly_push_int(out, result_pos, DEFAULT_ACCUMULATOR_OPERAND);
 }

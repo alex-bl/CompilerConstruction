@@ -35,9 +35,9 @@ void mCc_assembly_new_header(FILE *out, const char *file_name,
 
 void mCc_assembly_new_function_def_enter(FILE *out, const char *function_label)
 {
-	//TODO: already handled by label?
-//	fprintf(out, "%s:", function_label);
-//	mCc_assembly_print_nl(out);
+	// TODO: already handled by label?
+	//	fprintf(out, "%s:", function_label);
+	//	mCc_assembly_print_nl(out);
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "pushl");
@@ -52,14 +52,18 @@ void mCc_assembly_new_function_def_enter(FILE *out, const char *function_label)
 
 // TODO: what is correct?
 void mCc_assembly_new_function_def_leave(FILE *out, const char *function_label,
-                                         const char *next_function_label)
+                                         const char *next_function_label,
+                                         int func_scope_counter)
 {
 	//	fprintf(out, "popl\t%%edp");
 	//	fprintf(out, "ret");
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "addl");
-//	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
-//	mCc_assembly_print_nl(out);
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "addl");
+	//	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+	//	mCc_assembly_print_nl(out);
+
+	fprintf(out, ".%s%d:", DEFAULT_RETURN_LABEL, func_scope_counter);
+	mCc_assembly_print_nl(out);
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leave");
@@ -87,66 +91,69 @@ void mCc_assembly_new_function_def_leave(FILE *out, const char *function_label,
 
 void mCc_assembly_main_function_enter(FILE *out)
 {
-	//TODO: is this really required or is main just a simple function?
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "leal");
-//	fprintf(out, "4(%s), %s", DEFAULT_STACK_POINTER, ECX_REG);
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "andl");
-//	fprintf(out, "$-16, %s", DEFAULT_STACK_POINTER);
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "pushl");
-//	fprintf(out, "-4(%s)", ECX_REG);
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "pushl");
-//	fprintf(out, "%s", DEFAULT_DATA_STACK_POINTER);
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "movl");
-//	fprintf(out, "%s, %s", DEFAULT_STACK_POINTER, DEFAULT_DATA_STACK_POINTER);
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "pushl");
-//	fprintf(out, "%s", ECX_REG);
-//	mCc_assembly_print_nl(out);
+	// TODO: is this really required or is main just a simple function?
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "leal");
+	//	fprintf(out, "4(%s), %s", DEFAULT_STACK_POINTER, ECX_REG);
+	//	mCc_assembly_print_nl(out);
+	//
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "andl");
+	//	fprintf(out, "$-16, %s", DEFAULT_STACK_POINTER);
+	//	mCc_assembly_print_nl(out);
+	//
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "pushl");
+	//	fprintf(out, "-4(%s)", ECX_REG);
+	//	mCc_assembly_print_nl(out);
+	//
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "pushl");
+	//	fprintf(out, "%s", DEFAULT_DATA_STACK_POINTER);
+	//	mCc_assembly_print_nl(out);
+	//
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "movl");
+	//	fprintf(out, "%s, %s", DEFAULT_STACK_POINTER,
+	//DEFAULT_DATA_STACK_POINTER); 	mCc_assembly_print_nl(out);
+	//
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "pushl");
+	//	fprintf(out, "%s", ECX_REG);
+	//	mCc_assembly_print_nl(out);
 	mCc_assembly_new_function_def_enter(out, "main");
 }
 
-//TODO: main must not be the last function -.-
-void mCc_assembly_main_function_leave(FILE *out)
+// TODO: main must not be the last function -.-
+void mCc_assembly_main_function_leave(FILE *out, int func_scope_counter)
 {
-	//TODO: is this really required or is main just a simple function?
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "movl");
-//	fprintf(out, "-4(%s), %s", DEFAULT_DATA_STACK_POINTER, ECX_REG);
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "leave");
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "leal");
-//	fprintf(out, "-4(%s), %s", ECX_REG, DEFAULT_STACK_POINTER);
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "ret");
-//	mCc_assembly_print_nl(out);
+	// TODO: is this really required or is main just a simple function?
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "movl");
+	//	fprintf(out, "-4(%s), %s", DEFAULT_DATA_STACK_POINTER, ECX_REG);
+	//	mCc_assembly_print_nl(out);
+	//
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "leave");
+	//	mCc_assembly_print_nl(out);
+	//
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "leal");
+	//	fprintf(out, "-4(%s), %s", ECX_REG, DEFAULT_STACK_POINTER);
+	//	mCc_assembly_print_nl(out);
+	//
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "ret");
+	//	mCc_assembly_print_nl(out);
 
-//TODO: copied from function-def-leave
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "addl");
-//	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
-//	mCc_assembly_print_nl(out);
+	// TODO: copied from function-def-leave
+	//	mCc_assembly_print_shift(out);
+	//	mCc_assembly_print_op(out, "addl");
+	//	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
+	//	mCc_assembly_print_nl(out);
+
+	fprintf(out, ".%s%d:", DEFAULT_RETURN_LABEL,func_scope_counter);
+	mCc_assembly_print_nl(out);
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leave");
@@ -156,7 +163,7 @@ void mCc_assembly_main_function_leave(FILE *out)
 	mCc_assembly_print_op(out, "ret");
 	mCc_assembly_print_nl(out);
 
-//============================================
+	//============================================
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, ".size");
