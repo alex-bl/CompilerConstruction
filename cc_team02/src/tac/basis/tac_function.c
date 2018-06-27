@@ -213,7 +213,7 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 
 	if (ast_data_type != MCC_AST_DATA_TYPE_VOID) {
 		struct mCc_tac_element *tac_intermediate_return = tac_new_element(
-		    map_return_type(ast_data_type), tmp,
+		    map_return_type(ast_data_type), NULL,
 		    tac_new_identifier(call->identifier->identifier_name), tmp,
 		    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 
