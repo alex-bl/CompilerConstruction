@@ -46,6 +46,41 @@ static int get_actual_arg_count(struct mCc_ast_function_call *function_call)
 	return counter;
 }
 
+static enum mCc_ast_data_type
+get_def_type(struct mCc_symtab_parameter_ref *next_param)
+{
+	struct mCc_symbol_table_node *info = next_param->identifier->symtab_info;
+	if (info) {
+		return info->data_type;
+	}
+	return next_param->declaration->data_type;
+}
+
+static size_t get_size(struct mCc_symtab_parameter_ref *next_param)
+{
+	struct mCc_symbol_table_node *info = next_param->identifier->symtab_info;
+	if (info) {
+		return info->size;
+	}
+	return next_param->declaration->size;
+}
+
+static enum mCc_symtab_identifier_type
+get_entry_type(struct mCc_symtab_parameter_ref *next_param)
+{
+	struct mCc_symbol_table_node *info = next_param->identifier->symtab_info;
+	if (info) {
+		return info->entry_type;
+	}
+
+	struct mCc_ast_declaration *decl = next_param->declaration;
+
+	if (decl->declaration_type == MCC_AST_DECLARATION_ARRAY) {
+		return MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY;
+	}
+	return MCC_SYM_TAB_IDENTIFIER_VARIABLE_PRIMITIVE;
+}
+
 static void
 append_error_to_function_def(struct mCc_ast_function_def *function_def,
                              struct mCc_validation_status_result *error)
@@ -514,8 +549,7 @@ static bool
 array_primitive_missmatch(struct mCc_symtab_parameter_ref *next_param,
                           struct mCc_ast_expression *next_argument)
 {
-	enum mCc_symtab_identifier_type param_type =
-	    next_param->identifier->symtab_info->entry_type;
+	enum mCc_symtab_identifier_type param_type = get_entry_type(next_param);
 	enum mCc_ast_expression_type expr_type = next_argument->type;
 
 	if (expr_type == MCC_AST_EXPRESSION_TYPE_IDENTIFIER) {
@@ -534,17 +568,15 @@ array_primitive_missmatch(struct mCc_symtab_parameter_ref *next_param,
 static bool array_size_missmatch(struct mCc_symtab_parameter_ref *next_param,
                                  struct mCc_ast_expression *next_argument)
 {
-	struct mCc_symbol_table_node *symtab_info =
-	    next_param->identifier->symtab_info;
 	enum mCc_ast_expression_type expr_type = next_argument->type;
 
-	if (symtab_info->entry_type == MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY &&
+	if (get_entry_type(next_param) == MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY &&
 	    expr_type == MCC_AST_EXPRESSION_TYPE_IDENTIFIER) {
 
 		struct mCc_symbol_table_node *symtab_info_arg =
 		    next_argument->identifier->symtab_info;
 
-		return symtab_info->size != symtab_info_arg->size;
+		return get_size(next_param) != symtab_info_arg->size;
 	}
 	return false;
 }
@@ -652,8 +684,7 @@ void mCc_symtab_handle_function_call_post_order(
 		while (next_param) {
 
 			enum mCc_ast_data_type arg_type = next_argument->data_type;
-			enum mCc_ast_data_type def_type =
-			    next_param->identifier->symtab_info->data_type;
+			enum mCc_ast_data_type def_type = get_def_type(next_param);
 
 			// unknown or inconsistent
 			if (arg_type == MCC_AST_DATA_TYPE_UNKNOWN ||
@@ -666,15 +697,14 @@ void mCc_symtab_handle_function_call_post_order(
 				                                   arg_counter, info_holder);
 			} else if (array_primitive_missmatch(next_param, next_argument)) {
 				enum mCc_symtab_identifier_type expected =
-				    next_param->identifier->symtab_info->entry_type;
+				    get_entry_type(next_param);
 				enum mCc_symtab_identifier_type actual =
 				    get_identifier_type(next_argument);
 
 				handle_array_primitive_missmatch(
 				    call, expected, actual, def_type, arg_counter, info_holder);
 			} else if (array_size_missmatch(next_param, next_argument)) {
-				size_t expected_size =
-				    next_param->identifier->symtab_info->size;
+				size_t expected_size = get_size(next_param);
 				size_t actual_size =
 				    next_argument->identifier->symtab_info->size;
 				handle_array_size_missmatch(call, expected_size, actual_size,
