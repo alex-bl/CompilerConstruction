@@ -1,48 +1,43 @@
-void main() {
-    int test;
-    while_function (3.3, true);
-    test = dangling_else_function();
-    print_int(test);
-    print_nl();
-    array_functions();
-}
-
-int dangling_else_function() {
-    if (true && true) (42 + 2) * 4;
-        if (false || false) 42 * 1 + 14;
-        else 4 + 4 - 5;
-    return 1;
-}
-
-void while_function(float f, bool b) {
-    int i;
-    i = 0;
-    while (i < 2) {
-        print_int(i);
-        print_nl();
-        i = i + 1;
+bool check_primes_(int n, int i)
+{
+    if (n == i) {
+        return true;
+    } else if (0 == modulo(n, i)) {
+        return false;
     }
-    string str;
-    str = "test";
-    bool boolean;
-    if (2 <= 2) {
-        boolean = f > 6.8;
-    } else 6.7 >= f;
-    if (boolean) print(str);
-    else print("else");
-    print_nl();
-    return;
+    i = i + 1;
+    return check_primes_(n, i);
 }
 
-void array_functions() {
-    int[10] arr;
-    if (7 == 7) arr[1+1] = 8;
-    print_int(arr[2]);
-    print_nl();
-    if (6 != 6) {
-        arr[3] = 6;
-        print_int(arr[3]);
-        print_nl();
-    }
-    return;
+bool check_primes(int n)
+{
+	return check_primes_(n, 2);
+}
+
+int modulo(int a, int b)
+{
+    int tmp;
+    tmp = a / b;
+    tmp = b * tmp;
+    return a - tmp;
+
+}
+
+void main()
+{
+	print("Please enter a number: ");
+
+	int n;
+	n = read_int();
+	print_nl();
+
+	bool result;
+	result = check_primes(n);
+
+	if (result) {
+	    print("Number was a prime!");
+	} else {
+	    print("Number was no prime!");
+	}
+	print_nl();
 }

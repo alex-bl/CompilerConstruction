@@ -1,0 +1,54 @@
+
+#pass executable, input-file + compare-file as cmd-line-args
+
+#EXECUTABLE_FILE="test";
+EXECUTABLE_FILE=$1;
+
+#INPUT_FILE="file.txt";
+INPUT_FILE=$2;
+
+CMD_TO_EXEC="(";
+
+#FILE_TO_COMPARE="file2.txt";
+FILE_TO_COMPARE=$3;
+
+TMP_FILE="tmp.tmp"
+TMP_FILE_INPUT="tmp2.tmp"
+
+#for line in `cat $INPUT_FILE`; do
+#CMD_TO_EXEC=$CMD_TO_EXEC"echo '"$line"';";
+#done
+
+# build pipe-command
+while IFS= read -r line; do
+  CMD_TO_EXEC=$CMD_TO_EXEC"echo '"$line"';";
+done < $INPUT_FILE
+
+# extract result
+CMD_TO_EXEC=$CMD_TO_EXEC") | ./"$EXECUTABLE_FILE;
+eval $CMD_TO_EXEC >> $TMP_FILE
+
+# normalize files (newlines)
+(tr -d '\n' < $TMP_FILE) >> $TMP_FILE
+(tr -d '\n' < $FILE_TO_COMPARE) >> $TMP_FILE_INPUT
+
+# calc diff
+DIF_RESULT=$(grep -vxF -f $TMP_FILE $TMP_FILE_INPUT);
+
+# cleanup
+rm -f $TMP_FILE
+rm -f $TMP_FILE_INPUT
+
+# if there is no diff => success
+if [ -z "$DIF_RESULT" ]; then
+   exit 0;
+fi
+
+exit 1;
+#while IFS= read -r lineSec; do
+#  echo $lineSec
+#done < tmp.txt
+
+
+
+
