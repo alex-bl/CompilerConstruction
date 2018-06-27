@@ -13,14 +13,15 @@ get_function_def_identifier(struct mCc_tac_element *tac_elem)
 }
 
 static struct mCc_tac_identifier *
+get_next_function_def_identifier(struct mCc_tac_element *tac_elem)
+{
+	return tac_elem->tac_argument1;
+}
+
+static struct mCc_tac_identifier *
 get_function_call_identifier(struct mCc_tac_element *tac_elem)
 {
 	return tac_elem->tac_result;
-}
-
-static bool is_main(char *function_def_label)
-{
-	return strcmp(function_def_label, "main") == 0;
 }
 
 void mCc_assembly_start_function_def(FILE *out, struct mCc_assembly_data *data,
@@ -29,11 +30,7 @@ void mCc_assembly_start_function_def(FILE *out, struct mCc_assembly_data *data,
 	char *function_def_label = get_function_def_identifier(tac_elem)->name;
 	data->func_scope_counter++;
 
-	if (is_main(function_def_label)) {
-		mCc_assembly_main_function_enter(out);
-	} else {
-		mCc_assembly_new_function_def_enter(out, function_def_label);
-	}
+	mCc_assembly_new_function_def_enter(out, function_def_label);
 }
 
 void mCc_assembly_end_function_def(FILE *out, struct mCc_assembly_data *data,
@@ -45,8 +42,10 @@ void mCc_assembly_end_function_def(FILE *out, struct mCc_assembly_data *data,
 
 	const char *next_function_label =
 	    mCc_assembly_get_next_function_label(tac_elem);
-	if (is_main(function_def_label)) {
-		mCc_assembly_main_function_leave(out, data->func_scope_counter);
+	// last function
+	if (!get_next_function_def_identifier(tac_elem)) {
+		mCc_assembly_last_function_leave(out, function_def_label,
+		                                 data->func_scope_counter);
 	} else {
 		mCc_assembly_new_function_def_leave(out, function_def_label,
 		                                    next_function_label,data->func_scope_counter);

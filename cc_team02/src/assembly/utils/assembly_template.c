@@ -89,7 +89,7 @@ void mCc_assembly_new_function_def_leave(FILE *out, const char *function_label,
 	mCc_assembly_print_nl(out);
 }
 
-void mCc_assembly_main_function_enter(FILE *out)
+void mCc_assembly_last_function_enter(FILE *out)
 {
 	// TODO: is this really required or is main just a simple function?
 	//	mCc_assembly_print_shift(out);
@@ -125,32 +125,8 @@ void mCc_assembly_main_function_enter(FILE *out)
 }
 
 // TODO: main must not be the last function -.-
-void mCc_assembly_main_function_leave(FILE *out, int func_scope_counter)
+void mCc_assembly_last_function_leave(FILE *out, const char *label, int func_scope_counter)
 {
-	// TODO: is this really required or is main just a simple function?
-	//	mCc_assembly_print_shift(out);
-	//	mCc_assembly_print_op(out, "movl");
-	//	fprintf(out, "-4(%s), %s", DEFAULT_DATA_STACK_POINTER, ECX_REG);
-	//	mCc_assembly_print_nl(out);
-	//
-	//	mCc_assembly_print_shift(out);
-	//	mCc_assembly_print_op(out, "leave");
-	//	mCc_assembly_print_nl(out);
-	//
-	//	mCc_assembly_print_shift(out);
-	//	mCc_assembly_print_op(out, "leal");
-	//	fprintf(out, "-4(%s), %s", ECX_REG, DEFAULT_STACK_POINTER);
-	//	mCc_assembly_print_nl(out);
-	//
-	//	mCc_assembly_print_shift(out);
-	//	mCc_assembly_print_op(out, "ret");
-	//	mCc_assembly_print_nl(out);
-
-	// TODO: copied from function-def-leave
-	//	mCc_assembly_print_shift(out);
-	//	mCc_assembly_print_op(out, "addl");
-	//	fprintf(out, "%s, %s", EDX_REG, DEFAULT_ACCUMULATOR_OPERAND);
-	//	mCc_assembly_print_nl(out);
 
 	fprintf(out, ".%s%d:", DEFAULT_RETURN_LABEL,func_scope_counter);
 	mCc_assembly_print_nl(out);
@@ -167,7 +143,7 @@ void mCc_assembly_main_function_leave(FILE *out, int func_scope_counter)
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, ".size");
-	fprintf(out, "main, .-main");
+	fprintf(out, "%s, .-%s", label, label);
 	mCc_assembly_print_nl(out);
 
 	mCc_assembly_print_shift(out);

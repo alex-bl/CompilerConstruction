@@ -145,8 +145,15 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 		statement = statement->next_statement;
 	}
 
+	struct mCc_tac_identifier *next_def = NULL;
+
+	if (def->next_function_def) {
+		next_def = tac_new_identifier(
+		    def->next_function_def->identifier->identifier_name);
+	}
+
 	struct mCc_tac_element *tac_function_def_end =
-	    tac_new_element(MCC_TAC_OPARATION_END_FUNCTION_DEF, NULL, NULL,
+	    tac_new_element(MCC_TAC_OPARATION_END_FUNCTION_DEF, next_def, NULL,
 	                    tac_new_identifier(def->identifier->identifier_name),
 	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_function_def_end);
