@@ -2,12 +2,6 @@
 *  Warning: ackermann(4,1) already takes about 10 seconds (C implementation)
 */
 
-int ackermann(int m, int n){
-        if (m == 0) return n + 1;
-        if (n == 0) return ackermann(m - 1, 1);
-        return ackermann(m - 1, ackermann(m, n - 1));
-}
-
 void main() {
     int times;
     print("number of float multiplications: ");
@@ -31,4 +25,10 @@ void main() {
     print_nl();
     print_int(ackermann(m,n));
     print_nl();
+}
+
+int ackermann(int m, int n){
+        if (m == 0) return n + 1;
+        if (n == 0) return ackermann(m - 1, 1);
+        return ackermann(m - 1, ackermann(m, n - 1));
 }
