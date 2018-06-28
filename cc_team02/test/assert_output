@@ -12,8 +12,19 @@ CMD_TO_EXEC="(";
 #FILE_TO_COMPARE="file2.txt";
 FILE_TO_COMPARE=$3;
 
+#echo "----------------------" >> test.txt
+#echo $EXECUTABLE_FILE >> test.txt;
+#cat $INPUT_FILE >> test.txt;
+#echo "----------------------" >> test.txt
+#cat $FILE_TO_COMPARE >> test.txt;
+#echo "----------------------" >> test.txt
+
 TMP_FILE="tmp.tmp"
 TMP_FILE_INPUT="tmp2.tmp"
+
+# cleanup, just for assuring
+rm -f $TMP_FILE
+rm -f $TMP_FILE_INPUT
 
 #for line in `cat $INPUT_FILE`; do
 #CMD_TO_EXEC=$CMD_TO_EXEC"echo '"$line"';";
@@ -48,7 +59,6 @@ exit 1;
 #while IFS= read -r lineSec; do
 #  echo $lineSec
 #done < tmp.txt
-
 
 
 
