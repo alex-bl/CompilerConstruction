@@ -56,8 +56,8 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 		cfg_element = mCc_tac_cfg_new_element(tac_next_element, NULL, NULL);
 
 		if (prev_cfg_element != NULL) {
-			if (prev_cfg_element->tac_element->tac_operation ==
-			        MCC_TAC_OPARATION_JUMP_NOT_EQUALS ||
+			if ((prev_cfg_element->tac_element->tac_operation ==
+			     MCC_TAC_OPARATION_JUMP_NOT_EQUALS) ||
 			    prev_cfg_element->tac_element->tac_operation ==
 			        MCC_TAC_OPARATION_JUMP ||
 			    prev_cfg_element->tac_element->tac_operation ==
@@ -70,6 +70,21 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 		tac_next_element = tac_next_element->tac_next_element;
 	}
 	return NULL;
+}
+
+bool cfg_evaluate_jump_element(struct mCc_tac_element *jump_element)
+{
+	switch (jump_element->tac_argument1->type) {
+	case MCC_IDENTIFIER_TAC_TYPE_BOOL:
+		return strcmp(jump_element->tac_argument1->s_val,
+		              jump_element->tac_argument2->s_val);
+		break;
+	case MCC_IDENTIFIER_TAC_TYPE_STRING:
+		return strcmp(jump_element->tac_argument1->s_val,
+		              jump_element->tac_argument2->s_val);
+		break;
+	}
+	return false;
 }
 
 // function not needed?
