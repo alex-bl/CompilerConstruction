@@ -20,6 +20,10 @@ void main()
 	c=2;
 	d=a-b-c;
 	
+	if (a==b) {
+		a=9;
+	}
+	
 	print_int(d);
 	print_nl();
 	

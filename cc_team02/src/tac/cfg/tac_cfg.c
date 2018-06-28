@@ -43,6 +43,15 @@ struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac)
 	return cfg_function;
 }
 
+/*
+ * improvment:
+ * left side always continues with next tac elements
+ * if label where the jump points to comes up -> continue with the right side
+ * storing the element where the left side ends and connect it with the end of
+ * the right side
+ *
+ */
+
 struct mCc_tac_cfg_element *
 cfg_start_function(struct mCc_tac_element *tac_function_element)
 {
@@ -72,17 +81,35 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 	return NULL;
 }
 
+/*
+ * TODO
+ * TODO
+ * TODO
+ * find evaluation of first argument of jump operation of tac element
+ * -> check if it is true or not -> checks if to jump or not
+ */
+
+// no comparison needed -> this tac element just have one argument
 bool cfg_evaluate_jump_element(struct mCc_tac_element *jump_element)
 {
 	switch (jump_element->tac_argument1->type) {
+	case MCC_IDENTIFIER_TAC_TYPE_INTEGER:
+		return jump_element->tac_argument1->s_val ==
+		       jump_element->tac_argument2->s_val;
+		break;
+	case MCC_IDENTIFIER_TAC_TYPE_FLOAT:
+		return jump_element->tac_argument1->s_val ==
+		       jump_element->tac_argument2->s_val;
+		break;
 	case MCC_IDENTIFIER_TAC_TYPE_BOOL:
-		return strcmp(jump_element->tac_argument1->s_val,
-		              jump_element->tac_argument2->s_val);
+		return jump_element->tac_argument1->s_val ==
+		       jump_element->tac_argument2->s_val;
 		break;
 	case MCC_IDENTIFIER_TAC_TYPE_STRING:
 		return strcmp(jump_element->tac_argument1->s_val,
 		              jump_element->tac_argument2->s_val);
 		break;
+	default: return false;
 	}
 	return false;
 }
