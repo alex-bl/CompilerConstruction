@@ -20,6 +20,10 @@ void main()
 	c=2;
 	d=a-b-c;
 	
+	while (b<9) {
+		b=b+1;
+	}
+	
 	if (a==b) {
 		a=9;
 	}
