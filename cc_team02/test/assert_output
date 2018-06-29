@@ -35,8 +35,12 @@ while IFS= read -r line; do
   CMD_TO_EXEC=$CMD_TO_EXEC"echo '"$line"';";
 done < $INPUT_FILE
 
-# extract result
-CMD_TO_EXEC=$CMD_TO_EXEC") | ./"$EXECUTABLE_FILE;
+if [ "$CMD_TO_EXEC" = "(" ]; then
+	CMD_TO_EXEC="./"$EXECUTABLE_FILE;
+else
+	CMD_TO_EXEC=$CMD_TO_EXEC") | ./"$EXECUTABLE_FILE;
+fi
+
 eval $CMD_TO_EXEC >> $TMP_FILE
 
 # normalize files (newlines)

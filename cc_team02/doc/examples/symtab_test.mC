@@ -1,40 +1,47 @@
-float taylor_approx(int n) {
-	float signed_one;
-	signed_one = 1.0;
-	float pi;
-	pi = 0.0;
-	int i;
-	i = 1;
-	float j;
-	j = 1.0;
-
-	/* summation loop i goes from 1 to n */
-	while(i <= n) {
-		/* add next term to sum */
-		pi = pi + (signed_one/((2.0*j) * (2.0*j+1.0) *(2.0*j+2.0)));
-
-		/* reverse sign for next term */
-		signed_one = -signed_one;
-		i = i + 1;
-		j = j + 1.0;
-	}
-
-	/* finishing touches */
-	pi = 4.0 * pi + 3.0;
-
-	return pi;
-}
+/* Generates a diamond pattern */
 
 void main() {
-	print("Enter a number to obtain the n Taylor series for pi: ");
-	int n;
-	n = read_int();
-	print_nl();
-	float pi;
+  
+  int n;
+  int space;
+  n = 10;
+  space = n - 1;
+   
+  int k;
+  int c;
+  k = 1;
+  while (k <= n) {
+    c = 1;
+    while (c <= space) {
+      print(" ");
+      c = c + 1;
+    }
+    space = space - 1;
+    c = 1;
+    while (c <= space) {
+      print("*");
+      c = c + 1;
+    }
+    print("\n");
+    k = k + 1;
+  }
 
-	pi = taylor_approx(n);
+  space = 1;
 
-	print("Aproximation of pi: ");
-	print_float(pi);
-	print_nl();
+  k = 1;
+  while (k <= n) {
+    c = 1;
+    while (c <= space) {
+      print(" ");
+      c = c + 1;
+    }
+    space = space + 1;
+    c = 1;
+    while (c <= 2*(n-k)-1) {
+      print("*");
+      c = c + 1;
+    }
+    print("\n");
+    k = k + 1;
+  }
 }
