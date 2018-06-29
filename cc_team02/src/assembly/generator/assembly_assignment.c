@@ -83,6 +83,7 @@ void mCc_assembly_assign_primitive_float(FILE *out,
 	    mCc_assembly_calc_stack_position(pseudo_var, data->current_stack_pos);
 	int dest_var_offset =
 	    mCc_assembly_calc_stack_position(dest_var, data->current_stack_pos);
+
 	// is the "new" assignment => from var to var
 	mCc_assembly_move_float(out, pseudo_var_offset, dest_var_offset);
 }
@@ -110,7 +111,16 @@ void mCc_assembly_assign_function_call_float(FILE *out,
                                              struct mCc_tac_element *tac_elem)
 {
 	assert(tac_elem);
-	mCc_assembly_assign_function_call_int(out, data, tac_elem);
+	struct mCc_tac_identifier *dest_var = get_assign_dest_var(tac_elem);
+	struct mCc_tac_identifier *pseudo_var = get_pseudo_var(tac_elem);
+
+	int dest_var_offset =
+	    mCc_assembly_calc_stack_position(dest_var, data->current_stack_pos);
+	int pseudo_var_offset =
+	    mCc_assembly_calc_stack_position(pseudo_var, data->current_stack_pos);
+
+	mCc_assembly_move_float(out, pseudo_var_offset, dest_var_offset);
+	//mCc_assembly_push_int(out, dest_var_offset, DEFAULT_RETURN_REG);
 }
 
 void mCc_assembly_assign_primitive_bool(FILE *out,

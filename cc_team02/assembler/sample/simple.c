@@ -18,6 +18,16 @@ void params(int a, float b, int c){
 	c=1;
 }
 
+void read_float(){
+	float f;
+	float g;
+
+	scanf("%f", &f);
+	g=f+2;
+
+
+}
+
 void main(){
 	int a[10];
 	int b[10];

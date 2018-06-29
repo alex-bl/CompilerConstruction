@@ -258,6 +258,30 @@ enum mCc_tac_operation tac_helper_get_return_tac_operation(
 	}
 }
 
+//happens only on identifier?
+static bool return_expr_is_identifier(struct mCc_tac_element *tac_return_expression){
+	return tac_return_expression->tac_operation==MCC_TAC_OPARATION_EMPTY;
+}
+
+
+static enum mCc_tac_operation
+map_operation_type(enum mCc_ast_data_type ast_data_type)
+{
+	switch (ast_data_type) {
+	case MCC_AST_DATA_TYPE_INT:
+		return MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT;
+	case MCC_AST_DATA_TYPE_FLOAT:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT;
+	case MCC_AST_DATA_TYPE_BOOL:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL;
+	case MCC_AST_DATA_TYPE_STRING:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_STRING;
+	default: return MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS;
+	}
+	return MCC_TAC_OPARATION_EMPTY;
+}
+
+
 struct mCc_tac_element *
 mCc_tac_statement_return(struct mCc_ast_statement *statement,
                          struct mCc_tac_element *previous_tac)
@@ -269,6 +293,14 @@ mCc_tac_statement_return(struct mCc_ast_statement *statement,
 		struct mCc_tac_element *tac_return_expression =
 		    helper_get_tac_of_expression(statement->return_expression,
 		                                 previous_tac);
+
+
+		if (return_expr_is_identifier(tac_return_expression)) {
+			tac_return_expression->tac_operation =
+			    map_operation_type(statement->return_expression->identifier
+			                           ->symtab_info->data_type);
+		}
+
 		enum mCc_tac_operation return_operation =
 		    tac_helper_get_return_tac_operation(
 		        tac_return_expression->tac_operation);
