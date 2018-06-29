@@ -40,6 +40,7 @@ struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac)
 		tac_next_element = tac_next_element->tac_next_element;
 	}
 	// TODO just returns the cfg of the last function
+	// should return a cfg for each function separately
 	return cfg_function;
 }
 
@@ -62,19 +63,23 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 	while (tac_next_element->tac_operation !=
 	       MCC_TAC_OPARATION_END_FUNCTION_DEF) {
 		prev_cfg_element = cfg_element;
-		cfg_element = mCc_tac_cfg_new_element(tac_next_element, NULL, NULL);
 
 		if (prev_cfg_element != NULL) {
 			if (prev_cfg_element->tac_element->tac_operation ==
 			    MCC_TAC_OPARATION_LABEL_IF) {
-				cfg_if_statement(prev_cfg_element, tac_next_element);
-				// TODO where to jump? -> what is the right side?
-				// prev_cfg_element->next_cfg_element_right = cfg_element;
+				cfg_element =
+				    cfg_if_statement(prev_cfg_element, tac_next_element);
 			} else if (prev_cfg_element->tac_element->tac_operation ==
 			           MCC_TAC_OPARATION_LABEL_WHILE) {
-				cfg_while_statement(prev_cfg_element, tac_next_element);
+				cfg_element =
+				    cfg_while_statement(prev_cfg_element, tac_next_element);
+			} else {
+				// if the is no right side, the cfg uses the left side without
+				// any splits
+				cfg_element =
+				    mCc_tac_cfg_new_element(tac_next_element, NULL, NULL);
+				prev_cfg_element->next_cfg_element_left = cfg_element;
 			}
-			prev_cfg_element->next_cfg_element_left = cfg_element;
 		}
 		tac_next_element = tac_next_element->tac_next_element;
 	}
@@ -86,6 +91,45 @@ struct mCc_tac_cfg_element *
 cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
                  struct mCc_tac_element *tac_if_statement)
 {
+	struct mCc_tac_cfg_element *cfg_element;
+	// iterates till the real branching into if and else comes:
+	while (tac_if_statement->tac_operation !=
+	           MCC_TAC_OPARATION_JUMP_NOT_EQUALS ||
+	       tac_if_statement->tac_operation != MCC_TAC_OPARATION_JUMP ||
+	       tac_if_statement->tac_operation != MCC_TAC_OPARATION_JUMP_EQUALS) {
+		prev_cfg_element =
+		    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
+		tac_if_statement = tac_if_statement->tac_next_element;
+
+		/*cfg_element = mCc_tac_cfg_new_element(tac_if_statement, NULL, NULL);
+		prev_cfg_element->next_cfg_element_left = cfg_element;
+		prev_cfg_element = cfg_element;
+		tac_if_statement = tac_if_statement->tac_next_element;*/
+	}
+
+	// remembering the cfg element with the branch
+	struct mCc_tac_cfg_element *cfg_before_if =
+	    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
+	prev_cfg_element = cfg_before_if;
+	tac_if_statement = tac_if_statement->tac_next_element;
+
+	// evaluating the first/left side of the if
+	while (tac_if_statement->tac_operation != MCC_TAC_OPARATION_LABEL_ELSE) {
+		prev_cfg_element =
+		    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
+		tac_if_statement = tac_if_statement->tac_next_element;
+
+		/*cfg_element = mCc_tac_cfg_new_element(tac_if_statement, NULL, NULL);
+		prev_cfg_element->next_cfg_element_left = cfg_element;
+		prev_cfg_element = cfg_element;
+		tac_if_statement = tac_if_statement->tac_next_element;*/
+	}
+
+	// evaluating the else/right side of the if
+	while (tac_if_statement->tac_operation !=
+	       MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
+	}
+
 	return NULL;
 }
 
@@ -94,7 +138,7 @@ struct mCc_tac_cfg_element *
 cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
                     struct mCc_tac_element *tac_while_statement)
 {
-	return NULL;
+	return prev_cfg_element;
 }
 
 /*
@@ -128,6 +172,16 @@ bool cfg_evaluate_jump_element(struct mCc_tac_element *jump_element)
 	default: return false;
 	}
 	return false;
+}
+
+struct mCc_tac_cfg_element *
+cfg_connect_elements_to_left(struct mCc_tac_cfg_element *prev_cfg_element,
+                             struct mCc_tac_element *tac_statement)
+{
+	struct mCc_tac_cfg_element *cfg_element =
+	    mCc_tac_cfg_new_element(tac_statement, NULL, NULL);
+	prev_cfg_element->next_cfg_element_left = cfg_element;
+	return cfg_element;
 }
 
 // function not needed?
