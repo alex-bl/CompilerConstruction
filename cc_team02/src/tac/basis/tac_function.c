@@ -8,6 +8,7 @@
 #include "tac_expression.h"
 #include "tac_statement.h"
 #include "tac_utils.h"
+#include "config.h"
 
 enum mCc_tac_operation tac_helper_get_tac_oparation_for_parameter_type(
     enum mCc_tac_operation operation)
@@ -100,7 +101,8 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 			    mCc_tac_declaration_primitive(parameter, previous_tac);
 		} else if (parameter->declaration_type == MCC_AST_DECLARATION_ARRAY) {
 			parameter_tac = mCc_tac_declaration_array(parameter, previous_tac);
-			size_identifier = tac_new_identifier_int(parameter->size);
+			// is handled as a pointer
+			size_identifier = tac_new_identifier_int(POINTER_SIZE);
 		}
 
 		// hacky -.-
@@ -161,6 +163,17 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	return tac_function_def_end;
 }
 
+static bool is_array(enum mCc_symtab_identifier_type type)
+{
+	return type == MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY;
+}
+
+static enum mCc_tac_operation get_arg_label(enum mCc_symtab_identifier_type type)
+{
+	return (is_array(type) ? MCC_TAC_OPARATION_LABEL_ARGUMENT_ARRAY
+	                       : MCC_TAC_OPARATION_LABEL_ARGUMENT);
+}
+
 struct mCc_tac_element *
 mCc_tac_function_call(struct mCc_ast_function_call *call,
                       struct mCc_tac_element *previous_tac)
@@ -179,6 +192,7 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 	// call->first_argument
 	// stores arguments into tac table
 	struct mCc_ast_expression *argument = call->first_argument;
+	struct mCc_symtab_parameter_ref *next_param = call->identifier->symtab_info->next_parameter;
 	while (argument != NULL) {
 		struct mCc_tac_element *tac_argument =
 		    helper_get_tac_of_expression(argument, previous_tac);
@@ -190,12 +204,14 @@ mCc_tac_function_call(struct mCc_ast_function_call *call,
 		call_identifier->type = MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
 
 		struct mCc_tac_element *tac = tac_new_element(
-		    MCC_TAC_OPARATION_LABEL_ARGUMENT,
+			get_arg_label(next_param->identifier->symtab_info->entry_type),
 		    mCc_tac_create_from_tac_identifier(tac_argument->tac_result), NULL,
 		    call_identifier, mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 		mCc_tac_connect_tac_entry(tac_argument, tac);
 		previous_tac = tac;
+
 		argument = argument->next_expr;
+		next_param = next_param->next_parameter;
 	}
 
 	enum mCc_ast_data_type ast_data_type =

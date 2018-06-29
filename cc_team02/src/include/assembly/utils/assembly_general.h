@@ -201,6 +201,8 @@ void mCc_assembly_store_float_val_at_index(FILE *out, int calc_offset);
 void mCc_assembly_store_bool_val_at_index(FILE *out, int calc_offset);
 void mCc_assembly_store_string_val_at_index(FILE *out, int calc_offset);
 
+void mCc_assembly_load_ptr(FILE *out, int calc_offset, const char *dest);
+
 #ifdef __cplusplus
 }
 #endif

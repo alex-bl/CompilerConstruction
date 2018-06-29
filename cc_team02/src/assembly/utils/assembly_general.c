@@ -614,19 +614,32 @@ void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)
 void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
                                 int offset_array_index)
 {
-	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
+//	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
+//
+//	mCc_assembly_print_shift(out);
+//	mCc_assembly_print_op(out, "leal");
+//	fprintf(out, "%d(%s), %s", offset_array_base, DEFAULT_DATA_STACK_POINTER,
+//	        EDX_REG);
+//	mCc_assembly_print_nl(out);
+//
+//	mCc_assembly_print_shift(out);
+//	mCc_assembly_print_op(out, "leal");
+//	fprintf(out, "%d(%s,%s,%d), %s", 0, EDX_REG, DEFAULT_ACCUMULATOR_OPERAND,
+//	        base_size, ECX_REG);
+//	mCc_assembly_print_nl(out);
+
+//==================================================
+	mCc_assembly_load_int(out, offset_array_index, EDX_REG);
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leal");
-	fprintf(out, "%d(%s), %s", offset_array_base, DEFAULT_DATA_STACK_POINTER,
-	        EDX_REG);
+	fprintf(out, "%d(%s,%s,%d), %s", offset_array_base,
+	        DEFAULT_DATA_STACK_POINTER, EDX_REG, base_size, ECX_REG);
 	mCc_assembly_print_nl(out);
 
-	mCc_assembly_print_shift(out);
-	mCc_assembly_print_op(out, "leal");
-	fprintf(out, "%d(%s,%s,%d), %s", 0, EDX_REG, DEFAULT_ACCUMULATOR_OPERAND,
-	        base_size, ECX_REG);
-	mCc_assembly_print_nl(out);
+	//	movl 	$9, %eax	[ok]
+	//	leal	-44(%ebp, %eax, 4), %eax
+
 
 	//	mCc_assembly_print_shift(out);
 	//	mCc_assembly_print_op(out, "movl");
@@ -693,4 +706,12 @@ void mCc_assembly_store_string_val_at_index(FILE *out, int calc_offset)
 {
 	mCc_assembly_load_int(out, calc_offset, DEFAULT_ACCUMULATOR_OPERAND);
 	move_to_ecx_reg(out);
+}
+
+void mCc_assembly_load_ptr(FILE *out, int calc_offset, const char *dest)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "leal");
+	fprintf(out, "%d(%s), %s", calc_offset, DEFAULT_DATA_STACK_POINTER, dest);
+	mCc_assembly_print_nl(out);
 }

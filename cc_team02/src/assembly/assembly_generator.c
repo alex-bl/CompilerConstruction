@@ -50,8 +50,12 @@ static void
 mCc_assembly_generate_arg_list_elem(struct mCc_assembly_generator gen_cb,
                                     struct mCc_tac_element *tac_elem)
 {
-	// TODO: all arguments are handled equally => maybe extend?
-	gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
+	//TODO: should be sufficent hence all primitives/arrays are treated equally
+	if(tac_elem->tac_operation==MCC_TAC_OPARATION_LABEL_ARGUMENT){
+		gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
+	}else{
+		gen_cb.argument_int_array(gen_cb.out, gen_cb.data, tac_elem);
+	}
 }
 
 static void mCc_assembly_generate_arg_list(struct mCc_assembly_generator gen_cb)
@@ -295,6 +299,7 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 
 		// TODO: push remains the same?
 		case MCC_TAC_OPARATION_LABEL_ARGUMENT:
+		case MCC_TAC_OPARATION_LABEL_ARGUMENT_ARRAY:
 			// gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
 			prepend_arg(gen_cb, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;

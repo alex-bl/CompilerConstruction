@@ -48,7 +48,7 @@ run_compiler()
 	local executable_path=./out/a.out
 	local assertion_script=$OUTPUT_ASSERTION_DIR"assert_output"
 	
-	#echo $assertion_script >> test.txt
+	echo $input >> test.txt
 	
 	#run
 	$MCC -o $executable_path $input
