@@ -61,7 +61,8 @@ size_t mCc_assembly_calc_param_space(struct mCc_tac_element *function_def)
 int mCc_assembly_calc_stack_pos_param(struct mCc_tac_identifier *identifier)
 {
 	//+4 is return address
-	return identifier->stack_offset + BASE_OFFSET_PARAMS;
+	return identifier->stack_offset; // + BASE_OFFSET_PARAMS; => directly done
+	                                 // at assembly_offset
 }
 
 int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,

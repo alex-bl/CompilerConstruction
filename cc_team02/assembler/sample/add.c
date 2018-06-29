@@ -137,23 +137,27 @@ void test_if_without_else(){
 	}
 }
 
-void test_array(int arr[]){
+void test_array(int arr[10], int arr3[10]){
 	int arr2[100];
 	int b=2;
 	int c=b*3;
 	arr[b+c+12]=4;
+	arr3[b-c+12]=4;
+}
+
+void test_arr_simple(){
+	int arr[17];
+	arr[0]=0;
+	arr[1]=0;
+	arr[2]=0;
 }
 
 int main( int argc, char *argv[] )
 {
-        long hoi = add(3,1);
-        float a = test_float_add(2.2232,132.13244);
-        float b=3.121;
-        const char *booo="hoi, wia tuats?";
+		int arr[10];
+		int arr2[10];
 
-        printf("%ld\n", hoi);
-        int d;
-        int f;
-        printf("%f\n",a);
+		test_array(arr,arr2);
+
         return 0;
 }

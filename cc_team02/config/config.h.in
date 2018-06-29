@@ -35,6 +35,7 @@
 #define DEFAULT_RETURN_REG "%eax"
 #define DEFAULT_UNARY_OP_REG "%eax"
 #define BASE_OFFSET_PARAMS 4
+#define BASE_OFFSET_LOCAL_VARS 0
 #define EDX_REG "%edx"
 #define ECX_REG "%ecx"
 #define CONDITION_FLAG_REG "%al"
