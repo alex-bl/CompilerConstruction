@@ -116,8 +116,8 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	// struct mCc_tac_cfg_element *cfg_element;
 	// iterates till the real branching into if and else comes:
 	while (tac_if_statement->tac_operation !=
-	           MCC_TAC_OPARATION_JUMP_NOT_EQUALS ||
-	       tac_if_statement->tac_operation != MCC_TAC_OPARATION_JUMP ||
+	           MCC_TAC_OPARATION_JUMP_NOT_EQUALS &&
+	       tac_if_statement->tac_operation != MCC_TAC_OPARATION_JUMP &&
 	       tac_if_statement->tac_operation != MCC_TAC_OPARATION_JUMP_EQUALS) {
 		prev_cfg_element =
 		    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
@@ -195,6 +195,11 @@ cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	// connecting before while and end of while in the end
 	cfg_before_while->next_cfg_element_right = prev_cfg_element;
 
+	// going one element further to don't have a while label again
+	prev_cfg_element =
+	    cfg_connect_elements_to_left(prev_cfg_element, tac_while_statement);
+	tac_while_statement = tac_while_statement->tac_next_element;
+
 	return tac_while_statement;
 }
 
@@ -235,11 +240,13 @@ struct mCc_tac_cfg_element *
 cfg_connect_elements_to_left(struct mCc_tac_cfg_element *prev_cfg_element,
                              struct mCc_tac_element *tac_statement)
 {
-	assert(prev_cfg_element);
 	assert(tac_statement);
+
 	struct mCc_tac_cfg_element *cfg_element =
 	    mCc_tac_cfg_new_element(tac_statement, NULL, NULL);
-	prev_cfg_element->next_cfg_element_left = cfg_element;
+	if (prev_cfg_element != NULL) {
+		prev_cfg_element->next_cfg_element_left = cfg_element;
+	}
 	return cfg_element;
 }
 
