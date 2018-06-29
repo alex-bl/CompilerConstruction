@@ -623,7 +623,7 @@ void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)
 
 /*============================================================= array */
 
-void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
+static void mCc_assembly_compute_index_local(FILE *out, int base_size, int offset_array_base,
                                 int offset_array_index)
 {
 //	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
@@ -657,6 +657,29 @@ void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
 	//	mCc_assembly_print_op(out, "movl");
 	//	fprintf(out, "0(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
 	//	mCc_assembly_print_nl(out);
+}
+
+
+static void mCc_assembly_compute_index_param(FILE *out, int base_size, int offset_array_base,
+                                int offset_array_index)
+{
+	mCc_assembly_load_int(out, offset_array_index, EDX_REG);
+	mCc_assembly_load_int(out, offset_array_base, DEFAULT_ACCUMULATOR_OPERAND);
+
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "leal");
+	fprintf(out, "%d(%s,%s,%d), %s", 0,
+	        DEFAULT_ACCUMULATOR_OPERAND, EDX_REG, base_size, ECX_REG);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
+                                int offset_array_index, bool is_param){
+	if(is_param){
+		mCc_assembly_compute_index_param(out, base_size, offset_array_base, offset_array_index);
+	}else{
+		mCc_assembly_compute_index_local(out, base_size, offset_array_base, offset_array_index);
+	}
 }
 
 void mCc_assembly_move_index_val_to_eax(FILE *out)

@@ -239,7 +239,7 @@ void mCc_assembly_assign_array_int(FILE *out, struct mCc_assembly_data *data,
 	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_store_int_val_at_index(out, offset_array_value);
 }
 
@@ -264,7 +264,7 @@ void mCc_assembly_assign_array_float(FILE *out, struct mCc_assembly_data *data,
 	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_store_float_val_at_index(out, offset_array_value);
 }
 
@@ -288,7 +288,7 @@ void mCc_assembly_assign_array_bool(FILE *out, struct mCc_assembly_data *data,
 	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_store_bool_val_at_index(out, offset_array_value);
 }
 
@@ -312,6 +312,6 @@ void mCc_assembly_assign_array_string(FILE *out, struct mCc_assembly_data *data,
 	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_store_string_val_at_index(out, offset_array_value);
 }

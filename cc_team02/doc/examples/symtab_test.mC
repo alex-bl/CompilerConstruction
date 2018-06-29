@@ -1,47 +1,46 @@
-/* Generates a diamond pattern */
+/* This is array-centered.
+*/
 
 void main() {
-  
-  int n;
-  int space;
-  n = 10;
-  space = n - 1;
-   
-  int k;
-  int c;
-  k = 1;
-  while (k <= n) {
-    c = 1;
-    while (c <= space) {
-      print(" ");
-      c = c + 1;
-    }
-    space = space - 1;
-    c = 1;
-    while (c <= space) {
-      print("*");
-      c = c + 1;
-    }
-    print("\n");
-    k = k + 1;
-  }
+    /* First we declare some arrays */
+    int[5] first_array;
+    bool[5] processed;
 
-  space = 1;
+    processed[0] = false;
+    processed[4] = false;
 
-  k = 1;
-  while (k <= n) {
-    c = 1;
-    while (c <= space) {
-      print(" ");
-      c = c + 1;
+    run_calculation(first_array, processed);
+    print_bool_array(processed);
+}
+
+void run_calculation(int[5] first_array, bool[5] processed) {
+    int i;
+    i = 1;
+
+    while (i < 4) {
+        first_array[i] = extreme_function(i);
+        processed[i] = true;
+        i = i+1;
     }
-    space = space + 1;
-    c = 1;
-    while (c <= 2*(n-k)-1) {
-      print("*");
-      c = c + 1;
-    }
-    print("\n");
-    k = k + 1;
-  }
+}
+
+int extreme_function(int i) {
+    return (42 * i) + 7;
+}
+
+void print_bool_array(bool[5] processed) {
+        int i;
+        i = 0;
+
+        while (i < 5) {
+
+            if (processed[i] == true) {
+                print("true");
+            } else {
+                print("false");
+            }
+
+            print_nl();
+            i = i+1;
+        }
 }
