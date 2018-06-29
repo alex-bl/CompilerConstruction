@@ -26,6 +26,18 @@ struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac);
 struct mCc_tac_cfg_element *
 cfg_start_function(struct mCc_tac_element *tac_function_element);
 
+struct mCc_tac_element *
+cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
+                 struct mCc_tac_element *tac_if_statement);
+
+struct mCc_tac_element *
+cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
+                    struct mCc_tac_element *tac_while_statement);
+
+struct mCc_tac_cfg_element *
+cfg_connect_elements_to_left(struct mCc_tac_cfg_element *prev_cfg_element,
+                             struct mCc_tac_element *tac_statement);
+
 void cfg_connect_elements(struct mCc_tac_cfg_element *previous_element,
                           struct mCc_tac_cfg_element *next_element_left,
                           struct mCc_tac_cfg_element *next_element_right);
