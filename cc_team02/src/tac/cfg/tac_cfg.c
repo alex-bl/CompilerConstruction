@@ -65,19 +65,35 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 		cfg_element = mCc_tac_cfg_new_element(tac_next_element, NULL, NULL);
 
 		if (prev_cfg_element != NULL) {
-			if ((prev_cfg_element->tac_element->tac_operation ==
-			     MCC_TAC_OPARATION_JUMP_NOT_EQUALS) ||
-			    prev_cfg_element->tac_element->tac_operation ==
-			        MCC_TAC_OPARATION_JUMP ||
-			    prev_cfg_element->tac_element->tac_operation ==
-			        MCC_TAC_OPARATION_JUMP_EQUALS) {
+			if (prev_cfg_element->tac_element->tac_operation ==
+			    MCC_TAC_OPARATION_LABEL_IF) {
+				cfg_if_statement(prev_cfg_element, tac_next_element);
 				// TODO where to jump? -> what is the right side?
-				prev_cfg_element->next_cfg_element_right = cfg_element;
+				// prev_cfg_element->next_cfg_element_right = cfg_element;
+			} else if (prev_cfg_element->tac_element->tac_operation ==
+			           MCC_TAC_OPARATION_LABEL_WHILE) {
+				cfg_while_statement(prev_cfg_element, tac_next_element);
 			}
 			prev_cfg_element->next_cfg_element_left = cfg_element;
 		}
 		tac_next_element = tac_next_element->tac_next_element;
 	}
+	return NULL;
+}
+
+// TODO if handling
+struct mCc_tac_cfg_element *
+cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
+                 struct mCc_tac_element *tac_if_statement)
+{
+	return NULL;
+}
+
+// TODO while handling
+struct mCc_tac_cfg_element *
+cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
+                    struct mCc_tac_element *tac_while_statement)
+{
 	return NULL;
 }
 
