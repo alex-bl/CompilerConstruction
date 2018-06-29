@@ -37,6 +37,10 @@ void mCc_assembly_move_string(FILE *out, int tac_offset_src,
                               int tac_offset_dest);
 
 /*============================================================= allocation */
+void mCc_assembly_allocate_local_stack(FILE *out,
+                                        struct mCc_assembly_data *data,
+                                        long amount);
+
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,
                                         int nr_of);

@@ -24,13 +24,21 @@ get_function_call_identifier(struct mCc_tac_element *tac_elem)
 	return tac_elem->tac_result;
 }
 
+static struct mCc_tac_identifier *
+get_offset_info_identifier(struct mCc_tac_element *tac_elem)
+{
+	return tac_elem->tac_argument2;
+}
+
 void mCc_assembly_start_function_def(FILE *out, struct mCc_assembly_data *data,
                                      struct mCc_tac_element *tac_elem)
 {
 	char *function_def_label = get_function_def_identifier(tac_elem)->name;
 	data->func_scope_counter++;
+	struct mCc_tac_identifier *allocation_info=get_offset_info_identifier(tac_elem);
 
 	mCc_assembly_new_function_def_enter(out, function_def_label);
+	mCc_assembly_allocate_local_stack(out,data,allocation_info->i_val);
 }
 
 void mCc_assembly_end_function_def(FILE *out, struct mCc_assembly_data *data,

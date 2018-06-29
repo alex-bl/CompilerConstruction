@@ -99,6 +99,18 @@ void mCc_assembly_move_string(FILE *out, int tac_offset_src,
 }
 
 /*============================================================= allocation */
+void mCc_assembly_allocate_local_stack(FILE *out,
+                                        struct mCc_assembly_data *data,
+                                        long amount)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "subl");
+	fprintf(out, "$%ld, %s", amount, DEFAULT_STACK_POINTER);
+	mCc_assembly_print_nl(out);
+	// TODO: seems to be useless ;)
+	mCc_assembly_adjust_stack_pointer(amount, data);
+}
+
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,
                                         int nr_of)

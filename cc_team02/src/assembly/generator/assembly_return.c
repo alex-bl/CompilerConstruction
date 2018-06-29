@@ -31,7 +31,7 @@ void mCc_assembly_intermediate_return_int(FILE *out,
 	int result_offset =
 	    mCc_assembly_calc_stack_position(identifier, data->current_stack_pos);
 
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 	mCc_assembly_push_int(out, result_offset, DEFAULT_RETURN_REG);
 }
 
@@ -50,7 +50,7 @@ void mCc_assembly_intermediate_return_float(FILE *out,
 		mCc_assembly_push_float(out, result_offset);
 	}
 	else{
-		mCc_assembly_allocate_float_on_stack(out, data, 1);
+		//mCc_assembly_allocate_float_on_stack(out, data, 1);
 		mCc_assembly_push_int(out, result_offset, DEFAULT_RETURN_REG);
 	}
 }
@@ -63,7 +63,7 @@ void mCc_assembly_intermediate_return_bool(FILE *out,
 	int result_offset =
 	    mCc_assembly_calc_stack_position(identifier, data->current_stack_pos);
 
-	mCc_assembly_allocate_bool_on_stack(out, data, 1);
+	//mCc_assembly_allocate_bool_on_stack(out, data, 1);
 	mCc_assembly_push_int(out, result_offset, DEFAULT_RETURN_REG);
 }
 
@@ -75,7 +75,7 @@ void mCc_assembly_intermediate_return_string(FILE *out,
 	int result_offset =
 	    mCc_assembly_calc_stack_position(identifier, data->current_stack_pos);
 
-	mCc_assembly_allocate_string_on_stack(out, data, NULL);
+	//mCc_assembly_allocate_string_on_stack(out, data, NULL);
 	mCc_assembly_push_int(out, result_offset, DEFAULT_RETURN_REG);
 }
 

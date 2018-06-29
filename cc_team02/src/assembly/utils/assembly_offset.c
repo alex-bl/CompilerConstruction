@@ -381,13 +381,29 @@ static bool offset_reset_required(struct mCc_tac_element *tac_element)
 	return tac_element->tac_operation == MCC_TAC_OPARATION_LABEL_FUNCTION;
 }
 
+static bool is_function_start_point(struct mCc_tac_element *tac_element){
+	return tac_element->tac_operation == MCC_TAC_OPARATION_START_FUNCTION_DEF;
+}
+
+static bool is_function_end_point(struct mCc_tac_element *tac_element){
+	return tac_element->tac_operation == MCC_TAC_OPARATION_END_FUNCTION_DEF;
+}
+
 void mCc_assembly_calculate_stack_offsets(
     struct mCc_tac_element *first_tac_element)
 {
 	struct mCc_assembly_offset_holder info = init_offset_info();
 	struct mCc_tac_element *next_tac_element = first_tac_element;
+	struct mCc_tac_element *function_start;
+
 
 	while (next_tac_element) {
+
+		//mark start
+		if(is_function_start_point(next_tac_element)){
+			function_start=next_tac_element;
+		}
+
 		if (offset_reset_required(next_tac_element)) {
 			log_debug("Resetting offset while entering new function def '%s'",
 			          next_tac_element->tac_result->name);
@@ -395,6 +411,13 @@ void mCc_assembly_calculate_stack_offsets(
 			info.actual_param_offset = BASE_OFFSET_PARAMS;
 		}
 		handle_tac_elem(next_tac_element, &info);
+
+		// remember the offset count to allocate stack space at the beginning
+		if (is_function_end_point(next_tac_element)) {
+			function_start->tac_argument2 =
+			    tac_new_identifier_int(info.actual_offset);
+		}
+
 		next_tac_element = next_tac_element->tac_next_element;
 	}
 
