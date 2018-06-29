@@ -118,17 +118,25 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 		prev_cfg_element =
 		    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
 		tac_if_statement = tac_if_statement->tac_next_element;
-
-		/*cfg_element = mCc_tac_cfg_new_element(tac_if_statement, NULL, NULL);
-		prev_cfg_element->next_cfg_element_left = cfg_element;
-		prev_cfg_element = cfg_element;
-		tac_if_statement = tac_if_statement->tac_next_element;*/
 	}
+
+	struct mCc_tac_cfg_element *cfg_after_if = prev_cfg_element;
+
+	// going further to evaluate the right side, starting from the branch
+	// element:
+	struct mCc_tac_cfg_element *cfg_before_else =
+	    mCc_tac_cfg_new_element(tac_if_statement, NULL, NULL);
+	cfg_before_if->next_cfg_element_right = cfg_before_else;
+	prev_cfg_element = cfg_before_else;
+	tac_if_statement = tac_if_statement->tac_next_element;
 
 	// evaluating the else/right side of the if
 	while (tac_if_statement->tac_operation !=
 	       MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
 	}
+
+	// connecting the branches together in the end
+	// conecting cfg_after_if and last element
 
 	return NULL;
 }
