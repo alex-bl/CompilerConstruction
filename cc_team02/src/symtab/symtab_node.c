@@ -81,6 +81,8 @@ mCc_symtab_new_function_def_node(struct mCc_ast_function_def *function_def)
 		struct mCc_symtab_parameter_ref *first_param_node =
 		    mCc_symtab_new_parameter_ref(
 		        mCc_ast_get_declaration_identifier(parameter));
+		// ugly workaround -.-
+		first_param_node->declaration=parameter;
 
 		first_param_node->next_parameter = NULL;
 		struct mCc_symtab_parameter_ref *next_param_node = first_param_node;
@@ -90,6 +92,8 @@ mCc_symtab_new_function_def_node(struct mCc_ast_function_def *function_def)
 		while (next_param) {
 			next_param_node->next_parameter = mCc_symtab_new_parameter_ref(
 			    mCc_ast_get_declaration_identifier(next_param));
+			// ugly workaround -.-
+			next_param_node->next_parameter->declaration=next_param;
 
 			next_param_node = next_param_node->next_parameter;
 			next_param = next_param->next_declaration;

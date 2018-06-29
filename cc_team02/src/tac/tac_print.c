@@ -138,6 +138,7 @@ static const char *print_tac_op(enum mCc_tac_operation tac_operation)
 
 	// ARGUMENT
 	case MCC_TAC_OPARATION_LABEL_ARGUMENT: return "LABEL_ARGUMENT";
+	case MCC_TAC_OPARATION_LABEL_ARGUMENT_ARRAY: return "LABEL_ARGUMENT_ARRAY";
 	case MCC_TAC_OPARATION_ARGUMENT_LIST_START:
 		return "STAR_ARGUMENT_LIST";
 

@@ -119,7 +119,7 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
                         struct mCc_tac_element *previous_tac)
 {
 	assert(statement);
-	assert(statement->loop_condition_expression);
+	assert(statement->condition_expression);
 	assert(previous_tac);
 
 	// defining lables to jump to
@@ -131,48 +131,44 @@ mCc_tac_statement_while(struct mCc_ast_statement *statement,
 
 	// setting lable as tac element
 	struct mCc_tac_element *tac_lable_before_while =
-	    tac_new_element(MCC_TAC_OPARATION_LABEL_WHILE, NULL, NULL,
-	                    lable_before_while, MCC_TAC_TYPE_NO_TYPE, 0);
+	    tac_new_element(MCC_TAC_OPARATION_LABEL_WHILE, NULL, NULL, lable_before_while,
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
 	mCc_tac_connect_tac_entry(previous_tac, tac_lable_before_while);
 
-	struct mCc_tac_element *tac_while_condition = helper_get_tac_of_expression(
+	struct mCc_tac_element *tac_condition = helper_get_tac_of_expression(
 	    statement->loop_condition_expression, tac_lable_before_while);
+	previous_tac = tac_condition;
 
-	// jump after the loop, if condition is false
-	struct mCc_tac_element *tac_while_jump_condition = tac_new_element(
+	// jump after loop if condition is false
+	struct mCc_tac_element *tac_loop_condition = tac_new_element(
 	    MCC_TAC_OPARATION_JUMP_NOT_EQUALS,
-	    mCc_tac_create_from_tac_identifier(tac_while_condition->tac_result),
-	    NULL, mCc_tac_create_from_tac_identifier(lable_after_while),
-	    MCC_TAC_TYPE_BOOL, 0);
+	    mCc_tac_create_from_tac_identifier(tac_condition->tac_result), NULL,
+	    mCc_tac_create_from_tac_identifier(lable_after_while),
+	    MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(previous_tac, tac_loop_condition);
 
-	mCc_tac_connect_tac_entry(tac_lable_before_while, tac_while_jump_condition);
-	mCc_tac_connect_tac_entry(tac_while_jump_condition, tac_while_condition);
-
-	// takes tac_while_jump_conditions as previous tac if no other tac gets
-	// defined in the while
-	previous_tac = tac_while_jump_condition;
 	struct mCc_ast_statement *ast_while_statement = statement->while_statement;
+	// take condition as previous tac element, if there is no if statement,
+	// otherwise it will be overwritten
+	previous_tac = tac_loop_condition;
 	while (ast_while_statement != NULL) {
-		previous_tac = helper_get_tac_of_statement(statement->while_statement,
-		                                           previous_tac);
+		previous_tac =
+		    helper_get_tac_of_statement(ast_while_statement, previous_tac);
 		ast_while_statement = ast_while_statement->next_statement;
 	}
 
-	// jump to the start of the loop, if condition is false
-	struct mCc_tac_element *tac_while_jump_condition2 = tac_new_element(
-	    MCC_TAC_OPARATION_JUMP_EQUALS,
-	    mCc_tac_create_from_tac_identifier(tac_while_condition->tac_result),
-	    NULL, mCc_tac_create_from_tac_identifier(lable_before_while),
-	    MCC_TAC_TYPE_BOOL, 0);
+	// jump after else -> if the if is executed the else is skipped
+	struct mCc_tac_element *tac_while_condition2 = tac_new_element(
+	    MCC_TAC_OPARATION_JUMP,
+	    mCc_tac_create_from_tac_identifier(tac_condition->tac_result), NULL,
+	    mCc_tac_create_from_tac_identifier(lable_before_while),
+	    MCC_TAC_TYPE_NO_TYPE, 0);
+	mCc_tac_connect_tac_entry(previous_tac, tac_while_condition2);
 
-	mCc_tac_connect_tac_entry(tac_while_condition, previous_tac);
-	mCc_tac_connect_tac_entry(previous_tac, tac_while_jump_condition2);
-
-	// setting lable as tac element
 	struct mCc_tac_element *tac_lable_after_while =
 	    tac_new_element(MCC_TAC_OPARATION_LABEL_WHILE, NULL, NULL,
 	                    lable_after_while, MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(tac_while_jump_condition2, tac_lable_after_while);
+	mCc_tac_connect_tac_entry(tac_while_condition2, tac_lable_after_while);
 
 	return tac_lable_after_while;
 }
@@ -262,6 +258,30 @@ enum mCc_tac_operation tac_helper_get_return_tac_operation(
 	}
 }
 
+//happens only on identifier?
+static bool return_expr_is_identifier(struct mCc_tac_element *tac_return_expression){
+	return tac_return_expression->tac_operation==MCC_TAC_OPARATION_EMPTY;
+}
+
+
+static enum mCc_tac_operation
+map_operation_type(enum mCc_ast_data_type ast_data_type)
+{
+	switch (ast_data_type) {
+	case MCC_AST_DATA_TYPE_INT:
+		return MCC_TAC_OPARATION_RETURN_PRIMITIVE_INT;
+	case MCC_AST_DATA_TYPE_FLOAT:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_FLOAT;
+	case MCC_AST_DATA_TYPE_BOOL:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_BOOL;
+	case MCC_AST_DATA_TYPE_STRING:
+		return MCC_TAC_OPARATION_RETURN_PREMITIVE_STRING;
+	default: return MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS;
+	}
+	return MCC_TAC_OPARATION_EMPTY;
+}
+
+
 struct mCc_tac_element *
 mCc_tac_statement_return(struct mCc_ast_statement *statement,
                          struct mCc_tac_element *previous_tac)
@@ -273,6 +293,14 @@ mCc_tac_statement_return(struct mCc_ast_statement *statement,
 		struct mCc_tac_element *tac_return_expression =
 		    helper_get_tac_of_expression(statement->return_expression,
 		                                 previous_tac);
+
+
+		if (return_expr_is_identifier(tac_return_expression)) {
+			tac_return_expression->tac_operation =
+			    map_operation_type(statement->return_expression->identifier
+			                           ->symtab_info->data_type);
+		}
+
 		enum mCc_tac_operation return_operation =
 		    tac_helper_get_return_tac_operation(
 		        tac_return_expression->tac_operation);

@@ -54,7 +54,7 @@ void mCc_assembly_pseudo_assign_int_literal(FILE *out,
 	struct mCc_tac_identifier *int_val = get_literal_val(tac_elem);
 
 	// space for the tmp-variable
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	int calculated_offset =
 	    mCc_assembly_calc_stack_position(var, data->current_stack_pos);
@@ -83,6 +83,7 @@ void mCc_assembly_assign_primitive_float(FILE *out,
 	    mCc_assembly_calc_stack_position(pseudo_var, data->current_stack_pos);
 	int dest_var_offset =
 	    mCc_assembly_calc_stack_position(dest_var, data->current_stack_pos);
+
 	// is the "new" assignment => from var to var
 	mCc_assembly_move_float(out, pseudo_var_offset, dest_var_offset);
 }
@@ -98,7 +99,7 @@ void mCc_assembly_pseudo_assign_float_literal(FILE *out,
 	// strings
 
 	// space for the tmp-variable
-	mCc_assembly_allocate_float_on_stack(out, data, 1);
+	//mCc_assembly_allocate_float_on_stack(out, data, 1);
 
 	int calculated_offset =
 	    mCc_assembly_calc_stack_position(var, data->current_stack_pos);
@@ -110,7 +111,16 @@ void mCc_assembly_assign_function_call_float(FILE *out,
                                              struct mCc_tac_element *tac_elem)
 {
 	assert(tac_elem);
-	mCc_assembly_assign_function_call_int(out, data, tac_elem);
+	struct mCc_tac_identifier *dest_var = get_assign_dest_var(tac_elem);
+	struct mCc_tac_identifier *pseudo_var = get_pseudo_var(tac_elem);
+
+	int dest_var_offset =
+	    mCc_assembly_calc_stack_position(dest_var, data->current_stack_pos);
+	int pseudo_var_offset =
+	    mCc_assembly_calc_stack_position(pseudo_var, data->current_stack_pos);
+
+	mCc_assembly_move_float(out, pseudo_var_offset, dest_var_offset);
+	//mCc_assembly_push_int(out, dest_var_offset, DEFAULT_RETURN_REG);
 }
 
 void mCc_assembly_assign_primitive_bool(FILE *out,
@@ -136,7 +146,7 @@ void mCc_assembly_pseudo_assign_bool_literal(FILE *out,
 	struct mCc_tac_identifier *bool_val = get_literal_val(tac_elem);
 
 	// space for the tmp-variable
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	int calculated_offset =
 	    mCc_assembly_calc_stack_position(var, data->current_stack_pos);
@@ -174,7 +184,7 @@ void mCc_assembly_pseudo_assign_string_literal(FILE *out,
 	struct mCc_tac_identifier *string_val = get_literal_val(tac_elem);
 
 	// space for the tmp-variable
-	mCc_assembly_allocate_string_on_stack(out, data, string_val->name);
+	//mCc_assembly_allocate_string_on_stack(out, data, string_val->name);
 
 	int calculated_offset =
 	    mCc_assembly_calc_stack_position(var, data->current_stack_pos);
@@ -226,10 +236,10 @@ void mCc_assembly_assign_array_int(FILE *out, struct mCc_assembly_data *data,
 	    mCc_assembly_calc_stack_position(array_index, data->current_stack_pos);
 	int offset_array_value =
 	    mCc_assembly_calc_stack_position(array_value, data->current_stack_pos);
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_store_int_val_at_index(out, offset_array_value);
 }
 
@@ -251,10 +261,10 @@ void mCc_assembly_assign_array_float(FILE *out, struct mCc_assembly_data *data,
 	    mCc_assembly_calc_stack_position(array_index, data->current_stack_pos);
 	int offset_array_value =
 	    mCc_assembly_calc_stack_position(array_value, data->current_stack_pos);
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_store_float_val_at_index(out, offset_array_value);
 }
 
@@ -275,10 +285,10 @@ void mCc_assembly_assign_array_bool(FILE *out, struct mCc_assembly_data *data,
 	    mCc_assembly_calc_stack_position(array_index, data->current_stack_pos);
 	int offset_array_value =
 	    mCc_assembly_calc_stack_position(array_value, data->current_stack_pos);
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_store_bool_val_at_index(out, offset_array_value);
 }
 
@@ -299,9 +309,9 @@ void mCc_assembly_assign_array_string(FILE *out, struct mCc_assembly_data *data,
 	    mCc_assembly_calc_stack_position(array_index, data->current_stack_pos);
 	int offset_array_value =
 	    mCc_assembly_calc_stack_position(array_value, data->current_stack_pos);
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_store_string_val_at_index(out, offset_array_value);
 }

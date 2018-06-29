@@ -37,6 +37,10 @@ void mCc_assembly_move_string(FILE *out, int tac_offset_src,
                               int tac_offset_dest);
 
 /*============================================================= allocation */
+void mCc_assembly_allocate_local_stack(FILE *out,
+                                       struct mCc_assembly_data *data,
+                                       long amount);
+
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,
                                         int nr_of);
@@ -189,7 +193,7 @@ void mCc_assembly_set_less_equals_float(FILE *out);
 void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest);
 
 void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
-                                int offset_array_index);
+                                int offset_array_index, bool is_param);
 
 void mCc_assembly_move_index_val_to_eax(FILE *out);
 
@@ -200,6 +204,8 @@ void mCc_assembly_store_float_val_at_index(FILE *out, int calc_offset);
 
 void mCc_assembly_store_bool_val_at_index(FILE *out, int calc_offset);
 void mCc_assembly_store_string_val_at_index(FILE *out, int calc_offset);
+
+void mCc_assembly_load_ptr(FILE *out, int calc_offset, const char *dest);
 
 #ifdef __cplusplus
 }

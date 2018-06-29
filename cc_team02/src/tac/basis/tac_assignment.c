@@ -86,7 +86,8 @@ mCc_tac_assignment_primitive(struct mCc_ast_assignment *assignment,
 
 	// treat function-call
 	if (is_function_call_assignment(assignment)) {
-		tac_arg_1->type = MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
+		//what was that? why was this a function call?
+		tac_arg_1->type = MCC_IDENTIFIER_TAC_TYPE_VAR;
 		tac->tac_operation =
 		    tac_helper_get_function_assignment_tac_operation(ast_data_type);
 	}

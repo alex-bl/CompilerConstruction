@@ -37,6 +37,8 @@ struct mCc_symtab_and_validation_holder {
 struct mCc_symtab_parameter_ref {
 	struct mCc_ast_identifier *identifier;
 	struct mCc_symtab_parameter_ref *next_parameter;
+	// ugly workaround for parameters
+	struct mCc_ast_declaration *declaration;
 };
 
 enum mCc_symtab_identifier_type {

@@ -5,7 +5,7 @@ void main()
 	float dt;
 	float R;
 	float C;
-	float iter;
+	int iter;
 	float t;
 	float Ic;
 	float dV;
@@ -35,16 +35,16 @@ void main()
 	dt = read_float();
 
 	print("Number of iterations: ");
-	iter = read_float();
+	iter = read_int();
 
-	if (dt < 0.0 && iter < 0.0) {
+	if (dt < 0.0 && iter < 0) {
 		dt = -dt;
 		iter = -iter;
 		print("IC what you did there");
 		print_nl();
 	}
 
-	if (dt < 0.0 || iter < 0.0) {
+	if (dt < 0.0 || iter < 0) {
 		print("Cowardly refusing to go backwards in time");
 		print_nl();
 		return;
@@ -53,7 +53,7 @@ void main()
 	Vc = 0.0;
 	t = 0.0;
 
-	while (iter > 0.0) {
+	while (iter > 0) {
 		print("Capacitor voltage after ");
 		print_float(t);
 		print("s: ");
@@ -65,6 +65,6 @@ void main()
 
 		Vc = Vc + dV;
 		t = t + dt;
-		iter = iter - 1.0;
+		iter = iter - 1;
 	}
 }
