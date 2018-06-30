@@ -1,46 +1,38 @@
-/* This is array-centered.
-*/
 
-void main() {
-    /* First we declare some arrays */
-    int[5] first_array;
-    bool[5] processed;
+float kth(float k)
+{
 
-    processed[0] = false;
-    processed[4] = false;
-
-    run_calculation(first_array, processed);
-    print_bool_array(processed);
+    return 1.0 / (2.0 * k + 1.0);
 }
 
-void run_calculation(int[5] first_array, bool[5] processed) {
-    int i;
-    i = 1;
 
-    while (i < 4) {
-        first_array[i] = extreme_function(i);
-        processed[i] = true;
-        i = i+1;
+void main()
+{
+
+    print("Please enter a number: ");
+
+    float sign;
+    float n;
+    float i;
+    float pi;
+
+    i = 1.0;
+    n = read_float();
+    print_nl();
+    sign = 1.0;
+    pi = 1.0;
+
+    while (i < n)
+    {
+        sign = sign * (-1.0);
+        pi = pi + sign * kth(i);
+        i = i + 1.0;
     }
-}
 
-int extreme_function(int i) {
-    return (42 * i) + 7;
-}
+    pi = pi*4.0;
 
-void print_bool_array(bool[5] processed) {
-        int i;
-        i = 0;
+    print("Pi is approximately ");
+    print_float(pi);
+    print_nl();
 
-        while (i < 5) {
-
-            if (processed[i] == true) {
-                print("true");
-            } else {
-                print("false");
-            }
-
-            print_nl();
-            i = i+1;
-        }
 }

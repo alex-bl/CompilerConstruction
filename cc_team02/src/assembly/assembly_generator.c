@@ -409,6 +409,7 @@ static bool mCc_assembly_handle_floats(struct mCc_tac_element *tac_elem,
 	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_FLOAT:
 		gen_cb.label_float(gen_cb.out, gen_cb.data, tac_elem);
 		return true;
+	default: return false;
 	}
 	return false;
 }

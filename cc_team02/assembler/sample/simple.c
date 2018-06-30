@@ -25,6 +25,15 @@ void read_float(){
 
 }
 
+void float_playground(){
+	float a=0;
+	float max=12.0;
+	while(a<max){
+
+		a=a+1;
+	}
+}
+
 void main(){
 	int a[10];
 
