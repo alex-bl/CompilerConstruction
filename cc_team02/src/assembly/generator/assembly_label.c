@@ -52,16 +52,6 @@ static char *get_string_label(struct mCc_tac_element *tac_elem)
 	return tac_elem->tac_result->name;
 }
 
-//just an oversimplification => mask newlines!
-static void sanitize_string(char* string){
-	int size=strlen(string);
-	for(int i=0; i<size; i++){
-		if(string[i]=='\n'){
-			string[i]=' ';
-		}
-	}
-}
-
 void mCc_assembly_label_function(FILE *out, struct mCc_assembly_data *data,
                                  struct mCc_tac_element *tac_elem)
 {

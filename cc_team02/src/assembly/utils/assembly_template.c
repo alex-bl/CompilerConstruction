@@ -115,7 +115,7 @@ void mCc_assembly_last_function_enter(FILE *out)
 	//	mCc_assembly_print_shift(out);
 	//	mCc_assembly_print_op(out, "movl");
 	//	fprintf(out, "%s, %s", DEFAULT_STACK_POINTER,
-	//DEFAULT_DATA_STACK_POINTER); 	mCc_assembly_print_nl(out);
+	// DEFAULT_DATA_STACK_POINTER); 	mCc_assembly_print_nl(out);
 	//
 	//	mCc_assembly_print_shift(out);
 	//	mCc_assembly_print_op(out, "pushl");
@@ -125,10 +125,11 @@ void mCc_assembly_last_function_enter(FILE *out)
 }
 
 // TODO: main must not be the last function -.-
-void mCc_assembly_last_function_leave(FILE *out, const char *label, int func_scope_counter)
+void mCc_assembly_last_function_leave(FILE *out, const char *label,
+                                      int func_scope_counter)
 {
 
-	fprintf(out, ".%s%d:", DEFAULT_RETURN_LABEL,func_scope_counter);
+	fprintf(out, ".%s%d:", DEFAULT_RETURN_LABEL, func_scope_counter);
 	mCc_assembly_print_nl(out);
 
 	mCc_assembly_print_shift(out);
@@ -165,7 +166,18 @@ void mCc_assembly_new_string_enter(FILE *out, const char *label,
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, ".string");
-	fprintf(out, "\"%s\"", str_value);
+	fprintf(out, "\"");
+
+	// sanitize newlines
+	int size = strlen(str_value);
+	for (int i = 0; i < size; i++) {
+		if (str_value[i] == '\n') {
+			fprintf(out, "\\n");
+		} else {
+			fprintf(out, "%c", str_value[i]);
+		}
+	}
+	fprintf(out, "\"");
 	mCc_assembly_print_nl(out);
 }
 

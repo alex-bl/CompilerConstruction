@@ -1,33 +1,36 @@
+void main() {
+    bool x;
+    bool y;
+    bool z;
 
-int ackermann(int m, int n)
-{
-    if (m == 0) 
+    x = true;
+    y = false;
+    z = x || y;
+    x = x && z; /* x should still be true */
+
+    int value;
+    print("Enter a number"); print_nl();
+    value = read_int();
+
+    if((x && y && z) || (x || y || z) || (x == y) || (x != y)) {
+        /* should always go there */
+        print("Cool program "); print_int(value); print_nl();
+    } else {
+        print("???");
+        print_nl();
+    }
+
+    print("If you can read ??? above, there is something wrong");
+    print_nl();
+
     {
-        return n + 1;
-    }
-    if (n == 0) 
-    {		    
-        return ackermann(m - 1, 1);
-    }
-    return ackermann(m - 1, ackermann(m, n - 1));
-}
- 
-void main()
-{
-    print("Please enter two integer numbers: ");
-    int p1;
-    int p2;
-    p1 = 3;
-    p2 = 11;
-    print_nl();
+        string test;
+        test = "
+            This is a string over
 
-    print("The result of Ackermann(");
-    print_int(p1);
-    print(",");
-    print_int(p2);
-    print(") is: ");
+            several lines";
 
-    print_int(ackermann(p1,p2));
-    print_nl();
-    return;
+        print(test);
+        print_nl();
+    }
 }
