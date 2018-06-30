@@ -10,12 +10,14 @@ extern "C" {
 
 struct mCc_assembly_argument_list {
 	struct mCc_tac_element *argument;
+	int open_scope;
 	struct mCc_assembly_argument_list *next;
 };
 
 struct mCc_assembly_data {
 	int current_stack_pos;
 	int func_scope_counter;
+	int arg_scope_counter;
 	struct mCc_assembly_argument_list *arg_list;
 };
 

@@ -1,38 +1,47 @@
 
-float kth(float k)
+float abs(float a)
 {
-
-    return 1.0 / (2.0 * k + 1.0);
+    if (a > 0.0)
+    {
+        return a;
+    }
+    else
+    {
+        return -a;
+    }
 }
 
+bool isDiffSmallerEpsilon(float a, float b, float eps) 
+{
+    return (abs(a - b) < eps);
+}
+
+float betterGuess(float x, float guess) 
+{
+    return ((guess + x/guess) / 2.0);
+}
+
+float sqrt(float x, float guess) 
+{
+    if (isDiffSmallerEpsilon(x/guess, guess, 0.0001))
+    {
+        return guess;
+    }
+    else
+    {
+        return sqrt(x, betterGuess(x, guess));
+    }
+}
 
 void main()
 {
-
-    print("Please enter a number: ");
-
-    float sign;
+    print("Please enter two floating point numbers: ");
     float n;
-    float i;
-    float pi;
-
-    i = 1.0;
     n = read_float();
+    float guess;
+    guess = read_float();
     print_nl();
-    sign = 1.0;
-    pi = 1.0;
-
-    while (i < n)
-    {
-        sign = sign * (-1.0);
-        pi = pi + sign * kth(i);
-        i = i + 1.0;
-    }
-
-    pi = pi*4.0;
-
-    print("Pi is approximately ");
-    print_float(pi);
+    print("The result is: ");
+    print_float(sqrt(n,guess));
     print_nl();
-
 }
