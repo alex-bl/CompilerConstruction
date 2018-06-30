@@ -1,47 +1,33 @@
 
-float abs(float a)
+int ackermann(int m, int n)
 {
-    if (a > 0.0)
+    if (m == 0) 
     {
-        return a;
+        return n + 1;
     }
-    else
-    {
-        return -a;
+    if (n == 0) 
+    {		    
+        return ackermann(m - 1, 1);
     }
+    return ackermann(m - 1, ackermann(m, n - 1));
 }
-
-bool isDiffSmallerEpsilon(float a, float b, float eps) 
-{
-    return (abs(a - b) < eps);
-}
-
-float betterGuess(float x, float guess) 
-{
-    return ((guess + x/guess) / 2.0);
-}
-
-float sqrt(float x, float guess) 
-{
-    if (isDiffSmallerEpsilon(x/guess, guess, 0.0001))
-    {
-        return guess;
-    }
-    else
-    {
-        return sqrt(x, betterGuess(x, guess));
-    }
-}
-
+ 
 void main()
 {
-    print("Please enter two floating point numbers: ");
-    float n;
-    n = read_float();
-    float guess;
-    guess = read_float();
+    print("Please enter two integer numbers: ");
+    int p1;
+    int p2;
+    p1 = 3;
+    p2 = 11;
     print_nl();
-    print("The result is: ");
-    print_float(sqrt(n,guess));
+
+    print("The result of Ackermann(");
+    print_int(p1);
+    print(",");
+    print_int(p2);
+    print(") is: ");
+
+    print_int(ackermann(p1,p2));
     print_nl();
+    return;
 }
