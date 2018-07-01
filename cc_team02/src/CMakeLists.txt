@@ -65,7 +65,8 @@ add_library(mCc_tac SHARED tac/basis/basic_tac.c
 add_library(mCc_tac_print SHARED tac/tac_print.c)
 
 #tac control flow graph (cfg)
-add_library(mCc_tac_cfg SHARED tac/cfg/tac_cfg.c)
+add_library(mCc_tac_cfg SHARED tac/cfg/tac_cfg.c
+								tac/cfg/tac_cfg_print.c)
 
 # symbol-table-handler (for building the symbol-table and validation)
 add_library(mCc_symtab SHARED symtab/handler/symtab_handle_scope.c

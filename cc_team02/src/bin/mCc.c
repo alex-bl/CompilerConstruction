@@ -315,8 +315,10 @@ int main(int argc, char *argv[])
 	if (arguments.tac_cfg) {
 		// TODO
 		// print control flow graph (cfg) of tac
-		mCc_tac_cfg_generate(tac);
+		struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
 		log_debug("CFG generation of TAC finished\t\t[ok]");
+		mCc_tac_cfg_print(out_put, cfg);
+		log_debug("CFG print of TAC finished\t\t[ok]");
 	}
 
 	/* assembly-generation*/
