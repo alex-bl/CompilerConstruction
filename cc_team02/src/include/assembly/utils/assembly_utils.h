@@ -33,13 +33,16 @@ mCc_assembly_get_next_function_label(struct mCc_tac_element *identifier);
 void mCc_assembly_adjust_stack_pointer(int offset,
                                        struct mCc_assembly_data *data);
 
-struct mCc_assembly_argument_list *mCc_assembly_create_new_arg_list_elem();
+struct mCc_assembly_argument_list *
+mCc_assembly_create_new_arg_list_elem(int scope);
 
 struct mCc_assembly_argument_list *
 mCc_assembly_prepend_arg_list_elem(struct mCc_assembly_argument_list *actual,
-                                   struct mCc_tac_element *to_prepend);
+                                   struct mCc_tac_element *to_prepend,
+                                   int scope);
 
-void mCc_assembly_free_arg_list_elem(struct mCc_assembly_argument_list *to_free);
+void mCc_assembly_free_arg_list_elem(
+    struct mCc_assembly_argument_list *to_free);
 
 #ifdef __cplusplus
 }

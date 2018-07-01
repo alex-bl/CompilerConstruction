@@ -247,7 +247,7 @@ static void assign_type(struct mCc_ast_expression *expression,
 
 static bool identifier_is_array(struct mCc_ast_identifier *identifier)
 {
-	return identifier->symtab_info->entry_type ==
+	return identifier->symtab_info && identifier->symtab_info->entry_type ==
 	       MCC_SYM_TAB_IDENTIFIER_VARIABLE_ARRAY;
 }
 

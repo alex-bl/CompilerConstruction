@@ -23,7 +23,9 @@ static struct mCc_assembly_offset_holder init_offset_info()
 	map_init(&info.param_table);
 	map_init(&info.function_table);
 
-	info.actual_offset = 0;
+	info.actual_offset = BASE_OFFSET_LOCAL_VARS;
+	info.actual_param_offset = BASE_OFFSET_PARAMS;
+
 	return info;
 }
 
@@ -61,12 +63,14 @@ static void function_def_add_new_entry(struct mCc_tac_identifier *identifier,
 	map_set(&info->function_table, identifier->name, 0);
 }
 
-static size_t get_tac_elem_size(enum mCc_tac_type type)
+static size_t get_tac_elem_size(enum mCc_tac_type type, int nr_of)
 {
 	switch (type) {
-	case MCC_TAC_TYPE_INTEGER: return mCc_assembly_calc_int_space(1);
-	case MCC_TAC_TYPE_FLOAT: return mCc_assembly_calc_float_space(1);
-	case MCC_TAC_TYPE_BOOL: return mCc_assembly_calc_bool_space(1);
+	case MCC_TAC_TYPE_INTEGER: return mCc_assembly_calc_int_space(nr_of);
+	case MCC_TAC_TYPE_FLOAT: return mCc_assembly_calc_float_space(nr_of);
+	case MCC_TAC_TYPE_BOOL:
+		return mCc_assembly_calc_bool_space(nr_of);
+	// TODO: what about string-arrays?
 	case MCC_TAC_TYPE_STRING: return mCc_assembly_calc_string_space(NULL);
 	}
 	log_warn("No type?");
@@ -102,11 +106,35 @@ static int get_tac_offset(struct mCc_tac_identifier *identifier,
 	return *(map_get(&info->offset_table, identifier->name));
 }
 
-static int calc_new_offset(enum mCc_tac_type type,
-                           struct mCc_assembly_offset_holder *info)
+
+static int calc_new_offset_local(enum mCc_tac_type type,
+                           struct mCc_assembly_offset_holder *info, int nr_of)
 {
-	size_t size = get_tac_elem_size(type);
+	size_t size = get_tac_elem_size(type, nr_of);
 	return info->actual_offset + size;
+}
+
+static int calc_new_offset_param(enum mCc_tac_type type,
+                           struct mCc_assembly_offset_holder *info, int nr_of)
+{
+	size_t size = get_tac_elem_size(type, nr_of);
+	return info->actual_param_offset + size;
+}
+
+static int calc_new_offset(struct mCc_tac_identifier *identifier,enum mCc_tac_type type,
+                           struct mCc_assembly_offset_holder *info, int nr_of){
+	if(identifier->is_param){
+		return calc_new_offset_param(type, info, nr_of);
+	}
+	return calc_new_offset_local(type, info, nr_of);
+}
+
+static void adjust_offset_counter(struct mCc_tac_identifier *identifier,struct mCc_assembly_offset_holder *info,int offset){
+	if(identifier->is_param){
+		info->actual_param_offset=offset;
+	}else{
+		info->actual_offset=offset;
+	}
 }
 
 static void add_new_entry(struct mCc_tac_identifier *identifier,
@@ -122,10 +150,11 @@ static void adjust_identifier_offset(struct mCc_tac_identifier *identifier,
 	identifier->stack_offset = offset;
 }
 
-static void
-process_identifier_offset_calculation(struct mCc_tac_identifier *identifier,
-                                      enum mCc_tac_type type,
-                                      struct mCc_assembly_offset_holder *info)
+
+
+static void process_identifier_offset_calculation(
+    struct mCc_tac_identifier *identifier, enum mCc_tac_type type,
+    struct mCc_assembly_offset_holder *info, int nr_of)
 {
 	int stack_offset = 0;
 	if (tac_offset_contained(identifier, info)) {
@@ -133,9 +162,10 @@ process_identifier_offset_calculation(struct mCc_tac_identifier *identifier,
 		log_debug("Identifier '%s' found with offset %d", identifier->name,
 		          stack_offset);
 	} else {
-		stack_offset = calc_new_offset(type, info);
-		// set new offset
-		info->actual_offset = stack_offset;
+		int calculated_offset = calc_new_offset(identifier, type, info, nr_of);
+		adjust_offset_counter(identifier, info, calculated_offset);
+
+		stack_offset=calculated_offset;
 
 		add_new_entry(identifier, info, stack_offset);
 		log_debug("New entry for identifier '%s' with new offset %d",
@@ -146,17 +176,20 @@ process_identifier_offset_calculation(struct mCc_tac_identifier *identifier,
 
 static void handle_identifier(struct mCc_tac_identifier *identifier,
                               enum mCc_tac_type type,
-                              struct mCc_assembly_offset_holder *info)
+                              struct mCc_assembly_offset_holder *info,
+                              int nr_of)
 {
 	if (identifier_requires_offset_calculation(identifier)) {
-		if (function_def_contained(identifier, info)) {
-			identifier->type = MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
-		} else {
-			process_identifier_offset_calculation(identifier, type, info);
-		}
 
 		if (param_contained(identifier, info)) {
 			identifier->is_param = true;
+		}
+
+		if (function_def_contained(identifier, info)) {
+			identifier->type = MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL;
+		} else {
+			process_identifier_offset_calculation(identifier, type, info,
+			                                      nr_of);
 		}
 	}
 }
@@ -167,6 +200,7 @@ static bool tac_elem_contains_stack_vars(struct mCc_tac_element *element)
 
 	switch (element->tac_operation) {
 	case MCC_TAC_OPARATION_LABEL_ARGUMENT:
+	case MCC_TAC_OPARATION_LABEL_ARGUMENT_ARRAY:
 
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_INT:
 	case MCC_TAC_OPARATION_ASSIGN_PRIMITIVE_FLOAT:
@@ -181,6 +215,11 @@ static bool tac_elem_contains_stack_vars(struct mCc_tac_element *element)
 	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_FLOAT:
 	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_BOOL:
 	case MCC_TAC_OPARATION_DECLARE_PRIMITIVE_STRING:
+
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_INT:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_FLOAT:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_BOOL:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_STRING:
 
 	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_INT:
 	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_FLOAT:
@@ -238,6 +277,7 @@ static bool tac_elem_contains_stack_vars(struct mCc_tac_element *element)
 	case MCC_TAC_OPARATION_PARAM_FLOAT_PRIMITIVE:
 	case MCC_TAC_OPARATION_PARAM_BOOL_PRIMITIVE:
 	case MCC_TAC_OPARATION_PARAM_STRING_PRIMITIVE:
+
 	case MCC_TAC_OPARATION_PARAM_INT_ARRAY:
 	case MCC_TAC_OPARATION_PARAM_FLOAT_ARRAY:
 	case MCC_TAC_OPARATION_PARAM_BOOL_ARRAY:
@@ -281,6 +321,27 @@ static bool tac_elem_is_function_def(struct mCc_tac_element *element)
 	return element->tac_operation == MCC_TAC_OPARATION_LABEL_FUNCTION;
 }
 
+static bool tac_elem_is_array_decl(struct mCc_tac_element *element)
+{
+	switch (element->tac_operation) {
+	case MCC_TAC_OPARATION_PARAM_INT_ARRAY:
+	case MCC_TAC_OPARATION_PARAM_FLOAT_ARRAY:
+	case MCC_TAC_OPARATION_PARAM_BOOL_ARRAY:
+	case MCC_TAC_OPARATION_PARAM_STRING_ARRAY:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_INT:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_FLOAT:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_BOOL:
+	case MCC_TAC_OPARATION_DECLARE_ARRAY_STRING: return true;
+	default: return false;
+	}
+	return false;
+}
+
+static int get_arr_size(struct mCc_tac_element *element)
+{
+	return element->tac_argument2->i_val;
+}
+
 static void handle_tac_elem(struct mCc_tac_element *tac_element,
                             struct mCc_assembly_offset_holder *info)
 {
@@ -298,9 +359,16 @@ static void handle_tac_elem(struct mCc_tac_element *tac_element,
 
 	if (tac_elem_contains_stack_vars(tac_element)) {
 		enum mCc_tac_type type = tac_element->tac_type;
-		handle_identifier(tac_element->tac_argument1, type, info);
-		handle_identifier(tac_element->tac_argument2, type, info);
-		handle_identifier(tac_element->tac_result, type, info);
+		int nr_of = 1;
+
+		// for adjusting array-size
+		if (tac_elem_is_array_decl(tac_element)) {
+			nr_of = get_arr_size(tac_element);
+		}
+
+		handle_identifier(tac_element->tac_argument1, type, info, nr_of);
+		handle_identifier(tac_element->tac_argument2, type, info, nr_of);
+		handle_identifier(tac_element->tac_result, type, info, nr_of);
 	}
 }
 
@@ -313,19 +381,43 @@ static bool offset_reset_required(struct mCc_tac_element *tac_element)
 	return tac_element->tac_operation == MCC_TAC_OPARATION_LABEL_FUNCTION;
 }
 
+static bool is_function_start_point(struct mCc_tac_element *tac_element){
+	return tac_element->tac_operation == MCC_TAC_OPARATION_START_FUNCTION_DEF;
+}
+
+static bool is_function_end_point(struct mCc_tac_element *tac_element){
+	return tac_element->tac_operation == MCC_TAC_OPARATION_END_FUNCTION_DEF;
+}
+
 void mCc_assembly_calculate_stack_offsets(
     struct mCc_tac_element *first_tac_element)
 {
 	struct mCc_assembly_offset_holder info = init_offset_info();
 	struct mCc_tac_element *next_tac_element = first_tac_element;
+	struct mCc_tac_element *function_start;
+
 
 	while (next_tac_element) {
+
+		//mark start
+		if(is_function_start_point(next_tac_element)){
+			function_start=next_tac_element;
+		}
+
 		if (offset_reset_required(next_tac_element)) {
 			log_debug("Resetting offset while entering new function def '%s'",
 			          next_tac_element->tac_result->name);
-			info.actual_offset = 0;
+			info.actual_offset = BASE_OFFSET_LOCAL_VARS;
+			info.actual_param_offset = BASE_OFFSET_PARAMS;
 		}
 		handle_tac_elem(next_tac_element, &info);
+
+		// remember the offset count to allocate stack space at the beginning
+		if (is_function_end_point(next_tac_element)) {
+			function_start->tac_argument2 =
+			    tac_new_identifier_int(info.actual_offset);
+		}
+
 		next_tac_element = next_tac_element->tac_next_element;
 	}
 

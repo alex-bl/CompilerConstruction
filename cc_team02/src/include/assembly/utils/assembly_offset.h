@@ -13,6 +13,7 @@ struct mCc_assembly_offset_holder {
 	map_int_t param_table;
 	map_int_t function_table;
 	int actual_offset;
+	int actual_param_offset;
 };
 
 void mCc_assembly_calculate_stack_offsets(

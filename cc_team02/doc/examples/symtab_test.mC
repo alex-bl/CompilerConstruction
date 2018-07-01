@@ -1,48 +1,36 @@
-bool test_if(int a, int b){
-	if(a<b){
-		print("here");
-		print_nl();
-		return true;
-	}
-	print("or here");	
-	return false;
-}
+void main() {
+    bool x;
+    bool y;
+    bool z;
 
-void main()
-{
-	int a;
-	int b;
-	int c;
-	int d;
-	
-	a=12;
-	b=2;
-	c=2;
-	d=a-b-c;
-	
-	print_int(d);
-	print_nl();
-	
-	
-	float e;
-	float f;
-	float g;
-	
-	e=10.2;
-	f=2.0;
-	g=2.0;
-	
-	print_float(e/f/g);
-	print_nl();
-	
-	bool if_test;
-	if_test=test_if(1,2);
-	
-	if(if_test){
-		print("true");
-	}else{
-		print("false");
-	}
-	print_nl();
-	
+    x = true;
+    y = false;
+    z = x || y;
+    x = x && z; /* x should still be true */
+
+    int value;
+    print("Enter a number"); print_nl();
+    value = read_int();
+
+    if((x && y && z) || (x || y || z) || (x == y) || (x != y)) {
+        /* should always go there */
+        print("Cool program "); print_int(value); print_nl();
+    } else {
+        print("???");
+        print_nl();
+    }
+
+    print("If you can read ??? above, there is something wrong");
+    print_nl();
+
+    {
+        string test;
+        test = "
+            This is a string over
+
+            several lines";
+
+        print(test);
+        print_nl();
+    }
 }

@@ -31,6 +31,17 @@ void mCc_assembly_load_float(FILE *out, int tac_offset)
 	mCc_assembly_print_nl(out);
 }
 
+void mCc_assembly_load_int_as_float(FILE *out, int tac_offset)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "filds");
+	// TODO: load label?
+	fprintf(out, "%d(%s)", tac_offset, DEFAULT_DATA_STACK_POINTER);
+	// fprintf(out,".%s",label);
+	mCc_assembly_print_nl(out);
+}
+
+
 // stack_offset needs to be negative?
 void mCc_assembly_push_int(FILE *out, int tac_offset, const char *ret_to_push)
 {
@@ -99,6 +110,18 @@ void mCc_assembly_move_string(FILE *out, int tac_offset_src,
 }
 
 /*============================================================= allocation */
+void mCc_assembly_allocate_local_stack(FILE *out,
+                                        struct mCc_assembly_data *data,
+                                        long amount)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "subl");
+	fprintf(out, "$%ld, %s", amount, DEFAULT_STACK_POINTER);
+	mCc_assembly_print_nl(out);
+	// TODO: seems to be useless ;)
+	mCc_assembly_adjust_stack_pointer(amount, data);
+}
+
 void mCc_assembly_allocate_int_on_stack(FILE *out,
                                         struct mCc_assembly_data *data,
                                         int nr_of)
@@ -353,6 +376,11 @@ void mCc_assembly_compare_float(FILE *out)
 	mCc_assembly_print_op(out, "fcomip");
 	fprintf(out, "%s, %s", FLOAT_STACK_SEC_REG, FLOAT_STACK_TOP_REG);
 	mCc_assembly_print_nl(out);
+	//clear also the floating-point stack
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "fstp");
+	fprintf(out,"%s",FLOAT_STACK_TOP_REG);
+	mCc_assembly_print_nl(out);
 }
 
 // TODO: andl and orl enough or just simply use cmpl?
@@ -377,6 +405,13 @@ void mCc_assembly_or_op(FILE *out, int calculated_offset_op_1,
 	mCc_assembly_print_op(out, "orl");
 	fprintf(out, "%d(%s),%s", calculated_offset_op_2,
 	        DEFAULT_DATA_STACK_POINTER, DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_convert_float_to_int(FILE *out, int offset){
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "fistp");
+	fprintf(out,"%d(%s)", offset, DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);
 }
 
@@ -611,27 +646,63 @@ void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)
 
 /*============================================================= array */
 
-void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
+static void mCc_assembly_compute_index_local(FILE *out, int base_size, int offset_array_base,
                                 int offset_array_index)
 {
-	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
+//	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
+//
+//	mCc_assembly_print_shift(out);
+//	mCc_assembly_print_op(out, "leal");
+//	fprintf(out, "%d(%s), %s", offset_array_base, DEFAULT_DATA_STACK_POINTER,
+//	        EDX_REG);
+//	mCc_assembly_print_nl(out);
+//
+//	mCc_assembly_print_shift(out);
+//	mCc_assembly_print_op(out, "leal");
+//	fprintf(out, "%d(%s,%s,%d), %s", 0, EDX_REG, DEFAULT_ACCUMULATOR_OPERAND,
+//	        base_size, ECX_REG);
+//	mCc_assembly_print_nl(out);
+
+//==================================================
+	mCc_assembly_load_int(out, offset_array_index, EDX_REG);
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leal");
-	fprintf(out, "%d(%s), %s", offset_array_base, DEFAULT_DATA_STACK_POINTER,
-	        EDX_REG);
+	fprintf(out, "%d(%s,%s,%d), %s", offset_array_base,
+	        DEFAULT_DATA_STACK_POINTER, EDX_REG, base_size, ECX_REG);
 	mCc_assembly_print_nl(out);
 
-	mCc_assembly_print_shift(out);
-	mCc_assembly_print_op(out, "leal");
-	fprintf(out, "%d(%s,%s,%d), %s", 0, EDX_REG, DEFAULT_ACCUMULATOR_OPERAND,
-	        base_size, ECX_REG);
-	mCc_assembly_print_nl(out);
+	//	movl 	$9, %eax	[ok]
+	//	leal	-44(%ebp, %eax, 4), %eax
+
 
 	//	mCc_assembly_print_shift(out);
 	//	mCc_assembly_print_op(out, "movl");
 	//	fprintf(out, "0(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
 	//	mCc_assembly_print_nl(out);
+}
+
+
+static void mCc_assembly_compute_index_param(FILE *out, int base_size, int offset_array_base,
+                                int offset_array_index)
+{
+	mCc_assembly_load_int(out, offset_array_index, EDX_REG);
+	mCc_assembly_load_int(out, offset_array_base, DEFAULT_ACCUMULATOR_OPERAND);
+
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "leal");
+	fprintf(out, "%d(%s,%s,%d), %s", 0,
+	        DEFAULT_ACCUMULATOR_OPERAND, EDX_REG, base_size, ECX_REG);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
+                                int offset_array_index, bool is_param){
+	if(is_param){
+		mCc_assembly_compute_index_param(out, base_size, offset_array_base, offset_array_index);
+	}else{
+		mCc_assembly_compute_index_local(out, base_size, offset_array_base, offset_array_index);
+	}
 }
 
 void mCc_assembly_move_index_val_to_eax(FILE *out)
@@ -693,4 +764,12 @@ void mCc_assembly_store_string_val_at_index(FILE *out, int calc_offset)
 {
 	mCc_assembly_load_int(out, calc_offset, DEFAULT_ACCUMULATOR_OPERAND);
 	move_to_ecx_reg(out);
+}
+
+void mCc_assembly_load_ptr(FILE *out, int calc_offset, const char *dest)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "leal");
+	fprintf(out, "%d(%s), %s", calc_offset, DEFAULT_DATA_STACK_POINTER, dest);
+	mCc_assembly_print_nl(out);
 }

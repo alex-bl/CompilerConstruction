@@ -52,6 +52,8 @@ deep_copy_param_ref(struct mCc_symbol_table_node *symtab_info)
 
 	if (next_param) {
 		tmp_ref = mCc_symtab_new_parameter_ref(next_param->identifier);
+		// for ugly workaround -.-
+		tmp_ref->declaration = next_param->declaration;
 		new_ref = tmp_ref;
 		next_param = next_param->next_parameter;
 	}
@@ -59,6 +61,9 @@ deep_copy_param_ref(struct mCc_symbol_table_node *symtab_info)
 	while (next_param) {
 		tmp_ref->next_parameter =
 		    mCc_symtab_new_parameter_ref(next_param->identifier);
+		// for ugly workaround -.-
+		tmp_ref->next_parameter->declaration = next_param->declaration;
+
 		next_param = next_param->next_parameter;
 		tmp_ref = tmp_ref->next_parameter;
 	}

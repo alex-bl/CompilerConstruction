@@ -16,6 +16,7 @@ readonly DIR=$(dirname "$(readlink -f "$0")")
 
 # Location containing examples.
 readonly EXAMPLES_DIR="${EXAMPLES_DIR:-$DIR/../doc/examples}"
+readonly OUTPUT_ASSERTION_DIR="${OUTPUT_ASSERTION_DIR:-$DIR/}"
 
 # mC compiler binary.
 readonly MCC="${MCC:-./mCc}"
@@ -40,9 +41,19 @@ option_csv=false
 # ------------------------------------------------------------------- FUNCTIONS
 
 run_compiler()
-{
+{	
 	local input=$1
-	\time -f "%e %M %x" "$MCC" "$input" 2>&1 | tail -n1
+	local input_values=$1.stdin
+	local to_compare=$1.stdout
+	local executable_path=./out/a.out
+	local assertion_script=$OUTPUT_ASSERTION_DIR"assert_output"
+	
+	# echo $input >> test.txt
+	
+	#run
+	$MCC -o $executable_path $input
+	
+	\time -f "%e %M %x" $assertion_script $executable_path $input_values $to_compare 2>&1 | tail -n1
 	return ${PIPESTATUS[0]}
 }
 

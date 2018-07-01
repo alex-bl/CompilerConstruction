@@ -5,7 +5,7 @@ float calc_mean(float a, float b){
 }
 
 void main(){
-    float change;
+  float change;
 	int count;
 	float[100] arr_a;
 	float[100] arr_b;

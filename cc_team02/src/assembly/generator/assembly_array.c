@@ -44,10 +44,10 @@ void mCc_assembly_index_acc_arr_int(FILE *out, struct mCc_assembly_data *data,
 	int offset_array_value =
 	    mCc_assembly_calc_stack_position(array_value, data->current_stack_pos);
 
-	mCc_assembly_allocate_int_on_stack(out, data, 1);
+	//mCc_assembly_allocate_int_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_move_index_val_to_eax(out);
 	mCc_assembly_push_int(out, offset_array_value, DEFAULT_ACCUMULATOR_OPERAND);
 }
@@ -70,10 +70,10 @@ void mCc_assembly_index_acc_arr_float(FILE *out, struct mCc_assembly_data *data,
 	int offset_array_value =
 	    mCc_assembly_calc_stack_position(array_value, data->current_stack_pos);
 
-	mCc_assembly_allocate_float_on_stack(out, data, 1);
+	//mCc_assembly_allocate_float_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 
 	mCc_assembly_load_float_at_ecx(out);
 	mCc_assembly_push_float(out, offset_array_value);
@@ -97,10 +97,10 @@ void mCc_assembly_index_acc_arr_bool(FILE *out, struct mCc_assembly_data *data,
 	int offset_array_value =
 	    mCc_assembly_calc_stack_position(array_value, data->current_stack_pos);
 
-	mCc_assembly_allocate_bool_on_stack(out, data, 1);
+	//mCc_assembly_allocate_bool_on_stack(out, data, 1);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 	mCc_assembly_move_index_val_to_eax(out);
 	mCc_assembly_push_int(out, offset_array_value, DEFAULT_ACCUMULATOR_OPERAND);
 }
@@ -124,10 +124,10 @@ void mCc_assembly_index_acc_arr_string(FILE *out,
 	int offset_array_value =
 	    mCc_assembly_calc_stack_position(array_value, data->current_stack_pos);
 
-	mCc_assembly_allocate_string_on_stack(out, data, NULL);
+	//mCc_assembly_allocate_string_on_stack(out, data, NULL);
 
 	mCc_assembly_compute_index(out, INT_SIZE, offset_array_base,
-	                           offset_array_index);
+	                           offset_array_index, array_base->is_param);
 
 	mCc_assembly_move_index_val_to_eax(out);
 	mCc_assembly_push_int(out, offset_array_value, DEFAULT_ACCUMULATOR_OPERAND);

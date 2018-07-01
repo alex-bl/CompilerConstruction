@@ -1,5 +1,7 @@
 #include "assembly_label.h"
 
+#include <string.h>
+
 #include "assembly_formatter.h"
 #include "assembly_template.h"
 #include "basic_tac.h"
@@ -68,6 +70,8 @@ void mCc_assembly_label_string(FILE *out, struct mCc_assembly_data *data,
 {
 	struct mCc_tac_identifier *identifier = get_string_val_identifier(tac_elem);
 	//TODO: value is stored at name... strange -.-
+
+	//sanitize_string(identifier->name);
 	mCc_assembly_new_string_enter(out, get_string_label(tac_elem),
 	                              identifier->name);
 }

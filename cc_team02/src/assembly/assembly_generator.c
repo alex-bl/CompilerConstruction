@@ -39,10 +39,10 @@ static bool skip_generation(enum mCc_tac_operation tac_op)
 }
 
 static void prepend_arg(struct mCc_assembly_generator gen_cb,
-                        struct mCc_tac_element *tac_elem)
+                        struct mCc_tac_element *tac_elem, int scope)
 {
 	struct mCc_assembly_argument_list *new_head =
-	    mCc_assembly_prepend_arg_list_elem(gen_cb.data->arg_list, tac_elem);
+	    mCc_assembly_prepend_arg_list_elem(gen_cb.data->arg_list, tac_elem, scope);
 	gen_cb.data->arg_list = new_head;
 }
 
@@ -50,21 +50,38 @@ static void
 mCc_assembly_generate_arg_list_elem(struct mCc_assembly_generator gen_cb,
                                     struct mCc_tac_element *tac_elem)
 {
-	// TODO: all arguments are handled equally => maybe extend?
-	gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
+	//TODO: should be sufficent hence all primitives/arrays are treated equally
+	if(tac_elem->tac_operation==MCC_TAC_OPARATION_LABEL_ARGUMENT){
+		gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
+	}else{
+		gen_cb.argument_int_array(gen_cb.out, gen_cb.data, tac_elem);
+	}
 }
 
 static void mCc_assembly_generate_arg_list(struct mCc_assembly_generator gen_cb)
 {
 	struct mCc_assembly_argument_list *next_arg = gen_cb.data->arg_list;
+	int actual_arg_scope = gen_cb.data->arg_scope_counter;
+	bool has_params = false;
 
-	while (next_arg) {
+	while (next_arg && actual_arg_scope == next_arg->open_scope) {
 		struct mCc_assembly_argument_list *actual = next_arg;
 		mCc_assembly_generate_arg_list_elem(gen_cb, actual->argument);
 		next_arg = next_arg->next;
 		mCc_assembly_free_arg_list_elem(actual);
+		has_params=true;
 	}
-	gen_cb.data->arg_list = NULL;
+	// handle parameterless functions
+	if(has_params){
+		gen_cb.data->arg_scope_counter--;
+	}
+
+	// set new head
+	if(!next_arg){
+		gen_cb.data->arg_list = NULL;
+	}else{
+		gen_cb.data->arg_list=next_arg;
+	}
 }
 
 void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
@@ -292,11 +309,15 @@ void mCc_assembly_generate_tac_elem(struct mCc_assembly_generator gen_cb,
 		case MCC_TAC_OPARATION_LABEL_STRING:
 			gen_cb.label_string(gen_cb.out, gen_cb.data, tac_elem);
 			/*print_nl_debug(gen_cb.out); */ break;
-
+		// TODO: arg-scope-counter increase
+		case MCC_TAC_OPARATION_ARGUMENT_LIST_START:
+			gen_cb.data->arg_scope_counter++;
+			break;
 		// TODO: push remains the same?
 		case MCC_TAC_OPARATION_LABEL_ARGUMENT:
+		case MCC_TAC_OPARATION_LABEL_ARGUMENT_ARRAY:
 			// gen_cb.argument_int_primitive(gen_cb.out, gen_cb.data, tac_elem);
-			prepend_arg(gen_cb, tac_elem);
+			prepend_arg(gen_cb, tac_elem,gen_cb.data->arg_scope_counter);
 			/*print_nl_debug(gen_cb.out); */ break;
 
 			// "pseudo" labels => assign value to tmp-vars
@@ -404,6 +425,7 @@ static bool mCc_assembly_handle_floats(struct mCc_tac_element *tac_elem,
 	case MCC_TAC_OPERATION_PSEUDO_ASSIGNMENT_FLOAT:
 		gen_cb.label_float(gen_cb.out, gen_cb.data, tac_elem);
 		return true;
+	default: return false;
 	}
 	return false;
 }
@@ -600,6 +622,7 @@ void mCc_assembly_generate(FILE *out, struct mCc_tac_element *first_tac_elem)
 
 	data.current_stack_pos = 0;
 	data.func_scope_counter = -1;
+	data.arg_scope_counter = 0;
 	data.arg_list = NULL;
 
 	struct mCc_assembly_generator generator_functions =
