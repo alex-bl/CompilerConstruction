@@ -1,4 +1,3 @@
-/*
 float transform_x(float x)
 {
 	float fx;
@@ -68,9 +67,4 @@ void main()
 		print_nl();
 		y = y + 1.0;
 	}
-}
-*/
-
-void main(){
-
 }

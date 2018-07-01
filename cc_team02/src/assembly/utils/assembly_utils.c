@@ -100,22 +100,23 @@ void mCc_assembly_adjust_stack_pointer(int offset,
 	data->current_stack_pos += offset;
 }
 
-struct mCc_assembly_argument_list *mCc_assembly_create_new_arg_list_elem()
+struct mCc_assembly_argument_list *mCc_assembly_create_new_arg_list_elem(int scope)
 {
 	struct mCc_assembly_argument_list *elem = malloc(sizeof(*elem));
 	if (!elem) {
 		log_error("Malloc failed");
 		return NULL;
 	}
+	elem->open_scope=scope;
 	return elem;
 }
 
 struct mCc_assembly_argument_list *
 mCc_assembly_prepend_arg_list_elem(struct mCc_assembly_argument_list *actual,
-                                   struct mCc_tac_element *to_prepend)
+                                   struct mCc_tac_element *to_prepend, int scope)
 {
 	struct mCc_assembly_argument_list *elem =
-	    mCc_assembly_create_new_arg_list_elem();
+	    mCc_assembly_create_new_arg_list_elem(scope);
 	if (elem) {
 		elem->argument = to_prepend;
 		if (actual) {

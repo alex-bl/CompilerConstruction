@@ -31,6 +31,17 @@ void mCc_assembly_load_float(FILE *out, int tac_offset)
 	mCc_assembly_print_nl(out);
 }
 
+void mCc_assembly_load_int_as_float(FILE *out, int tac_offset)
+{
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "filds");
+	// TODO: load label?
+	fprintf(out, "%d(%s)", tac_offset, DEFAULT_DATA_STACK_POINTER);
+	// fprintf(out,".%s",label);
+	mCc_assembly_print_nl(out);
+}
+
+
 // stack_offset needs to be negative?
 void mCc_assembly_push_int(FILE *out, int tac_offset, const char *ret_to_push)
 {
@@ -365,6 +376,11 @@ void mCc_assembly_compare_float(FILE *out)
 	mCc_assembly_print_op(out, "fcomip");
 	fprintf(out, "%s, %s", FLOAT_STACK_SEC_REG, FLOAT_STACK_TOP_REG);
 	mCc_assembly_print_nl(out);
+	//clear also the floating-point stack
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "fstp");
+	fprintf(out,"%s",FLOAT_STACK_TOP_REG);
+	mCc_assembly_print_nl(out);
 }
 
 // TODO: andl and orl enough or just simply use cmpl?
@@ -389,6 +405,13 @@ void mCc_assembly_or_op(FILE *out, int calculated_offset_op_1,
 	mCc_assembly_print_op(out, "orl");
 	fprintf(out, "%d(%s),%s", calculated_offset_op_2,
 	        DEFAULT_DATA_STACK_POINTER, DEFAULT_ACCUMULATOR_OPERAND);
+	mCc_assembly_print_nl(out);
+}
+
+void mCc_assembly_convert_float_to_int(FILE *out, int offset){
+	mCc_assembly_print_shift(out);
+	mCc_assembly_print_op(out, "fistp");
+	fprintf(out,"%d(%s)", offset, DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);
 }
 
