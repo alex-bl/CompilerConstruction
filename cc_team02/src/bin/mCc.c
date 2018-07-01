@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
 		// TODO
 		// print control flow graph (cfg) of tac
 		mCc_tac_cfg_generate(tac);
-		log_debug("CFG of TAC finished\t\t[ok]");
+		log_debug("CFG generation of TAC finished\t\t[ok]");
 	}
 
 	/* assembly-generation*/

@@ -74,11 +74,10 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 		// prev_cfg_element = cfg_element;
 
 		if (prev_cfg_element != NULL) {
-			if (prev_cfg_element->tac_element->tac_operation ==
-			    MCC_TAC_OPARATION_LABEL_IF) {
+			if (tac_next_element->tac_operation == MCC_TAC_OPARATION_LABEL_IF) {
 				tac_next_element =
 				    cfg_if_statement(prev_cfg_element, tac_next_element);
-			} else if (prev_cfg_element->tac_element->tac_operation ==
+			} else if (tac_next_element->tac_operation ==
 			           MCC_TAC_OPARATION_LABEL_WHILE) {
 				tac_next_element =
 				    cfg_while_statement(prev_cfg_element, tac_next_element);
