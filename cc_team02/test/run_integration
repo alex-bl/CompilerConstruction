@@ -1,0 +1,4 @@
+
+unset EXAMPLES_DIR
+
+$1
