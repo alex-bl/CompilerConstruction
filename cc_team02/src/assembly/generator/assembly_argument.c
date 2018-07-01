@@ -66,14 +66,12 @@ void mCc_assembly_argument_float_array(FILE *out,
                                        struct mCc_assembly_data *data,
                                        struct mCc_tac_element *tac_elem)
 {
-	/*TODO: special treatment here?*/
 	mCc_assembly_argument_int_array(out, data, tac_elem);
 }
 
 void mCc_assembly_argument_bool_array(FILE *out, struct mCc_assembly_data *data,
                                       struct mCc_tac_element *tac_elem)
 {
-	/*TODO: special treatment here?*/
 	mCc_assembly_argument_int_array(out, data, tac_elem);
 }
 
@@ -81,6 +79,5 @@ void mCc_assembly_argument_string_array(FILE *out,
                                         struct mCc_assembly_data *data,
                                         struct mCc_tac_element *tac_elem)
 {
-	/*TODO: special treatment here?*/
 	mCc_assembly_argument_int_array(out, data, tac_elem);
 }

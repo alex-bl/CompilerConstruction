@@ -8,7 +8,8 @@ project (cc_team02)
 
 # The version number.
 set(cc_team02_VERSION_MAJOR 1)
-set(cc_team02_VERSION_MINOR 0)
+set(cc_team02_VERSION_MINOR 8)
+set(cc_team02_VERSION_LOWER 9)
 
 # set global compiler flags (append them)
 # append -Wextra when all ast-implmentations are provided
@@ -54,8 +55,9 @@ set(DOXYGEN_GENERATE_XML NO)
 #message(STATUS "valgrind: " ${MEMORYCHECK_COMMAND})
 set(MCC_VALGRIND_ARGS "--leak-check=full --show-reachable=yes --track-origins=yes --error-exitcode=1")
 set(MCC_VALGRIND_SUPPRESSIONS "--suppressions=${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp")
-
-set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS}")
+set(MCC_VALGRIND_SUPPRESSIONS_2 "--suppressions=${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.25.supp")
+							  
+set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS} ${MCC_VALGRIND_SUPPRESSIONS_2}")
 #============================================================  assembler config
 set(OBJECT_OUTPUT_DIR "${CMAKE_BINARY_DIR}/out")
 set(ASSEMBLY_OUTPUT_DIR "${CMAKE_BINARY_DIR}/assembly")
@@ -77,6 +79,11 @@ configure_file (
 configure_file (
   "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.21.supp.in"
   "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
+  )
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.25.supp.in"
+  "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.25.supp"
   )
 
 # configure build-ins (semantic checks)

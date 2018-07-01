@@ -23,6 +23,7 @@
 #define GCC_CMD_BUF_SIZE 512
 #define LOG_QUIET ${STDOUT_LOGGING_DISABLED}
 #define COMPILE_STATUS_OUTPUT_LINE_SIZE 1024
+#define MCC_VERSION_TEXT "mCc ${cc_team02_VERSION_MAJOR}.${cc_team02_VERSION_MINOR}.${cc_team02_VERSION_LOWER}"
 
 //assembly-related stuff
 

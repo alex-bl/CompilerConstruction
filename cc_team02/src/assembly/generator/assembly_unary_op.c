@@ -30,8 +30,6 @@ void mCc_assembly_generate_unary_minus_int(FILE *out,
 	int result_offset = mCc_assembly_calc_stack_position(
 	    result_identifier, data->current_stack_pos);
 
-	//mCc_assembly_allocate_int_on_stack(out, data, 1);
-
 	mCc_assembly_load_int(out, arg_offset, DEFAULT_ACCUMULATOR_OPERAND);
 	mCc_assembly_unary_minus_int(out);
 
@@ -52,8 +50,6 @@ void mCc_assembly_generate_unary_minus_float(FILE *out,
 	int result_offset = mCc_assembly_calc_stack_position(
 	    result_identifier, data->current_stack_pos);
 
-	//mCc_assembly_allocate_float_on_stack(out, data, 1);
-
 	mCc_assembly_load_float(out, arg_offset);
 	mCc_assembly_unary_minus_float(out);
 
@@ -73,10 +69,8 @@ void mCc_assembly_generate_unary_negation(FILE *out,
 	int result_offset = mCc_assembly_calc_stack_position(
 	    result_identifier, data->current_stack_pos);
 
-	//mCc_assembly_allocate_bool_on_stack(out, data, 1);
 	mCc_assembly_load_int(out, arg_offset, DEFAULT_ACCUMULATOR_OPERAND);
 	mCc_assembly_unary_negation(out);
-
 
 	mCc_assembly_push_int(out, result_offset, DEFAULT_ACCUMULATOR_OPERAND);
 }

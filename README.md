@@ -66,9 +66,11 @@ $ ./mCc --help
 Usage: mCc [OPTION...] INPUT_FILE or '-' for stdin
 mCc -- A compiler for the mC-language
 
+  -c, --tac-cfg              Generate tac control flow graph    (default=false)
   -d, --dot                  Print the AST in dot-notation      (default=false)
   -f, --fileLog              Log into <project_dir>/log/        (default=false)
   -l, --stdoutLog            Log to stdout                      (default=false)
+  -o, --output=FILE          Output to FILE                     (default=a.out)
   -t, --tac                  Print the Three-adress-code        (default=false)
   -?, --help                 Give this help list
       --usage                Give a short usage message
@@ -95,9 +97,30 @@ See [issues](https://github.com/alex-bl/CompilerConstruction/issues) for project
 - **Incorrect location information (line-/column-number) on the first statements inside a new scope (if/else, while):** This first statement gets the same location-information as the parent that opens the scope. All subsequent statements are correct. 
 - **Memory Leaks on TAC tests:** Testing the TAC code still shows memory leaks. This will be improved shortly.
 
+### Assignment 3
+- **Valgrind issue**: Valgrind reports "Uninitialised value was created by a heap allocation" if using `malloc` on allocating memory for identifiers at `basic_tac.c`. We do not investigated further why this error occurs, but fixed it initializing the allocated memory with `0`s (using `calloc`).
+
+- **Rounding error at integration tests**: On test-programs where a `floating-point` value's equality is checked afterwards, it may happens, that rounding errors prevent a positive match (because of string-comparison between program-output and `*.mC.stdout`). The affected test-outputs (currently only one) were adjusted accordingly.
+
 ## 4. Changelog
 
-This section contains the fixed issues from the previous assignments.
+This section contains the fixed and unfixed issues from the previous assignments.
+
+#### After assignment 2:
+
+- Parsing assotiativity for binary-operations corrected (changed from right to left to guarantee correct TAC-construction + later evaluation).
+- Function-uses before their declaration are allowed now (according to specification).
+- Function- and primitive-variable-identifiers cannot be abused as array-identifiers anymore.
+- Additional semantic checks for arrays as arguments (size + type equality ensured now).
+- Assignments on array-variables dropped according to the changed specification.
+- Segmentation fault dueto function-uses before their declaration (because of unlinked symbol-table-information) fixed.  
+- Further TAC improvements done.
+
+Unfixed issues:
+
+- Avoid creating a shared library for each module.
+
+#### After assignment 1:
 
 - `Meson`-support is dropped. Only `CMake` is used now as build-tool.
 - `Segmentation-fault` on `mCc` and `mCc_to_dot` is fixed (The wrong toplevel was detected).

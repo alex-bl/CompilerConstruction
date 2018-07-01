@@ -10,12 +10,6 @@
 #include "config.h"
 #include "log.h"
 
-/*
- * TODO:
- * - wie kann man feststellen, welchen typ der tac-identifier hat? (speziell die
- * var-typen)
- * - setzen des offsets von l0 noch fehlerhaft?
- */
 static struct mCc_assembly_offset_holder init_offset_info()
 {
 	struct mCc_assembly_offset_holder info;
@@ -70,8 +64,9 @@ static size_t get_tac_elem_size(enum mCc_tac_type type, int nr_of)
 	case MCC_TAC_TYPE_FLOAT: return mCc_assembly_calc_float_space(nr_of);
 	case MCC_TAC_TYPE_BOOL:
 		return mCc_assembly_calc_bool_space(nr_of);
-	// TODO: what about string-arrays?
+	// NOTE: what about string-arrays?
 	case MCC_TAC_TYPE_STRING: return mCc_assembly_calc_string_space(NULL);
+	default: break;
 	}
 	log_warn("No type?");
 	return 0;
@@ -106,34 +101,40 @@ static int get_tac_offset(struct mCc_tac_identifier *identifier,
 	return *(map_get(&info->offset_table, identifier->name));
 }
 
-
 static int calc_new_offset_local(enum mCc_tac_type type,
-                           struct mCc_assembly_offset_holder *info, int nr_of)
+                                 struct mCc_assembly_offset_holder *info,
+                                 int nr_of)
 {
 	size_t size = get_tac_elem_size(type, nr_of);
 	return info->actual_offset + size;
 }
 
 static int calc_new_offset_param(enum mCc_tac_type type,
-                           struct mCc_assembly_offset_holder *info, int nr_of)
+                                 struct mCc_assembly_offset_holder *info,
+                                 int nr_of)
 {
 	size_t size = get_tac_elem_size(type, nr_of);
 	return info->actual_param_offset + size;
 }
 
-static int calc_new_offset(struct mCc_tac_identifier *identifier,enum mCc_tac_type type,
-                           struct mCc_assembly_offset_holder *info, int nr_of){
-	if(identifier->is_param){
+static int calc_new_offset(struct mCc_tac_identifier *identifier,
+                           enum mCc_tac_type type,
+                           struct mCc_assembly_offset_holder *info, int nr_of)
+{
+	if (identifier->is_param) {
 		return calc_new_offset_param(type, info, nr_of);
 	}
 	return calc_new_offset_local(type, info, nr_of);
 }
 
-static void adjust_offset_counter(struct mCc_tac_identifier *identifier,struct mCc_assembly_offset_holder *info,int offset){
-	if(identifier->is_param){
-		info->actual_param_offset=offset;
-	}else{
-		info->actual_offset=offset;
+static void adjust_offset_counter(struct mCc_tac_identifier *identifier,
+                                  struct mCc_assembly_offset_holder *info,
+                                  int offset)
+{
+	if (identifier->is_param) {
+		info->actual_param_offset = offset;
+	} else {
+		info->actual_offset = offset;
 	}
 }
 
@@ -150,8 +151,6 @@ static void adjust_identifier_offset(struct mCc_tac_identifier *identifier,
 	identifier->stack_offset = offset;
 }
 
-
-
 static void process_identifier_offset_calculation(
     struct mCc_tac_identifier *identifier, enum mCc_tac_type type,
     struct mCc_assembly_offset_holder *info, int nr_of)
@@ -165,7 +164,7 @@ static void process_identifier_offset_calculation(
 		int calculated_offset = calc_new_offset(identifier, type, info, nr_of);
 		adjust_offset_counter(identifier, info, calculated_offset);
 
-		stack_offset=calculated_offset;
+		stack_offset = calculated_offset;
 
 		add_new_entry(identifier, info, stack_offset);
 		log_debug("New entry for identifier '%s' with new offset %d",
@@ -196,8 +195,6 @@ static void handle_identifier(struct mCc_tac_identifier *identifier,
 
 static bool tac_elem_contains_stack_vars(struct mCc_tac_element *element)
 {
-	// TODO: which operations allowed here? => extend them
-
 	switch (element->tac_operation) {
 	case MCC_TAC_OPARATION_LABEL_ARGUMENT:
 	case MCC_TAC_OPARATION_LABEL_ARGUMENT_ARRAY:
@@ -299,8 +296,6 @@ static bool tac_elem_contains_stack_vars(struct mCc_tac_element *element)
 
 static bool tac_elem_is_param(struct mCc_tac_element *element)
 {
-	// TODO: which operations allowed here? => extend them
-
 	switch (element->tac_operation) {
 	case MCC_TAC_OPARATION_PARAM_INT_PRIMITIVE:
 	case MCC_TAC_OPARATION_PARAM_FLOAT_PRIMITIVE:
@@ -381,11 +376,13 @@ static bool offset_reset_required(struct mCc_tac_element *tac_element)
 	return tac_element->tac_operation == MCC_TAC_OPARATION_LABEL_FUNCTION;
 }
 
-static bool is_function_start_point(struct mCc_tac_element *tac_element){
+static bool is_function_start_point(struct mCc_tac_element *tac_element)
+{
 	return tac_element->tac_operation == MCC_TAC_OPARATION_START_FUNCTION_DEF;
 }
 
-static bool is_function_end_point(struct mCc_tac_element *tac_element){
+static bool is_function_end_point(struct mCc_tac_element *tac_element)
+{
 	return tac_element->tac_operation == MCC_TAC_OPARATION_END_FUNCTION_DEF;
 }
 
@@ -396,12 +393,11 @@ void mCc_assembly_calculate_stack_offsets(
 	struct mCc_tac_element *next_tac_element = first_tac_element;
 	struct mCc_tac_element *function_start;
 
-
 	while (next_tac_element) {
 
-		//mark start
-		if(is_function_start_point(next_tac_element)){
-			function_start=next_tac_element;
+		// mark start
+		if (is_function_start_point(next_tac_element)) {
+			function_start = next_tac_element;
 		}
 
 		if (offset_reset_required(next_tac_element)) {

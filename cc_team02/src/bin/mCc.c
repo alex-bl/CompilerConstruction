@@ -18,7 +18,7 @@
 
 /*Argp: Inspired by
  * https://www.gnu.org/software/libc/manual/html_node/Argp-Example-4.html#Argp-Example-4*/
-const char *argp_program_version = "mCc 1.6.2";
+const char *argp_program_version = MCC_VERSION_TEXT;
 const char *argp_program_bug_address = "directly to the members of team02";
 
 /* Program documentation */
@@ -43,7 +43,7 @@ static struct argp_option options[] = {
 	  .key = 'c',
 	  .flags = 0,
 	  .group = 0,
-	  .doc = "Generate tac control flow graph (cfg)\t\t\t(default=false)" },
+	  .doc = "Generate tac control flow graph\t(default=false)" },
 	{ .name = "stdoutLog",
 	  .key = 'l',
 	  .flags = 0,
@@ -169,15 +169,6 @@ void cleanup_ast(struct mCc_ast_program *prog, struct mCc_ast_program *buildins)
 	mCc_ast_delete_program(buildins);
 }
 
-static void print_separation_line(FILE *out)
-{
-	if (out == stdout) {
-		fprintf(
-		    out,
-		    "\n\n========================================================\n\n");
-	}
-}
-
 int main(int argc, char *argv[])
 {
 	struct arguments arguments;
@@ -300,18 +291,14 @@ int main(int argc, char *argv[])
 		log_debug("Freeing AST-elements\t\t[OK]");
 	}
 
-	/*    TODO
-	 * - do some optimisations
-	 * - output assembly code
-	 * - invoke backend compiler
-	 */
-
+	/* print tac */
 	if (arguments.print_tac) {
 		// TAC print
 		mCc_tac_print_start_program(tac, out_put);
 		log_debug("TAC print finished\t\t[ok]");
 	}
 
+	/* print cfg */
 	if (arguments.tac_cfg) {
 		// TODO
 		// print control flow graph (cfg) of tac
@@ -319,15 +306,13 @@ int main(int argc, char *argv[])
 		log_debug("CFG of TAC finished\t\t[ok]");
 	}
 
-	/* assembly-generation*/
+	/* generate assembly-code*/
 	{
-		// just for testing
-		print_separation_line(assembly_output_dir);
 		mCc_assembly_generate(assembly_output_dir, tac);
 		fclose(assembly_output_dir);
 	}
 
-	/* backend-compiler invocation*/
+	/* invoke backend-compiler*/
 	{
 		/* compile build-ins */
 		int build_in_compile_status = compile_file(
