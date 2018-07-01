@@ -194,7 +194,10 @@ void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier)
 {
 	assert(identifier);
 
-	if (identifier->type == MCC_IDENTIFIER_TAC_TYPE_STRING &&
+	if ((identifier->type == MCC_IDENTIFIER_TAC_TYPE_STRING ||
+	     identifier->type == MCC_IDENTIFIER_TAC_TYPE_VAR ||
+	     identifier->type == MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL ||
+	     identifier->type == MCC_IDENTIFIER_TAC_TYPE_FUNCTION_DEF) &&
 	    identifier->name != NULL) {
 		free(identifier->name);
 	}

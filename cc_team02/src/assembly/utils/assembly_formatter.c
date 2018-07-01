@@ -2,9 +2,7 @@
 
 void mCc_assembly_print_shift(FILE *out)
 {
-	//TODO: nicer for stdout
 	fprintf(out, "\t");
-	//fprintf(out, "   ");
 }
 
 void mCc_assembly_print_nl(FILE *out)

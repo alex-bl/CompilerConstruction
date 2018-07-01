@@ -54,8 +54,9 @@ set(DOXYGEN_GENERATE_XML NO)
 #message(STATUS "valgrind: " ${MEMORYCHECK_COMMAND})
 set(MCC_VALGRIND_ARGS "--leak-check=full --show-reachable=yes --track-origins=yes --error-exitcode=1")
 set(MCC_VALGRIND_SUPPRESSIONS "--suppressions=${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp")
-
-set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS}")
+set(MCC_VALGRIND_SUPPRESSIONS_2 "--suppressions=${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.25.supp")
+							  
+set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS} ${MCC_VALGRIND_SUPPRESSIONS_2}")
 #============================================================  assembler config
 set(OBJECT_OUTPUT_DIR "${CMAKE_BINARY_DIR}/out")
 set(ASSEMBLY_OUTPUT_DIR "${CMAKE_BINARY_DIR}/assembly")
@@ -77,6 +78,11 @@ configure_file (
 configure_file (
   "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.21.supp.in"
   "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
+  )
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.25.supp.in"
+  "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.25.supp"
   )
 
 # configure build-ins (semantic checks)
@@ -170,8 +176,8 @@ include(GoogleTest)
 
 #create list: add all tests manually here (file-names without *.cpp)
 #set(unit_test_list "tac_build" "tac_print")
-#set(unit_test_list "assembly")
-set(unit_test_list "parser" "builder" "printer" "symtab" "validator" "checks" "tac_build" "tac_print" "assembly")
+set(unit_test_list "assembly")
+#set(unit_test_list "parser" "builder" "printer" "symtab" "validator" "checks" "tac_build" "tac_print" "assembly")
 
 #================================================================ valgrind
 

@@ -43,6 +43,11 @@ size_t mCc_assembly_calc_string_space(const char *string)
 	return STRING_SIZE;
 }
 
+/*
+ * NOTE:
+ * Currently unused, but maybe useful in the future
+ *
+ */
 size_t mCc_assembly_calc_param_space(struct mCc_tac_element *function_def)
 {
 	/*
@@ -93,27 +98,30 @@ mCc_assembly_get_next_function_label(struct mCc_tac_element *tac_elem)
 	return "";
 }
 
+// NOTE: currently not used
 void mCc_assembly_adjust_stack_pointer(int offset,
                                        struct mCc_assembly_data *data)
 {
-	// TODO: check this
 	data->current_stack_pos += offset;
 }
 
-struct mCc_assembly_argument_list *mCc_assembly_create_new_arg_list_elem(int scope)
+struct mCc_assembly_argument_list *
+mCc_assembly_create_new_arg_list_elem(int scope)
 {
 	struct mCc_assembly_argument_list *elem = malloc(sizeof(*elem));
 	if (!elem) {
 		log_error("Malloc failed");
 		return NULL;
 	}
-	elem->open_scope=scope;
+	elem->open_scope = scope;
+	elem->next = NULL;
 	return elem;
 }
 
 struct mCc_assembly_argument_list *
 mCc_assembly_prepend_arg_list_elem(struct mCc_assembly_argument_list *actual,
-                                   struct mCc_tac_element *to_prepend, int scope)
+                                   struct mCc_tac_element *to_prepend,
+                                   int scope)
 {
 	struct mCc_assembly_argument_list *elem =
 	    mCc_assembly_create_new_arg_list_elem(scope);

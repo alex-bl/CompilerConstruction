@@ -4,6 +4,8 @@
 #include "gtest/gtest.h"
 
 #include "assembly_arithmetic_op.h"
+#include "assembly_data.h"
+#include "assembly_utils.h"
 #include "basic_tac.h"
 #include "config.h"
 #include "mCc/ast.h"
@@ -11,197 +13,167 @@
 #include "mCc/tac.h"
 #include "mCc_test/mCc_test_utils.h"
 #include "parser_helper.h"
-#include "assembly_data.h"
 
-static FILE *build_assembly_file(const char *file_name)
+struct mCc_tac_element *build_test_tac_elem(char *name)
 {
-	return open_file(ASSEMBLY_TEST_OUTPUT_DIR, ASSEMBLY_PREFIX, file_name,
-	                 ASSEMBLY_FILE_SUFFIX);
+	struct mCc_tac_identifier *result_identifier = tac_new_identifier(name);
+	struct mCc_tac_element *tac_element =
+	    tac_new_element(MCC_TAC_OPARATION_EMPTY, NULL, NULL, result_identifier,
+	                    MCC_TAC_TYPE_NO_TYPE, 0);
+	return tac_element;
 }
 
-static void close_assembly_file(FILE *file)
+static struct mCc_tac_identifier *build_test_identifier(char *name,
+                                                        int stack_offset)
 {
-	fclose(file);
+	struct mCc_tac_identifier *identifier = tac_new_identifier(name);
+	identifier->stack_offset = stack_offset;
+	return identifier;
 }
 
-static struct mCc_assembly_data build_param_data(){
-	struct mCc_assembly_data data;
-	data.current_stack_pos=0;
-	return data;
+//==================================================== Assembly utils
+TEST(AssemblyUtils, CalcIntSpace)
+{
+	size_t expected = 8;
+	ASSERT_EQ(expected, mCc_assembly_calc_int_space(2));
 }
 
-static struct mCc_tac_identifier *test_build_tac_identifier(char *name,
-                                                            int offset)
+TEST(AssemblyUtils, CalcBoolSpace)
 {
-	struct mCc_tac_identifier *result = tac_new_identifier(name);
-	result->stack_offset = offset;
-	return result;
+	size_t expected = 8;
+	ASSERT_EQ(expected, mCc_assembly_calc_bool_space(2));
 }
 
-static struct mCc_tac_element *
-generate_literal_int_tac_binary_op(enum mCc_tac_operation operation,
-                                   int lhs_val, int rhs_val, int offset)
+TEST(AssemblyUtils, CalcFloatSpace)
 {
-	struct mCc_tac_identifier *lhs = tac_new_identifier_int(lhs_val);
-	struct mCc_tac_identifier *rhs = tac_new_identifier_int(rhs_val);
-	char name[] = "t0";
-	struct mCc_tac_identifier *result = test_build_tac_identifier(name, offset);
-	struct mCc_tac_element *binary_op =
-	    tac_new_element(operation, lhs, rhs, result, MCC_TAC_TYPE_INTEGER, 0);
-
-	return binary_op;
+	size_t expected = 8;
+	ASSERT_EQ(expected, mCc_assembly_calc_float_space(2));
 }
 
-static struct mCc_tac_element *
-generate_var_int_tac_binary_op(enum mCc_tac_operation operation)
+TEST(AssemblyUtils, CalcStringSpace)
 {
-	char lhs_name[] = "t0";
-	char rhs_name[] = "t1";
-	char result_name[] = "t2";
-
-	struct mCc_tac_identifier *lhs = test_build_tac_identifier(lhs_name, 0);
-	struct mCc_tac_identifier *rhs = test_build_tac_identifier(rhs_name, 4);
-	struct mCc_tac_identifier *result =
-	    test_build_tac_identifier(result_name, 8);
-
-	struct mCc_tac_element *binary_op =
-	    tac_new_element(operation, lhs, rhs, result, MCC_TAC_TYPE_INTEGER, 0);
-
-	return binary_op;
+	size_t expected = 8;
+	ASSERT_EQ(expected, mCc_assembly_calc_string_space(NULL));
 }
 
-static struct mCc_tac_element *
-generate_misc_int_tac_binary_op(enum mCc_tac_operation operation)
+TEST(AssemblyUtils, CalcParamSpace)
 {
-	char lhs_name[] = "t0";
-	char result_name[] = "t2";
-
-	struct mCc_tac_identifier *lhs = test_build_tac_identifier(lhs_name, 4);
-	struct mCc_tac_identifier *rhs = tac_new_identifier_int(24);
-	struct mCc_tac_identifier *result =
-	    test_build_tac_identifier(result_name, 8);
-
-	struct mCc_tac_element *binary_op =
-	    tac_new_element(operation, lhs, rhs, result, MCC_TAC_TYPE_INTEGER, 0);
-
-	return binary_op;
+	char name[] = "test";
+	struct mCc_tac_element *test_elem = build_test_tac_elem(name);
+	size_t expected = 0;
+	ASSERT_EQ(expected, mCc_assembly_calc_param_space(test_elem));
+	mCc_tac_element_delete(test_elem);
 }
 
-static void test_int_arithmetic_op(
-    const char *output_file, struct mCc_tac_element *tac_element,
-    void(generation_fct)(FILE *out, struct mCc_assembly_data *data, struct mCc_tac_element *tac_elem))
+TEST(AssemblyUtils, CalcStackPosParam)
 {
-	FILE *fp = build_assembly_file(output_file);
-	struct mCc_assembly_data data = build_param_data();
-	generation_fct(fp, &data, tac_element);
+	char name[] = "test";
+	struct mCc_tac_identifier *test_identifier = build_test_identifier(name, 8);
+	ASSERT_EQ(8, mCc_assembly_calc_stack_pos_param(test_identifier));
+	mCc_tac_delete_identifier(test_identifier);
+}
+
+TEST(AssemblyUtils, GetStackPosLocalVar)
+{
+	char name[] = "test";
+	struct mCc_tac_identifier *test_identifier = build_test_identifier(name, 4);
+	test_identifier->is_param = false;
+	ASSERT_EQ(-4, mCc_assembly_calc_stack_position(test_identifier, 0));
+	mCc_tac_delete_identifier(test_identifier);
+}
+
+TEST(AssemblyUtils, GetStackPosParam)
+{
+	char name[] = "test";
+	struct mCc_tac_identifier *test_identifier = build_test_identifier(name, 8);
+	test_identifier->is_param = true;
+	ASSERT_EQ(8, mCc_assembly_calc_stack_position(test_identifier, 0));
+	mCc_tac_delete_identifier(test_identifier);
+}
+
+TEST(AssemblyUtils, GetNextFunctionLabel)
+{
+	char name[] = "first_func";
+	struct mCc_tac_identifier *result_identifier =
+	    build_test_identifier(name, 4);
+
+	struct mCc_tac_element *tac_element = tac_new_element(
+	    MCC_TAC_OPARATION_EMPTY, NULL, NULL, NULL, MCC_TAC_TYPE_NO_TYPE, 0);
+
+	struct mCc_tac_element *tac_element_label =
+	    tac_new_element(MCC_TAC_OPARATION_LABEL_FUNCTION, NULL, NULL,
+	                    result_identifier, MCC_TAC_TYPE_NO_TYPE, 0);
+
+	mCc_tac_connect_tac_entry(tac_element, tac_element_label);
+
+	ASSERT_STREQ("first_func",
+	             mCc_assembly_get_next_function_label(tac_element));
 	mCc_tac_delete(tac_element);
-	close_assembly_file(fp);
 }
 
-//TEST(AssemblyGeneration, AddIntegerLiterals)
-//{
-//	struct mCc_tac_element *binary_op = generate_literal_int_tac_binary_op(
-//	    MCC_TAC_OPARATION_BINARY_OP_ADD_INT, 10, 20, 4);
-//
-//	test_int_arithmetic_op("add_int_literals", binary_op,
-//	                                mCc_assembly_generate_add_int);
-//}
-
-TEST(AssemblyGeneration, AddIntegerVariables)
+TEST(AssemblyUtils, AdjustStackPointer)
 {
-	struct mCc_tac_element *binary_op =
-	    generate_var_int_tac_binary_op(MCC_TAC_OPARATION_BINARY_OP_ADD_INT);
-
-	test_int_arithmetic_op("add_int_var", binary_op,
-	                                mCc_assembly_generate_add_int);
+	struct mCc_assembly_data assembly_data;
+	assembly_data.current_stack_pos = 0;
+	mCc_assembly_adjust_stack_pointer(4, &assembly_data);
+	ASSERT_EQ(4, assembly_data.current_stack_pos);
 }
 
-//TEST(AssemblyGeneration, AddIntegerMisc)
-//{
-//	struct mCc_tac_element *binary_op =
-//	    generate_misc_int_tac_binary_op(MCC_TAC_OPARATION_BINARY_OP_ADD_INT);
-//
-//	test_int_arithmetic_op("add_int_misc", binary_op,
-//	                                mCc_assembly_generate_add_int);
-//}
-
-//TEST(AssemblyGeneration, SubIntegerLiterals)
-//{
-//	struct mCc_tac_element *binary_op = generate_literal_int_tac_binary_op(
-//	    MCC_TAC_OPARATION_BINARY_OP_SUB_INT, 10, 20, 4);
-//
-//	test_int_arithmetic_op("sub_int_literals", binary_op,
-//	                                mCc_assembly_generate_sub_int);
-//}
-
-TEST(AssemblyGeneration, SubIntegerVariables)
+TEST(AssemblyUtils, CreateNewArgListElement)
 {
-	struct mCc_tac_element *binary_op =
-	    generate_var_int_tac_binary_op(MCC_TAC_OPARATION_BINARY_OP_SUB_INT);
+	struct mCc_assembly_argument_list *elem =
+	    mCc_assembly_create_new_arg_list_elem(0);
 
-	test_int_arithmetic_op("sub_int_var", binary_op,
-	                                mCc_assembly_generate_sub_int);
+	ASSERT_TRUE(elem != NULL);
+	ASSERT_EQ(0, elem->open_scope);
+	ASSERT_TRUE(elem->next == NULL);
+
+	mCc_assembly_free_arg_list_elem(elem);
 }
 
-//TEST(AssemblyGeneration, SubIntegerMisc)
-//{
-//	struct mCc_tac_element *binary_op =
-//	    generate_misc_int_tac_binary_op(MCC_TAC_OPARATION_BINARY_OP_SUB_INT);
-//
-//	test_int_arithmetic_op("sub_int_misc", binary_op,
-//	                                mCc_assembly_generate_sub_int);
-//}
-
-//TEST(AssemblyGeneration, MulIntegerLiterals)
-//{
-//	struct mCc_tac_element *binary_op = generate_literal_int_tac_binary_op(
-//	    MCC_TAC_OPARATION_BINARY_OP_MUL_INT, 10, 20, 4);
-//
-//	test_int_arithmetic_op("mul_int_literals", binary_op,
-//	                                mCc_assembly_generate_mul_int);
-//}
-
-TEST(AssemblyGeneration, MulIntegerVariables)
+TEST(AssemblyUtils, PrependArgListElementEmptyHead)
 {
-	struct mCc_tac_element *binary_op =
-	    generate_var_int_tac_binary_op(MCC_TAC_OPARATION_BINARY_OP_MUL_INT);
+	char name[] = "test";
+	struct mCc_tac_element *tac_elem = build_test_tac_elem(name);
 
-	test_int_arithmetic_op("mul_int_var", binary_op,
-	                                mCc_assembly_generate_mul_int);
+	struct mCc_assembly_argument_list *new_head =
+	    mCc_assembly_prepend_arg_list_elem(NULL, tac_elem, 0);
+
+	ASSERT_TRUE(new_head != NULL);
+	ASSERT_EQ(0, new_head->open_scope);
+	ASSERT_TRUE(new_head->next == NULL);
+
+	mCc_assembly_free_arg_list_elem(new_head);
+	mCc_tac_element_delete(tac_elem);
 }
 
-//TEST(AssemblyGeneration, MulIntegerMisc)
-//{
-//	struct mCc_tac_element *binary_op =
-//	    generate_misc_int_tac_binary_op(MCC_TAC_OPARATION_BINARY_OP_MUL_INT);
-//
-//	test_int_arithmetic_op("mul_int_misc", binary_op,
-//	                                mCc_assembly_generate_mul_int);
-//}
-//
-//TEST(AssemblyGeneration, DivIntegerLiterals)
-//{
-//	struct mCc_tac_element *binary_op = generate_literal_int_tac_binary_op(
-//	    MCC_TAC_OPARATION_BINARY_OP_DIV_INT, 10, 20, 4);
-//
-//	test_int_arithmetic_op("div_int_literals", binary_op,
-//	                                mCc_assembly_generate_div_int);
-//}
-
-TEST(AssemblyGeneration, DivIntegerVariables)
+TEST(AssemblyUtils, PrependArgListElementExistingHead)
 {
-	struct mCc_tac_element *binary_op =
-	    generate_var_int_tac_binary_op(MCC_TAC_OPARATION_BINARY_OP_DIV_INT);
 
-	test_int_arithmetic_op("div_int_var", binary_op,
-	                                mCc_assembly_generate_div_int);
+	struct mCc_assembly_argument_list *old_head =
+	    mCc_assembly_create_new_arg_list_elem(0);
+
+	ASSERT_TRUE(old_head != NULL);
+
+	char name[] = "test";
+	struct mCc_tac_element *tac_elem = build_test_tac_elem(name);
+
+	struct mCc_assembly_argument_list *new_head =
+	    mCc_assembly_prepend_arg_list_elem(old_head, tac_elem, 0);
+
+	ASSERT_TRUE(new_head != NULL);
+	ASSERT_EQ(0, new_head->open_scope);
+	ASSERT_TRUE(new_head->next == old_head);
+
+	mCc_assembly_free_arg_list_elem(new_head);
+	mCc_assembly_free_arg_list_elem(old_head);
+
+	mCc_tac_element_delete(tac_elem);
 }
 
-//TEST(AssemblyGeneration, DivIntegerMisc)
-//{
-//	struct mCc_tac_element *binary_op =
-//	    generate_misc_int_tac_binary_op(MCC_TAC_OPARATION_BINARY_OP_DIV_INT);
-//
-//	test_int_arithmetic_op("div_int_misc", binary_op,
-//	                                mCc_assembly_generate_div_int);
-//}
+TEST(AssemblyUtils, FreeArgListElement)
+{
+	struct mCc_assembly_argument_list *elem =
+	    mCc_assembly_create_new_arg_list_elem(0);
+	mCc_assembly_free_arg_list_elem(elem);
+}
