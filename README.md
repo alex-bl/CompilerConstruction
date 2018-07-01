@@ -48,6 +48,8 @@ This section lists the available targets that can be build.
 | doxygen		| Builds the documentation      |    - 			|
 | test\*			| Runs all gtests (unit)	| - |
 | build\_and\_test\* | Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild. |
+| extended\_unit\_test\* | Runs the extended unit-tests (for assembly-generation) | Just simpler versions of integration-tests. |
+| build\_and\_test\_all* | Runs all unit-tests AND the extended unit-tests | At first the unit-tests, then the extended ones. |
 | build\_and\_test_memcheck\* | Runs all gtests together with valgrind | - |
 | integration\_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration). |
 | run\_benchmarks\*\* | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. |

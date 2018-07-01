@@ -210,12 +210,34 @@ add_custom_target(build_and_test_memcheck
 # See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802778
 
 #=============================================================== integration tests
+
+set(INTEGRATION_TEST_SCRIPT "${PROJECT_SOURCE_DIR}/test/integration")
+set(RUN_INTEGRATION_TEST_SCRIPT "${PROJECT_SOURCE_DIR}/test/run_integration")
+set(RUN_EXTENDED_UNIT_TEST_SCRIPT "${PROJECT_SOURCE_DIR}/test/run_extended_unit_test")
+
 # use provided shell-script
 add_custom_target(integration_test
 	COMMAND echo "============================================================================="
-	COMMAND ${PROJECT_SOURCE_DIR}/test/integration
+	COMMAND ${RUN_INTEGRATION_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
 	COMMAND echo "=============================================================================")
 add_dependencies(integration_test mCc)
+
+# integration-tests on a unit-level (for assembly-generation)
+add_custom_target(extended_unit_test	
+	COMMAND echo "============================================================================="
+	COMMAND ${RUN_EXTENDED_UNIT_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
+	COMMAND echo "=============================================================================")
+add_dependencies(extended_unit_test mCc)
+
+# just a helper-target to execute unit-tests before the extended unit-tests
+add_custom_target(extended_unit_test_helper	
+	COMMAND echo "============================================================================="
+	COMMAND ${RUN_EXTENDED_UNIT_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
+	COMMAND echo "=============================================================================")
+add_dependencies(extended_unit_test_helper build_and_test)
+
+# a target to execute the unit-tests together with the extended unit-tests
+add_custom_target(build_and_test_all DEPENDS extended_unit_test_helper)
 
 #=============================================================== gtest-execution
 # build output-folders

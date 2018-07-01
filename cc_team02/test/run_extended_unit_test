@@ -1,0 +1,6 @@
+
+readonly DIR=$(dirname "$(readlink -f "$0")")
+EXAMPLES_DIR=$DIR/assembly; 
+export EXAMPLES_DIR;
+
+$1
