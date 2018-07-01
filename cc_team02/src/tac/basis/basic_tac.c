@@ -49,11 +49,20 @@ void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
 struct mCc_tac_identifier *tac_new_identifier(char *name)
 {
 	assert(name);
-
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	/*
+	 * NOTE:
+	 *
+	 * Not sure why, but if using malloc valgrind reports the following at
+	 * malloc: "Uninitialised value was created by a heap allocation"
+	 *
+	 * Workaround: using calloc
+	 */
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
+
 	tac_identifier->name = strndup(name, strlen(name));
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_VAR;
 	tac_identifier->is_param = false;
@@ -65,7 +74,8 @@ struct mCc_tac_identifier *tac_new_identifier_string(char *string)
 {
 	// assert(value);
 
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
@@ -81,7 +91,8 @@ struct mCc_tac_identifier *tac_new_identifier_float(double value)
 {
 	// assert(value);
 
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
@@ -97,7 +108,8 @@ struct mCc_tac_identifier *tac_new_identifier_int(long value)
 {
 	// assert(value);
 
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
@@ -113,7 +125,8 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 {
 	// assert(value);
 
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}

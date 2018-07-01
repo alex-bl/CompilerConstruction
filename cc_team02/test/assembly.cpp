@@ -5,6 +5,7 @@
 
 #include "assembly_arithmetic_op.h"
 #include "assembly_data.h"
+#include "assembly_offset.h"
 #include "assembly_utils.h"
 #include "basic_tac.h"
 #include "config.h"
@@ -29,6 +30,44 @@ static struct mCc_tac_identifier *build_test_identifier(char *name,
 	struct mCc_tac_identifier *identifier = tac_new_identifier(name);
 	identifier->stack_offset = stack_offset;
 	return identifier;
+}
+
+static struct mCc_tac_identifier *
+get_tac_arg_1(struct mCc_tac_element *tac_element)
+{
+	return tac_element->tac_argument1;
+}
+
+static struct mCc_tac_identifier *
+get_tac_arg_2(struct mCc_tac_element *tac_element)
+{
+	return tac_element->tac_argument2;
+}
+
+static struct mCc_tac_identifier *
+get_tac_result(struct mCc_tac_element *tac_element)
+{
+	return tac_element->tac_result;
+}
+
+static struct mCc_tac_identifier *
+get_tac_element_identifier(struct mCc_tac_element *start_element,
+                           int nr_of_element,
+                           struct mCc_tac_identifier *get_identifier(
+                               struct mCc_tac_element *tac_element))
+{
+	struct mCc_tac_element *next_element = start_element;
+	int i = 0;
+
+	while (next_element) {
+		if (nr_of_element == i) {
+			return get_identifier(next_element);
+		}
+		i++;
+		next_element = next_element->tac_next_element;
+	}
+
+	return NULL;
 }
 
 //==================================================== Assembly utils
@@ -176,4 +215,31 @@ TEST(AssemblyUtils, FreeArgListElement)
 	struct mCc_assembly_argument_list *elem =
 	    mCc_assembly_create_new_arg_list_elem(0);
 	mCc_assembly_free_arg_list_elem(elem);
+}
+
+//==================================================== Assembly offset
+
+TEST(AssemblyOffset, Simple)
+{
+	//======================== setup
+	const char *simple_main = "void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(simple_prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *function_label =
+	    get_tac_element_identifier(tac, 1, get_tac_result);
+	ASSERT_TRUE(function_label != NULL);
+	ASSERT_EQ(0, function_label->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(simple_prog);
+	mCc_tac_delete(tac);
 }

@@ -169,15 +169,6 @@ void cleanup_ast(struct mCc_ast_program *prog, struct mCc_ast_program *buildins)
 	mCc_ast_delete_program(buildins);
 }
 
-static void print_separation_line(FILE *out)
-{
-	if (out == stdout) {
-		fprintf(
-		    out,
-		    "\n\n========================================================\n\n");
-	}
-}
-
 int main(int argc, char *argv[])
 {
 	struct arguments arguments;
@@ -300,18 +291,14 @@ int main(int argc, char *argv[])
 		log_debug("Freeing AST-elements\t\t[OK]");
 	}
 
-	/*    TODO
-	 * - do some optimisations
-	 * - output assembly code
-	 * - invoke backend compiler
-	 */
-
+	/* print tac */
 	if (arguments.print_tac) {
 		// TAC print
 		mCc_tac_print_start_program(tac, out_put);
 		log_debug("TAC print finished\t\t[ok]");
 	}
 
+	/* print cfg */
 	if (arguments.tac_cfg) {
 		// TODO
 		// print control flow graph (cfg) of tac
@@ -319,15 +306,13 @@ int main(int argc, char *argv[])
 		log_debug("CFG of TAC finished\t\t[ok]");
 	}
 
-	/* assembly-generation*/
+	/* generate assembly-code*/
 	{
-		// just for testing
-		print_separation_line(assembly_output_dir);
 		mCc_assembly_generate(assembly_output_dir, tac);
 		fclose(assembly_output_dir);
 	}
 
-	/* backend-compiler invocation*/
+	/* invoke backend-compiler*/
 	{
 		/* compile build-ins */
 		int build_in_compile_status = compile_file(
