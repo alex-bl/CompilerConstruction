@@ -222,8 +222,7 @@ mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier)
 		to_create->is_param = identifier->is_param;
 		return to_create;
 	case MCC_IDENTIFIER_TAC_TYPE_STRING:
-		// default
-		break;
+	default: break;
 	}
 	to_create = tac_new_identifier(identifier->name);
 	to_create->is_param = identifier->is_param;

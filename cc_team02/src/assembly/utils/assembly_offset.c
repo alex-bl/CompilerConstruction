@@ -72,6 +72,7 @@ static size_t get_tac_elem_size(enum mCc_tac_type type, int nr_of)
 		return mCc_assembly_calc_bool_space(nr_of);
 	// TODO: what about string-arrays?
 	case MCC_TAC_TYPE_STRING: return mCc_assembly_calc_string_space(NULL);
+	default: break;
 	}
 	log_warn("No type?");
 	return 0;

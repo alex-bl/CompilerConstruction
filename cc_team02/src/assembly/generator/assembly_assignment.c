@@ -181,7 +181,6 @@ void mCc_assembly_pseudo_assign_string_literal(FILE *out,
 {
 	assert(tac_elem);
 	struct mCc_tac_identifier *var = get_assign_dest(tac_elem);
-	struct mCc_tac_identifier *string_val = get_literal_val(tac_elem);
 
 	// space for the tmp-variable
 	//mCc_assembly_allocate_string_on_stack(out, data, string_val->name);
