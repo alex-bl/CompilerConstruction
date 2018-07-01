@@ -176,8 +176,8 @@ include(GoogleTest)
 
 #create list: add all tests manually here (file-names without *.cpp)
 #set(unit_test_list "tac_build" "tac_print")
-set(unit_test_list "assembly")
-#set(unit_test_list "parser" "builder" "printer" "symtab" "validator" "checks" "tac_build" "tac_print" "assembly")
+#set(unit_test_list "assembly")
+set(unit_test_list "parser" "builder" "printer" "symtab" "validator" "checks" "tac_build" "tac_print" "assembly")
 
 #================================================================ valgrind
 
