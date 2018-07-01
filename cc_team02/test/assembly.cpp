@@ -11,6 +11,7 @@
 #include "config.h"
 #include "mCc/ast.h"
 #include "mCc/parser.h"
+#include "mCc/semantic_check.h"
 #include "mCc/tac.h"
 #include "mCc_test/mCc_test_utils.h"
 #include "parser_helper.h"
@@ -36,12 +37,6 @@ static struct mCc_tac_identifier *
 get_tac_arg_1(struct mCc_tac_element *tac_element)
 {
 	return tac_element->tac_argument1;
-}
-
-static struct mCc_tac_identifier *
-get_tac_arg_2(struct mCc_tac_element *tac_element)
-{
-	return tac_element->tac_argument2;
 }
 
 static struct mCc_tac_identifier *
@@ -228,6 +223,8 @@ TEST(AssemblyOffset, Simple)
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
 	ASSERT_TRUE(&(result.program) != NULL);
 	struct mCc_ast_program *simple_prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(simple_prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
 
 	struct mCc_tac_element *tac = mCc_tac_start_program(simple_prog);
 	ASSERT_TRUE(tac != NULL);
@@ -241,5 +238,331 @@ TEST(AssemblyOffset, Simple)
 
 	//======================== cleanup
 	mCc_ast_delete_program(simple_prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, SimpleVar)
+{
+	//======================== setup
+	const char *simple_main = "void main(){int a;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(simple_main);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *simple_prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(simple_prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(simple_prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *declaration =
+	    get_tac_element_identifier(tac, 3, get_tac_result);
+	ASSERT_TRUE(declaration != NULL);
+	ASSERT_EQ(4, declaration->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(simple_prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, MoreVars)
+{
+	//======================== setup
+	const char *prog_to_parse = "void main(){int a; int b;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *declaration =
+	    get_tac_element_identifier(tac, 4, get_tac_result);
+	ASSERT_TRUE(declaration != NULL);
+	ASSERT_EQ(8, declaration->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, ArraySimple)
+{
+	//======================== setup
+	const char *prog_to_parse = "void main(){int[100] a;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *declaration =
+	    get_tac_element_identifier(tac, 3, get_tac_result);
+	ASSERT_TRUE(declaration != NULL);
+	ASSERT_EQ(400, declaration->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, ArrayWithVar)
+{
+	//======================== setup
+	const char *prog_to_parse = "void main(){int[100] a; int b;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *declaration =
+	    get_tac_element_identifier(tac, 4, get_tac_result);
+	ASSERT_TRUE(declaration != NULL);
+	ASSERT_EQ(404, declaration->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, MultipleArrays)
+{
+	//======================== setup
+	const char *prog_to_parse = "void main(){int[100] a; int[100] b;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *declaration =
+	    get_tac_element_identifier(tac, 4, get_tac_result);
+	ASSERT_TRUE(declaration != NULL);
+	ASSERT_EQ(800, declaration->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, ParamSimple)
+{
+	//======================== setup
+	const char *prog_to_parse = "void test(int a){} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *param =
+	    get_tac_element_identifier(tac, 3, get_tac_arg_1);
+	ASSERT_TRUE(param != NULL);
+	ASSERT_EQ(8, param->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, ParamMultiple)
+{
+	//======================== setup
+	const char *prog_to_parse = "void test(int a, int b){} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *param =
+	    get_tac_element_identifier(tac, 4, get_tac_arg_1);
+	ASSERT_TRUE(param != NULL);
+	ASSERT_EQ(12, param->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, ParamArray)
+{
+	//======================== setup
+	const char *prog_to_parse =
+	    "void test(bool d, int[100] b, int a){} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *param =
+	    get_tac_element_identifier(tac, 4, get_tac_arg_1);
+	ASSERT_TRUE(param != NULL);
+	ASSERT_EQ(12, param->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, ParamAfterArray)
+{
+	//======================== setup
+	const char *prog_to_parse =
+	    "void test(int c, bool d, int[100] b, int a){} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *param =
+	    get_tac_element_identifier(tac, 6, get_tac_arg_1);
+	ASSERT_TRUE(param != NULL);
+	ASSERT_EQ(20, param->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, LocalVarWithParam)
+{
+	//======================== setup
+	const char *prog_to_parse = "void test(int c){int a;} void main(){}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *param =
+	    get_tac_element_identifier(tac, 4, get_tac_result);
+	ASSERT_TRUE(param != NULL);
+	ASSERT_EQ(4, param->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, LocalVarSecondFunction)
+{
+	//======================== setup
+	const char *prog_to_parse = "void test(){int a;} void main(){int a;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *param =
+	    get_tac_element_identifier(tac, 7, get_tac_result);
+	ASSERT_TRUE(param != NULL);
+	ASSERT_EQ(4, param->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+
+TEST(AssemblyOffset, LocalSecondVarSecondFunction)
+{
+	//======================== setup
+	const char *prog_to_parse = "void test(){int a;} void main(){int a; bool b;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+	mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	struct mCc_tac_identifier *param =
+	    get_tac_element_identifier(tac, 8, get_tac_result);
+	ASSERT_TRUE(param != NULL);
+	ASSERT_EQ(8, param->stack_offset);
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 }

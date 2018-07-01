@@ -8,7 +8,7 @@
 
 /*
  *
- * TODO:
+ * NOTE:
  * Allocation is now done at funcion-def enter. Thus this functionality is
  * not used at the moment, but kept if it gets necessary
  */
@@ -63,6 +63,5 @@ void mCc_assembly_declare_array_string(FILE *out,
                                        struct mCc_assembly_data *data,
                                        struct mCc_tac_element *tac_elem)
 {
-	// TODO: how to deal with string-arrays?
 	// mCc_assembly_allocate_string_on_stack(out, data, NULL);
 }

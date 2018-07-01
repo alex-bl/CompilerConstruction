@@ -18,7 +18,7 @@
 
 /*Argp: Inspired by
  * https://www.gnu.org/software/libc/manual/html_node/Argp-Example-4.html#Argp-Example-4*/
-const char *argp_program_version = "mCc 1.6.2";
+const char *argp_program_version = MCC_VERSION_TEXT;
 const char *argp_program_bug_address = "directly to the members of team02";
 
 /* Program documentation */
@@ -43,7 +43,7 @@ static struct argp_option options[] = {
 	  .key = 'c',
 	  .flags = 0,
 	  .group = 0,
-	  .doc = "Generate tac control flow graph (cfg)\t\t\t(default=false)" },
+	  .doc = "Generate tac control flow graph\t(default=false)" },
 	{ .name = "stdoutLog",
 	  .key = 'l',
 	  .flags = 0,
