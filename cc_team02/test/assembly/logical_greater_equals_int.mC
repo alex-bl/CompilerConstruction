@@ -5,7 +5,7 @@ void main(){
 	a=14;
 	b=14;
 
-	if(a>=b{
+	if(a>=b){
 		print("true");
 	}else{
 		print("false");

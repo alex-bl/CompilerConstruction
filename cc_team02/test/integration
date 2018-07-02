@@ -64,7 +64,7 @@ run_compiler()
 		return $status_result;	
 	fi		
 	
-	\time -f "%e %M %x" $assertion_script $executable_path $input_values $to_compare 2>&1 | tail -n1
+	\time -f "%e %M %x" $assertion_script $executable_path $input_values $to_compare $ERROR_LOG_PATH 2>&1 | tail -n1
 	rm -f $executable_path
 	
 	return ${PIPESTATUS[0]}
@@ -207,13 +207,16 @@ print_header
 		print_run "$example" $stats
 
 	done
-	
-	# continue HERE!!!
-	if [ ! -s $ERROR_LOG_PATH ]; then
+
+	if [ -s $ERROR_LOG_PATH ]; then
 		echo "";
+		echo "==============================================================================";
 		echo "Errors detected (see error.log):"
+		echo "==============================================================================";		
 		echo "";
 		cat $ERROR_LOG_PATH
+		echo "==============================================================================";		
+		echo "";
 	fi
 	
 	$flawless

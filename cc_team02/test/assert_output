@@ -12,16 +12,12 @@ CMD_TO_EXEC="(";
 #FILE_TO_COMPARE="file2.txt";
 FILE_TO_COMPARE=$3;
 
-#echo "----------------------" >> test.txt
-#echo $EXECUTABLE_FILE >> test.txt;
-#cat $INPUT_FILE >> test.txt;
-#echo "----------------------" >> test.txt
-#cat $FILE_TO_COMPARE >> test.txt;
-#echo "----------------------" >> test.txt
+ERROR_LOG=$4
 
 TMP_FILE="tmp.tmp"
 TMP_FILE_INPUT="tmp2.tmp"
 TMP_FILE_INTERMEDIATE="tmp3.tmp"
+exit_status=0;
 
 # cleanup, just for assuring
 rm -f $TMP_FILE
@@ -43,7 +39,6 @@ else
 	CMD_TO_EXEC=$CMD_TO_EXEC") | ./"$EXECUTABLE_FILE;
 fi
 
-
 eval $CMD_TO_EXEC >> $TMP_FILE
 
 # normalize files (newlines)
@@ -53,20 +48,33 @@ eval $CMD_TO_EXEC >> $TMP_FILE
 # calc diff
 DIF_RESULT=$(grep -vxF -f $TMP_FILE_INTERMEDIATE $TMP_FILE_INPUT);
 
+# if there is no diff => success
+if [ ! -z "$DIF_RESULT" ]; then
+	echo "==============================================================================" >> $ERROR_LOG
+	echo "File: "$3":" >> $ERROR_LOG
+	echo "Expected:" >> $ERROR_LOG
+	echo "" >> $ERROR_LOG	
+	
+	cat $TMP_FILE >> $ERROR_LOG
+	
+	echo "" >> $ERROR_LOG;
+	echo "" >> $ERROR_LOG	
+	echo "Having:" >> $ERROR_LOG	
+	echo "" >> $ERROR_LOG
+	
+	cat $FILE_TO_COMPARE >> $ERROR_LOG
+	
+	echo "" >> $ERROR_LOG;
+	echo "" >> $ERROR_LOG;	
+	echo "==============================================================================" >> $ERROR_LOG	
+	echo "" >> $ERROR_LOG;
+	
+	exit_status=1;
+fi
+
 # cleanup
 rm -f $TMP_FILE
 rm -f $TMP_FILE_INPUT
 rm -f $TMP_FILE_INTERMEDIATE
 
-# if there is no diff => success
-if [ -z "$DIF_RESULT" ]; then
-   exit 0;
-fi
-
-exit 1;
-#while IFS= read -r lineSec; do
-#  echo $lineSec
-#done < tmp.txt
-
-
-
+exit $exit_status;
