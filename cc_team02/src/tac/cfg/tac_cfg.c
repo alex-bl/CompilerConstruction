@@ -13,7 +13,6 @@ mCc_tac_cfg_new_element(struct mCc_tac_element *tac_element,
                         struct mCc_tac_cfg_element *next_element_right)
 {
 	assert(tac_element);
-	// assert(next_element_left);
 
 	struct mCc_tac_cfg_element *tac_cfg_element =
 	    malloc(sizeof(*tac_cfg_element));
@@ -29,9 +28,10 @@ mCc_tac_cfg_new_element(struct mCc_tac_element *tac_element,
 
 struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac)
 {
-	struct mCc_tac_element *tac_next_element = tac;
 	// iterate throw all function -> each function separate cfg
-	struct mCc_tac_cfg_element *prev_cfg = NULL;
+	struct mCc_tac_cfg_element *prev_cfg =
+	    mCc_tac_cfg_new_element(tac, NULL, NULL);
+	struct mCc_tac_element *tac_next_element = tac->tac_next_element;
 	struct mCc_tac_cfg_element *first_cfg = NULL;
 	struct mCc_tac_cfg_element *cfg_function;
 	while (tac_next_element != NULL) {

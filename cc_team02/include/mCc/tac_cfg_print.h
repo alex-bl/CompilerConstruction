@@ -12,6 +12,8 @@ extern "C" {
 
 void mCc_tac_cfg_print(FILE *out, struct mCc_tac_cfg_element *cfg_element);
 
+void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element);
+
 #ifdef __cplusplus
 }
 #endif
