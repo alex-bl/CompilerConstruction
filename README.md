@@ -49,7 +49,8 @@ This section lists the available targets that can be build.
 | test\*			| Runs all gtests (unit)	| - |
 | build\_and\_test\* | Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild. |
 | extended\_unit\_test\* | Runs the extended unit-tests (for assembly-generation) | Just simpler versions of integration-tests. |
-| build\_and\_test\_all* | Runs all unit-tests AND the extended unit-tests | At first the unit-tests, then the extended ones. |
+| build\_and\_test\_all\_units* | Runs all unit-tests AND the extended unit-tests | At first the unit-tests, then the extended ones. |
+| build\_and\_test\_all* | Runs all tests (all unit-tests AND integration-tests) | At first the unit-tests, then the extended ones and afterwards the integration-tests. |
 | build\_and\_test_memcheck\* | Runs all gtests together with valgrind | - |
 | integration\_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration). |
 | run\_benchmarks\*\* | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. |
@@ -118,10 +119,7 @@ This section contains the fixed and unfixed issues from the previous assignments
 - Segmentation fault dueto function-uses before their declaration (because of unlinked symbol-table-information) fixed.  
 - Further TAC improvements done.
 - Unnecessary warnings supressed + resolved.
-
-Unfixed issues:
-
-- Avoid creating a shared library for each module.
+- One single, static library contains now the whole logic (`libmCc.a`).
 
 #### After assignment 1:
 

@@ -230,11 +230,14 @@ add_custom_target(extended_unit_test
 add_dependencies(extended_unit_test mCc)
 
 # execute unit-tests before the extended unit-tests
-add_custom_target(build_and_test_all	
-	COMMAND echo "============================================================================="
+add_custom_target(build_and_test_all_units	
+	COMMAND echo "======================================================================================"
 	COMMAND ${RUN_EXTENDED_UNIT_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
-	COMMAND echo "============================================================================="
+	COMMAND echo "======================================================================================"
 	DEPENDS build_and_test mCc)
+
+# one target to run every test
+add_custom_target(build_and_test_all DEPENDS build_and_test_all_units integration_test)
 
 #=============================================================== gtest-execution
 # build output-folders
@@ -247,7 +250,7 @@ foreach(entry_name ${unit_test_list})
 	
 	# build and link
 	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)
-	target_link_libraries(${entry_name}_test_exec mCc_lib mCc_test_utils gtest_main)
+	target_link_libraries(${entry_name}_test_exec mCc_test_utils mCc_lib gtest_main)
 	# pass the test_exec to ctest => after COMMAND set args
 	# add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 	# native gtest support since cmake 3.9?
