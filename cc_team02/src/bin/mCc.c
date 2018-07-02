@@ -118,14 +118,14 @@ void build_log_file_name(char file_name_buf[])
 	tm_info = localtime(&timer);
 
 	strftime(buffer, TIME_BUF_SIZE, "%Y-%m-%d", tm_info);
-	snprintf(file_name_buf, FILE_NAME_BUF_SIZE, "%s%s-mCc.log",
+	snprintf(file_name_buf, LOGGING_PATH_BUF_SIZE, "%s%s-mCc.log",
 	         LOG_FILE_PATH_BASE_DIR, buffer);
 }
 
 void config_logging(bool log_to_stdout, bool log_to_file)
 {
 	if (log_to_file) {
-		char file_path[FILE_NAME_BUF_SIZE];
+		char file_path[LOGGING_PATH_BUF_SIZE];
 		build_log_file_name(file_path);
 
 		FILE *log_file = fopen(file_path, "a");
@@ -204,8 +204,8 @@ int main(int argc, char *argv[])
 	FILE *buildin_file = fopen(PATH_BUILDINS, "r");
 	FILE *out_put = stdout;
 
-	char assembly_output_dest[FILE_NAME_BUF_SIZE];
-	snprintf(assembly_output_dest, FILE_NAME_BUF_SIZE, "%s/%s",
+	char assembly_output_dest[FILE_PATH_BUF_SIZE];
+	snprintf(assembly_output_dest, FILE_PATH_BUF_SIZE, "%s/%s",
 	         DEFAULT_OUTPUT_PATH_ASSEMBLY, GENERATED_ASSEMBLY_FILE_NAME);
 	FILE *assembly_output_dir = fopen(assembly_output_dest, "w");
 
