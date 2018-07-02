@@ -94,7 +94,7 @@ mCc_tac_function_def(struct mCc_ast_function_def *def,
 	struct mCc_ast_declaration *parameter = def->first_parameter;
 	while (parameter != NULL) {
 
-		struct mCc_tac_element *parameter_tac;
+		struct mCc_tac_element *parameter_tac = NULL;
 		struct mCc_tac_identifier *size_identifier = NULL;
 		if (parameter->declaration_type == MCC_AST_DECLARATION_PRIMITIVE) {
 			parameter_tac =

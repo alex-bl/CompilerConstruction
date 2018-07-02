@@ -13,8 +13,8 @@ set(cc_team02_VERSION_LOWER 9)
 
 # set global compiler flags (append them)
 # append -Wextra when all ast-implmentations are provided
-string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Wextra -Wno-unused-parameter")
-string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Wextra -Wno-unused-parameter")
+string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -Wno-unused-function -Wno-sign-compare")
+string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-compare")
 
 # enable this to see the exact commands form cmake
 set(CMAKE_VERBOSE_MAKEFILE OFF)
@@ -229,15 +229,12 @@ add_custom_target(extended_unit_test
 	COMMAND echo "======================================================================================")
 add_dependencies(extended_unit_test mCc)
 
-# just a helper-target to execute unit-tests before the extended unit-tests
-add_custom_target(extended_unit_test_helper	
+# execute unit-tests before the extended unit-tests
+add_custom_target(build_and_test_all	
 	COMMAND echo "============================================================================="
 	COMMAND ${RUN_EXTENDED_UNIT_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
-	COMMAND echo "=============================================================================")
-add_dependencies(extended_unit_test_helper build_and_test)
-
-# a target to execute the unit-tests together with the extended unit-tests
-add_custom_target(build_and_test_all DEPENDS extended_unit_test_helper)
+	COMMAND echo "============================================================================="
+	DEPENDS build_and_test mCc)
 
 #=============================================================== gtest-execution
 # build output-folders
@@ -311,21 +308,3 @@ add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E mak
 
 add_custom_target(build_test_dot_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${DOT_TEST_OUTPUT_DIR})
 add_custom_target(build_test_assembly_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSEMBLY_TEST_OUTPUT_DIR})
-
-
-
-#================================================================ remaining dependencies for created folders
-add_dependencies(build_and_test object_output_dir)
-add_dependencies(build_and_test build_assembler_output_dir)
-
-add_dependencies(integration_test object_output_dir)
-add_dependencies(integration_test build_assembler_output_dir)
-
-add_dependencies(extended_unit_test object_output_dir)
-add_dependencies(extended_unit_test build_assembler_output_dir)
-
-add_dependencies(extended_unit_test_helper object_output_dir)
-add_dependencies(extended_unit_test_helper build_assembler_output_dir)
-
-add_dependencies(build_and_test_all object_output_dir)
-add_dependencies(build_and_test_all build_assembler_output_dir)

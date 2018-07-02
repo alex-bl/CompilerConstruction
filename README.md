@@ -117,6 +117,7 @@ This section contains the fixed and unfixed issues from the previous assignments
 - Assignments on array-variables dropped according to the changed specification.
 - Segmentation fault dueto function-uses before their declaration (because of unlinked symbol-table-information) fixed.  
 - Further TAC improvements done.
+- Unnecessary warnings supressed + resolved.
 
 Unfixed issues:
 
