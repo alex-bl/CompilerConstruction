@@ -105,8 +105,9 @@ void mCc_assembly_return_primitive_string(FILE *out,
                                           struct mCc_assembly_data *data,
                                           struct mCc_tac_element *tac_elem)
 {
-	struct mCc_tac_identifier *identifier = get_return_identifier(tac_elem);
-	mCc_assembly_prepare_return_string(out, identifier->name);
+//	struct mCc_tac_identifier *identifier = get_return_identifier(tac_elem);
+//	mCc_assembly_prepare_return_string(out, identifier->name);
+	mCc_assembly_return_primitive_int(out,data,tac_elem);
 }
 
 void mCc_assembly_return_array_int(FILE *out, struct mCc_assembly_data *data,
