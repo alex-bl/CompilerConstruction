@@ -36,6 +36,28 @@ Using the setup-wrapper (experimental):
 
 **Note**: If there occur strange error-messages from cmake, try to delete the build-directory.
 
+**Additional note:** Please consider that this application uses limited buffer-sizes (e.g. to construct the command to invoke the backend-compiler). The buffer-sizes are listed below (and specified in `<project_base_dir>/config/config.h.in`):
+
+- `#define FILE_NAME_BUF_SIZE 255`
+- `#define LOGGING_PATH_BUF_SIZE 2048`
+- `#define FILE_PATH_BUF_SIZE 512`
+- `#define GCC_CMD_BUF_SIZE 2048`
+
+These buffer-sizes may be relevant (especially) for the following constructed strings:
+
+- `gcc -m32 -c <path_to_buildins> -o <path_to_buildins_object_file>`   
+- `gcc -m32 -c <path_to_generated_assembly_file> -o <path_to_object_file>`   
+- `gcc -m32 <path_to_object_file> <path_to_buildins_object_file> -o <executable_destination>`   
+
+The values for `<path_to_buildins>`, `<path_to_buildins_object_file>`, `<path_to_generated_assembly_file>` and `<path_to_object_file>` are hardcoded:
+
+- `<path_to_buildins>`: `<build_dir_base_path>/data/buildins.c`
+- `<path_to_buildins_object_file>`: `<build_dir_base_path>/out/buildins.o`
+- `<path_to_generated_assembly_file>`: `<build_dir_base_path>/assembly/a.s`
+- `<path_to_object_file>`: `<build_dir_base_path>/out/a.o`
+
+So please make sure that the mentioned commands don't exceed the mentioned buffer-sizes. If they do, you have to adjust the buffer-sizes in `<project_base_dir>/config/config.h.in` and rebuild the whole project.
+
 ### Targets
 
 This section lists the available targets that can be build.
@@ -49,7 +71,8 @@ This section lists the available targets that can be build.
 | test\*			| Runs all gtests (unit)	| - |
 | build\_and\_test\* | Runs all gtests (unit; and builds all needed targets) | In cmake the default test-target does not ensure a rebuild. |
 | extended\_unit\_test\* | Runs the extended unit-tests (for assembly-generation) | Just simpler versions of integration-tests. |
-| build\_and\_test\_all* | Runs all unit-tests AND the extended unit-tests | At first the unit-tests, then the extended ones. |
+| build\_and\_test\_all\_units* | Runs all unit-tests AND the extended unit-tests | At first the unit-tests, then the extended ones. |
+| build\_and\_test\_all* | Runs all tests (all unit-tests AND integration-tests) | At first the unit-tests, then the extended ones and afterwards the integration-tests. |
 | build\_and\_test_memcheck\* | Runs all gtests together with valgrind | - |
 | integration\_test | Runs all integration-tests (and builds all needed targets) | It runs the provided [shell-script](https://github.com/W4RH4WK/mCc/blob/master/test/integration). |
 | run\_benchmarks\*\* | Runs all benchmarks | It is currently not used, but maybe in the future: CMake requires the [google-benchmark](https://github.com/google/benchmark) for this task. A custom shell script then runs all the benchmarked source-files. |
@@ -117,10 +140,8 @@ This section contains the fixed and unfixed issues from the previous assignments
 - Assignments on array-variables dropped according to the changed specification.
 - Segmentation fault dueto function-uses before their declaration (because of unlinked symbol-table-information) fixed.  
 - Further TAC improvements done.
-
-Unfixed issues:
-
-- Avoid creating a shared library for each module.
+- Unnecessary warnings supressed + resolved.
+- One single, static library contains now the whole logic (`libmCc.a`).
 
 #### After assignment 1:
 

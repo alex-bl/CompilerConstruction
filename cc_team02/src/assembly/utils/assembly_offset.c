@@ -391,7 +391,7 @@ void mCc_assembly_calculate_stack_offsets(
 {
 	struct mCc_assembly_offset_holder info = init_offset_info();
 	struct mCc_tac_element *next_tac_element = first_tac_element;
-	struct mCc_tac_element *function_start;
+	struct mCc_tac_element *function_start = NULL;
 
 	while (next_tac_element) {
 

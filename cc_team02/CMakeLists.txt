@@ -13,8 +13,8 @@ set(cc_team02_VERSION_LOWER 9)
 
 # set global compiler flags (append them)
 # append -Wextra when all ast-implmentations are provided
-string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Wextra -Wno-unused-parameter")
-string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Wextra -Wno-unused-parameter")
+string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -Wno-unused-function -Wno-sign-compare")
+string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-compare")
 
 # enable this to see the exact commands form cmake
 set(CMAKE_VERBOSE_MAKEFILE OFF)
@@ -229,26 +229,28 @@ add_custom_target(extended_unit_test
 	COMMAND echo "======================================================================================")
 add_dependencies(extended_unit_test mCc)
 
-# just a helper-target to execute unit-tests before the extended unit-tests
-add_custom_target(extended_unit_test_helper	
-	COMMAND echo "============================================================================="
+# execute unit-tests before the extended unit-tests
+add_custom_target(build_and_test_all_units	
+	COMMAND echo "======================================================================================"
 	COMMAND ${RUN_EXTENDED_UNIT_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
-	COMMAND echo "=============================================================================")
-add_dependencies(extended_unit_test_helper build_and_test)
+	COMMAND echo "======================================================================================"
+	DEPENDS build_and_test mCc)
 
-# a target to execute the unit-tests together with the extended unit-tests
-add_custom_target(build_and_test_all DEPENDS extended_unit_test_helper)
+# one target to run every test
+add_custom_target(build_and_test_all DEPENDS build_and_test_all_units integration_test)
 
 #=============================================================== gtest-execution
 # build output-folders
 add_dependencies(gtest build_test_dot_output_dir)	
 add_dependencies(gtest build_test_assembly_output_dir)		
+add_dependencies(gtest object_output_dir)	
+add_dependencies(gtest build_assembler_output_dir)		
 
 foreach(entry_name ${unit_test_list})
 	
 	# build and link
 	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)
-	target_link_libraries(${entry_name}_test_exec mCc_lib mCc_test_utils gtest_main)
+	target_link_libraries(${entry_name}_test_exec mCc_test_utils mCc_lib gtest_main)
 	# pass the test_exec to ctest => after COMMAND set args
 	# add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 	# native gtest support since cmake 3.9?
@@ -309,4 +311,3 @@ add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E mak
 
 add_custom_target(build_test_dot_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${DOT_TEST_OUTPUT_DIR})
 add_custom_target(build_test_assembly_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSEMBLY_TEST_OUTPUT_DIR})
-
