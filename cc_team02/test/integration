@@ -72,8 +72,8 @@ run_compiler()
 
 print_header_md()
 {
-	echo "Input                                             Time        Memory  Status"
-	echo "----------------------------------------- ------------ ------------- --------"
+	echo "   Nr    Input                                         Time        Memory      Status"
+	echo "-------  ----------------------------------------- ------------ ------------- --------"
 }
 
 print_header_csv()
@@ -83,13 +83,13 @@ print_header_csv()
 
 print_run_md()
 {
-	echo "$@" | awk '{ printf "%-40s   %8s s   %8s kB   ", $1, $2, $3; }'
+	echo "$@" | awk '{ printf "%6s %-40s   %8s s   %8s kB   ", $5, $1, $2, $3; }'
 
 	# fancy status label
 	if [[ "$4" == "0" ]]; then
-		echo -e "${Green}[ Ok ]${NC}"
+		echo -e "${Green}  [ Ok ]${NC}"
 	else
-		echo -e "${Red}[Fail]${NC}"
+		echo -e "${Red}  [Fail]${NC}"
 	fi
 }
 
@@ -192,6 +192,8 @@ print_header
 (cd "$EXAMPLES_DIR"; find -type f -name "${pattern}.mC" -print0) | sort -z |
 (
 	rm -f $ERROR_LOG_PATH
+	nr_of_files=$(ls $EXAMPLES_DIR/*.mC| wc -l);
+	i=1;
 	flawless=true
 	while read -r -d $'\0' example; do
 
@@ -204,18 +206,20 @@ print_header
 			flawless=false
 		fi
 
-		print_run "$example" $stats
+		stats=$stats" $i/$nr_of_files"
 
+		print_run "$example" $stats
+		i=$(expr $i + 1)
 	done
 
 	if [ -s $ERROR_LOG_PATH ]; then
 		echo "";
-		echo "==============================================================================";
+		echo "======================================================================================";
 		echo "Errors detected (see error.log):"
-		echo "==============================================================================";		
+		echo "======================================================================================";		
 		echo "";
 		cat $ERROR_LOG_PATH
-		echo "==============================================================================";		
+		echo "======================================================================================";		
 		echo "";
 	fi
 	

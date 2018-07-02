@@ -50,7 +50,7 @@ DIF_RESULT=$(grep -vxF -f $TMP_FILE_INTERMEDIATE $TMP_FILE_INPUT);
 
 # if there is no diff => success
 if [ ! -z "$DIF_RESULT" ]; then
-	echo "==============================================================================" >> $ERROR_LOG
+	echo "======================================================================================" >> $ERROR_LOG
 	echo "File: "$3":" >> $ERROR_LOG
 	echo "Expected:" >> $ERROR_LOG
 	echo "" >> $ERROR_LOG	
@@ -66,7 +66,7 @@ if [ ! -z "$DIF_RESULT" ]; then
 	
 	echo "" >> $ERROR_LOG;
 	echo "" >> $ERROR_LOG;	
-	echo "==============================================================================" >> $ERROR_LOG	
+	echo "======================================================================================" >> $ERROR_LOG	
 	echo "" >> $ERROR_LOG;
 	
 	exit_status=1;
