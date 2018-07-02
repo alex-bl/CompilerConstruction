@@ -30,18 +30,29 @@ mCc_tac_cfg_new_element(struct mCc_tac_element *tac_element,
 struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac)
 {
 	struct mCc_tac_element *tac_next_element = tac;
-	// TODO iterate throw all function -> each function separate cfg
+	// iterate throw all function -> each function separate cfg
+	struct mCc_tac_cfg_element *prev_cfg = NULL;
+	struct mCc_tac_cfg_element *first_cfg = NULL;
 	struct mCc_tac_cfg_element *cfg_function;
 	while (tac_next_element != NULL) {
 		if (tac_next_element->tac_operation ==
 		    MCC_TAC_OPARATION_START_FUNCTION_DEF) {
 			cfg_function = cfg_start_function(tac_next_element);
+			// iterate through previous cfg to put the next on the end
+			while (prev_cfg->next_cfg_element_left != NULL) {
+				prev_cfg = prev_cfg->next_cfg_element_left;
+			}
+			prev_cfg->next_cfg_element_left = cfg_function;
+			prev_cfg = cfg_function;
+			// define the first cfg once
+			if (first_cfg == NULL) {
+				first_cfg = cfg_function;
+			}
 		}
 		tac_next_element = tac_next_element->tac_next_element;
 	}
-	// TODO just returns the cfg of the last function
-	// should return a cfg for each function separately
-	return cfg_function;
+
+	return first_cfg;
 }
 
 /*
