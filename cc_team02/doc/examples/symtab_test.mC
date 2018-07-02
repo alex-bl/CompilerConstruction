@@ -1,4 +1,4 @@
-bool test_if(int a, int b){
+/*bool test_if(int a, int b){
 	if(a<b){
 		print("here");
 		print_nl();
@@ -6,7 +6,7 @@ bool test_if(int a, int b){
 	}
 	print("or here");	
 	return false;
-}
+}*/
 
 void main()
 {
@@ -40,7 +40,7 @@ void main()
 	f=2.0;
 	g=2.0;
 	
-	print_float(e/f/g);
+	/*print_float(e/f/g);
 	print_nl();
 	
 	bool if_test;
@@ -51,6 +51,6 @@ void main()
 	}else{
 		print("false");
 	}
-	print_nl();
+	print_nl();*/
 	
 }

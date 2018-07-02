@@ -175,10 +175,10 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	struct mCc_tac_cfg_element *cfg_after_else =
 	    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
 	tac_if_statement = tac_if_statement->tac_next_element;
-	//another step further
+	// another step further
 	cfg_after_else =
-		    cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
-	//connecting to previous part
+	    cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
+	// connecting to previous part
 	cfg_after_if->next_cfg_element_left = cfg_after_else;
 	tac_if_statement = tac_if_statement->tac_next_element;
 
@@ -208,12 +208,15 @@ cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	}
 
 	// connecting before while and end of while in the end
-	cfg_before_while->next_cfg_element_right = prev_cfg_element;
+	//cfg_before_while->next_cfg_element_right = prev_cfg_element;
 
 	// going one element further to don't have a while label again
 	prev_cfg_element =
 	    cfg_connect_elements_to_left(prev_cfg_element, tac_while_statement);
 	tac_while_statement = tac_while_statement->tac_next_element;
+
+	// connecting before while and end of while in the end
+	cfg_before_while->next_cfg_element_right = prev_cfg_element;
 
 	return tac_while_statement;
 }
