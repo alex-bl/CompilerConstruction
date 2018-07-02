@@ -23,10 +23,27 @@ void mCc_tac_cfg_print(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 
 void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 {
-	if (cfg_element->tac_element->tac_operation !=
-	        MCC_TAC_OPARATION_LABEL_AFTER_ELSE &&
-	    cfg_element->tac_element->tac_operation !=
-	        MCC_TAC_OPARATION_LABEL_WHILE) {
+	if (cfg_element->tac_element->tac_operation ==
+	    MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
+		// print last edge/node of the right side
+		fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n", cfg_element,
+		        mCc_tac_print_op(cfg_element->tac_element->tac_operation));
+		fprintf(out, "\t\"%p\" -> \"%p\" [label=\"left_side\"];\n", cfg_element,
+		        cfg_element->next_cfg_element_left);
+	} else if (cfg_element->tac_element->tac_operation ==
+	               MCC_TAC_OPARATION_JUMP &&
+	           cfg_element->tac_element->tac_next_element->tac_operation ==
+	               MCC_TAC_OPARATION_LABEL_WHILE) {
+		// print last edge/node of the right side
+		fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n", cfg_element,
+		        mCc_tac_print_op(cfg_element->tac_element->tac_operation));
+		fprintf(out, "\t\"%p\" -> \"%p\" [label=\"left_side\"];\n", cfg_element,
+		        cfg_element->next_cfg_element_left);
+		fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n", cfg_element,
+		        mCc_tac_print_op(cfg_element->tac_element->tac_operation));
+		fprintf(out, "\t\"%p\" -> \"%p\" [label=\"left_side\"];\n", cfg_element,
+		        cfg_element->next_cfg_element_left);
+	} else {
 		if (cfg_element->next_cfg_element_left != NULL) {
 			// TODO not just print number of tac_operation enum -> print
 			// operation name print node
@@ -50,11 +67,5 @@ void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 			fprintf(out, "\t\"%p\" [shape=box, label=\"%d\"];\n", cfg_element,
 			        cfg_element->tac_element->tac_operation);
 		}
-	} else {
-		// print last edge/node of the right side
-		fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n", cfg_element,
-		        mCc_tac_print_op(cfg_element->tac_element->tac_operation));
-		fprintf(out, "\t\"%p\" -> \"%p\" [label=\"left_side\"];\n", cfg_element,
-		        cfg_element->next_cfg_element_left);
 	}
 }
