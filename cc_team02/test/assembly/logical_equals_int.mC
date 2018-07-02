@@ -2,16 +2,16 @@ void main(){
 	int a;
 	int b;
 
-	a=14;
-	b=14;
+	a=12;
+	b=12;
 
-	if(a>=b{
+	if(a==b){
 		print("true");
 	}else{
 		print("false");
 	}
 	
-	if(b>=16){
+	if(a==13){
 		print("true");
 	}else{
 		print("false");

@@ -17,6 +17,7 @@ readonly DIR=$(dirname "$(readlink -f "$0")")
 # Location containing examples.
 readonly EXAMPLES_DIR="${EXAMPLES_DIR:-$DIR/../doc/examples}"
 readonly OUTPUT_ASSERTION_DIR="${OUTPUT_ASSERTION_DIR:-$DIR/}"
+readonly ERROR_LOG_PATH=./out/error.log
 
 # mC compiler binary.
 readonly MCC="${MCC:-./mCc}"
@@ -48,12 +49,24 @@ run_compiler()
 	local executable_path=./out/a.out
 	local assertion_script=$OUTPUT_ASSERTION_DIR"assert_output"
 	
-	# echo $input >> test.txt
+	rm -f $executable_path	
 	
-	#run
-	$MCC -o $executable_path $input
+	# echo $input >> test.txt	
+	#run	
+	$MCC -o $executable_path $input &>> $ERROR_LOG_PATH
+	local status_result=${PIPESTATUS[0]}
+	
+	if [ "$status_result" = "1" ]; then
+	
+		echo "at $input" >> $ERROR_LOG_PATH
+		echo "" >> $ERROR_LOG_PATH
+		
+		return $status_result;	
+	fi		
 	
 	\time -f "%e %M %x" $assertion_script $executable_path $input_values $to_compare 2>&1 | tail -n1
+	rm -f $executable_path
+	
 	return ${PIPESTATUS[0]}
 }
 
@@ -178,6 +191,7 @@ print_header
 
 (cd "$EXAMPLES_DIR"; find -type f -name "${pattern}.mC" -print0) | sort -z |
 (
+	rm -f $ERROR_LOG_PATH
 	flawless=true
 	while read -r -d $'\0' example; do
 
@@ -193,5 +207,14 @@ print_header
 		print_run "$example" $stats
 
 	done
+	
+	# continue HERE!!!
+	if [ ! -s $ERROR_LOG_PATH ]; then
+		echo "";
+		echo "Errors detected (see error.log):"
+		echo "";
+		cat $ERROR_LOG_PATH
+	fi
+	
 	$flawless
 )

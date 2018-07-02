@@ -3,15 +3,15 @@ void main(){
 	int b;
 
 	a=14;
-	b=14;
+	b=12;
 
-	if(a>=b{
+	if(b<a){
 		print("true");
 	}else{
 		print("false");
 	}
 	
-	if(b>=16){
+	if(a<b){
 		print("true");
 	}else{
 		print("false");

@@ -5,13 +5,13 @@ void main(){
 	a=14;
 	b=14;
 
-	if(a>=b{
+	if(b<=a){
 		print("true");
 	}else{
 		print("false");
 	}
 	
-	if(b>=16){
+	if(a<=13){
 		print("true");
 	}else{
 		print("false");
