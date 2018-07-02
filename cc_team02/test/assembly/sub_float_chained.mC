@@ -6,6 +6,6 @@ void main(){
 	b=1.4;
 	c=0.7;
 
-	print_float(a/b/c);
+	print_float(a-b-c);
 	print_nl();
 }

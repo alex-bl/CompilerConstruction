@@ -21,10 +21,12 @@ FILE_TO_COMPARE=$3;
 
 TMP_FILE="tmp.tmp"
 TMP_FILE_INPUT="tmp2.tmp"
+TMP_FILE_INTERMEDIATE="tmp3.tmp"
 
 # cleanup, just for assuring
 rm -f $TMP_FILE
 rm -f $TMP_FILE_INPUT
+rm -f $TMP_FILE_INTERMEDIATE
 
 #for line in `cat $INPUT_FILE`; do
 #CMD_TO_EXEC=$CMD_TO_EXEC"echo '"$line"';";
@@ -44,15 +46,20 @@ fi
 eval $CMD_TO_EXEC >> $TMP_FILE
 
 # normalize files (newlines)
-(tr -d '\n' < $TMP_FILE) >> $TMP_FILE
+(tr -d '\n' < $TMP_FILE) >> $TMP_FILE_INTERMEDIATE
 (tr -d '\n' < $FILE_TO_COMPARE) >> $TMP_FILE_INPUT
 
 # calc diff
-DIF_RESULT=$(grep -vxF -f $TMP_FILE $TMP_FILE_INPUT);
+DIF_RESULT=$(grep -vxF -f $TMP_FILE_INTERMEDIATE $TMP_FILE_INPUT);
+
+echo $DIF_RESULT >> test.txt
+
+echo "====" >> test.txt
 
 # cleanup
 rm -f $TMP_FILE
 rm -f $TMP_FILE_INPUT
+rm -f $TMP_FILE_INTERMEDIATE
 
 # if there is no diff => success
 if [ -z "$DIF_RESULT" ]; then
