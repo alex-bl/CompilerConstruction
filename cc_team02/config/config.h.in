@@ -29,7 +29,7 @@
 
 #define INT_SIZE 4
 #define FLOAT_SIZE 4
-#define STRING_SIZE 8
+#define STRING_SIZE 4
 #define POINTER_SIZE 1 //1*BASE_TYPE
 #define DEFAULT_ACCUMULATOR_OPERAND "%eax"
 #define DEFAULT_DATA_STACK_POINTER "%ebp"

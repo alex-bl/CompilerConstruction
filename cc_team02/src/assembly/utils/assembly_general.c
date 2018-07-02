@@ -189,7 +189,7 @@ void mCc_assembly_prepare_return_string(FILE *out, const char *label)
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "movl");
-	fprintf(out, ".%s, (%s)", label, DEFAULT_RETURN_REG);
+	fprintf(out, ".%s, %s", label, DEFAULT_RETURN_REG);
 	mCc_assembly_print_nl(out);
 }
 

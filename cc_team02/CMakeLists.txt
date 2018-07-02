@@ -217,16 +217,16 @@ set(RUN_EXTENDED_UNIT_TEST_SCRIPT "${PROJECT_SOURCE_DIR}/test/run_extended_unit_
 
 # use provided shell-script
 add_custom_target(integration_test
-	COMMAND echo "============================================================================="
+	COMMAND echo "======================================================================================"
 	COMMAND ${RUN_INTEGRATION_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
-	COMMAND echo "=============================================================================")
+	COMMAND echo "======================================================================================")
 add_dependencies(integration_test mCc)
 
 # integration-tests on a unit-level (for assembly-generation)
 add_custom_target(extended_unit_test	
-	COMMAND echo "============================================================================="
+	COMMAND echo "======================================================================================"
 	COMMAND ${RUN_EXTENDED_UNIT_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
-	COMMAND echo "=============================================================================")
+	COMMAND echo "======================================================================================")
 add_dependencies(extended_unit_test mCc)
 
 # just a helper-target to execute unit-tests before the extended unit-tests

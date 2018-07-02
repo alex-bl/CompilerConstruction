@@ -86,7 +86,7 @@ TEST(AssemblyUtils, CalcFloatSpace)
 
 TEST(AssemblyUtils, CalcStringSpace)
 {
-	size_t expected = 8;
+	size_t expected = 4;
 	ASSERT_EQ(expected, mCc_assembly_calc_string_space(NULL));
 }
 
