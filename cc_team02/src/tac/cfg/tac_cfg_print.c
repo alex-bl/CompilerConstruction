@@ -1,7 +1,7 @@
 #include "mCc/tac_cfg_print.h"
 
-#include "mCc/tac_print.h"
 #include "basic_tac.h"
+#include "mCc/tac_print.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -31,7 +31,7 @@ void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 			// TODO not just print number of tac_operation enum -> print
 			// operation name print node
 			fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n", cfg_element,
-					mCc_tac_print_op(cfg_element->tac_element->tac_operation));
+			        mCc_tac_print_op(cfg_element->tac_element->tac_operation));
 			// print left edge
 			fprintf(out, "\t\"%p\" -> \"%p\" [label=\"left_side\"];\n",
 			        cfg_element, cfg_element->next_cfg_element_left);
@@ -50,5 +50,11 @@ void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 			fprintf(out, "\t\"%p\" [shape=box, label=\"%d\"];\n", cfg_element,
 			        cfg_element->tac_element->tac_operation);
 		}
+	} else {
+		// print last edge/node of the right side
+		fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n", cfg_element,
+		        mCc_tac_print_op(cfg_element->tac_element->tac_operation));
+		fprintf(out, "\t\"%p\" -> \"%p\" [label=\"left_side\"];\n", cfg_element,
+		        cfg_element->next_cfg_element_left);
 	}
 }

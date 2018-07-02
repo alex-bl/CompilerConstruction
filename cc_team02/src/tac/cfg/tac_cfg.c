@@ -32,7 +32,7 @@ struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac)
 	struct mCc_tac_cfg_element *prev_cfg =
 	    mCc_tac_cfg_new_element(tac, NULL, NULL);
 	struct mCc_tac_element *tac_next_element = tac->tac_next_element;
-	struct mCc_tac_cfg_element *first_cfg = NULL;
+	struct mCc_tac_cfg_element *first_cfg = prev_cfg;
 	struct mCc_tac_cfg_element *cfg_function;
 	while (tac_next_element != NULL) {
 		if (tac_next_element->tac_operation ==
@@ -45,9 +45,9 @@ struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac)
 			prev_cfg->next_cfg_element_left = cfg_function;
 			prev_cfg = cfg_function;
 			// define the first cfg once
-			if (first_cfg == NULL) {
-				first_cfg = cfg_function;
-			}
+			/*if (first_cfg == NULL) {
+			    first_cfg = cfg_function;
+			}*/
 		}
 		tac_next_element = tac_next_element->tac_next_element;
 	}
@@ -158,9 +158,9 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	// element:
 	struct mCc_tac_cfg_element *cfg_before_else =
 	    mCc_tac_cfg_new_element(tac_if_statement, NULL, NULL);
+	tac_if_statement = tac_if_statement->tac_next_element;
 	cfg_before_if->next_cfg_element_right = cfg_before_else;
 	prev_cfg_element = cfg_before_else;
-	tac_if_statement = tac_if_statement->tac_next_element;
 
 	// evaluating the else/right side of the if
 	while (tac_if_statement->tac_operation !=
@@ -174,6 +174,11 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	// conecting cfg_after_if and last element
 	struct mCc_tac_cfg_element *cfg_after_else =
 	    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
+	tac_if_statement = tac_if_statement->tac_next_element;
+	//another step further
+	cfg_after_else =
+		    cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
+	//connecting to previous part
 	cfg_after_if->next_cfg_element_left = cfg_after_else;
 	tac_if_statement = tac_if_statement->tac_next_element;
 
