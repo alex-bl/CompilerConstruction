@@ -243,6 +243,8 @@ add_custom_target(build_and_test_all DEPENDS extended_unit_test_helper)
 # build output-folders
 add_dependencies(gtest build_test_dot_output_dir)	
 add_dependencies(gtest build_test_assembly_output_dir)		
+add_dependencies(gtest object_output_dir)	
+add_dependencies(gtest build_assembler_output_dir)		
 
 foreach(entry_name ${unit_test_list})
 	
@@ -310,3 +312,20 @@ add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E mak
 add_custom_target(build_test_dot_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${DOT_TEST_OUTPUT_DIR})
 add_custom_target(build_test_assembly_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSEMBLY_TEST_OUTPUT_DIR})
 
+
+
+#================================================================ remaining dependencies for created folders
+add_dependencies(build_and_test object_output_dir)
+add_dependencies(build_and_test build_assembler_output_dir)
+
+add_dependencies(integration_test object_output_dir)
+add_dependencies(integration_test build_assembler_output_dir)
+
+add_dependencies(extended_unit_test object_output_dir)
+add_dependencies(extended_unit_test build_assembler_output_dir)
+
+add_dependencies(extended_unit_test_helper object_output_dir)
+add_dependencies(extended_unit_test_helper build_assembler_output_dir)
+
+add_dependencies(build_and_test_all object_output_dir)
+add_dependencies(build_and_test_all build_assembler_output_dir)
