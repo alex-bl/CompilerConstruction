@@ -176,8 +176,7 @@ TEST(TacCfgPrintFunction, PrintCFGIfElse)
 TEST(TacCfgPrintFunction, PrintCFGNestedIf)
 {
 	//======================== setup
-	const char *prog_to_parse = "void main(){int a; a=5; int b; b=5+a; if "
-	                            "(a!=9) {if(b==3) {int c; c=0;}} }";
+	const char *prog_to_parse = "void main(){int a; a=5; int b; b=5+a; if (a!=9) {if(b==3) {int c; c=0;}} }";
 	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
 
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);

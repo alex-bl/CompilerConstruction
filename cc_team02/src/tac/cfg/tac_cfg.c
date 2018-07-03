@@ -89,8 +89,9 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 	tac_next_element = tac_next_element->tac_next_element;
 
 	// TODO build up cfg for each function here
-	while (tac_next_element->tac_operation !=
-	       MCC_TAC_OPARATION_END_FUNCTION_DEF) {
+	while (tac_next_element->tac_operation != NULL &&
+	       tac_next_element->tac_operation !=
+	           MCC_TAC_OPARATION_END_FUNCTION_DEF) {
 		// prev_cfg_element = cfg_element;
 
 		if (prev_cfg_element != NULL) {
@@ -120,6 +121,10 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 {
 	assert(prev_cfg_element);
 	assert(tac_if_statement);
+
+	prev_cfg_element =
+	    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
+	tac_if_statement = tac_if_statement->tac_next_element;
 
 	// struct mCc_tac_cfg_element *cfg_element;
 	// iterates till the real branching into if and else comes:
@@ -232,6 +237,9 @@ struct mCc_tac_element *
 cfg_connect_elements(struct mCc_tac_cfg_element *prev_cfg_element,
                      struct mCc_tac_element *tac_next_element)
 {
+	assert(prev_cfg_element);
+	assert(tac_next_element);
+
 	if (tac_next_element->tac_operation == MCC_TAC_OPARATION_LABEL_IF) {
 		tac_next_element = cfg_if_statement(prev_cfg_element, tac_next_element);
 	} else if (tac_next_element->tac_operation ==
