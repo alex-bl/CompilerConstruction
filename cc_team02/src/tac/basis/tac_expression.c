@@ -223,7 +223,7 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 
 	struct mCc_tac_identifier *operationlabel =
 	    mCc_tac_create_new_lable_identifier();
-	//assert(NULL);
+	// assert(NULL);
 	enum mCc_ast_data_type ast_data_type = expression->data_type;
 
 	struct mCc_tac_element *tac = tac_new_element(
@@ -272,12 +272,10 @@ static enum mCc_tac_operation
 map_arr_index_type(enum mCc_ast_data_type ast_data_type)
 {
 	switch (ast_data_type) {
-	case MCC_AST_DATA_TYPE_INT:
-		return MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS;
+	case MCC_AST_DATA_TYPE_INT: return MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS;
 	case MCC_AST_DATA_TYPE_FLOAT:
 		return MCC_TAC_OPERATION_FLOAT_ARR_INDEX_ACCESS;
-	case MCC_AST_DATA_TYPE_BOOL:
-		return MCC_TAC_OPERATION_BOOL_ARR_INDEX_ACCESS;
+	case MCC_AST_DATA_TYPE_BOOL: return MCC_TAC_OPERATION_BOOL_ARR_INDEX_ACCESS;
 	case MCC_AST_DATA_TYPE_STRING:
 		return MCC_TAC_OPERATION_STRING_ARR_INDEX_ACCESS;
 	default: return MCC_TAC_OPERATION_INT_ARR_INDEX_ACCESS;
@@ -333,7 +331,7 @@ mCc_tac_expression_unary_op(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(previous_tac);
 
-	enum mCc_tac_operation operation;
+	enum mCc_tac_operation operation = MCC_TAC_OPARATION_EMPTY;
 
 	switch (expression->unary_op) {
 	case MCC_AST_UNARY_OP_MINUS:

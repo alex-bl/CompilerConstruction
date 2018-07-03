@@ -17,9 +17,6 @@ void mCc_assembly_generate_add_int(FILE *out, struct mCc_assembly_data *data,
 	                                             data->current_stack_pos);
 	int result_pos = mCc_assembly_calc_stack_position(tac_elem->tac_result,
 	                                                  data->current_stack_pos);
-	// allocate result
-	//mCc_assembly_allocate_int_on_stack(out, data, 1);
-
 	// Load the 2nd operant into %eax
 	mCc_assembly_load_int(out, arg_1, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
@@ -53,9 +50,6 @@ void mCc_assembly_generate_sub_int(FILE *out, struct mCc_assembly_data *data,
 	                                             data->current_stack_pos);
 	int result_pos = mCc_assembly_calc_stack_position(tac_elem->tac_result,
 	                                                  data->current_stack_pos);
-	// allocate result
-	//mCc_assembly_allocate_int_on_stack(out, data, 1);
-
 	// Load the 1st operant into %eax
 	mCc_assembly_load_int(out, arg_1, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
@@ -89,9 +83,6 @@ void mCc_assembly_generate_mul_int(FILE *out, struct mCc_assembly_data *data,
 	                                             data->current_stack_pos);
 	int result_pos = mCc_assembly_calc_stack_position(tac_elem->tac_result,
 	                                                  data->current_stack_pos);
-	// allocate result
-	//mCc_assembly_allocate_int_on_stack(out, data, 1);
-
 	// Load the 2nd operant into %eax
 	mCc_assembly_load_int(out, arg_1, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition
@@ -126,9 +117,6 @@ void mCc_assembly_generate_div_int(FILE *out, struct mCc_assembly_data *data,
 	                                             data->current_stack_pos);
 	int result_pos = mCc_assembly_calc_stack_position(tac_elem->tac_result,
 	                                                  data->current_stack_pos);
-	// allocate result
-	//mCc_assembly_allocate_int_on_stack(out, data, 1);
-
 	// Load the 1st operant into %eax
 	mCc_assembly_load_int(out, arg_1, DEFAULT_ACCUMULATOR_OPERAND);
 	// Do addition

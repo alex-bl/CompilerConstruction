@@ -60,9 +60,6 @@ TEST(TAC, TACFloatLiteralExpression)
 	struct mCc_ast_expression *expression =
 	    mCc_ast_new_expression_literal(literal);
 
-	struct mCc_tac_element *tac =
-	    mCc_tac_expression_literal(expression, previous_tac);
-
 	ASSERT_EQ(previous_tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
 	//ASSERT_EQ(tac->tac_result->f_val, expression->literal->f_value);
 
@@ -84,9 +81,6 @@ TEST(TAC, TACIntLiteralExpression)
 
 	struct mCc_ast_expression *expression =
 	    mCc_ast_new_expression_literal(literal);
-
-	struct mCc_tac_element *tac =
-	    mCc_tac_expression_literal(expression, previous_tac);
 
 	ASSERT_EQ(previous_tac->tac_operation, MCC_TAC_OPARATION_EMPTY);
 	//ASSERT_EQ(tac->tac_result->i_val, expression->literal->i_value);

@@ -49,11 +49,20 @@ void mCc_tac_connect_tac_entry(struct mCc_tac_element *previous_tac,
 struct mCc_tac_identifier *tac_new_identifier(char *name)
 {
 	assert(name);
-
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	/*
+	 * NOTE:
+	 *
+	 * Not sure why, but if using malloc valgrind reports the following at
+	 * malloc: "Uninitialised value was created by a heap allocation"
+	 *
+	 * Workaround: using calloc
+	 */
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
+
 	tac_identifier->name = strndup(name, strlen(name));
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_VAR;
 	tac_identifier->is_param = false;
@@ -65,7 +74,8 @@ struct mCc_tac_identifier *tac_new_identifier_string(char *string)
 {
 	// assert(value);
 
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
@@ -81,7 +91,8 @@ struct mCc_tac_identifier *tac_new_identifier_float(double value)
 {
 	// assert(value);
 
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
@@ -97,7 +108,8 @@ struct mCc_tac_identifier *tac_new_identifier_int(long value)
 {
 	// assert(value);
 
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
@@ -113,7 +125,8 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 {
 	// assert(value);
 
-	struct mCc_tac_identifier *tac_identifier = malloc(sizeof(*tac_identifier));
+	struct mCc_tac_identifier *tac_identifier =
+	    calloc(sizeof(*tac_identifier), 1);
 	if (!tac_identifier) {
 		return NULL;
 	}
@@ -128,7 +141,7 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 // helper function for getting the size of an int
 int mCc_tac_helper_intlen(int var)
 {
-	int length;
+	int length=16;
 	if (var < 10) {
 		length = 1;
 	} else if (var < 100) {
@@ -194,7 +207,10 @@ void mCc_tac_delete_identifier(struct mCc_tac_identifier *identifier)
 {
 	assert(identifier);
 
-	if (identifier->type == MCC_IDENTIFIER_TAC_TYPE_STRING &&
+	if ((identifier->type == MCC_IDENTIFIER_TAC_TYPE_STRING ||
+	     identifier->type == MCC_IDENTIFIER_TAC_TYPE_VAR ||
+	     identifier->type == MCC_IDENTIFIER_TAC_TYPE_FUNCTION_CALL ||
+	     identifier->type == MCC_IDENTIFIER_TAC_TYPE_FUNCTION_DEF) &&
 	    identifier->name != NULL) {
 		free(identifier->name);
 	}
@@ -222,8 +238,7 @@ mCc_tac_create_from_tac_identifier(struct mCc_tac_identifier *identifier)
 		to_create->is_param = identifier->is_param;
 		return to_create;
 	case MCC_IDENTIFIER_TAC_TYPE_STRING:
-		// default
-		break;
+	default: break;
 	}
 	to_create = tac_new_identifier(identifier->name);
 	to_create->is_param = identifier->is_param;

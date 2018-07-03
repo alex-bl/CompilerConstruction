@@ -25,9 +25,7 @@ void mCc_assembly_load_float(FILE *out, int tac_offset)
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "flds");
-	// TODO: load label?
 	fprintf(out, "%d(%s)", tac_offset, DEFAULT_DATA_STACK_POINTER);
-	// fprintf(out,".%s",label);
 	mCc_assembly_print_nl(out);
 }
 
@@ -35,14 +33,10 @@ void mCc_assembly_load_int_as_float(FILE *out, int tac_offset)
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "filds");
-	// TODO: load label?
 	fprintf(out, "%d(%s)", tac_offset, DEFAULT_DATA_STACK_POINTER);
-	// fprintf(out,".%s",label);
 	mCc_assembly_print_nl(out);
 }
 
-
-// stack_offset needs to be negative?
 void mCc_assembly_push_int(FILE *out, int tac_offset, const char *ret_to_push)
 {
 	mCc_assembly_print_shift(out);
@@ -92,33 +86,30 @@ void mCc_assembly_move_int(FILE *out, int tac_offset_src, int tac_offset_dest)
 
 void mCc_assembly_move_bool(FILE *out, int tac_offset_src, int tac_offset_dest)
 {
-	// TODO: separate handling?
 	mCc_assembly_move_int(out, tac_offset_src, tac_offset_dest);
 }
 
 void mCc_assembly_move_float(FILE *out, int tac_offset_src, int tac_offset_dest)
 {
-	// TODO: separate handling?
 	mCc_assembly_move_int(out, tac_offset_src, tac_offset_dest);
 }
 
 void mCc_assembly_move_string(FILE *out, int tac_offset_src,
                               int tac_offset_dest)
 {
-	// TODO: separate handling?
 	mCc_assembly_move_int(out, tac_offset_src, tac_offset_dest);
 }
 
 /*============================================================= allocation */
 void mCc_assembly_allocate_local_stack(FILE *out,
-                                        struct mCc_assembly_data *data,
-                                        long amount)
+                                       struct mCc_assembly_data *data,
+                                       long amount)
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "subl");
 	fprintf(out, "$%ld, %s", amount, DEFAULT_STACK_POINTER);
 	mCc_assembly_print_nl(out);
-	// TODO: seems to be useless ;)
+	// NOTE: seems to be useless ;)
 	mCc_assembly_adjust_stack_pointer(amount, data);
 }
 
@@ -131,7 +122,7 @@ void mCc_assembly_allocate_int_on_stack(FILE *out,
 	mCc_assembly_print_op(out, "subl");
 	fprintf(out, "$%zu, %s", required_space, DEFAULT_STACK_POINTER);
 	mCc_assembly_print_nl(out);
-	// TODO: seems to be useless ;)
+	// NOTE: seems to be useless ;)
 	mCc_assembly_adjust_stack_pointer(required_space, data);
 }
 
@@ -188,11 +179,6 @@ void mCc_assembly_allocate_string_array_on_stack(FILE *out,
 void mCc_assembly_prepare_return(FILE *out, int calculated_offset)
 {
 	mCc_assembly_print_shift(out);
-	/*
-	 * TODO:
-	 * - use DEFAULT_RETURN_REG, DEFAULT_STACK_POINTER
-	 * - use movl	<offset>(%ebp), (%eax)
-	 */
 	mCc_assembly_print_op(out, "movl");
 	fprintf(out, "%d(%s), %s", calculated_offset, DEFAULT_DATA_STACK_POINTER,
 	        DEFAULT_RETURN_REG);
@@ -203,13 +189,13 @@ void mCc_assembly_prepare_return_string(FILE *out, const char *label)
 {
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "movl");
-	fprintf(out, ".%s, (%s)", label, DEFAULT_RETURN_REG);
+	fprintf(out, ".%s, %s", label, DEFAULT_RETURN_REG);
 	mCc_assembly_print_nl(out);
 }
 
 /*============================================================= arithmetics */
 /*
- * TODO:
+ * NOTE:
  * - CHANGED: left operant is always pointer to value on the stack
  */
 
@@ -326,12 +312,10 @@ void mCc_assembly_assign_string(FILE *out, const char *label,
 	mCc_assembly_print_nl(out);
 }
 
-// TODO: what about arrays?
-
 /*=============================================================
  * logical-binary-ops */
 /*
- * TODO:
+ * NOTE:
  * - values are already loaded to the registers which are compared
  * - cmp-result is stored into cmp-reg
  */
@@ -366,24 +350,17 @@ void mCc_assembly_compare_bool(FILE *out, int calculated_offset_op_1,
 // Maybe the same?
 void mCc_assembly_compare_float(FILE *out)
 {
-	/*
-	 * TODO:
-	 * - check float-compairison
-	 * - fcomi (should) compare the actual float-val on stack with value?
-	 * - is this correct???
-	 */
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "fcomip");
 	fprintf(out, "%s, %s", FLOAT_STACK_SEC_REG, FLOAT_STACK_TOP_REG);
 	mCc_assembly_print_nl(out);
-	//clear also the floating-point stack
+	// clear also the floating-point stack
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "fstp");
-	fprintf(out,"%s",FLOAT_STACK_TOP_REG);
+	fprintf(out, "%s", FLOAT_STACK_TOP_REG);
 	mCc_assembly_print_nl(out);
 }
 
-// TODO: andl and orl enough or just simply use cmpl?
 void mCc_assembly_and_op(FILE *out, int calculated_offset_op_1,
                          int calculated_offset_op_2)
 {
@@ -408,16 +385,17 @@ void mCc_assembly_or_op(FILE *out, int calculated_offset_op_1,
 	mCc_assembly_print_nl(out);
 }
 
-void mCc_assembly_convert_float_to_int(FILE *out, int offset){
+void mCc_assembly_convert_float_to_int(FILE *out, int offset)
+{
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "fistp");
-	fprintf(out,"%d(%s)", offset, DEFAULT_DATA_STACK_POINTER);
+	fprintf(out, "%d(%s)", offset, DEFAULT_DATA_STACK_POINTER);
 	mCc_assembly_print_nl(out);
 }
 
 /*============================================================= unary-ops */
 
-/*TODO:
+/*NOTE:
  * - values are already stored to the registers
  */
 void mCc_assembly_unary_minus_int(FILE *out)
@@ -446,7 +424,7 @@ void mCc_assembly_unary_negation(FILE *out)
 
 /*============================================================= jumps */
 /*
- * TODO: reads the value from the cmp-reg
+ * NOTE: reads the value from the cmp-reg
  */
 
 static void jump_to(FILE *out, const char *dest_label, const char *jump_op)
@@ -501,22 +479,22 @@ void mCc_assembly_jump_less_equals(FILE *out, const char *dest_label)
 
 void mCc_assembly_add_param_int(FILE *out, int calculated_offset)
 {
-	/*TODO*/
+	/*NOTE: actually not used. Maybe usefull sometimes?*/
 }
 
 void mCc_assembly_add_param_float(FILE *out, int calculated_offset)
 {
-	/*TODO*/
+	/*NOTE: actually not used. Maybe usefull sometimes?*/
 }
 
 void mCc_assembly_add_param_bool(FILE *out, int calculated_offset)
 {
-	/*TODO*/
+	/*NOTE: actually not used. Maybe usefull sometimes?*/
 }
 
 void mCc_assembly_add_param_string(FILE *out, const char *string_label)
 {
-	/*TODO*/
+	/*NOTE: actually not used. Maybe usefull sometimes?*/
 }
 
 /*============================================================= arguments */
@@ -531,7 +509,7 @@ void mCc_assembly_add_argument_int(FILE *out, int calculated_offset)
 
 void mCc_assembly_add_argument_float(FILE *out, int calculated_offset)
 {
-	// same treatment as int?
+	// same treatment as int
 	mCc_assembly_add_argument_int(out, calculated_offset);
 }
 
@@ -596,7 +574,6 @@ void mCc_assembly_set_greater(FILE *out)
 
 void mCc_assembly_set_greater_float(FILE *out)
 {
-	//???
 	do_set_cc_op(out, "seta");
 }
 
@@ -640,30 +617,16 @@ void mCc_assembly_extract_condition_flag(FILE *out, const char *reg_dest)
 
 /*============================================================= if/while */
 /*
- * TODO:
+ * NOTE:
  * - is compound (cmp/jump-combo) => do at handler
  */
 
 /*============================================================= array */
 
-static void mCc_assembly_compute_index_local(FILE *out, int base_size, int offset_array_base,
-                                int offset_array_index)
+static void mCc_assembly_compute_index_local(FILE *out, int base_size,
+                                             int offset_array_base,
+                                             int offset_array_index)
 {
-//	mCc_assembly_load_int(out, offset_array_index, DEFAULT_ACCUMULATOR_OPERAND);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "leal");
-//	fprintf(out, "%d(%s), %s", offset_array_base, DEFAULT_DATA_STACK_POINTER,
-//	        EDX_REG);
-//	mCc_assembly_print_nl(out);
-//
-//	mCc_assembly_print_shift(out);
-//	mCc_assembly_print_op(out, "leal");
-//	fprintf(out, "%d(%s,%s,%d), %s", 0, EDX_REG, DEFAULT_ACCUMULATOR_OPERAND,
-//	        base_size, ECX_REG);
-//	mCc_assembly_print_nl(out);
-
-//==================================================
 	mCc_assembly_load_int(out, offset_array_index, EDX_REG);
 
 	mCc_assembly_print_shift(out);
@@ -671,37 +634,31 @@ static void mCc_assembly_compute_index_local(FILE *out, int base_size, int offse
 	fprintf(out, "%d(%s,%s,%d), %s", offset_array_base,
 	        DEFAULT_DATA_STACK_POINTER, EDX_REG, base_size, ECX_REG);
 	mCc_assembly_print_nl(out);
-
-	//	movl 	$9, %eax	[ok]
-	//	leal	-44(%ebp, %eax, 4), %eax
-
-
-	//	mCc_assembly_print_shift(out);
-	//	mCc_assembly_print_op(out, "movl");
-	//	fprintf(out, "0(%s), %s", ECX_REG, DEFAULT_ACCUMULATOR_OPERAND);
-	//	mCc_assembly_print_nl(out);
 }
 
-
-static void mCc_assembly_compute_index_param(FILE *out, int base_size, int offset_array_base,
-                                int offset_array_index)
+static void mCc_assembly_compute_index_param(FILE *out, int base_size,
+                                             int offset_array_base,
+                                             int offset_array_index)
 {
 	mCc_assembly_load_int(out, offset_array_index, EDX_REG);
 	mCc_assembly_load_int(out, offset_array_base, DEFAULT_ACCUMULATOR_OPERAND);
 
 	mCc_assembly_print_shift(out);
 	mCc_assembly_print_op(out, "leal");
-	fprintf(out, "%d(%s,%s,%d), %s", 0,
-	        DEFAULT_ACCUMULATOR_OPERAND, EDX_REG, base_size, ECX_REG);
+	fprintf(out, "%d(%s,%s,%d), %s", 0, DEFAULT_ACCUMULATOR_OPERAND, EDX_REG,
+	        base_size, ECX_REG);
 	mCc_assembly_print_nl(out);
 }
 
 void mCc_assembly_compute_index(FILE *out, int base_size, int offset_array_base,
-                                int offset_array_index, bool is_param){
-	if(is_param){
-		mCc_assembly_compute_index_param(out, base_size, offset_array_base, offset_array_index);
-	}else{
-		mCc_assembly_compute_index_local(out, base_size, offset_array_base, offset_array_index);
+                                int offset_array_index, bool is_param)
+{
+	if (is_param) {
+		mCc_assembly_compute_index_param(out, base_size, offset_array_base,
+		                                 offset_array_index);
+	} else {
+		mCc_assembly_compute_index_local(out, base_size, offset_array_base,
+		                                 offset_array_index);
 	}
 }
 
@@ -727,11 +684,6 @@ static void move_float_to_ecx_reg(FILE *out)
 	mCc_assembly_print_op(out, "fstps");
 	fprintf(out, "(%s)", ECX_REG);
 	mCc_assembly_print_nl(out);
-
-	//	mCc_assembly_print_shift(out);
-	//	mCc_assembly_print_op(out, "movl");
-	//	fprintf(out, "%s, (%s)", FLOAT_STACK_TOP_REG, ECX_REG);
-	//	mCc_assembly_print_nl(out);
 }
 
 void mCc_assembly_load_float_at_ecx(FILE *out)

@@ -14,7 +14,7 @@ helper_get_tac_of_statement(struct mCc_ast_statement *statement,
 {
 	assert(statement);
 
-	struct mCc_tac_element *statement_tac;
+	struct mCc_tac_element *statement_tac = NULL;
 	switch (statement->statement_type) {
 	case MCC_AST_STATEMENT_IF:
 		statement_tac = mCc_tac_statement_if(statement, previous_tac);
@@ -329,7 +329,7 @@ mCc_tac_statement_declaration(struct mCc_ast_statement *statement,
 	assert(statement->declaration);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac_declaration;
+	struct mCc_tac_element *tac_declaration = NULL;
 	if (statement->declaration->declaration_type ==
 	    MCC_AST_DECLARATION_PRIMITIVE) {
 		tac_declaration =
@@ -350,7 +350,7 @@ mCc_tac_statement_assignment(struct mCc_ast_statement *statement,
 	assert(statement->assignment);
 	assert(previous_tac);
 
-	struct mCc_tac_element *tac_assignment;
+	struct mCc_tac_element *tac_assignment = NULL;
 	if (statement->assignment->assignment_type ==
 	    MCC_AST_ASSIGNMENT_PRIMITIVE) {
 		tac_assignment =

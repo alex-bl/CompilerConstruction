@@ -8,12 +8,13 @@ project (cc_team02)
 
 # The version number.
 set(cc_team02_VERSION_MAJOR 1)
-set(cc_team02_VERSION_MINOR 0)
+set(cc_team02_VERSION_MINOR 8)
+set(cc_team02_VERSION_LOWER 9)
 
 # set global compiler flags (append them)
 # append -Wextra when all ast-implmentations are provided
-string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Wextra -Wno-unused-parameter")
-string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Wextra -Wno-unused-parameter")
+string(APPEND CMAKE_C_FLAGS " -std=c11 -Wall -Wextra -Wno-unused-parameter -Wno-format-truncation -Wno-unused-function -Wno-sign-compare")
+string(APPEND CMAKE_CXX_FLAGS " -std=c++14 -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-sign-compare")
 
 # enable this to see the exact commands form cmake
 set(CMAKE_VERBOSE_MAKEFILE OFF)
@@ -54,8 +55,9 @@ set(DOXYGEN_GENERATE_XML NO)
 #message(STATUS "valgrind: " ${MEMORYCHECK_COMMAND})
 set(MCC_VALGRIND_ARGS "--leak-check=full --show-reachable=yes --track-origins=yes --error-exitcode=1")
 set(MCC_VALGRIND_SUPPRESSIONS "--suppressions=${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp")
-
-set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS}")
+set(MCC_VALGRIND_SUPPRESSIONS_2 "--suppressions=${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.25.supp")
+							  
+set(MEMORYCHECK_COMMAND_OPTIONS "${MCC_VALGRIND_ARGS} ${MCC_VALGRIND_SUPPRESSIONS} ${MCC_VALGRIND_SUPPRESSIONS_2}")
 #============================================================  assembler config
 set(OBJECT_OUTPUT_DIR "${CMAKE_BINARY_DIR}/out")
 set(ASSEMBLY_OUTPUT_DIR "${CMAKE_BINARY_DIR}/assembly")
@@ -77,6 +79,11 @@ configure_file (
 configure_file (
   "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.21.supp.in"
   "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.21.supp"
+  )
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/config/valgrind_libstdc++.so.6.0.25.supp.in"
+  "${CMAKE_BINARY_DIR}/config/valgrind_libstdc++.so.6.0.25.supp"
   )
 
 # configure build-ins (semantic checks)
@@ -203,23 +210,47 @@ add_custom_target(build_and_test_memcheck
 # See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=802778
 
 #=============================================================== integration tests
+
+set(INTEGRATION_TEST_SCRIPT "${PROJECT_SOURCE_DIR}/test/integration")
+set(RUN_INTEGRATION_TEST_SCRIPT "${PROJECT_SOURCE_DIR}/test/run_integration")
+set(RUN_EXTENDED_UNIT_TEST_SCRIPT "${PROJECT_SOURCE_DIR}/test/run_extended_unit_test")
+
 # use provided shell-script
 add_custom_target(integration_test
-	COMMAND echo "============================================================================="
-	COMMAND ${PROJECT_SOURCE_DIR}/test/integration
-	COMMAND echo "=============================================================================")
+	COMMAND echo "======================================================================================"
+	COMMAND ${RUN_INTEGRATION_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
+	COMMAND echo "======================================================================================")
 add_dependencies(integration_test mCc)
+
+# integration-tests on a unit-level (for assembly-generation)
+add_custom_target(extended_unit_test	
+	COMMAND echo "======================================================================================"
+	COMMAND ${RUN_EXTENDED_UNIT_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
+	COMMAND echo "======================================================================================")
+add_dependencies(extended_unit_test mCc)
+
+# execute unit-tests before the extended unit-tests
+add_custom_target(build_and_test_all_units	
+	COMMAND echo "======================================================================================"
+	COMMAND ${RUN_EXTENDED_UNIT_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
+	COMMAND echo "======================================================================================"
+	DEPENDS build_and_test mCc)
+
+# one target to run every test
+add_custom_target(build_and_test_all DEPENDS build_and_test_all_units integration_test)
 
 #=============================================================== gtest-execution
 # build output-folders
 add_dependencies(gtest build_test_dot_output_dir)	
 add_dependencies(gtest build_test_assembly_output_dir)		
+add_dependencies(gtest object_output_dir)	
+add_dependencies(gtest build_assembler_output_dir)		
 
 foreach(entry_name ${unit_test_list})
 	
 	# build and link
 	add_executable(${entry_name}_test_exec test/${entry_name}.cpp)
-	target_link_libraries(${entry_name}_test_exec mCc_lib mCc_test_utils gtest_main)
+	target_link_libraries(${entry_name}_test_exec mCc_test_utils mCc_lib gtest_main)
 	# pass the test_exec to ctest => after COMMAND set args
 	# add_test(NAME ${entry_name}_test COMMAND ${entry_name}_test_exec)
 	# native gtest support since cmake 3.9?
@@ -280,4 +311,3 @@ add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E mak
 
 add_custom_target(build_test_dot_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${DOT_TEST_OUTPUT_DIR})
 add_custom_target(build_test_assembly_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSEMBLY_TEST_OUTPUT_DIR})
-

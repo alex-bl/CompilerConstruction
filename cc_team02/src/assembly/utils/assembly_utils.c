@@ -14,7 +14,6 @@
 #include "config.h"
 #include "log.h"
 
-// TODO: correct?
 static struct mCc_tac_identifier *
 get_function_label_identifier(struct mCc_tac_element *tac_elem)
 {
@@ -39,22 +38,17 @@ size_t mCc_assembly_calc_float_space(int nr_of)
 
 size_t mCc_assembly_calc_string_space(const char *string)
 {
-	// TODO: required? => always 8?
+	// TODO: => always 8?
 	return STRING_SIZE;
 }
 
+/*
+ * NOTE:
+ * Currently unused, but maybe useful in the future
+ *
+ */
 size_t mCc_assembly_calc_param_space(struct mCc_tac_element *function_def)
 {
-	/*
-	 * TODO:
-	 * - use INT_SIZE
-	 * - use FLOAT_SIZE
-	 * - consider string
-	 * - consider arrays
-	 * - what about string-arrays?
-	 *
-	 * => requires changes on tac!
-	 */
 	return 0;
 }
 
@@ -72,8 +66,7 @@ int mCc_assembly_calc_stack_position(struct mCc_tac_identifier *identifier,
 	if (identifier->is_param) {
 		return mCc_assembly_calc_stack_pos_param(identifier);
 	}
-	// stack-positions for local variables are always <0?
-	// TODO: current_stack_ptr_pos useless????
+	// NOTE: current_stack_ptr_pos useless right now. Maybe sometimes useful
 	return (identifier->stack_offset) * -1;
 }
 
@@ -93,27 +86,30 @@ mCc_assembly_get_next_function_label(struct mCc_tac_element *tac_elem)
 	return "";
 }
 
+// NOTE: currently not used
 void mCc_assembly_adjust_stack_pointer(int offset,
                                        struct mCc_assembly_data *data)
 {
-	// TODO: check this
 	data->current_stack_pos += offset;
 }
 
-struct mCc_assembly_argument_list *mCc_assembly_create_new_arg_list_elem(int scope)
+struct mCc_assembly_argument_list *
+mCc_assembly_create_new_arg_list_elem(int scope)
 {
 	struct mCc_assembly_argument_list *elem = malloc(sizeof(*elem));
 	if (!elem) {
 		log_error("Malloc failed");
 		return NULL;
 	}
-	elem->open_scope=scope;
+	elem->open_scope = scope;
+	elem->next = NULL;
 	return elem;
 }
 
 struct mCc_assembly_argument_list *
 mCc_assembly_prepend_arg_list_elem(struct mCc_assembly_argument_list *actual,
-                                   struct mCc_tac_element *to_prepend, int scope)
+                                   struct mCc_tac_element *to_prepend,
+                                   int scope)
 {
 	struct mCc_assembly_argument_list *elem =
 	    mCc_assembly_create_new_arg_list_elem(scope);
