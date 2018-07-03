@@ -5,8 +5,6 @@
 #include "basic_tac.h"
 #include "tac_utils.h"
 
-// TODO put helper function on an higher base -> better reachable from other
-// functions  or not!
 enum mCc_tac_operation tac_helper_data_type_to_tac_declaration_primitive(
     enum mCc_ast_data_type data_type)
 {

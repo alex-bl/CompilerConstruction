@@ -64,12 +64,6 @@ mCc_tac_expression_literal(struct mCc_ast_expression *expression,
 	assert(expression);
 	assert(previous_tac);
 
-	/* MCC_AST_DATA_TYPE_VOID,
-	MCC_AST_DATA_TYPE_INT,
-	MCC_AST_DATA_TYPE_FLOAT,
-	MCC_AST_DATA_TYPE_BOOL,
-	MCC_AST_DATA_TYPE_STRING,*/
-
 	enum mCc_tac_operation operation;
 	struct mCc_tac_identifier *argument1;
 	enum mCc_tac_type tac_type;
@@ -238,32 +232,6 @@ mCc_tac_expression_binary_op(struct mCc_ast_expression *expression,
 	    mCc_tac_map_from_ast_data_type(ast_data_type), 0);
 	mCc_tac_connect_tac_entry(tac_rhs, tac);
 	return tac;
-
-	// trying to fix bug, with wrong previous tac statement
-	/*struct mCc_tac_identifier lhs;
-	struct mCc_tac_identifier rhs;
-
-	    struct mCc_tac_element *tac_lhs =
-	        helper_get_tac_of_expression(expression->lhs, previous_tac);
-	// if it is a complex statement - otherwise just take the bare expression
-	if (tac_lhs != NULL) {
-	    lhs = mCc_tac_create_from_tac_identifier(tac_lhs->tac_result);
-	    previous_tac = tac_lhs;
-	} else {
-	    lhs = expression->lhs;
-	}
-
-	struct mCc_tac_element *tac_rhs =
-	    helper_get_tac_of_expression(expression->rhs, previous_tac);
-
-	struct mCc_tac_identifier *operationlabel =
-	    mCc_tac_create_new_lable_identifier();
-
-	struct mCc_tac_element *tac = tac_new_element(
-	    operation, lhs, mCc_tac_create_from_tac_identifier(tac_rhs->tac_result),
-	    operationlabel, MCC_TAC_TYPE_NO_TYPE, 0);
-	mCc_tac_connect_tac_entry(tac_rhs, tac);
-	return tac;*/
 }
 
 struct mCc_tac_element *

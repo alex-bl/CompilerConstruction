@@ -58,7 +58,9 @@ add_library(mCc_lib	STATIC  ${BISON_parser_OUTPUTS}
 							tac/basis/tac_statement.c
 							# tac-print
 							tac/tac_print.c
+							# tac-cfg
 							tac/cfg/tac_cfg.c
+							tac/cfg/tac_cfg_print.c
 							# semantic-check infrastructure
 							symtab/handler/symtab_handle_scope.c
 							symtab/handler/symtab_handle_function.c
