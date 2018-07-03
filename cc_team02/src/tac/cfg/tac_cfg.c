@@ -224,39 +224,6 @@ cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	return tac_while_statement;
 }
 
-/*
- * TODO
- * TODO
- * TODO
- * find evaluation of first argument of jump operation of tac element
- * -> check if it is true or not -> checks if to jump or not
- */
-
-// no comparison needed -> this tac element just have one argument
-/*bool cfg_evaluate_jump_element(struct mCc_tac_element *jump_element)
-{
-    switch (jump_element->tac_argument1->type) {
-    case MCC_IDENTIFIER_TAC_TYPE_INTEGER:
-        return jump_element->tac_argument1->s_val ==
-               jump_element->tac_argument2->s_val;
-        break;
-    case MCC_IDENTIFIER_TAC_TYPE_FLOAT:
-        return jump_element->tac_argument1->s_val ==
-               jump_element->tac_argument2->s_val;
-        break;
-    case MCC_IDENTIFIER_TAC_TYPE_BOOL:
-        return jump_element->tac_argument1->s_val ==
-               jump_element->tac_argument2->s_val;
-        break;
-    case MCC_IDENTIFIER_TAC_TYPE_STRING:
-        return strcmp(jump_element->tac_argument1->s_val,
-                      jump_element->tac_argument2->s_val);
-        break;
-    default: return false;
-    }
-    return false;
-}*/
-
 struct mCc_tac_cfg_element *
 cfg_connect_elements_to_left(struct mCc_tac_cfg_element *prev_cfg_element,
                              struct mCc_tac_element *tac_statement)
@@ -272,10 +239,10 @@ cfg_connect_elements_to_left(struct mCc_tac_cfg_element *prev_cfg_element,
 }
 
 // function not needed?
-void cfg_connect_elements(struct mCc_tac_cfg_element *previous_element,
+/*void cfg_connect_elements(struct mCc_tac_cfg_element *previous_element,
                           struct mCc_tac_cfg_element *next_element_left,
                           struct mCc_tac_cfg_element *next_element_right)
 {
 	previous_element->next_cfg_element_left = next_element_left;
 	previous_element->next_cfg_element_right = next_element_right;
-}
+}*/
