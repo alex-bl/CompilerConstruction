@@ -1,1 +1,1 @@
-void main(){int a; a=5; if (a!=9) {a=a+1;}else {a=a+3;} int b; b=5+a;}
+void main(){int a; a=5; while (a!=9) {int c; if(a==8) {a=a+1;} else{a=a-1;} }  a=5;}
