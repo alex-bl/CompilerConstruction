@@ -32,7 +32,7 @@ void main()
 	print_nl();
 	
 	
-	float e;
+	/*float e;
 	float f;
 	float g;
 	
@@ -40,7 +40,7 @@ void main()
 	f=2.0;
 	g=2.0;
 	
-	/*print_float(e/f/g);
+	print_float(e/f/g);
 	print_nl();
 	
 	bool if_test;

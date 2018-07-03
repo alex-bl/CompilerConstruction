@@ -56,7 +56,7 @@ struct mCc_tac_cfg_element *mCc_tac_cfg_generate(struct mCc_tac_element *tac)
 }
 
 /*
- * improvment:
+ * improvement:
  * left side always continues with next tac elements
  * if label where the jump points to comes up -> continue with the right side
  * storing the element where the left side ends and connect it with the end of
@@ -111,7 +111,10 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 			}
 		}
 	}
-	// returning multiple cfgs (for each function one)
+	// evaluating the last ..._END_FUNCTION_DEF element
+	cfg_connect_elements_to_left(prev_cfg_element, tac_next_element);
+
+	// returning one cfg for this function
 	return cfg_first_element;
 }
 
@@ -208,7 +211,7 @@ cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	}
 
 	// connecting before while and end of while in the end
-	//cfg_before_while->next_cfg_element_right = prev_cfg_element;
+	// cfg_before_while->next_cfg_element_right = prev_cfg_element;
 
 	// going one element further to don't have a while label again
 	prev_cfg_element =
