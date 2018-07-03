@@ -1,1 +1,1 @@
-void main(){int a; a=5; int b; b=5+a; if (a!=9) {if(b==3) {int c; c=0;}} }
+void main(){int a; a=5; if (a!=9) {a=a+1;}else {a=a+3;} int b; b=5+a;}
