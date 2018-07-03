@@ -318,6 +318,7 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhile)
 
 TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
 {
+	//Not working
 	//======================== setup
 	const char *prog_to_parse = "void main(){int a; a=5; while (a!=9) { "
 	                            "while(a==3) {a=a-1; while(a!=2) {a=0;}} }  "
@@ -352,8 +353,6 @@ TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
 	mCc_tac_delete(tac);
 }
 
-
-
 TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
 {
 	//======================== setup
@@ -387,3 +386,39 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 }
+
+
+TEST(TacCfgPrintFunction, PrintCFGEmptyIfWhile)
+{
+	//======================== setup
+	const char *prog_to_parse = "void main(){int a; a=5;  if(a==8) {while (a!=9) {}} else{} a=5;}";
+	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
+
+	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
+	ASSERT_TRUE(&(result.program) != NULL);
+	struct mCc_ast_program *prog = result.program;
+	int nr_of_semantic_errors = mCc_symtab_perform_semantic_checks(prog);
+	ASSERT_EQ(0, nr_of_semantic_errors);
+
+	struct mCc_tac_element *tac = mCc_tac_start_program(prog);
+	ASSERT_TRUE(tac != NULL);
+
+	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	// mCc_assembly_calculate_stack_offsets(tac);
+	//======================== test
+
+	FILE *fp = open_file(CFG_DOT_TEST_OUTPUT_DIR, DOT_PREFIX,
+	                     "PrintCFGEmptyIfWhile", DOT_FILE_SUFFIX);
+	mCc_tac_cfg_print(fp, cfg);
+	fclose(fp);
+
+	/*struct mCc_tac_identifier *param =
+	    get_tac_element_identifier(tac, 8, get_tac_result);
+	ASSERT_TRUE(param != NULL);
+	ASSERT_EQ(8, param->stack_offset);*/
+
+	//======================== cleanup
+	mCc_ast_delete_program(prog);
+	mCc_tac_delete(tac);
+}
+

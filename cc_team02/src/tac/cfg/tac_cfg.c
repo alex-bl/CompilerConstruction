@@ -187,10 +187,12 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	struct mCc_tac_cfg_element *cfg_after_else =
 	    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
 	tac_if_statement = tac_if_statement->tac_next_element;
+	// if (tac_if_statement->tac_operation != MCC_TAC_OPARATION_JUMP) {
 	// another step further
 	cfg_after_else =
 	    cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
-	/*tac_if_statement = tac_if_statement->tac_next_element;*/
+	tac_if_statement = tac_if_statement->tac_next_element;
+	//}
 	// connecting to previous part
 	cfg_after_if->next_cfg_element_left = cfg_after_else;
 
@@ -259,7 +261,9 @@ cfg_connect_elements(struct mCc_tac_cfg_element *prev_cfg_element,
 	if (tac_next_element->tac_operation == MCC_TAC_OPARATION_LABEL_IF) {
 		tac_next_element = cfg_if_statement(prev_cfg_element, tac_next_element);
 	} else if (tac_next_element->tac_operation ==
-	           MCC_TAC_OPARATION_LABEL_WHILE) {
+	               MCC_TAC_OPARATION_LABEL_WHILE &&
+	           prev_cfg_element->tac_element->tac_operation !=
+	               MCC_TAC_OPARATION_JUMP) {
 		tac_next_element =
 		    cfg_while_statement(prev_cfg_element, tac_next_element);
 	} else {
