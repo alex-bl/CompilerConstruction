@@ -313,6 +313,9 @@ void mCc_tac_cfg_element_delete(struct mCc_tac_cfg_element *cfg_element)
 	/*if (cfg_element->tac_element != NULL) {
 	    mCc_tac_element_delete(cfg_element->tac_element);
 	}*/
+	// TODO
+	// TODO just free one -> this is called multiple times for one cfg_element
+	// TODO improve structure for else if element directly after each other
 	free(cfg_element);
 }
 

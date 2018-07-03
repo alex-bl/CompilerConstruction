@@ -68,7 +68,6 @@ TEST(TacCfgPrintFunction, PrintCFGFunction)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -99,7 +98,6 @@ TEST(TacCfgPrintFunction, PrintCFGWhile)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -131,7 +129,6 @@ TEST(TacCfgPrintFunction, PrintCFGIf)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -163,7 +160,6 @@ TEST(TacCfgPrintFunction, PrintCFGIfElse)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -197,7 +193,6 @@ TEST(TacCfgPrintFunction, PrintCFGNestedIf)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -229,7 +224,6 @@ TEST(TacCfgPrintFunction, PrintCFGNestedIfElse)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -262,7 +256,6 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhileIf)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -296,7 +289,6 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhile)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -329,7 +321,6 @@ TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -361,7 +352,6 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
@@ -393,7 +383,6 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyIfWhile)
 	fclose(fp);
 
 	//======================== cleanup
-	mCc_parser_destroy_parser(result);
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
