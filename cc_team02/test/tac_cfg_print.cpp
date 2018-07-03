@@ -318,7 +318,6 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhile)
 
 TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
 {
-	//Not working
 	//======================== setup
 	const char *prog_to_parse = "void main(){int a; a=5; while (a!=9) { "
 	                            "while(a==3) {a=a-1; while(a!=2) {a=0;}} }  "
@@ -356,7 +355,7 @@ TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
 TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
 {
 	//======================== setup
-	const char *prog_to_parse = "void main(){int a; a=5; while (a!=9) { if(a==8) {} else{} }  a=5;}";
+	const char *prog_to_parse = "void main(){int a; a=5; while (a!=9) { if(a==8) {int c;} else{int d;} }  a=5;}";
 	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
 
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);

@@ -221,9 +221,13 @@ cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	// working through the while statement
 	// while (tac_while_statement->tac_operation !=
 	// MCC_TAC_OPARATION_LABEL_WHILE)
-	while (!(tac_while_statement->tac_operation == MCC_TAC_OPARATION_JUMP &&
-	         tac_while_statement->tac_next_element->tac_operation ==
-	             MCC_TAC_OPARATION_LABEL_WHILE)) {
+	// while (!(tac_while_statement->tac_operation == MCC_TAC_OPARATION_JUMP &&
+	// tac_while_statement->tac_next_element->tac_operation ==
+	// MCC_TAC_OPARATION_LABEL_WHILE)) {
+	while (
+	    !(tac_while_statement->tac_operation == MCC_TAC_OPARATION_LABEL_WHILE &&
+	      prev_cfg_element->tac_element->tac_operation ==
+	          MCC_TAC_OPARATION_JUMP)) {
 		tac_while_statement =
 		    cfg_connect_elements(prev_cfg_element, tac_while_statement);
 		prev_cfg_element = get_actual_cfg_element(prev_cfg_element);
@@ -236,9 +240,9 @@ cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	// cfg_before_while->next_cfg_element_right = prev_cfg_element;
 
 	// going one element further to don't have a while label again
-	prev_cfg_element =
+	/*prev_cfg_element =
 	    cfg_connect_elements_to_left(prev_cfg_element, tac_while_statement);
-	tac_while_statement = tac_while_statement->tac_next_element;
+	tac_while_statement = tac_while_statement->tac_next_element;*/
 
 	// going one element further to don't have a while label again
 	prev_cfg_element =
