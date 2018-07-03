@@ -3,6 +3,7 @@
 
 #include "gtest/gtest.h"
 
+#include "config.h"
 #include "mCc/ast.h"
 #include "mCc/tac.h"
 #include "mCc/tac_cfg_print.h"
@@ -13,7 +14,11 @@
 
 TEST(TacCfgPrintProgram, PrintProgramFunctionSimple)
 {
+	/*FILE *fp =
+	    open_file(DOT_OUTPUT_DIR, DOT_PREFIX, file_name, DOT_FILE_SUFFIX);
+	mCc_ast_print_dot_expression(fp, expr);
 
+	fclose(fp);
 	/*struct mCc_ast_function_def *function_def =
 	    mCc_test_build_test_function_def(
 	        MCC_AST_DATA_TYPE_BOOL, "my_bool_function",
