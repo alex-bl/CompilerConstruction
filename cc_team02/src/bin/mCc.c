@@ -14,6 +14,7 @@
 #include "mCc/semantic_check.h"
 #include "mCc/tac.h"
 #include "mCc/tac_cfg.h"
+#include "mCc/tac_cfg_print.h"
 #include "mCc/tac_print.h"
 
 /*Argp: Inspired by
@@ -305,6 +306,8 @@ int main(int argc, char *argv[])
 		log_debug("CFG generation of TAC finished\t\t[ok]");
 		mCc_tac_cfg_print(out_put, cfg);
 		log_debug("CFG print of TAC finished\t\t[ok]");
+		// mCc_tac_cfg_delete(cfg);
+		// log_debug("CFG deleted successful\t\t[ok]");
 	}
 
 	/* generate assembly-code*/
