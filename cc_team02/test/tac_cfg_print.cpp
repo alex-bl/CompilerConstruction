@@ -26,12 +26,20 @@ TEST(TacCfgPrintFunction, PrintCFGSimpleFunction)
 	struct mCc_ast_program *program = mCc_ast_new_program(function_def);
 
 	struct mCc_tac_element *tac = mCc_tac_start_program(program);
+	ASSERT_TRUE(tac != NULL);
+
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 
 	FILE *fp = open_file(CFG_DOT_TEST_OUTPUT_DIR, DOT_PREFIX,
 	                     "PrintCFGSimpleFunction", DOT_FILE_SUFFIX);
 	mCc_tac_cfg_print(fp, cfg);
 	fclose(fp);
+
+	//======================== cleanup
+	mCc_ast_delete_program(program);
+	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGFunction)
@@ -51,6 +59,7 @@ TEST(TacCfgPrintFunction, PrintCFGFunction)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -67,6 +76,7 @@ TEST(TacCfgPrintFunction, PrintCFGFunction)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGWhile)
@@ -85,6 +95,7 @@ TEST(TacCfgPrintFunction, PrintCFGWhile)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -101,6 +112,7 @@ TEST(TacCfgPrintFunction, PrintCFGWhile)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGIf)
@@ -120,6 +132,7 @@ TEST(TacCfgPrintFunction, PrintCFGIf)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -136,6 +149,7 @@ TEST(TacCfgPrintFunction, PrintCFGIf)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGIfElse)
@@ -155,6 +169,7 @@ TEST(TacCfgPrintFunction, PrintCFGIfElse)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -171,6 +186,7 @@ TEST(TacCfgPrintFunction, PrintCFGIfElse)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGNestedIf)
@@ -192,6 +208,7 @@ TEST(TacCfgPrintFunction, PrintCFGNestedIf)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -208,6 +225,7 @@ TEST(TacCfgPrintFunction, PrintCFGNestedIf)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGNestedIfElse)
@@ -227,6 +245,7 @@ TEST(TacCfgPrintFunction, PrintCFGNestedIfElse)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -243,12 +262,15 @@ TEST(TacCfgPrintFunction, PrintCFGNestedIfElse)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGNestedWhileIf)
 {
 	//======================== setup
-	const char *prog_to_parse = "void main(){int a; a=5; while (a!=9) {int c; if(a==8) {a=a+1;} else{a=a-1;} int d; }  a=5;}";
+	const char *prog_to_parse = "void main(){int a; a=5; while (a!=9) {int c; "
+	                            "if(a==8) {a=a+1;} else{a=a-1;} int d; }  "
+	                            "a=5;}";
 	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
 
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
@@ -261,6 +283,7 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhileIf)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -277,6 +300,7 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhileIf)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGNestedWhile)
@@ -298,6 +322,7 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhile)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -314,6 +339,7 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhile)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
@@ -334,6 +360,7 @@ TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -350,12 +377,14 @@ TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
 {
 	//======================== setup
-	const char *prog_to_parse = "void main(){int a; a=5; while (a!=9) { if(a==8) {int c;} else{int d;} }  a=5;}";
+	const char *prog_to_parse = "void main(){int a; a=5; while (a!=9) { "
+	                            "if(a==8) {int c;} else{int d;} }  a=5;}";
 	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
 
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
@@ -368,6 +397,7 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -384,13 +414,14 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
-
 
 TEST(TacCfgPrintFunction, PrintCFGEmptyIfWhile)
 {
 	//======================== setup
-	const char *prog_to_parse = "void main(){int a; a=5;  if(a==8) {while (a!=9) {}} else{} a=5;}";
+	const char *prog_to_parse =
+	    "void main(){int a; a=5;  if(a==8) {while (a!=9) {}} else{} a=5;}";
 	struct mCc_parser_result result = mCc_parser_parse_string(prog_to_parse);
 
 	ASSERT_EQ(MCC_PARSER_TOP_LEVEL_PROGRAM, result.top_level_type);
@@ -403,6 +434,7 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyIfWhile)
 	ASSERT_TRUE(tac != NULL);
 
 	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+	ASSERT_TRUE(cfg != NULL);
 	// mCc_assembly_calculate_stack_offsets(tac);
 	//======================== test
 
@@ -419,5 +451,5 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyIfWhile)
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
 	mCc_tac_delete(tac);
+	mCc_tac_cfg_delete(cfg);
 }
-
