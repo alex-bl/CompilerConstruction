@@ -299,6 +299,36 @@ cfg_connect_elements_to_left(struct mCc_tac_cfg_element *prev_cfg_element,
 	return cfg_element;
 }
 
+void mCc_tac_cfg_element_delete(struct mCc_tac_cfg_element *cfg_element)
+{
+	assert(cfg_element);
+
+	if (cfg_element->next_cfg_element_left != NULL) {
+		mCc_tac_cfg_element_delete(cfg_element->next_cfg_element_left);
+	}
+	if (cfg_element->next_cfg_element_right != NULL) {
+		mCc_tac_cfg_element_delete(cfg_element->next_cfg_element_left);
+	}
+	// tac should not be deleted, because it is deleted seperatly
+	/*if (cfg_element->tac_element != NULL) {
+	    mCc_tac_element_delete(cfg_element->tac_element);
+	}*/
+	free(cfg_element);
+}
+
+void mCc_tac_cfg_delete(struct mCc_tac_cfg_element *cfg_element)
+{
+	assert(cfg_element);
+
+	mCc_tac_cfg_element_delete(cfg_element);
+	/*struct mCc_tac_element *next_cfg_element;
+	while (cfg_element != NULL) {
+	    next_cfg_element = cfg_element->next_cfg_element_left;
+	    mCc_tac_element_delete(cfg_element);
+	    cfg_element = next_cfg_element;
+	}*/
+}
+
 // function not needed?
 /*void cfg_connect_elements(struct mCc_tac_cfg_element *previous_element,
                           struct mCc_tac_cfg_element *next_element_left,
