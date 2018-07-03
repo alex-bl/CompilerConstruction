@@ -12,14 +12,10 @@
 /*===========================================================================
  * program tests*/
 
-TEST(TacCfgPrintProgram, PrintProgramFunctionSimple)
+TEST(TacCfgPrintProgram, PrintCFGProgram)
 {
-	/*FILE *fp =
-	    open_file(DOT_OUTPUT_DIR, DOT_PREFIX, file_name, DOT_FILE_SUFFIX);
-	mCc_ast_print_dot_expression(fp, expr);
 
-	fclose(fp);
-	/*struct mCc_ast_function_def *function_def =
+	struct mCc_ast_function_def *function_def =
 	    mCc_test_build_test_function_def(
 	        MCC_AST_DATA_TYPE_BOOL, "my_bool_function",
 	        mCc_test_build_test_lit_expression_bool(true));
@@ -27,8 +23,12 @@ TEST(TacCfgPrintProgram, PrintProgramFunctionSimple)
 	struct mCc_ast_program *program = mCc_ast_new_program(function_def);
 
 	struct mCc_tac_element *tac = mCc_tac_start_program(program);
-	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);*/
-	// mCc_tac_cfg_print(out_put, cfg);
+	struct mCc_tac_cfg_element *cfg = mCc_tac_cfg_generate(tac);
+
+	FILE *fp = open_file(CFG_DOT_TEST_OUTPUT_DIR, DOT_PREFIX,
+	                     "PrintCFGProgram", DOT_FILE_SUFFIX);
+	mCc_tac_cfg_print(fp, cfg);
+	fclose(fp);
 
 	// test_print_and_free_ast_program(program, "PrintProgramFunctionSimple");
 }
