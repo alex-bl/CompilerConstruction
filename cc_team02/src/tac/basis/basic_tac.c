@@ -141,7 +141,7 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 // helper function for getting the size of an int
 int mCc_tac_helper_intlen(int var)
 {
-	int length=16;
+	int length = 16;
 	if (var < 10) {
 		length = 1;
 	} else if (var < 100) {
@@ -191,6 +191,9 @@ void mCc_tac_element_delete(struct mCc_tac_element *tac_element)
 	free(tac_element);
 }
 
+/*
+ * delete the control-flow-graph (cfg) before the tac is deleted!
+ */
 void mCc_tac_delete(struct mCc_tac_element *tac_element)
 {
 	assert(tac_element);
