@@ -81,18 +81,21 @@ static void helper_print_cfg_element_connection(
 	assert(cfg_next_element);
 	assert(out);
 
-	// checks if special treatment because of two after else labels is needed
-	/*if (cfg_next_element->next_cfg_element_left != NULL &&
+	// checks if special treatment is needed, because of two after else labels
+	if (/*cfg_next_element->next_cfg_element_left != NULL &&*/
 	    (cfg_next_element->tac_element->tac_operation ==
 	         MCC_TAC_OPARATION_LABEL_AFTER_ELSE &&
-	     cfg_next_element->next_cfg_element_left->tac_element->tac_operation !=
+	     cfg_next_element->next_cfg_element_left->tac_element->tac_operation ==
 	         MCC_TAC_OPARATION_LABEL_AFTER_ELSE)) {
-	    fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
-	            cfg_next_element->next_cfg_element_left);
-	} else {*/
-	fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
-	        cfg_next_element);
-	//}
+		fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+		        cfg_next_element->next_cfg_element_left);
+	} else {
+		fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+		        cfg_next_element);
+	}
+
+	// fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+	//      cfg_next_element);
 }
 
 void mCc_tac_cfg_print(FILE *out, struct mCc_tac_cfg_element *cfg_element)
@@ -118,15 +121,17 @@ void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 	    cfg_element->next_cfg_element_left->tac_element->tac_operation ==
 	        MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
 		// print last edge/node of the right side
-		helper_print_tac_element(cfg_element, out);
+		// helper_print_tac_element(cfg_element, out);
+
 		// fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n",  cfg_element,
 		// mCc_tac_print_op(cfg_element->tac_element->tac_operation));
 
 		// does not need a connection?
-		 helper_print_cfg_element_connection(
-		   cfg_element, cfg_element->next_cfg_element_left, out);
-		 // fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
-		 //      cfg_element->next_cfg_element_left);
+		// helper_print_cfg_element_connection(
+		//  cfg_element, cfg_element->next_cfg_element_left, out);
+
+		// fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+		//      cfg_element->next_cfg_element_left);
 
 	} else if (cfg_element->tac_element->tac_operation ==
 	               MCC_TAC_OPARATION_JUMP &&
@@ -137,8 +142,11 @@ void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 		//       mCc_tac_print_op(cfg_element->tac_element->tac_operation));
 		helper_print_tac_element(cfg_element, out);
 
-		fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
-		        cfg_element->next_cfg_element_left);
+		// fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+		//       cfg_element->next_cfg_element_left);
+		helper_print_cfg_element_connection(
+		    cfg_element, cfg_element->next_cfg_element_left, out);
+
 		// fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n",
 		// cfg_element->next_cfg_element_left,
 		// mCc_tac_print_op(cfg_element->next_cfg_element_left->tac_element
@@ -159,17 +167,25 @@ void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 			helper_print_tac_element(cfg_element, out);
 
 			// print left edge
-			fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
-			        cfg_element->next_cfg_element_left);
+			// fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+			//        cfg_element->next_cfg_element_left);
+			helper_print_cfg_element_connection(
+			    cfg_element, cfg_element->next_cfg_element_left, out);
 
 			// print right edge if exists
 			if (cfg_element->next_cfg_element_right != NULL) {
-				fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
-				        cfg_element->next_cfg_element_right);
+				// fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n",
+				// cfg_element,
+				//      cfg_element->next_cfg_element_right);
+				helper_print_cfg_element_connection(
+				    cfg_element, cfg_element->next_cfg_element_right, out);
+
+				// call recursively
 				tac_cfg_print_element(out, cfg_element->next_cfg_element_right);
 			}
 			// cfg_element = cfg_element->next_cfg_element_left;
 
+			// call recursively
 			tac_cfg_print_element(out, cfg_element->next_cfg_element_left);
 		} else {
 			// print last element without further connections:
