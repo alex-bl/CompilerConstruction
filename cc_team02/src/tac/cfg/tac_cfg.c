@@ -303,20 +303,40 @@ void mCc_tac_cfg_element_delete(struct mCc_tac_cfg_element *cfg_element)
 {
 	assert(cfg_element);
 
+	//(cfg_element->tac_element->tac_operation ==        MCC_TAC_OPARATION_JUMP
+	//&& cfg_element->next_cfg_element_left->tac_element->tac_operation ==
+	// MCC_TAC_OPARATION_LABEL_WHILE   )
+	// (cfg_element->tac_element->tac_operation
+	//==    MCC_TAC_OPARATION_LABEL_AFTER_ELSE)
 	if (cfg_element->next_cfg_element_left != NULL) {
-		mCc_tac_cfg_element_delete(cfg_element->next_cfg_element_left);
+		if (cfg_element->tac_element->tac_operation == MCC_TAC_OPARATION_JUMP &&
+		    cfg_element->next_cfg_element_left->tac_element->tac_operation ==
+		        MCC_TAC_OPARATION_LABEL_WHILE) {
+			free(cfg_element);
+		} else if (cfg_element->tac_element->tac_operation ==
+		           MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
+			free(cfg_element);
+		} else {
+			if (cfg_element->next_cfg_element_left != NULL) {
+				mCc_tac_cfg_element_delete(cfg_element->next_cfg_element_left);
+			}
+			if (cfg_element->next_cfg_element_right != NULL) {
+				mCc_tac_cfg_element_delete(cfg_element->next_cfg_element_right);
+			}
+			free(cfg_element);
+		}
+	} else {
+		free(cfg_element);
 	}
-	if (cfg_element->next_cfg_element_right != NULL) {
-		mCc_tac_cfg_element_delete(cfg_element->next_cfg_element_left);
-	}
-	// tac should not be deleted, because it is deleted seperatly
+	// tac should not be deleted, because it is deleted separately
 	/*if (cfg_element->tac_element != NULL) {
 	    mCc_tac_element_delete(cfg_element->tac_element);
 	}*/
 	// TODO
-	// TODO just free one -> this is called multiple times for one cfg_element
+	// TODO just free one -> this is called multiple times for one
+	// cfg_element
 	// TODO improve structure for else if element directly after each other
-	free(cfg_element);
+	// free(cfg_element);
 }
 
 void mCc_tac_cfg_delete(struct mCc_tac_cfg_element *cfg_element)
