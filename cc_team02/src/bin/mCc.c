@@ -61,6 +61,11 @@ static struct argp_option options[] = {
 	  .flags = 0,
 	  .group = 0,
 	  .doc = "Output to FILE\t\t\t(default=a.out)" },
+	  { .name = "optimize",
+	  	  .key = 'O',
+	  	  .flags = 0,
+	  	  .group = 0,
+	  	  .doc = "Enable optimization\t\t(default=false)" },
 	{ 0 }
 };
 
@@ -73,6 +78,7 @@ struct arguments {
 	bool log_on_stdout;
 	bool file_log;
 	char *output_file;
+	bool enable_optimization;
 };
 
 /* Parse a single option */
@@ -88,6 +94,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	case 'l': arguments->log_on_stdout = true; break;
 	case 'f': arguments->file_log = true; break;
 	case 'o': arguments->output_file = arg; break;
+	case 'O': arguments->enable_optimization = arg; break;
 	case ARGP_KEY_ARG:
 		if (state->arg_num >= 1)
 			/* Too many arguments */
@@ -181,6 +188,7 @@ int main(int argc, char *argv[])
 	arguments.log_on_stdout = false;
 	arguments.file_log = false;
 	arguments.output_file = "a.out";
+	arguments.enable_optimization = false;
 
 	/* Parse arguments */
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
