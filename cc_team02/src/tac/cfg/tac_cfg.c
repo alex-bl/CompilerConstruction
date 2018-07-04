@@ -133,12 +133,6 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 
 	struct mCc_tac_cfg_element *cfg_after_if = prev_cfg_element;
 
-	// going further to evaluate the right side, starting from the branch
-	// element:
-	// tac_if_statement = cfg_connect_elements(prev_cfg_element,
-	// tac_if_statement);  struct mCc_tac_cfg_element *cfg_before_else =
-	//   get_actual_cfg_element(prev_cfg_element);
-
 	// LABEL ELSE
 	struct mCc_tac_cfg_element *cfg_before_else =
 	    mCc_tac_cfg_new_element(tac_if_statement, NULL, NULL);
@@ -159,41 +153,16 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	// AFTER_ELSE LABLE
 	struct mCc_tac_cfg_element *cfg_after_else =
 	    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
-	// cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
-	// tac_if_statement = tac_if_statement->tac_next_element;
-
-	// adding the after_if label a second time to know when the right side endsF
-	/*cfg_after_else =
-	    cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
-	tac_if_statement = tac_if_statement->tac_next_element;*/
-
-	// create a new tac element, which indicated the end of the else:
-	/*struct mCc_tac_element *end_of_else_tac =
-	    tac_new_element(NULL, NULL, NULL, NULL, NULL, 0);
-	struct mCc_tac_cfg_element *cfg_after_after_else =
-	    mCc_tac_cfg_new_element(end_of_else_tac, NULL, NULL);
-	cfg_after_else->next_cfg_element_left = cfg_after_after_else;
-	tac_if_statement = tac_if_statement->tac_next_element;*/
-
-	// connecting to if (previous part) after else
-	//	cfg_after_if->next_cfg_element_left = cfg_after_after_else;
 
 	// another step further
+	// adding the after_if label a second time to know when the right side ends
 	tac_if_statement = cfg_connect_elements(cfg_after_else, tac_if_statement);
 	cfg_after_else = get_actual_cfg_element(cfg_after_else);
 
 	cfg_after_else->type_info = MCC_TAC_CFG_ELSE_END;
 
-	// not like this:
-	/*cfg_after_else =
-	  cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
-	tac_if_statement = tac_if_statement->tac_next_element;*/
-
 	// connecting to if (previous part) after else
 	cfg_after_if->next_cfg_element_left = cfg_after_else;
-
-	/*prev_cfg_element = get_actual_cfg_element(cfg_after_else);
-	cfg_after_if->next_cfg_element_left = prev_cfg_element;*/
 
 	return tac_if_statement;
 }
