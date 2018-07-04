@@ -238,7 +238,11 @@ add_custom_target(build_and_test_all_units
 	DEPENDS build_and_test mCc)
 
 # one target to run every test
-add_custom_target(build_and_test_all DEPENDS build_and_test_all_units integration_test)
+add_custom_target(build_and_test_all
+	COMMAND echo "======================================================================================"
+	COMMAND ${RUN_INTEGRATION_TEST_SCRIPT} ${INTEGRATION_TEST_SCRIPT}
+	COMMAND echo "======================================================================================")
+add_dependencies(build_and_test_all build_and_test_all_units)
 
 #=============================================================== gtest-execution
 # build output-folders
