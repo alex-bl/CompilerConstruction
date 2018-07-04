@@ -158,19 +158,17 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 	// AFTER_ELSE LABLE
 	struct mCc_tac_cfg_element *cfg_after_else =
 	    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
+	// cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
 	// tac_if_statement = tac_if_statement->tac_next_element;
 
 	// adding the after_if lable a second time to know when the right side endsF
-	cfg_after_else =
+	/*cfg_after_else =
 	    cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
-	tac_if_statement = tac_if_statement->tac_next_element;
-	// cfg_after_else =
-	//	    mCc_tac_cfg_new_element(tac, NULL, NULL);
+	tac_if_statement = tac_if_statement->tac_next_element;*/
 
 	// another step further
-	// tac_if_statement = cfg_connect_elements(cfg_after_else,
-	// tac_if_statement);  cfg_after_else =
-	// get_actual_cfg_element(cfg_after_else);
+	tac_if_statement = cfg_connect_elements(cfg_after_else, tac_if_statement);
+	cfg_after_else = get_actual_cfg_element(cfg_after_else);
 	// not like this:
 	/*cfg_after_else =
 	  cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
