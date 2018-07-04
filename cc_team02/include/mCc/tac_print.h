@@ -11,6 +11,8 @@ extern "C" {
 
 void mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out);
 
+const char *mCc_tac_print_op(enum mCc_tac_operation tac_operation);
+
 #ifdef __cplusplus
 }
 #endif

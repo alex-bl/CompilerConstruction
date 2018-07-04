@@ -1,11 +1,1 @@
-string return_string(string a, string b, string c){
-	print(c);
-	print(a);
-	return b;
-}
-
-void main(){
-
-	print(return_string("b","c","a"));
-
-}
+void main(){int a; a=5; while (a!=9) {int c; if(a==8) {a=a+1;} else{a=a-1;} }  a=5;}

@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <stddef.h>
 
-static const char *print_tac_op(enum mCc_tac_operation tac_operation)
+const char *mCc_tac_print_op(enum mCc_tac_operation tac_operation)
 {
 	switch (tac_operation) {
 	case MCC_TAC_OPARATION_EMPTY:
@@ -231,7 +231,7 @@ void mCc_tac_print_start_program(struct mCc_tac_element *tac, FILE *out)
 	fprintf(out, "Printing TAC-table:\n");
 
 	while (tac != NULL) {
-		fprintf(out, "op: %25s", print_tac_op(tac->tac_operation));
+		fprintf(out, "op: %25s", mCc_tac_print_op(tac->tac_operation));
 		fprintf(out, " | ");
 		print_tac_arg(tac->tac_argument1, out);
 		fprintf(out, " | ");
