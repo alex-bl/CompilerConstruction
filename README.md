@@ -96,6 +96,7 @@ mCc -- A compiler for the mC-language
   -f, --fileLog              Log into <project_dir>/log/        (default=false)
   -l, --stdoutLog            Log to stdout                      (default=false)
   -o, --output=FILE          Output to FILE                     (default=a.out)
+  -O, --optimize             Enable optimization                (default=false)
   -t, --tac                  Print the Three-adress-code        (default=false)
   -?, --help                 Give this help list
       --usage                Give a short usage message
