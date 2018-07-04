@@ -250,9 +250,20 @@ void mCc_tac_cfg_element_delete(struct mCc_tac_cfg_element *cfg_element)
 	// right side ends
 	if ((cfg_element->tac_element->tac_operation == MCC_TAC_OPARATION_JUMP &&
 	     cfg_element->next_cfg_element_left->tac_element->tac_operation ==
-	         MCC_TAC_OPARATION_LABEL_WHILE) ||
-	    cfg_element->tac_element->tac_operation ==
-	        MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
+	         MCC_TAC_OPARATION_LABEL_WHILE)) {
+		free(cfg_element);
+	} else if (cfg_element->tac_element->tac_operation ==
+	        MCC_TAC_OPARATION_LABEL_AFTER_ELSE &&
+	    cfg_element->type_info != MCC_TAC_CFG_ELSE_END) {
+		/*if (cfg_element->tac_element->tac_operation ==
+		        MCC_TAC_OPARATION_LABEL_AFTER_ELSE &&
+		    cfg_element->type_info != MCC_TAC_CFG_ELSE_END  &&
+		    cfg_element->next_cfg_element_left->tac_element->tac_operation ==
+		        MCC_TAC_OPARATION_LABEL_AFTER_ELSE &&
+		    cfg_element->next_cfg_element_left->type_info ==
+		        MCC_TAC_CFG_ELSE_END) {
+		}*/
+		// free(cfg_element->next_cfg_element_left);
 		free(cfg_element);
 	} else {
 		if (cfg_element->next_cfg_element_left != NULL) {
