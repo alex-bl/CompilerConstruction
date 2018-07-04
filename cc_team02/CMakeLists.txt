@@ -43,6 +43,7 @@ set(GBENCHMARK_DOWNLOAD_DESTINATION "${SUB_PROJECTS_BASE_DIR}/googlebenchmark-re
 
 #============================================================ test config (output-folders)
 set(DOT_TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}/test/output/dot")
+set(CFG_DOT_TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}/test/output/tac-cfg-dot")
 set(ASSEMBLY_TEST_OUTPUT_DIR "${CMAKE_BINARY_DIR}/test/output/assembly")
 #============================================================ doxygen config
 set(DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/doc")
@@ -244,7 +245,8 @@ add_custom_target(build_and_test_all DEPENDS build_and_test_all_units integratio
 add_dependencies(gtest build_test_dot_output_dir)	
 add_dependencies(gtest build_test_assembly_output_dir)		
 add_dependencies(gtest object_output_dir)	
-add_dependencies(gtest build_assembler_output_dir)		
+add_dependencies(gtest build_assembler_output_dir)	
+add_dependencies(gtest build_test_cfg_dot_output_dir)		
 
 foreach(entry_name ${unit_test_list})
 	
@@ -311,3 +313,4 @@ add_custom_target(build_assembler_output_dir ALL COMMAND ${CMAKE_COMMAND} -E mak
 
 add_custom_target(build_test_dot_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${DOT_TEST_OUTPUT_DIR})
 add_custom_target(build_test_assembly_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSEMBLY_TEST_OUTPUT_DIR})
+add_custom_target(build_test_cfg_dot_output_dir ALL COMMAND ${CMAKE_COMMAND} -E make_directory ${CFG_DOT_TEST_OUTPUT_DIR})

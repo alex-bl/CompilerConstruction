@@ -38,9 +38,13 @@ struct mCc_tac_cfg_element *
 cfg_connect_elements_to_left(struct mCc_tac_cfg_element *prev_cfg_element,
                              struct mCc_tac_element *tac_statement);
 
-void cfg_connect_elements(struct mCc_tac_cfg_element *previous_element,
-                          struct mCc_tac_cfg_element *next_element_left,
-                          struct mCc_tac_cfg_element *next_element_right);
+struct mCc_tac_element *
+cfg_connect_elements(struct mCc_tac_cfg_element *prev_cfg_element,
+                     struct mCc_tac_element *tac_next_element);
+
+void mCc_tac_cfg_element_delete(struct mCc_tac_cfg_element *cfg_element);
+
+void mCc_tac_cfg_delete(struct mCc_tac_cfg_element *cfg_element);
 
 #ifdef __cplusplus
 }
