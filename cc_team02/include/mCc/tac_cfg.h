@@ -9,10 +9,17 @@
 extern "C" {
 #endif
 
+enum mCc_tac_cfg_type {
+	MCC_TAC_CFG_EMPTY,
+	MCC_TAC_CFG_IF_START,
+	MCC_TAC_CFG_ELSE_END,
+};
+
 struct mCc_tac_cfg_element {
 	struct mCc_tac_element *tac_element;
 	struct mCc_tac_cfg_element *next_cfg_element_left;
 	struct mCc_tac_cfg_element *next_cfg_element_right;
+	enum mCc_tac_cfg_type type_info;
 	void *meta_info;
 };
 

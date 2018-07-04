@@ -38,8 +38,8 @@ TEST(TacCfgPrintFunction, PrintCFGSimpleFunction)
 
 	//======================== cleanup
 	mCc_ast_delete_program(program);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGFunction)
@@ -69,8 +69,8 @@ TEST(TacCfgPrintFunction, PrintCFGFunction)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGWhile)
@@ -99,8 +99,8 @@ TEST(TacCfgPrintFunction, PrintCFGWhile)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGIf)
@@ -130,8 +130,8 @@ TEST(TacCfgPrintFunction, PrintCFGIf)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGIfElse)
@@ -161,8 +161,8 @@ TEST(TacCfgPrintFunction, PrintCFGIfElse)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGNestedIf)
@@ -194,8 +194,8 @@ TEST(TacCfgPrintFunction, PrintCFGNestedIf)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGNestedIfElse)
@@ -225,8 +225,8 @@ TEST(TacCfgPrintFunction, PrintCFGNestedIfElse)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGNestedWhileIf)
@@ -257,8 +257,8 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhileIf)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGNestedWhile)
@@ -290,8 +290,8 @@ TEST(TacCfgPrintFunction, PrintCFGNestedWhile)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
@@ -322,8 +322,8 @@ TEST(TacCfgPrintFunction, PrintCFGDoubleNestedWhile)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
@@ -353,8 +353,8 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyWhileIf)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
 
 TEST(TacCfgPrintFunction, PrintCFGEmptyIfWhile)
@@ -384,6 +384,6 @@ TEST(TacCfgPrintFunction, PrintCFGEmptyIfWhile)
 
 	//======================== cleanup
 	mCc_ast_delete_program(prog);
-	mCc_tac_delete(tac);
 	mCc_tac_cfg_delete(cfg);
+	mCc_tac_delete(tac);
 }
