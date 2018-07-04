@@ -66,11 +66,33 @@ static void helper_print_tac_element(struct mCc_tac_cfg_element *cfg_element,
 	fprintf(
 	    out, " | %s",
 	    helper_get_element_type_as_string(cfg_element->tac_element->tac_type));
-	//fprintf(out, "|\n");
+	// fprintf(out, "|\n");
 	fprintf(out, "\"];\n");
 
 	// fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n", cfg_element,
 	// mCc_tac_print_op(cfg_element->tac_element->tac_operation));
+}
+
+static void helper_print_cfg_element_connection(
+    struct mCc_tac_cfg_element *cfg_element,
+    struct mCc_tac_cfg_element *cfg_next_element, FILE *out)
+{
+	assert(cfg_element);
+	assert(cfg_next_element);
+	assert(out);
+
+	// checks if special treatment because of two after else labels is needed
+	/*if (cfg_next_element->next_cfg_element_left != NULL &&
+	    (cfg_next_element->tac_element->tac_operation ==
+	         MCC_TAC_OPARATION_LABEL_AFTER_ELSE &&
+	     cfg_next_element->next_cfg_element_left->tac_element->tac_operation !=
+	         MCC_TAC_OPARATION_LABEL_AFTER_ELSE)) {
+	    fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+	            cfg_next_element->next_cfg_element_left);
+	} else {*/
+	fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+	        cfg_next_element);
+	//}
 }
 
 void mCc_tac_cfg_print(FILE *out, struct mCc_tac_cfg_element *cfg_element)
@@ -92,14 +114,20 @@ void tac_cfg_print_element(FILE *out, struct mCc_tac_cfg_element *cfg_element)
 	assert(cfg_element);
 
 	if (cfg_element->tac_element->tac_operation ==
-	    MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
+	        MCC_TAC_OPARATION_LABEL_AFTER_ELSE &&
+	    cfg_element->next_cfg_element_left->tac_element->tac_operation ==
+	        MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
 		// print last edge/node of the right side
 		helper_print_tac_element(cfg_element, out);
 		// fprintf(out, "\t\"%p\" [shape=box, label=\"%s\"];\n",  cfg_element,
 		// mCc_tac_print_op(cfg_element->tac_element->tac_operation));
 
-		fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
-		        cfg_element->next_cfg_element_left);
+		// does not need a connection?
+		 helper_print_cfg_element_connection(
+		   cfg_element, cfg_element->next_cfg_element_left, out);
+		 // fprintf(out, "\t\"%p\" -- \"%p\" [label=\"\"];\n", cfg_element,
+		 //      cfg_element->next_cfg_element_left);
+
 	} else if (cfg_element->tac_element->tac_operation ==
 	               MCC_TAC_OPARATION_JUMP &&
 	           cfg_element->tac_element->tac_next_element->tac_operation ==

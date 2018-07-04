@@ -84,13 +84,14 @@ cfg_start_function(struct mCc_tac_element *tac_function_element)
 	struct mCc_tac_cfg_element *prev_cfg_element;
 
 	// building first element:
-	cfg_first_element = cfg_connect_elements_to_left(NULL, tac_next_element);
+	cfg_first_element = mCc_tac_cfg_new_element(tac_next_element, NULL, NULL);
+	// cfg_first_element = cfg_connect_elements_to_left(NULL, tac_next_element);
 	prev_cfg_element = cfg_first_element;
 	tac_next_element = tac_next_element->tac_next_element;
 
 	// TODO build up cfg for each function here
-	while (/*tac_next_element->tac_operation != NULL &&*/
-	       tac_next_element->tac_operation !=
+	/*tac_next_element->tac_operation != NULL &&*/
+	while (tac_next_element->tac_operation !=
 	       MCC_TAC_OPARATION_END_FUNCTION_DEF) {
 		// prev_cfg_element = cfg_element;
 
@@ -165,6 +166,11 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 
 	// going further to evaluate the right side, starting from the branch
 	// element:
+	// tac_if_statement = cfg_connect_elements(prev_cfg_element,
+	// tac_if_statement);  struct mCc_tac_cfg_element *cfg_before_else =
+	//   get_actual_cfg_element(prev_cfg_element);
+
+	// LABEL ELSE
 	struct mCc_tac_cfg_element *cfg_before_else =
 	    mCc_tac_cfg_new_element(tac_if_statement, NULL, NULL);
 	tac_if_statement = tac_if_statement->tac_next_element;
@@ -184,22 +190,36 @@ cfg_if_statement(struct mCc_tac_cfg_element *prev_cfg_element,
 
 	// connecting the branches together in the end
 	// conecting cfg_after_if and last element
+	// AFTER_ELSE LABLE
 	struct mCc_tac_cfg_element *cfg_after_else =
 	    cfg_connect_elements_to_left(prev_cfg_element, tac_if_statement);
-	tac_if_statement = tac_if_statement->tac_next_element;
-	// if (tac_if_statement->tac_operation != MCC_TAC_OPARATION_JUMP) {
-	// another step further
+	// tac_if_statement = tac_if_statement->tac_next_element;
+
+	// adding the after_if lable a second time to know when the right side endsF
 	cfg_after_else =
 	    cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
 	tac_if_statement = tac_if_statement->tac_next_element;
-	//}
-	// connecting to previous part
+	// cfg_after_else =
+	//	    mCc_tac_cfg_new_element(tac, NULL, NULL);
+
+	// another step further
+	// tac_if_statement = cfg_connect_elements(cfg_after_else,
+	// tac_if_statement);  cfg_after_else =
+	// get_actual_cfg_element(cfg_after_else);
+	// not like this:
+	/*cfg_after_else =
+	  cfg_connect_elements_to_left(cfg_after_else, tac_if_statement);
+	tac_if_statement = tac_if_statement->tac_next_element;*/
+
+	// connecting to if (previous part) after else
 	cfg_after_if->next_cfg_element_left = cfg_after_else;
+
+	/*prev_cfg_element = get_actual_cfg_element(cfg_after_else);
+	cfg_after_if->next_cfg_element_left = prev_cfg_element;*/
 
 	return tac_if_statement;
 }
 
-// TODO while handling
 struct mCc_tac_element *
 cfg_while_statement(struct mCc_tac_cfg_element *prev_cfg_element,
                     struct mCc_tac_element *tac_while_statement)
@@ -290,12 +310,11 @@ cfg_connect_elements_to_left(struct mCc_tac_cfg_element *prev_cfg_element,
                              struct mCc_tac_element *tac_statement)
 {
 	assert(tac_statement);
+	assert(prev_cfg_element);
 
 	struct mCc_tac_cfg_element *cfg_element =
 	    mCc_tac_cfg_new_element(tac_statement, NULL, NULL);
-	if (prev_cfg_element != NULL) {
-		prev_cfg_element->next_cfg_element_left = cfg_element;
-	}
+	prev_cfg_element->next_cfg_element_left = cfg_element;
 	return cfg_element;
 }
 
