@@ -176,6 +176,7 @@ int main(int argc, char *argv[])
 
 	/* Default values: Disable all logging + printing */
 	arguments.to_dot = false;
+	arguments.tac_cfg = false;
 	arguments.print_tac = false;
 	arguments.log_on_stdout = false;
 	arguments.file_log = false;
