@@ -304,6 +304,8 @@ void mCc_tac_cfg_element_delete(struct mCc_tac_cfg_element *cfg_element)
 	assert(cfg_element);
 	assert(cfg_element->tac_element);
 
+	// here the information of the tac_element is needed to recognize, when the
+	// right side ends
 	if ((cfg_element->tac_element->tac_operation == MCC_TAC_OPARATION_JUMP &&
 	     cfg_element->next_cfg_element_left->tac_element->tac_operation ==
 	         MCC_TAC_OPARATION_LABEL_WHILE) ||
@@ -319,84 +321,16 @@ void mCc_tac_cfg_element_delete(struct mCc_tac_cfg_element *cfg_element)
 		}
 		free(cfg_element);
 	}
-
-	//(cfg_element->tac_element->tac_operation ==        MCC_TAC_OPARATION_JUMP
-	//&& cfg_element->next_cfg_element_left->tac_element->tac_operation ==
-	// MCC_TAC_OPARATION_LABEL_WHILE   )
-	// (cfg_element->tac_element->tac_operation
-	//==    MCC_TAC_OPARATION_LABEL_AFTER_ELSE)
-	/*if (cfg_element->next_cfg_element_left != NULL) {
-	    if (cfg_element->tac_element->tac_operation == MCC_TAC_OPARATION_JUMP &&
-	        cfg_element->next_cfg_element_left->tac_element->tac_operation ==
-	            MCC_TAC_OPARATION_LABEL_WHILE) {
-	        free(cfg_element);
-	    } else if (cfg_element->tac_element->tac_operation ==
-	               MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
-	        free(cfg_element);
-	    } else {
-	        if (cfg_element->next_cfg_element_left != NULL) {
-	            mCc_tac_cfg_element_delete(cfg_element->next_cfg_element_left);
-	        }
-	        if (cfg_element->next_cfg_element_right != NULL) {
-	            mCc_tac_cfg_element_delete(cfg_element->next_cfg_element_right);
-	        }
-	        free(cfg_element);
-	    }
-	} else {
-	    free(cfg_element);
-	}*/
-
-	// tac should not be deleted, because it is deleted separately
-	/*if (cfg_element->tac_element != NULL) {
-	    mCc_tac_element_delete(cfg_element->tac_element);
-	}*/
-	// TODO
-	// TODO just free one -> this is called multiple times for one
-	// cfg_element
-	// TODO improve structure for else if element directly after each other
-	//free(cfg_element);
 }
 
+/*
+ * delete tac structure after the cfg was deleted,
+ * otherwise there will be too less information for recognizing when two cfg
+ * elements come together again
+ */
 void mCc_tac_cfg_delete(struct mCc_tac_cfg_element *cfg_element)
 {
 	assert(cfg_element);
 
 	mCc_tac_cfg_element_delete(cfg_element);
-
-	/*if (cfg_element->tac_element->tac_operation == MCC_TAC_OPARATION_JUMP &&
-	    cfg_element->next_cfg_element_left->tac_element->tac_operation ==
-	        MCC_TAC_OPARATION_LABEL_WHILE) {
-
-	} else if (cfg_element->tac_element->tac_operation ==
-	           MCC_TAC_OPARATION_LABEL_AFTER_ELSE) {
-
-	} else {
-
-	    struct mCc_tac_cfg_element *next_cfg_element;
-	    while (cfg_element != NULL) {
-	        next_cfg_element = cfg_element->next_cfg_element_left;
-	        if (cfg_element->next_cfg_element_right != NULL) {
-	            mCc_tac_cfg_delete(cfg_element->next_cfg_element_right);
-	        }
-	        mCc_tac_cfg_delete(cfg_element);
-	        cfg_element = next_cfg_element;
-	    }
-	}
-
-	mCc_tac_cfg_element_delete(cfg_element);*/
-	/*struct mCc_tac_cfg_element *next_cfg_element;
-	while (cfg_element != NULL) {
-	    next_cfg_element = cfg_element->next_cfg_element_left;
-	    mCc_tac_element_delete(cfg_element);
-	    cfg_element = next_cfg_element;
-	}*/
 }
-
-// function not needed?
-/*void cfg_connect_elements(struct mCc_tac_cfg_element *previous_element,
-                          struct mCc_tac_cfg_element *next_element_left,
-                          struct mCc_tac_cfg_element *next_element_right)
-{
-    previous_element->next_cfg_element_left = next_element_left;
-    previous_element->next_cfg_element_right = next_element_right;
-}*/
