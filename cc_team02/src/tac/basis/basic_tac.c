@@ -65,7 +65,7 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 		return NULL;
 	}
 
-	tac_identifier->name = strndup(name, strlen(name)+1);
+	tac_identifier->name = strndup(name, strlen(name) + 1);
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_VAR;
 	tac_identifier->is_param = false;
 	// tac_identifier->stack_offset;
@@ -139,7 +139,6 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 	// tac_identifier->stack_offset;
 	return tac_identifier;
 }
-
 
 // TODO: maybe here the the char has to be freed
 // function for concatenate a name of a variable with the scope
@@ -258,6 +257,10 @@ mCc_tac_create_new_lable_tac_element(enum mCc_tac_operation label_type,
 
 struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier()
 {
+	/*
+	 * currently "l" is used as prefix, but it may be a longer string
+	 * (reason for the increased buffer)
+	 */
 	char label_name[BASIC_BUFFER_SIZE] = "l";
 	struct mCc_tac_identifier *label =
 	    mCc_helper_concat_name_and_scope(label_name, label_count);
