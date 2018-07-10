@@ -258,7 +258,7 @@ mCc_tac_create_new_lable_tac_element(enum mCc_tac_operation label_type,
 
 struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier()
 {
-	char label_name[1] = "l";
+	char label_name[BASIC_BUFFER_SIZE] = "l";
 	struct mCc_tac_identifier *label =
 	    mCc_helper_concat_name_and_scope(label_name, label_count);
 	label_count++;
