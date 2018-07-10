@@ -9,7 +9,7 @@ project (cc_team02)
 # The version number.
 set(cc_team02_VERSION_MAJOR 1)
 set(cc_team02_VERSION_MINOR 8)
-set(cc_team02_VERSION_LOWER 9)
+set(cc_team02_VERSION_LOWER 11)
 
 # set global compiler flags (append them)
 # append -Wextra when all ast-implmentations are provided
