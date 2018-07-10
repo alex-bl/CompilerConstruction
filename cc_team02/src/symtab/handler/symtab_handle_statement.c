@@ -39,7 +39,7 @@ handle_expected_type(struct mCc_ast_statement *statement,
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_statement(statement, error);
 	info_holder->error_count++;
 }

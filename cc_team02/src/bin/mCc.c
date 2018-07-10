@@ -61,11 +61,11 @@ static struct argp_option options[] = {
 	  .flags = 0,
 	  .group = 0,
 	  .doc = "Output to FILE\t\t\t(default=a.out)" },
-	  { .name = "optimize",
-	  	  .key = 'O',
-	  	  .flags = 0,
-	  	  .group = 0,
-	  	  .doc = "Enable optimization\t\t(default=false)" },
+	{ .name = "optimize",
+	  .key = 'O',
+	  .flags = 0,
+	  .group = 0,
+	  .doc = "Enable optimization\t\t(default=false)" },
 	{ 0 }
 };
 

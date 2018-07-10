@@ -28,6 +28,8 @@
 #define COMPILE_STATUS_OUTPUT_LINE_SIZE 1024
 #define MCC_VERSION_TEXT "mCc ${cc_team02_VERSION_MAJOR}.${cc_team02_VERSION_MINOR}.${cc_team02_VERSION_LOWER}"
 
+#define BASIC_BUFFER_SIZE 256
+
 //assembly-related stuff
 
 #define INT_SIZE 4

@@ -138,7 +138,7 @@ void test_print_and_free_ast_statement(struct mCc_ast_statement *statement,
 struct mCc_ast_identifier *
 mCc_test_build_const_test_identifier(const char *identifier)
 {
-	return mCc_ast_new_identifier(strdup(identifier));
+	return mCc_ast_new_identifier(strndup(identifier, strlen(identifier)+1));
 }
 
 struct mCc_ast_expression *mCc_test_build_test_lit_expression(int value)
@@ -158,7 +158,7 @@ struct mCc_ast_expression *mCc_test_build_test_lit_expression_bool(bool value)
 
 struct mCc_ast_literal *mCc_test_build_test_lit_string(const char *value)
 {
-	return mCc_ast_new_literal_string(strdup(value));
+	return mCc_ast_new_literal_string(strndup(value, strlen(value)+1));
 }
 
 struct mCc_ast_expression *
