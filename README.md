@@ -125,8 +125,10 @@ See [issues](https://github.com/alex-bl/CompilerConstruction/issues) for project
 
 ### Assignment 3
 - **Valgrind issue**: Valgrind reports "Uninitialised value was created by a heap allocation" if using `malloc` on allocating memory for identifiers at `basic_tac.c`. We do not investigated further why this error occurs, but fixed it initializing the allocated memory with `0`s (using `calloc`).
-
 - **Rounding error at integration tests**: On test-programs where a `floating-point` value's equality is checked afterwards, it may happens, that rounding errors prevent a positive match (because of string-comparison between program-output and `*.mC.stdout`). The affected test-outputs (currently only one) were adjusted accordingly.
+- **Task 6**: We didn't work on `Task 6` dueto lack of time.
+- **Possible issue at a target**: At the target `build_and_test_all` (building and running all unit-tests, extended unit-tests and integration tests) we encountered (not on every machine) a strange overlapping at executing the tests (e.g. before the unit-tests were completely finished, the execution of the integration-tests started and after some tests the execution switched back to the unit-tests,...). This misbehavior caused a failure of the most of the tests.
+Running the `build_and_test_all_units` and `integration_test` separately, the mentioned issue could not be reproduced. We fixed the `build_and_test_all` target and tested again. On our machines it seems to work (the issue was not reproducible anymore). So if you encounter this strange behavior by executing the `build_and_test_all` target, please run the mentioned targets separately.
 
 ## 4. Changelog
 
