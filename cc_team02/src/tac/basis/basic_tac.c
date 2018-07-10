@@ -261,7 +261,7 @@ struct mCc_tac_identifier *mCc_tac_create_new_lable_identifier()
 	 * currently "l" is used as prefix, but it may be a longer string
 	 * (reason for the increased buffer)
 	 */
-	char label_name[BASIC_BUFFER_SIZE] = "l";
+	char label_name[BASIC_BUFFER_SIZE] = "l\0";
 	struct mCc_tac_identifier *label =
 	    mCc_helper_concat_name_and_scope(label_name, label_count);
 	label_count++;
