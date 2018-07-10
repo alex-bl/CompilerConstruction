@@ -38,7 +38,7 @@ handle_identifier(struct mCc_ast_identifier *identifier,
 	         identifier->identifier_name);
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
-	        status, strndup(error_msg, strlen(error_msg)));
+	        status, strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_identifier(identifier, error);
 	info_holder->error_count++;
 }

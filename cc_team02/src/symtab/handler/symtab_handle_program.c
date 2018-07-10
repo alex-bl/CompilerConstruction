@@ -91,7 +91,7 @@ handle_main_presence(struct mCc_ast_program *program,
 
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
-	        validation_error, strndup(error_msg, strlen(error_msg)));
+	        validation_error, strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_pgrogram(program, error);
 	info_holder->error_count++;
 }

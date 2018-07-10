@@ -38,7 +38,7 @@ handle_inconsistent_type(struct mCc_ast_expression *expression,
 	         mCc_ast_print_binary_op(expression->op), type_msg, side);
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
-	        type, strndup(error_msg, strlen(error_msg)));
+	        type, strndup(error_msg, strlen(error_msg)+1));
 
 	append_error_to_expr(expression, error);
 	expression->data_type = type;
@@ -72,7 +72,7 @@ handle_expected_type(struct mCc_ast_expression *expression,
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 	info_holder->error_count++;
@@ -98,7 +98,7 @@ handle_invalid_identifier(struct mCc_ast_expression *expression,
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_EXPR_IDENTIFIER,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 	info_holder->error_count++;
@@ -117,7 +117,7 @@ static void handle_expected_numerical_type(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 	info_holder->error_count++;
@@ -137,7 +137,7 @@ static void handle_expected_numerical_and_bool_type(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 	info_holder->error_count++;
@@ -156,7 +156,7 @@ static void handle_invalid_operation(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 	info_holder->error_count++;
@@ -176,7 +176,7 @@ static void handle_invalid_operation_numerical(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCOMPATIBLE;
 	info_holder->error_count++;
@@ -198,7 +198,7 @@ handle_inconsistent_sides(struct mCc_ast_expression *expression,
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_TYPE,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_expr(expression, error);
 	expression->data_type = MCC_AST_DATA_TYPE_INCONSISTENT;
 	info_holder->error_count++;

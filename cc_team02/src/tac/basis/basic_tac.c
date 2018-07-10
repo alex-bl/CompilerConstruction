@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "config.h"
+
 int label_count = 0;
 
 //#include "ast_data_type.h"
@@ -63,7 +65,7 @@ struct mCc_tac_identifier *tac_new_identifier(char *name)
 		return NULL;
 	}
 
-	tac_identifier->name = strndup(name, strlen(name));
+	tac_identifier->name = strndup(name, strlen(name)+1);
 	tac_identifier->type = MCC_IDENTIFIER_TAC_TYPE_VAR;
 	tac_identifier->is_param = false;
 	// tac_identifier->stack_offset;
@@ -138,23 +140,6 @@ struct mCc_tac_identifier *tac_new_identifier_bool(bool value)
 	return tac_identifier;
 }
 
-// helper function for getting the size of an int
-int mCc_tac_helper_intlen(int var)
-{
-	int length = 16;
-	if (var < 10) {
-		length = 1;
-	} else if (var < 100) {
-		length = 2;
-	} else if (var < 1000) {
-		length = 3;
-	} else if (var < 10000) {
-		length = 4;
-	} else if (var < 100000) {
-		length = 5;
-	}
-	return length;
-}
 
 // TODO: maybe here the the char has to be freed
 // function for concatenate a name of a variable with the scope
@@ -165,8 +150,8 @@ struct mCc_tac_identifier *mCc_helper_concat_name_and_scope(char *name,
 
 	// if (scope != NULL) {
 	// puts scope level behind the variable name
-	char new_name[strlen(name) + mCc_tac_helper_intlen(scope)];
-	sprintf(new_name, "%s%d", name, scope);
+	char new_name[BASIC_BUFFER_SIZE];
+	snprintf(new_name, BASIC_BUFFER_SIZE, "%s%d", name, scope);
 	struct mCc_tac_identifier *tac_identifier = tac_new_identifier(new_name);
 	// free(new_name);
 	return tac_identifier;

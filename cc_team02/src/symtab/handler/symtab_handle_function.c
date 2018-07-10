@@ -118,7 +118,7 @@ handle_invalid_param_count(struct mCc_ast_function_call *call, int expected,
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_SIGNATURE,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 
 	append_error_to_function_call(call, error);
 	info_holder->error_count++;
@@ -200,7 +200,7 @@ static void handle_expected_return_type_statement(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_RETURN,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_statement(statement, error);
 	info_holder->error_count++;
 }
@@ -219,7 +219,7 @@ static void handle_returns_on_control_path(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_MISSING_RETURN_PATH,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_statement(statement, error);
 	statement->return_error_already_reported = true;
 	info_holder->error_count++;
@@ -437,7 +437,7 @@ static void handle_expected_return_type(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_RETURN,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_function_def(def, error);
 	info_holder->error_count++;
 }
@@ -455,7 +455,7 @@ static void handle_expected_type_function_call(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_function_call(call, error);
 	info_holder->error_count++;
 }
@@ -484,7 +484,7 @@ static void handle_array_primitive_missmatch(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_function_call(call, error);
 	info_holder->error_count++;
 }
@@ -503,7 +503,7 @@ static void handle_array_size_missmatch(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_function_call(call, error);
 	info_holder->error_count++;
 }
@@ -518,7 +518,7 @@ static void handle_unknown_inconsistent_type(
 	struct mCc_validation_status_result *error =
 	    mCc_validator_new_validation_result(
 	        MCC_VALIDATION_STATUS_INVALID_PARAMETER,
-	        strndup(error_msg, strlen(error_msg)));
+	        strndup(error_msg, strlen(error_msg)+1));
 	append_error_to_function_call(call, error);
 	info_holder->error_count++;
 }
