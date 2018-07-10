@@ -158,7 +158,7 @@ struct mCc_ast_expression *mCc_test_build_test_lit_expression_bool(bool value)
 
 struct mCc_ast_literal *mCc_test_build_test_lit_string(const char *value)
 {
-	return mCc_ast_new_literal_string(strdup(value, strlen(value)+1));
+	return mCc_ast_new_literal_string(strndup(value, strlen(value)+1));
 }
 
 struct mCc_ast_expression *
