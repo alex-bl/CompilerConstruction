@@ -134,6 +134,9 @@ Running the `build_and_test_all_units` and `integration_test` separately, the me
 
 This section contains the fixed and unfixed issues from the previous assignments.
 
+#### Recent fixes:
+- Messed up string-termination at pseudo-label-generation (`basic_tac.c`) fixed.
+
 #### After assignment 2:
 
 - Parsing assotiativity for binary-operations corrected (changed from right to left to guarantee correct TAC-construction + later evaluation).
